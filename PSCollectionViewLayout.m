@@ -7,6 +7,9 @@
 
 #import "PSCollectionViewLayout.h"
 
+NSString *const PSCollectionElementKindCell = @"UICollectionElementKindCell";
+NSString *const PSCollectionElementKindDecorationView = @"PSCollectionElementKindDecorationView";
+
 @interface PSCollectionViewLayoutAttributes() {
     struct {
         unsigned int isCellKind:1;
@@ -16,7 +19,6 @@
 }
 @property (nonatomic, copy) NSString *elementKind;
 @property (nonatomic, copy) NSString *reuseIdentifier;
-@property (nonatomic, assign) PSCollectionViewItemType representedElementCategory;
 @end
 
 @implementation PSCollectionViewLayoutAttributes
@@ -26,14 +28,13 @@
 
 + (instancetype)layoutAttributesForCellWithIndexPath:(NSIndexPath *)indexPath {
     PSCollectionViewLayoutAttributes *attributes = [self new];
-    attributes.representedElementCategory = PSCollectionViewItemTypeCell;
+    attributes.elementKind = PSCollectionElementKindCell;
     attributes.indexPath = indexPath;
     return attributes;
 }
 
 + (instancetype)layoutAttributesForSupplementaryViewOfKind:(NSString *)elementKind withIndexPath:(NSIndexPath *)indexPath {
     PSCollectionViewLayoutAttributes *attributes = [self new];
-    attributes.representedElementCategory = PSCollectionViewItemTypeSupplementaryView;
     attributes.elementKind = elementKind;
     attributes.indexPath = indexPath;
     return attributes;
@@ -41,7 +42,7 @@
 
 + (instancetype)layoutAttributesForDecorationViewWithReuseIdentifier:(NSString *)reuseIdentifier withIndexPath:(NSIndexPath *)indexPath {
     PSCollectionViewLayoutAttributes *attributes = [self new];
-    attributes.representedElementCategory = PSCollectionViewItemTypeDecorationView;
+    attributes.elementKind = PSCollectionElementKindDecorationView;
     attributes.reuseIdentifier = reuseIdentifier;
     attributes.indexPath = indexPath;
     return attributes;
@@ -52,18 +53,42 @@
 
 - (id)init {
     if((self = [super init])) {
+        _alpha = 1.f;
         _transform3D = CATransform3DIdentity;
     }
     return self;
 }
 
-//- (BOOL)isEqual:(id)arg1;
-//- (unsigned int)hash;
-
-- (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p frame:%@ indexPath:%@ category:%@>", NSStringFromClass([self class]), self, NSStringFromCGRect(self.frame), self.indexPath, PSCollectionViewItemTypeToString(self.representedElementCategory)];
+- (NSUInteger)hash {
+    return ([_elementKind hash] * 31) + [_indexPath hash];
 }
 
+- (BOOL)isEqual:(id)other {
+    if ([other isKindOfClass:[self class]]) {
+        PSCollectionViewLayoutAttributes *otherLayoutAttributes = (PSCollectionViewLayoutAttributes *)other;
+        if ([_elementKind isEqual:otherLayoutAttributes.elementKind] && [_indexPath isEqual:otherLayoutAttributes.indexPath]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+- (NSString *)description {
+    return [NSString stringWithFormat:@"<%@: %p frame:%@ indexPath:%@ elementKind:%@>", NSStringFromClass([self class]), self, NSStringFromCGRect(self.frame), self.indexPath, self.elementKind];
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - Public
+
+- (PSCollectionViewItemType)representedElementCategory {
+    if ([self.elementKind isEqualToString:PSCollectionElementKindCell]) {
+        return PSCollectionViewItemTypeCell;
+    }else if([self.elementKind isEqualToString:PSCollectionElementKindDecorationView]) {
+        return PSCollectionViewItemTypeDecorationView;
+    }else {
+        return PSCollectionViewItemTypeSupplementaryView;
+    }
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Private
@@ -92,7 +117,6 @@
     layoutAttributes.indexPath = self.indexPath;
     layoutAttributes.elementKind = self.elementKind;
     layoutAttributes.reuseIdentifier = self.reuseIdentifier;
-    layoutAttributes.representedElementCategory = self.representedElementCategory;
     layoutAttributes.frame = self.frame;
     layoutAttributes.center = self.center;
     layoutAttributes.size = self.size;
@@ -107,28 +131,27 @@
 #pragma mark - PSCollection/UICollection interoperability
 
 #import <objc/runtime.h>
-#import <objc/message.h>
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)selector {
-    NSMethodSignature *sig = [super methodSignatureForSelector:selector];
-    if(!sig) {
+    NSMethodSignature *signature = [super methodSignatureForSelector:selector];
+    if(!signature) {
         NSString *selString = NSStringFromSelector(selector);
         if ([selString hasPrefix:@"_"]) {
             SEL cleanedSelector = NSSelectorFromString([selString substringFromIndex:1]);
-            sig = [super methodSignatureForSelector:cleanedSelector];
+            signature = [super methodSignatureForSelector:cleanedSelector];
         }
     }
-    return sig;
+    return signature;
 }
-- (void)forwardInvocation:(NSInvocation *)inv {
-    NSString *selString = NSStringFromSelector([inv selector]);
+- (void)forwardInvocation:(NSInvocation *)invocation {
+    NSString *selString = NSStringFromSelector([invocation selector]);
     if ([selString hasPrefix:@"_"]) {
         SEL cleanedSelector = NSSelectorFromString([selString substringFromIndex:1]);
         if ([self respondsToSelector:cleanedSelector]) {
-            inv.selector = cleanedSelector;
-            [inv invokeWithTarget:self];
+            invocation.selector = cleanedSelector;
+            [invocation invokeWithTarget:self];
         }
     }else {
-        [super forwardInvocation:inv];
+        [super forwardInvocation:invocation];
     }
 }
 
