@@ -18,3 +18,13 @@ TODO:
 As cell animations are another super-tricky theme, my goal for now is to just don't animate.
 
 Should work with Xcode 4.4+ and ARC.
+
+Feel free to hack around and improve it.
+
+Another goal (at least super useful for debugging) is interoperability between UI/PS classes:
+
+            flowLayout = (UICollectionViewFlowLayout *)[UICollectionViewFlowLayout new];
+            collectionView = (UICollectionView *)[[PSCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:(PSCollectionViewFlowLayout *)flowLayout];
+
+
+License will be MIT.
