@@ -202,16 +202,19 @@
 }
 
 - (PSCollectionViewCell *)cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    /*
+    //NSInteger index = [_collectionViewData globalIndexForItemAtIndexPath:indexPath];
+    // TODO Apple uses some kind of globalIndex for this.
+    __block PSCollectionViewCell *cell = nil;
     [_allVisibleViewsDict enumerateKeysAndObjectsWithOptions:0 usingBlock:^(id key, id obj, BOOL *stop) {
         PSCollectionViewItemKey *itemKey = (PSCollectionViewItemKey *)key;
         if (itemKey.type == PSCollectionViewItemTypeCell) {
+            if ([itemKey.indexPath isEqual:indexPath]) {
+                cell = obj;
+                *stop = YES;
+            }
         }
-    }*/
-
-    NSInteger index = [_collectionViewData globalIndexForItemAtIndexPath:indexPath];
-    // TODO ????
-    return nil;
+    }];
+    return cell;
 }
 
 - (NSArray *)indexPathsForVisibleItems {
