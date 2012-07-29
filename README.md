@@ -30,6 +30,6 @@ Another goal (at least super useful for debugging) is interoperability between U
             PSCollectionView *collectionView = [PSCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:(PSCollectionViewFlowLayout *)flowLayout];
 
 
-* Note that for some methods we can't use the _ underscore variants or we risk to get a false-positive on private API use. I've added  some runtime hacks to dynamcially add block forwarders for those cases (mainly for UI/PS interoperability)
+(*) Note that for some methods we can't use the _ underscore variants or we risk to get a false-positive on private API use. I've added  some runtime hacks to dynamcially add block forwarders for those cases (mainly for UI/PS interoperability)
 
 License will be MIT.
