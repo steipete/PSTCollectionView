@@ -68,9 +68,9 @@
         // get dimension and compensate for section margin
         CGFloat dimension = self.layoutInfo.dimension;
         if (self.layoutInfo.horizontal) {
-            dimension -= self.sectionMargins.top - self.sectionMargins.bottom;
+            dimension -= self.sectionMargins.top + self.sectionMargins.bottom;
         }else {
-            dimension -= self.sectionMargins.left - self.sectionMargins.right;
+            dimension -= self.sectionMargins.left + self.sectionMargins.right;
         }
         do {
             BOOL finishCycle = itemIndex >= self.itemsCount;
@@ -81,6 +81,7 @@
             }
             CGSize itemSize = self.fixedItemSize ? self.itemSize : item.itemFrame.size;
             CGFloat itemDimension = self.layoutInfo.horizontal ? itemSize.height : itemSize.width;
+            itemDimension += self.layoutInfo.horizontal ? self.verticalInterstice : self.horizontalInterstice;
             if (dimensionLeft < itemDimension || finishCycle) {
                 // finish current row
                 if (row) {
