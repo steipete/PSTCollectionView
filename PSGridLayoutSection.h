@@ -23,6 +23,7 @@
 @property (nonatomic, assign) CGFloat verticalInterstice;
 @property (nonatomic, assign) CGFloat horizontalInterstice;
 @property (nonatomic, assign) UIEdgeInsets sectionMargins;
+
 @property (nonatomic, assign) CGRect frame;
 @property (nonatomic, assign) CGRect headerFrame;
 @property (nonatomic, assign) CGRect footerFrame;

@@ -15,6 +15,7 @@
 NSString *const PSCollectionElementKindSectionHeader = @"UICollectionElementKindSectionHeader";
 NSString *const PSCollectionElementKindSectionFooter = @"UICollectionElementKindSectionFooter";
 
+// this is not exposed in UICollectionViewFlowLayout
 NSString *const PSFlowLayoutCommonRowHorizontalAlignmentKey = @"UIFlowLayoutCommonRowHorizontalAlignmentKey";
 NSString *const PSFlowLayoutLastRowHorizontalAlignmentKey = @"UIFlowLayoutLastRowHorizontalAlignmentKey";
 NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalAlignmentKey";
@@ -29,7 +30,7 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
         unsigned int delegateInteritemSpacingForSection:1;
         unsigned int delegateLineSpacingForSection:1;
         unsigned int delegateAlignmentOptions:1;
-        
+
         unsigned int keepDelegateInfoWhileInvalidating:1;
         unsigned int keepAllDataWhileInvalidating:1;
         unsigned int layoutDataIsValid:1;
@@ -65,6 +66,15 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
 - (id)init {
     if((self = [super init])) {
         _scrollDirection = PSCollectionViewScrollDirectionVertical;
+
+        // set default values for row alignment.
+        // TODO: those values are some enum. find out what what is.
+        // 3 = justified; 0 = left;  center, right?
+        _rowAlignmentsOptionsDictionary = @{
+            PSFlowLayoutCommonRowHorizontalAlignmentKey : @(3),
+            PSFlowLayoutLastRowHorizontalAlignmentKey : @(0),
+            PSFlowLayoutRowVerticalAlignmentKey : @(1),
+        };
     }
     return self;
 }
@@ -95,9 +105,9 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
                         if (row.fixedItemSize) {
                             sectionItemIndex = row.index * section.itemsByRowCount + itemIndex;
                             if (_data.horizontal) {
-                                itemFrame = CGRectMake(0, section.itemSize.height * itemIndex, section.itemSize.width, section.itemSize.height);
+                                itemFrame = CGRectMake(0, section.itemSize.height * itemIndex + section.verticalInterstice * itemIndex, section.itemSize.width, section.itemSize.height);
                             }else {
-                                itemFrame = CGRectMake(section.itemSize.width * itemIndex, 0, section.itemSize.width, section.itemSize.height);
+                                itemFrame = CGRectMake(section.itemSize.width * itemIndex + section.horizontalInterstice * itemIndex, 0, section.itemSize.width, section.itemSize.height);
                             }
                         }else {
                             PSGridLayoutItem *item = row.items[itemIndex];
@@ -128,7 +138,7 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
 }
 
 - (CGSize)collectionViewContentSize {
-//    return _currentLayoutSize;
+    //    return _currentLayoutSize;
     return _data.contentSize;
 }
 
@@ -172,6 +182,9 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
     NSUInteger numberOfSections = [self.collectionView numberOfSections];
     for (NSUInteger section = 0; section < numberOfSections; section++) {
         PSGridLayoutSection *layoutSection = [_data addSection];
+        layoutSection.verticalInterstice = _data.horizontal ? self.minimumInteritemSpacing : 0.f;
+        layoutSection.horizontalInterstice = !_data.horizontal ? self.minimumInteritemSpacing : 0.f;
+        layoutSection.sectionMargins = self.sectionInset;
         NSUInteger numberOfItems = [self.collectionView numberOfItemsInSection:section];
 
         // if delegate implements size delegate, query it for all items
@@ -183,7 +196,7 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
                 PSGridLayoutItem *layoutItem = [layoutSection addItem];
                 layoutItem.itemFrame = (CGRect){.size=itemSize};
             }
-        // if not, go the fast path
+            // if not, go the fast path
         }else {
             layoutSection.fixedItemSize = YES;
             layoutSection.itemSize = self.itemSize;

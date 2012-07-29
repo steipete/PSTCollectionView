@@ -59,10 +59,10 @@
             }
             if (self.section.layoutInfo.horizontal) {
                 itemFrame.origin.y = itemOffset.y;
-                itemOffset.y += itemFrame.size.height;
+                itemOffset.y += itemFrame.size.height + self.section.verticalInterstice;
             }else {
                 itemFrame.origin.x = itemOffset.x;
-                itemOffset.x += itemFrame.size.width;
+                itemOffset.x += itemFrame.size.width + self.section.horizontalInterstice;
             }
             item.itemFrame = itemFrame; // might call nil; don't care
 
