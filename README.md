@@ -1,9 +1,9 @@
 PSCollectionView
 ================
 
-Open Source Clone of UICollectionView for iOS4+
+Open Source rewrite of UICollectionView for iOS4+
 
-This project has the goal to be a 100% API compatible replacement for UICollectionView.
+This project has the goal to be a 100% API compatible* replacement for UICollectionView.
 The goal is to use it for fallback on iOS4/iOS5 and use "the real thing" on iOS6.
 
 Since iSO6 is not yet released, this repository needs to be private to not break the NDA :/
@@ -26,8 +26,10 @@ Feel free to hack around and improve it.
 
 Another goal (at least super useful for debugging) is interoperability between UI/PS classes:
 
-            flowLayout = (UICollectionViewFlowLayout *)[UICollectionViewFlowLayout new];
-            collectionView = (UICollectionView *)[[PSCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:(PSCollectionViewFlowLayout *)flowLayout];
+            fUICollectionViewFlowLayout *flowLayout = [UICollectionViewFlowLayout new];
+            PSCollectionView *collectionView = [PSCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:(PSCollectionViewFlowLayout *)flowLayout];
 
+
+* Note that for some methods we can't use the _ underscore variants or we risk to get a false-positive on private API use. I've added  some runtime hacks to dynamcially add block forwarders for those cases (mainly for UI/PS interoperability)
 
 License will be MIT.
