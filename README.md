@@ -26,7 +26,7 @@ Feel free to hack around and improve it.
 
 Another goal (at least super useful for debugging) is interoperability between UI/PS classes:
 
-            fUICollectionViewFlowLayout *flowLayout = [UICollectionViewFlowLayout new];
+            UICollectionViewFlowLayout *flowLayout = [UICollectionViewFlowLayout new];
             PSCollectionView *collectionView = [PSCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:(PSCollectionViewFlowLayout *)flowLayout];
 
 
