@@ -23,11 +23,30 @@
     NSMutableDictionary *_supplementaryViewReuseQueues;
 
     NSMutableDictionary *_cellClassDict;
-    PSCollectionViewData *_collectionViewData;
 
     NSUInteger _reloadingSuspendedCount;
     NSMutableSet *_indexPathsForSelectedItems;
+
+    struct {
+        /*
+        unsigned int reloadSkippedDuringSuspension : 1;
+        unsigned int scheduledUpdateVisibleCells : 1;
+        unsigned int scheduledUpdateVisibleCellLayoutAttributes : 1;
+        unsigned int allowsSelection : 1;
+        unsigned int allowsMultipleSelection : 1;
+        unsigned int updating : 1;
+         */
+        unsigned int fadeCellsForBoundsChange : 1;
+        /*
+        unsigned int updatingLayout : 1;
+        unsigned int needsReload : 1;
+        unsigned int reloading : 1;
+        unsigned int skipLayoutDuringSnapshotting : 1;
+        unsigned int layoutInvalidatedSinceLastCellUpdate : 1;
+         */
+    } _collectionViewFlags;
 }
+@property (nonatomic, strong) PSCollectionViewData *collectionViewData;
 @end
 
 @implementation PSCollectionView
@@ -74,6 +93,16 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
 
+    // Adding alpha animation to make the relayouting smooth
+    if (_collectionViewFlags.fadeCellsForBoundsChange) {
+        CATransition *transition = [CATransition animation];
+        transition.duration = 0.25f;
+        transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+        transition.type = kCATransitionFade;
+        [self.layer addAnimation:transition forKey:@"rotationAnimation"];
+        _collectionViewFlags.fadeCellsForBoundsChange = NO;
+    }
+
     // TODO: don't always call
     [_collectionViewData validateLayoutInRect:self.bounds];
 
@@ -86,24 +115,17 @@
         self.contentSize = contentSize;
     }
 
-    /*
-    if (_rotationActive) {
-        // Adding alpha animation to make the relayouting smooth
-        CATransition *transition = [CATransition animation];
-        transition.duration = 0.25f;
-        transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-        transition.type = kCATransitionFade;
-        [self.layer addAnimation:transition forKey:@"rotationAnimation"];
-    }*/
-
-/*
-    [self applyWithoutAnimation:^{
-        [self relayoutItems];
-        [self loadRequiredItems];
-    }];
- */
-
     _backgroundView.frame = (CGRect){.size=self.contentSize};
+}
+
+- (void)setFrame:(CGRect)frame {
+    if (!CGRectEqualToRect(frame, self.frame)) {
+        if ([self.collectionViewLayout shouldInvalidateLayoutForBoundsChange:frame]) {
+            [self invalidateLayout];
+            _collectionViewFlags.fadeCellsForBoundsChange = YES;
+        }
+        [super setFrame:frame];
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -342,7 +364,8 @@
 #pragma mark - Private
 
 - (void)invalidateLayout {
-    // TODO
+    [self.collectionViewLayout invalidateLayout];
+    [self.collectionViewData invalidate]; // invalidate layout cache
 }
 
 // update currently visible cells, fetches new cells if needed
@@ -359,6 +382,9 @@
             PSCollectionViewCell *cell = [self _createPreparedCellForItemAtIndexPath:layoutAttributes.indexPath withLayoutAttributes:layoutAttributes];
             _allVisibleViewsDict[itemKey] = cell;
             [self addControlledSubview:cell];
+        }else {
+            // just update cell
+            [cell applyLayoutAttributes:layoutAttributes];
         }
 
         // remove from current dict

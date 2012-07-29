@@ -142,9 +142,15 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
     return _data.contentSize;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - Invalidating the Layout
+
+- (void)invalidateLayout {
+}
+
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds {
     // we need to recalculate on width changes
-    if (self.collectionView.bounds.size.width != newBounds.size.width) {
+    if ((self.collectionView.bounds.size.width != newBounds.size.width && self.scrollDirection == PSCollectionViewScrollDirectionHorizontal) || (self.collectionView.bounds.size.height != newBounds.size.height && self.scrollDirection == PSCollectionViewScrollDirectionVertical)) {
         return YES;
     }
     return NO;

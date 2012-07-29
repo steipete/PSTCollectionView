@@ -76,6 +76,7 @@
 - (void)invalidate {
     _collectionViewDataFlags.itemCountsAreValid = NO;
     _collectionViewDataFlags.layoutIsPrepared = NO;
+    _validLayoutRect = CGRectZero;
 }
 
 - (CGRect)collectionViewContentRect {
