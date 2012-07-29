@@ -60,12 +60,18 @@
 
         // iterate over all items, turning them into rows.
         CGSize sectionSize = CGSizeZero;
-        CGFloat dimension = self.layoutInfo.dimension;
         NSUInteger rowIndex = 0;
         NSUInteger itemIndex = 0;
         NSUInteger itemsByRowCount = 0;
         CGFloat dimensionLeft = 0;
         PSGridLayoutRow *row = nil;
+        // get dimension and compensate for section margin
+        CGFloat dimension = self.layoutInfo.dimension;
+        if (self.layoutInfo.horizontal) {
+            dimension -= self.sectionMargins.top - self.sectionMargins.bottom;
+        }else {
+            dimension -= self.sectionMargins.left - self.sectionMargins.right;
+        }
         do {
             BOOL finishCycle = itemIndex >= self.itemsCount;
             // TODO: fast path could even remove row creation and just calculate on the fly
@@ -111,8 +117,8 @@
             itemIndex++;
             itemsByRowCount++;
         }while (itemIndex <= self.itemsCount); // cycle once more to finish last row
-        
-        _frame = (CGRect){.size=sectionSize};
+
+        _frame = CGRectMake(self.sectionMargins.left, self.sectionMargins.top, sectionSize.width + self.sectionMargins.right, sectionSize.height + self.sectionMargins.bottom);
         _isValid = YES;
     }
 }

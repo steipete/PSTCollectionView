@@ -105,9 +105,9 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
                         if (row.fixedItemSize) {
                             sectionItemIndex = row.index * section.itemsByRowCount + itemIndex;
                             if (_data.horizontal) {
-                                itemFrame = CGRectMake(0, section.itemSize.height * itemIndex + section.verticalInterstice * itemIndex, section.itemSize.width, section.itemSize.height);
+                                itemFrame = CGRectMake(0, section.frame.origin.y + section.itemSize.height * itemIndex + section.verticalInterstice * itemIndex, section.itemSize.width, section.itemSize.height);
                             }else {
-                                itemFrame = CGRectMake(section.itemSize.width * itemIndex + section.horizontalInterstice * itemIndex, 0, section.itemSize.width, section.itemSize.height);
+                                itemFrame = CGRectMake(section.frame.origin.x + section.itemSize.width * itemIndex + section.horizontalInterstice * itemIndex, 0, section.itemSize.width, section.itemSize.height);
                             }
                         }else {
                             PSGridLayoutItem *item = row.items[itemIndex];
@@ -209,15 +209,19 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
     CGSize contentSize = CGSizeZero;
     for (PSGridLayoutSection *section in _data.sections) {
         [section computeLayout];
+
+        // update section offset to make frame absolute (section only calculates relative)
+        CGRect sectionFrame = section.frame;
         if (_data.horizontal) {
-            section.frame = CGRectMake(contentSize.width, 0, section.frame.size.width, section.frame.size.height);
-            contentSize.width += section.frame.size.width;
-            contentSize.height = fmaxf(contentSize.height, section.frame.size.height);
+            sectionFrame.origin.x += contentSize.width;
+            contentSize.width += section.frame.size.width + section.frame.origin.x;
+            contentSize.height = fmaxf(contentSize.height, sectionFrame.size.height + section.frame.origin.y);
         }else {
-            section.frame = CGRectMake(0, contentSize.height, section.frame.size.width, section.frame.size.height);
-            contentSize.height += section.frame.size.height;
-            contentSize.width = fmaxf(contentSize.width, section.frame.size.width);
+            sectionFrame.origin.y += contentSize.height;
+            contentSize.height += sectionFrame.size.height + section.frame.origin.y;
+            contentSize.width = fmaxf(contentSize.width, sectionFrame.size.width + section.frame.origin.x);
         }
+        section.frame = sectionFrame;
     }
     _data.contentSize = contentSize;
 }
