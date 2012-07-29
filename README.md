@@ -32,4 +32,12 @@ Another goal (at least super useful for debugging) is interoperability between U
 
 (*) Note that for some methods we can't use the _ underscore variants or we risk to get a false-positive on private API use. I've added  some runtime hacks to dynamcially add block forwarders for those cases (mainly for UI/PS interoperability)
 
-License will be MIT.
+### Creator
+
+[Peter Steinberger](http://github.com/steipete), [@steipete](https://twitter.com/steipete)
+
+and hopefully lots of others! See [HowTo](HowTo.m) for helpful details.
+
+## License
+
+PSCollectionView is available under the MIT license. See the LICENSE file for more info.
