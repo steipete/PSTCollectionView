@@ -40,14 +40,7 @@
 - (id)initWithFrame:(CGRect)frame collectionViewLayout:(PSCollectionViewLayout *)layout {
     if ((self = [super initWithFrame:frame])) {
         // UICollectionViewCommonSetup
-
-        // Allow subclasses of UICollectionViewLayout
-        SEL privateSetter = NSSelectorFromString([NSString stringWithFormat:@"%@etCollectionView:", @"_s"]);
-        if ([layout respondsToSelector:privateSetter]) {
-            [layout performSelector:privateSetter withObject:self];
-        }else {
-            layout.collectionView = self;
-        }
+        layout.collectionView = self;
         _collectionViewLayout = layout;
         _indexPathsForSelectedItems = [NSMutableSet new];
         _cellReuseQueues = [NSMutableDictionary new];
