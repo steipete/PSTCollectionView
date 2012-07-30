@@ -1,13 +1,27 @@
 //
 //  PSCollectionView.h
-//  PSPDFKit-lib
+//  PSPDFKit
 //
 //  Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //
 
-#import "PSPDFKitGlobal.h"
+#define kPSCollectionViewRelayToUICollectionViewIfAvailable
 
-@class PSCollectionView, PSCollectionViewCell, PSCollectionViewLayout,  PSCollectionViewLayoutAttributes, PSCollectionReusableView;
+@class PSCollectionView, PSCollectionViewCell, PSCollectionViewLayout, PSCollectionViewFlowLayout,  PSCollectionViewLayoutAttributes, PSCollectionReusableView;
+
+// Allows code to just use UICollectionView as if it would be avaiable on iOS SDK 5.
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < 60000
+@compatibility_alias UICollectionView PSCollectionView;
+@compatibility_alias UICollectionViewCell PSCollectionViewCell;
+@compatibility_alias UICollectionViewLayout PSCollectionViewLayout;
+@compatibility_alias UICollectionViewFlowLayout PSCollectionViewFlowLayout;
+#endif
+
+// Newer runtimes defines this, here's a fallback for the iOS5 SDK.
+#ifndef NS_ENUM
+#define NS_ENUM(_type, _name) _type _name; enum
+#define NS_OPTIONS(_type, _name) _type _name; enum
+#endif
 
 @protocol PSCollectionViewDataSource <NSObject>
 @required
@@ -154,3 +168,21 @@ typedef NS_OPTIONS(NSUInteger, PSCollectionViewScrollPosition) {
 @property (nonatomic, readonly) NSInteger item;
 
 @end
+
+// compatibility
+#ifndef kCFCoreFoundationVersionNumber_iOS_6_0
+#define kCFCoreFoundationVersionNumber_iOS_6_0 788.0
+#endif
+
+// imp_implementationWithBlock changed it's type in iOS6.
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < 60000
+#define PSBlockImplCast (__bridge void *)
+@interface NSObject (PSSubscriptingSupport)
+- (id)objectAtIndexedSubscript:(NSUInteger)idx;
+- (void)setObject:(id)obj atIndexedSubscript:(NSUInteger)idx;
+- (void)setObject:(id)obj forKeyedSubscript:(id <NSCopying>)key;
+- (id)objectForKeyedSubscript:(id)key;
+@end
+#else
+#define PSBlockImplCast
+#endif

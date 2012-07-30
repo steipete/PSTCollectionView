@@ -5,6 +5,7 @@
 //  Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //
 
+#import "PSCollectionView.h"
 #import "PSCollectionViewLayout.h"
 
 NSString *const PSCollectionElementKindCell = @"UICollectionElementKindCell";
@@ -291,9 +292,9 @@ NSString *const PSCollectionElementKindDecorationView = @"PSCollectionElementKin
         if ([self respondsToSelector:cleanedSelector]) {
             // dynamically add method for faster resolving
             Method newMethod = class_getInstanceMethod([self class], [inv selector]);
-            IMP underscoreIMP = imp_implementationWithBlock(^(id _self) {
+            IMP underscoreIMP = imp_implementationWithBlock(PSBlockImplCast(^(id _self) {
                 return objc_msgSend(_self, cleanedSelector);
-            });
+            }));
             class_addMethod([self class], [inv selector], underscoreIMP, method_getTypeEncoding(newMethod));
             // invoke now
             inv.selector = cleanedSelector;

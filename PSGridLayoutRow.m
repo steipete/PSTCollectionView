@@ -5,6 +5,7 @@
 //  Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //
 
+#import "PSCollectionView.h"
 #import "PSGridLayoutRow.h"
 #import "PSGridLayoutSection.h"
 #import "PSGridLayoutItem.h"
@@ -108,22 +109,21 @@
 @end
 
 
-
+/*
 // _UIGridLayoutItem
-#import "PSPDFPatches.h"
 #import <objc/runtime.h>
 #import <objc/message.h>
 __attribute__((constructor)) static void PSHackUIGridLayoutItem(void) {
     @autoreleasepool {
-        SEL itemFrameSetter = @selector(ps_setItemFrame:);
-        IMP customImageViewDescIMP = imp_implementationWithBlock(^(id _self, CGRect itemFrame) {
-            objc_msgSend(_self, itemFrameSetter, itemFrame);
+        SEL itemFrameSetter = @selector(ps_dealloc);
+        IMP customImageViewDescIMP = imp_implementationWithBlock(PSBlockImplCast(^(__unsafe_unretained id _self)) {
+//            NSLog(@"deallocating %@", _self);
+            objc_msgSend(_self, itemFrameSetter);
         });
-        PSPDFReplaceMethod(NSClassFromString(@"_UIGridLayoutItem"), @selector(setItemFrame:), itemFrameSetter, customImageViewDescIMP);
+        PSPDFReplaceMethod(NSClassFromString(@"UICollectionViewLayoutAttributes"), NSSelectorFromString(@"dealloc"), itemFrameSetter, customImageViewDescIMP);
     }
 }
 
-/*
 __attribute__((constructor)) static void PSHackUIGridLayoutSection(void) {
     @autoreleasepool {
         SEL itemFrameSetter = @selector(ps_addRow);
@@ -132,8 +132,7 @@ __attribute__((constructor)) static void PSHackUIGridLayoutSection(void) {
         });
         PSPDFReplaceMethod(NSClassFromString(@"_UIGridLayoutSection"), @selector(addRow), itemFrameSetter, customImageViewDescIMP);
     }
-}*/
-
+}
 
 __attribute__((constructor)) static void PSHackUICollectionViewLayoutAttributes(void) {
     @autoreleasepool {
@@ -144,3 +143,4 @@ __attribute__((constructor)) static void PSHackUICollectionViewLayoutAttributes(
         PSPDFReplaceMethod(NSClassFromString(@"UICollectionViewData"), @selector(initWithCollectionView:layout:), itemFrameSetter, customImageViewDescIMP);
     }
 }
+ */

@@ -22,7 +22,7 @@
 // @steipete addition for row-fastPath
 @property (nonatomic, assign) NSInteger itemCount;
 
-- (PSGridLayoutRow *)copyFromSection:(PSGridLayoutSection *)section; // ???
+//- (PSGridLayoutRow *)copyFromSection:(PSGridLayoutSection *)section; // ???
 
 // Add new item to items array.
 - (void)addItem:(PSGridLayoutItem *)item;

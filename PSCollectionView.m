@@ -9,6 +9,7 @@
 #import "PSCollectionViewData.h"
 #import "PSCollectionViewCell.h"
 #import "PSCollectionViewLayout.h"
+#import "PSCollectionViewFlowLayout.h"
 #import "PSCollectionViewItemKey.h"
 #import <QuartzCore/QuartzCore.h>
 
@@ -29,20 +30,20 @@
 
     struct {
         /*
-        unsigned int reloadSkippedDuringSuspension : 1;
-        unsigned int scheduledUpdateVisibleCells : 1;
-        unsigned int scheduledUpdateVisibleCellLayoutAttributes : 1;
-        unsigned int allowsSelection : 1;
-        unsigned int allowsMultipleSelection : 1;
-        unsigned int updating : 1;
+         unsigned int reloadSkippedDuringSuspension : 1;
+         unsigned int scheduledUpdateVisibleCells : 1;
+         unsigned int scheduledUpdateVisibleCellLayoutAttributes : 1;
+         unsigned int allowsSelection : 1;
+         unsigned int allowsMultipleSelection : 1;
+         unsigned int updating : 1;
          */
         unsigned int fadeCellsForBoundsChange : 1;
         /*
-        unsigned int updatingLayout : 1;
-        unsigned int needsReload : 1;
-        unsigned int reloading : 1;
-        unsigned int skipLayoutDuringSnapshotting : 1;
-        unsigned int layoutInvalidatedSinceLastCellUpdate : 1;
+         unsigned int updatingLayout : 1;
+         unsigned int needsReload : 1;
+         unsigned int reloading : 1;
+         unsigned int skipLayoutDuringSnapshotting : 1;
+         unsigned int layoutInvalidatedSinceLastCellUpdate : 1;
          */
     } _collectionViewFlags;
 }
@@ -51,12 +52,17 @@
 
 @implementation PSCollectionView
 
-//static void *kPSKVOToken;
-
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject
 
 - (id)initWithFrame:(CGRect)frame collectionViewLayout:(PSCollectionViewLayout *)layout {
+#ifdef kPSCollectionViewRelayToUICollectionViewIfAvailable
+    if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_6_0) {
+        self = (PSCollectionView *)[[UICollectionView alloc] initWithFrame:frame collectionViewLayout:(UICollectionViewLayout *)layout];
+        return self;
+    }
+#endif
+
     if ((self = [super initWithFrame:frame])) {
         // UICollectionViewCommonSetup
         layout.collectionView = self;
@@ -70,18 +76,6 @@
     }
     return self;
 }
-
-- (void)dealloc {
-}
-
-/*
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if (context == kPSKVOToken) {
-        NSLog(@"scroll: %@", NSStringFromCGPoint(self.contentOffset));
-    }else {
-        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-    }
-}*/
 
 - (NSString *)description {
     return [NSString stringWithFormat:@"%@ collection view layout: %@", [super description], self.collectionViewLayout];
@@ -272,7 +266,7 @@
     if ([self.delegate respondsToSelector:@selector(collectionView:shouldSelectItemAtIndexPath:)]) {
         shouldSelect = [self.delegate collectionView:self shouldSelectItemAtIndexPath:indexPath];
     }
-    
+
     if (shouldSelect) {
         [self selectItemAtIndexPath:indexPath animated:animated scrollPosition:scrollPosition];
 
@@ -412,7 +406,7 @@
 
 // fetches a cell from the dataSource and sets the layoutAttributes
 - (PSCollectionViewCell *)_createPreparedCellForItemAtIndexPath:(NSIndexPath *)indexPath withLayoutAttributes:(PSCollectionViewLayoutAttributes *)layoutAttributes {
-    
+
     PSCollectionViewCell *cell = [self.dataSource collectionView:self cellForItemAtIndexPath:indexPath];
     [cell applyLayoutAttributes:layoutAttributes];
     return cell;
@@ -473,9 +467,9 @@
         if ([self respondsToSelector:cleanedSelector]) {
             // dynamically add method for faster resolving
             Method newMethod = class_getInstanceMethod([self class], [inv selector]);
-            IMP underscoreIMP = imp_implementationWithBlock(^(id _self) {
+            IMP underscoreIMP = imp_implementationWithBlock(PSBlockImplCast(^(id _self) {
                 return objc_msgSend(_self, cleanedSelector);
-            });
+            }));
             class_addMethod([self class], [inv selector], underscoreIMP, method_getTypeEncoding(newMethod));
             // invoke now
             inv.selector = cleanedSelector;
@@ -499,3 +493,18 @@
 }
 
 @end
+
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - Runtime Additions to create UICollectionView
+
+// Create subclasses that pose as UICollectionView et al, if not available at runtime.
+__attribute__((constructor)) static void PSCreateUICollectionViewClasses(void) {
+    @autoreleasepool {
+        if (kCFCoreFoundationVersionNumber < 788.0) { // everyting below iOS6.
+            objc_registerClassPair(objc_allocateClassPair([PSCollectionView class], "UICollectionView", 0));
+            objc_registerClassPair(objc_allocateClassPair([PSCollectionViewCell class], "UICollectionViewCell", 0));
+            objc_registerClassPair(objc_allocateClassPair([PSCollectionViewLayout class], "UICollectionViewLayout", 0));
+            objc_registerClassPair(objc_allocateClassPair([PSCollectionViewFlowLayout class], "UICollectionViewFlowLayout", 0));
+        }
+    }
+}

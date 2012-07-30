@@ -14,11 +14,6 @@
 NSString *const PSCollectionElementKindSectionHeader;
 NSString *const PSCollectionElementKindSectionFooter;
 
-// @steipete addition, private API in UICollectionView
-NSString *const PSFlowLayoutCommonRowHorizontalAlignmentKey;
-NSString *const PSFlowLayoutLastRowHorizontalAlignmentKey;
-NSString *const PSFlowLayoutRowVerticalAlignmentKey;
-
 typedef NS_ENUM(NSInteger, PSCollectionViewScrollDirection) {
     PSCollectionViewScrollDirectionVertical,
     PSCollectionViewScrollDirectionHorizontal
@@ -61,6 +56,20 @@ typedef NS_ENUM(NSInteger, PSCollectionViewScrollDirection) {
 @property(nonatomic, strong) NSDictionary *rowAlignmentOptions;
 
 @end
+
+// @steipete addition, private API in UICollectionViewFlowLayout
+NSString *const PSFlowLayoutCommonRowHorizontalAlignmentKey;
+NSString *const PSFlowLayoutLastRowHorizontalAlignmentKey;
+NSString *const PSFlowLayoutRowVerticalAlignmentKey;
+
+typedef NS_ENUM(NSInteger, PSFlowLayoutHorizontalAlignment) {
+    PSFlowLayoutHorizontalAlignmentLeft,
+    PSFlowLayoutHorizontalAlignmentCentered,
+    PSFlowLayoutHorizontalAlignmentRight,
+    PSFlowLayoutHorizontalAlignmentJustify
+};
+// TODO: settings for UIFlowLayoutRowVerticalAlignmentKey
+
 
 
 
