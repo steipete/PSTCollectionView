@@ -27,7 +27,7 @@ NSString *PSCollectionViewItemTypeToString(PSCollectionViewItemType type); // de
 + (id)collectionItemKeyForCellWithIndexPath:(NSIndexPath *)indexPath;
 
 @property(nonatomic, assign) PSCollectionViewItemType type;
-@property(retain) NSIndexPath *indexPath;
-@property(retain) NSString *identifier;
+@property(nonatomic, strong) NSIndexPath *indexPath;
+@property(nonatomic, strong) NSString *identifier;
 
 @end
