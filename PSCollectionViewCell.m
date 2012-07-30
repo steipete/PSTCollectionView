@@ -5,6 +5,7 @@
 //  Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //
 
+#import "PSCollectionView.h"
 #import "PSCollectionViewCell.h"
 #import "PSCollectionViewLayout.h"
 
@@ -20,11 +21,17 @@
 
 @implementation PSCollectionReusableView
 
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - NSObject
+
 - (id)initWithFrame:(CGRect)frame {
     if ((self = [super initWithFrame:frame])) {
     }
     return self;
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - Public
 
 - (void)prepareForReuse {
     self.layoutAttributes = nil;
@@ -47,10 +54,21 @@
     _reusableViewFlags.inUpdateAnimation = NO;
 }
 
+- (BOOL)isInUpdateAnimation {
+    return _reusableViewFlags.inUpdateAnimation;
+}
+
+- (void)setInUpdateAnimation:(BOOL)inUpdateAnimation {
+    _reusableViewFlags.inUpdateAnimation = inUpdateAnimation;
+}
+
 @end
 
 
 @implementation PSCollectionViewCell
+
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - NSObject
 
 - (id)initWithFrame:(CGRect)frame {
     if ((self = [super initWithFrame:frame])) {
@@ -72,6 +90,9 @@
     return self;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - Public
+
 - (void)setSelected:(BOOL)selected {
     if (_collectionCellFlags.selected != selected) {
         _collectionCellFlags.selected = selected;
@@ -87,6 +108,35 @@
 
 - (void)menuGesture:(UILongPressGestureRecognizer *)recognizer {
     NSLog(@"Not yet implemented: %@", NSStringFromSelector(_cmd));
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - PSCollection/UICollection interoperability
+
+#import <objc/runtime.h>
+#import <objc/message.h>
+- (NSMethodSignature *)methodSignatureForSelector:(SEL)selector {
+    NSMethodSignature *sig = [super methodSignatureForSelector:selector];
+    if(!sig) {
+        NSString *selString = NSStringFromSelector(selector);
+        if ([selString hasPrefix:@"_"]) {
+            SEL cleanedSelector = NSSelectorFromString([selString substringFromIndex:1]);
+            sig = [super methodSignatureForSelector:cleanedSelector];
+        }
+    }
+    return sig;
+}
+- (void)forwardInvocation:(NSInvocation *)inv {
+    NSString *selString = NSStringFromSelector([inv selector]);
+    if ([selString hasPrefix:@"_"]) {
+        SEL cleanedSelector = NSSelectorFromString([selString substringFromIndex:1]);
+        if ([self respondsToSelector:cleanedSelector]) {
+            inv.selector = cleanedSelector;
+            [inv invokeWithTarget:self];
+        }
+    }else {
+        [super forwardInvocation:inv];
+    }
 }
 
 @end
