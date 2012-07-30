@@ -5,11 +5,13 @@
 //  Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //
 
+// Define this to automatically return UICollection* variants on init if they are available.
 #define kPSCollectionViewRelayToUICollectionViewIfAvailable
 
 @class PSCollectionView, PSCollectionViewCell, PSCollectionViewLayout, PSCollectionViewFlowLayout,  PSCollectionViewLayoutAttributes, PSCollectionReusableView;
 
 // Allows code to just use UICollectionView as if it would be avaiable on iOS SDK 5.
+// http://developer.apple.com/legacy/mac/library/#documentation/DeveloperTools/gcc-3.3/gcc/compatibility_005falias.html
 #if __IPHONE_OS_VERSION_MAX_ALLOWED < 60000
 @compatibility_alias UICollectionView PSCollectionView;
 @compatibility_alias UICollectionViewCell PSCollectionViewCell;
