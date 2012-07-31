@@ -110,6 +110,25 @@ NSString *const PSCollectionElementKindDecorationView = @"PSCollectionElementKin
     return self.representedElementCategory == PSCollectionViewItemTypeCell;
 }
 
+- (void)setSize:(CGSize)size
+{
+    _size = size;
+    _frame = (CGRect){_frame.origin, _size};
+}
+
+- (void)setCenter:(CGPoint)center
+{
+    _center = center;
+    _frame = (CGRect){_center.x - _frame.size.width / 2, _center.y - _frame.size.height / 2, _frame.size};
+}
+
+- (void)setFrame:(CGRect)frame
+{
+    _frame = frame;
+    _size = _frame.size;
+    _center = (CGPoint){CGRectGetMidX(_frame), CGRectGetMidY(_frame)};
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSCopying
 
