@@ -538,7 +538,7 @@
 
 @end
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 60000
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
 @implementation NSIndexPath (PSCollectionViewAdditions)
 
 // Simple NSIndexPath addition to allow using "item" instead of "row".
