@@ -43,6 +43,7 @@
         self.frame = layoutAttributes.frame;
         self.hidden = layoutAttributes.isHidden;
         self.layer.transform = layoutAttributes.transform3D;
+        self.layer.zPosition = layoutAttributes.zIndex;
         // TODO more attributes
     }
 }
