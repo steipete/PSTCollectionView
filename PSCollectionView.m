@@ -24,6 +24,7 @@
     NSMutableDictionary *_supplementaryViewReuseQueues;
 
     NSMutableDictionary *_cellClassDict;
+    NSMutableDictionary *_supplementaryViewClassDict;
 
     NSUInteger _reloadingSuspendedCount;
     NSMutableSet *_indexPathsForSelectedItems;
@@ -72,6 +73,7 @@
         _supplementaryViewReuseQueues = [NSMutableDictionary new];
         _allVisibleViewsDict = [NSMutableDictionary new];
         _cellClassDict = [NSMutableDictionary new];
+        _supplementaryViewClassDict = [NSMutableDictionary new];
         _collectionViewData = [[PSCollectionViewData alloc] initWithCollectionView:self layout:layout];
     }
     return self;
@@ -131,6 +133,13 @@
     _cellClassDict[identifier] = cellClass;
 }
 
+- (void)registerClass:(Class)viewClass forSupplementaryViewOfKind:(NSString *)elementKind withReuseIdentifier:(NSString *)identifier {
+    NSParameterAssert(viewClass);
+    NSParameterAssert(elementKind);
+    NSParameterAssert(identifier);
+    _supplementaryViewClassDict[identifier] = viewClass;
+}
+
 - (id)dequeueReusableCellWithReuseIdentifier:(NSString *)identifier forIndexPath:(NSIndexPath *)indexPath {
     // dequeue cell (if available)
     NSMutableArray *reusableCells = _cellReuseQueues[identifier];
@@ -159,9 +168,29 @@
 }
 
 - (id)dequeueReusableSupplementaryViewOfKind:(NSString *)elementKind withReuseIdentifier:(NSString *)identifier forIndexPath:(NSIndexPath *)indexPath {
-    // TODO
-    // _supplementaryViewReuseQueues
-    return nil;
+    NSMutableArray *reusableViews = _supplementaryViewReuseQueues[identifier];
+    PSCollectionReusableView *view = [reusableViews lastObject];
+    if (view) {
+        [reusableViews removeObjectAtIndex:reusableViews.count - 1];
+    } else {
+        Class viewClass = _supplementaryViewClassDict[identifier];
+        if ([viewClass isEqual:[UICollectionReusableView class]]) {
+            viewClass = [PSCollectionReusableView class];
+        }
+        if (viewClass == nil) {
+            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"Class not registered for identifier %@", identifier] userInfo:nil];
+        }
+        if (self.collectionViewLayout) {
+            PSCollectionViewLayoutAttributes *attributes = [self.collectionViewLayout layoutAttributesForSupplementaryViewOfKind:elementKind
+                                                                                                                     atIndexPath:indexPath];
+            view = [[viewClass alloc] initWithFrame:attributes.frame];
+        } else {
+            view = [viewClass new];
+        }
+        view.collectionView = self;
+        view.reuseIdentifier = identifier;
+    }
+    return view;
 }
 
 - (NSArray *)visibleCells {
@@ -379,14 +408,22 @@
     for (PSCollectionViewLayoutAttributes *layoutAttributes in layoutAttributesArray) {
         PSCollectionViewItemKey *itemKey = [PSCollectionViewItemKey collectionItemKeyForLayoutAttributes:layoutAttributes];
         // check if cell is in visible dict; add it if not.
-        PSCollectionViewCell *cell = _allVisibleViewsDict[itemKey];
-        if (!cell) {
-            PSCollectionViewCell *cell = [self _createPreparedCellForItemAtIndexPath:layoutAttributes.indexPath withLayoutAttributes:layoutAttributes];
-            _allVisibleViewsDict[itemKey] = cell;
-            [self addControlledSubview:cell];
+        PSCollectionReusableView *view = _allVisibleViewsDict[itemKey];
+        if (!view) {
+            if (itemKey.type == PSCollectionViewItemTypeCell) {
+                view = [self _createPreparedCellForItemAtIndexPath:layoutAttributes.indexPath withLayoutAttributes:layoutAttributes];
+                
+            } else if (itemKey.type == PSCollectionViewItemTypeSupplementaryView) {
+                view = [self _createPreparedSupplementaryViewForElementOfKind:layoutAttributes.representedElementKind
+                                                                  atIndexPath:layoutAttributes.indexPath
+                                                         withLayoutAttributes:layoutAttributes];
+                
+            }
+            _allVisibleViewsDict[itemKey] = view;
+            [self addControlledSubview:view];
         }else {
             // just update cell
-            [cell applyLayoutAttributes:layoutAttributes];
+            [view applyLayoutAttributes:layoutAttributes];
         }
 
         // remove from current dict
@@ -415,6 +452,17 @@
     PSCollectionViewCell *cell = [self.dataSource collectionView:self cellForItemAtIndexPath:indexPath];
     [cell applyLayoutAttributes:layoutAttributes];
     return cell;
+}
+
+- (PSCollectionReusableView *)_createPreparedSupplementaryViewForElementOfKind:(NSString *)kind
+                                                                   atIndexPath:(NSIndexPath *)indexPath
+                                                          withLayoutAttributes:(PSCollectionViewLayoutAttributes *)layoutAttributes
+{
+    PSCollectionReusableView *view = [self.dataSource collectionView:self
+                                   viewForSupplementaryElementOfKind:kind
+                                                         atIndexPath:indexPath];
+    [view applyLayoutAttributes:layoutAttributes];
+    return view;
 }
 
 

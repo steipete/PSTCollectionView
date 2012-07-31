@@ -23,7 +23,7 @@
 + (id)collectionItemKeyForLayoutAttributes:(PSCollectionViewLayoutAttributes *)layoutAttributes {
     PSCollectionViewItemKey *key = [[self class] new];
     key.indexPath = layoutAttributes.indexPath;
-    key.type = PSCollectionViewItemTypeCell; // TODO figure out real type
+    key.type = layoutAttributes.representedElementCategory;
 //    key.identifier =
     return key;
 }
