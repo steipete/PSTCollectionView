@@ -195,8 +195,8 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
     NSUInteger numberOfSections = [self.collectionView numberOfSections];
     for (NSUInteger section = 0; section < numberOfSections; section++) {
         PSGridLayoutSection *layoutSection = [_data addSection];
-        layoutSection.verticalInterstice = _data.horizontal ? self.minimumInteritemSpacing : 0.f;
-        layoutSection.horizontalInterstice = !_data.horizontal ? self.minimumInteritemSpacing : 0.f;
+        layoutSection.verticalInterstice = _data.horizontal ? self.minimumInteritemSpacing : self.minimumLineSpacing;
+        layoutSection.horizontalInterstice = !_data.horizontal ? self.minimumInteritemSpacing : self.minimumLineSpacing;
         layoutSection.sectionMargins = self.sectionInset;
         NSUInteger numberOfItems = [self.collectionView numberOfItemsInSection:section];
 

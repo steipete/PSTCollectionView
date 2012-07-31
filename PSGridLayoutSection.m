@@ -92,10 +92,10 @@
                     if (self.layoutInfo.horizontal) {
                         row.rowFrame = CGRectMake(sectionSize.width, 0, row.rowSize.width, row.rowSize.height);
                         sectionSize.height = fmaxf(row.rowSize.height, sectionSize.height);
-                        sectionSize.width += row.rowSize.width;
+                        sectionSize.width += row.rowSize.width + self.horizontalInterstice;
                     }else {
                         row.rowFrame = CGRectMake(0, sectionSize.height, row.rowSize.width, row.rowSize.height);
-                        sectionSize.height += row.rowSize.height;
+                        sectionSize.height += row.rowSize.height + self.verticalInterstice;
                         sectionSize.width = fmaxf(row.rowSize.width, sectionSize.width);
                     }
                 }
