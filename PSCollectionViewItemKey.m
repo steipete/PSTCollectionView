@@ -24,17 +24,24 @@
     PSCollectionViewItemKey *key = [[self class] new];
     key.indexPath = layoutAttributes.indexPath;
     key.type = layoutAttributes.representedElementCategory;
-//    key.identifier =
     return key;
 }
 
 // elementKind or reuseIdentifier?
 + (id)collectionItemKeyForDecorationViewOfKind:(NSString *)elementKind andIndexPath:(NSIndexPath *)indexPath {
-    return nil;
+    PSCollectionViewItemKey *key = [[self class] new];
+    key.indexPath = indexPath;
+    key.identifier = elementKind;
+    key.type = PSCollectionViewItemTypeDecorationView;
+    return key;
 }
 
 + (id)collectionItemKeyForSupplementaryViewOfKind:(NSString *)elementKind andIndexPath:(NSIndexPath *)indexPath {
-    return nil;
+    PSCollectionViewItemKey *key = [[self class] new];
+    key.indexPath = indexPath;
+    key.identifier = elementKind;
+    key.type = PSCollectionViewItemTypeSupplementaryView;
+    return key;
 }
 
 NSString *PSCollectionViewItemTypeToString(PSCollectionViewItemType type) {
