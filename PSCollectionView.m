@@ -317,6 +317,7 @@
 - (NSArray *)indexPathsForSelectedItems {
     return nil;
 }
+
 - (void)selectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(PSCollectionViewScrollPosition)scrollPosition {
     if (!self.allowsMultipleSelection) {
         [_indexPathsForSelectedItems removeAllObjects];
@@ -331,7 +332,6 @@
         [_indexPathsForSelectedItems removeObject:indexPath];
     }
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Update Grid

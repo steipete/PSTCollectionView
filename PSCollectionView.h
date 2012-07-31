@@ -9,6 +9,7 @@
 #define kPSCollectionViewRelayToUICollectionViewIfAvailable
 
 @class PSCollectionView, PSCollectionViewCell, PSCollectionViewLayout, PSCollectionViewFlowLayout,  PSCollectionViewLayoutAttributes, PSCollectionReusableView;
+@protocol PSCollectionViewDataSource, PSCollectionViewDelegate;
 
 // Allows code to just use UICollectionView as if it would be avaiable on iOS SDK 5.
 // http://developer.apple.com/legacy/mac/library/#documentation/DeveloperTools/gcc-3.3/gcc/compatibility_005falias.html
@@ -17,6 +18,8 @@
 @compatibility_alias UICollectionViewCell PSCollectionViewCell;
 @compatibility_alias UICollectionViewLayout PSCollectionViewLayout;
 @compatibility_alias UICollectionViewFlowLayout PSCollectionViewFlowLayout;
+@protocol UICollectionViewDataSource <PSCollectionViewDataSource> @end
+@protocol UICollectionViewDelegate <PSCollectionViewDelegate> @end
 #endif
 
 // Newer runtimes defines this, here's a fallback for the iOS5 SDK.
