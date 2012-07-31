@@ -165,13 +165,13 @@ typedef NS_OPTIONS(NSUInteger, PSCollectionViewScrollPosition) {
 
 @end
 
+// Category exists in iOS6.
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 60000
 @interface NSIndexPath (PSCollectionViewAdditions)
-
 + (NSIndexPath *)indexPathForItem:(NSInteger)item inSection:(NSInteger)section;
-
 @property (nonatomic, readonly) NSInteger item;
-
 @end
+#endif
 
 // compatibility
 #ifndef kCFCoreFoundationVersionNumber_iOS_6_0

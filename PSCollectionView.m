@@ -315,7 +315,7 @@
 
 // returns nil or an array of selected index paths
 - (NSArray *)indexPathsForSelectedItems {
-    return nil;
+    return [_indexPathsForSelectedItems allObjects];
 }
 
 - (void)selectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(PSCollectionViewScrollPosition)scrollPosition {
@@ -538,8 +538,10 @@
 
 @end
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 60000
 @implementation NSIndexPath (PSCollectionViewAdditions)
 
+// Simple NSIndexPath addition to allow using "item" instead of "row".
 + (NSIndexPath *)indexPathForItem:(NSInteger)item inSection:(NSInteger)section {
     return [NSIndexPath indexPathForRow:item inSection:section];
 }
@@ -547,8 +549,8 @@
 - (NSInteger)item {
     return self.row;
 }
-
 @end
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Runtime Additions to create UICollectionView
@@ -556,7 +558,7 @@
 // Create subclasses that pose as UICollectionView et al, if not available at runtime.
 __attribute__((constructor)) static void PSCreateUICollectionViewClasses(void) {
     @autoreleasepool {
-        if (kCFCoreFoundationVersionNumber < 788.0) { // everyting below iOS6.
+        if (kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_6_0) {
             objc_registerClassPair(objc_allocateClassPair([PSCollectionView class], "UICollectionView", 0));
             objc_registerClassPair(objc_allocateClassPair([PSCollectionViewCell class], "UICollectionViewCell", 0));
             objc_registerClassPair(objc_allocateClassPair([PSCollectionViewLayout class], "UICollectionViewLayout", 0));
