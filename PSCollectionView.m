@@ -430,6 +430,7 @@
         }
 
         // remove from current dict
+        // TODO: this is slow!
         [allVisibleItemKeys removeObject:itemKey];
     }
 
@@ -440,8 +441,14 @@
             [reusableView removeFromSuperview];
             [_allVisibleViewsDict removeObjectForKey:itemKey];
             if (itemKey.type == PSCollectionViewItemTypeCell) {
+                if ([self.delegate respondsToSelector:@selector(collectionView:didEndDisplayingCell:forItemAtIndexPath:)]) {
+                    [self.delegate collectionView:self didEndDisplayingCell:(PSCollectionViewCell *)reusableView forItemAtIndexPath:itemKey.indexPath];
+                }
                 [self reuseCell:(PSCollectionViewCell *)reusableView];
             }else if(itemKey.type == PSCollectionViewItemTypeSupplementaryView) {
+                if ([self.delegate respondsToSelector:@selector(collectionView:didEndDisplayingSupplementaryView:forElementOfKind:atIndexPath:)]) {
+                    [self.delegate collectionView:self didEndDisplayingSupplementaryView:reusableView forElementOfKind:itemKey.identifier atIndexPath:itemKey.indexPath];
+                }
                 [self reuseSupplementaryView:reusableView];
             }
             // TODO: decoration views etc?
