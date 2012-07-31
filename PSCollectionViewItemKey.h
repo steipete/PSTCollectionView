@@ -6,7 +6,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "PSPDFKitGlobal.h"
 
 @class PSCollectionViewLayoutAttributes;
 

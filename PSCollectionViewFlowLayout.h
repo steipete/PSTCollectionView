@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "PSCollectionViewLayout.h"
 #import "PSCollectionView.h"
-#import "PSPDFKitGlobal.h"
 
 NSString *const PSCollectionElementKindSectionHeader;
 NSString *const PSCollectionElementKindSectionFooter;
