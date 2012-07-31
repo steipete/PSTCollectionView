@@ -111,7 +111,7 @@
         self.contentSize = contentSize;
     }
 
-    _backgroundView.frame = (CGRect){.size=self.contentSize};
+    _backgroundView.frame = (CGRect){.size=self.bounds.size};
 }
 
 - (void)setFrame:(CGRect)frame {
@@ -387,7 +387,8 @@
     if (backgroundView != _backgroundView) {
         [_backgroundView removeFromSuperview];
         _backgroundView = backgroundView;
-        [self addSubview:backgroundView];
+        [self.superview addSubview:_backgroundView];
+        [self.superview sendSubviewToBack:_backgroundView];
     }
 }
 
