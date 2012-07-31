@@ -15,11 +15,12 @@
 // http://developer.apple.com/legacy/mac/library/#documentation/DeveloperTools/gcc-3.3/gcc/compatibility_005falias.html
 #if __IPHONE_OS_VERSION_MAX_ALLOWED < 60000
 @compatibility_alias UICollectionView PSCollectionView;
+@compatibility_alias UICollectionReusableView PSCollectionReusableView;
 @compatibility_alias UICollectionViewCell PSCollectionViewCell;
 @compatibility_alias UICollectionViewLayout PSCollectionViewLayout;
 @compatibility_alias UICollectionViewFlowLayout PSCollectionViewFlowLayout;
-@compatibility_alias UICollectionViewDataSource PSCollectionViewDataSource;
-@compatibility_alias UICollectionViewDelegate PSCollectionViewDelegate;
+@protocol UICollectionViewDataSource <PSCollectionViewDataSource> @end
+@protocol UICollectionViewDelegate <PSCollectionViewDelegate> @end
 #endif
 
 // Newer runtimes defines this, here's a fallback for the iOS5 SDK.
