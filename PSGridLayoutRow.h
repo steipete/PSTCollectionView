@@ -30,6 +30,10 @@
 // Layout current row (if invalid)
 - (void)layoutRow;
 
+// @steipete: Helper to save code in PSCollectionViewFlowLayout.
+// Returns the item rects when fixedItemSize is enabled.
+- (NSArray *)itemRects;
+
 //  Set current row frame invalid.
 - (void)invalidate;
 

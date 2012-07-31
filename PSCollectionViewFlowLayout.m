@@ -78,9 +78,9 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
         // TODO: those values are some enum. find out what what is.
         // 3 = justified; 0 = left;  center, right?
         _rowAlignmentsOptionsDictionary = @{
-            PSFlowLayoutCommonRowHorizontalAlignmentKey : @(3),
-            PSFlowLayoutLastRowHorizontalAlignmentKey : @(0),
-            PSFlowLayoutRowVerticalAlignmentKey : @(1),
+        PSFlowLayoutCommonRowHorizontalAlignmentKey : @(PSFlowLayoutHorizontalAlignmentJustify),
+        PSFlowLayoutLastRowHorizontalAlignmentKey : @(PSFlowLayoutHorizontalAlignmentLeft),
+        PSFlowLayoutRowVerticalAlignmentKey : @(1),
         };
     }
     return self;
@@ -95,27 +95,30 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
     NSMutableArray *layoutAttributesArray = [NSMutableArray array];
     for (PSGridLayoutSection *section in _data.sections) {
         if (CGRectIntersectsRect(section.frame, rect)) {
+
+            // if we have fixed size, calculate item frames only once.
+            // this also uses the default PSFlowLayoutCommonRowHorizontalAlignmentKey alignment
+            // for the last row. (we want this effect!)
+            NSArray *itemRects = nil;
+            if (section.fixedItemSize && [section.rows count]) {
+                itemRects = [[section.rows objectAtIndex:0] itemRects];
+            }
+
             for (PSGridLayoutRow *row in section.rows) {
                 CGRect normalizedRowFrame = row.rowFrame;
-                if (_data.horizontal) {
-                    normalizedRowFrame.origin.x += section.frame.origin.x;
-                }else {
-                    normalizedRowFrame.origin.y += section.frame.origin.y;
-                }
+                normalizedRowFrame.origin.x += section.frame.origin.x;
+                normalizedRowFrame.origin.y += section.frame.origin.y;
                 if (CGRectIntersectsRect(normalizedRowFrame, rect)) {
                     // TODO be more fine-graind for items
+
                     for (NSUInteger itemIndex = 0; itemIndex < row.itemCount; itemIndex++) {
                         PSCollectionViewLayoutAttributes *layoutAttributes;
                         NSUInteger sectionIndex = [section.layoutInfo.sections indexOfObject:section];
                         NSUInteger sectionItemIndex;
                         CGRect itemFrame;
                         if (row.fixedItemSize) {
+                            itemFrame = [itemRects[itemIndex] CGRectValue];
                             sectionItemIndex = row.index * section.itemsByRowCount + itemIndex;
-                            if (_data.horizontal) {
-                                itemFrame = CGRectMake(0, section.frame.origin.y + section.itemSize.height * itemIndex + section.verticalInterstice * itemIndex, section.itemSize.width, section.itemSize.height);
-                            }else {
-                                itemFrame = CGRectMake(section.frame.origin.x + section.itemSize.width * itemIndex + section.horizontalInterstice * itemIndex, 0, section.itemSize.width, section.itemSize.height);
-                            }
                         }else {
                             PSGridLayoutItem *item = row.items[itemIndex];
                             sectionItemIndex = [section.items indexOfObject:item];
@@ -173,6 +176,7 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
     _data.horizontal = self.scrollDirection == PSCollectionViewScrollDirectionHorizontal;
     CGSize collectionViewSize = self.collectionView.bounds.size;
     _data.dimension = _data.horizontal ? collectionViewSize.height : collectionViewSize.width;
+    _data.rowAlignmentOptions = _rowAlignmentsOptionsDictionary;
     [self fetchItemsInfo];
 }
 

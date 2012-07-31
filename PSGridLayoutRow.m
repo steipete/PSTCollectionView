@@ -10,6 +10,7 @@
 #import "PSGridLayoutSection.h"
 #import "PSGridLayoutItem.h"
 #import "PSGridLayoutInfo.h"
+#import "PSCollectionViewFlowLayout.h"
 
 @interface PSGridLayoutRow() {
     NSMutableArray *_items;
@@ -45,34 +46,80 @@
     _rowFrame = CGRectZero;
 }
 
+- (NSArray *)itemRects {
+    return [self layoutRowAndGenerateRectArray:YES];
+}
+
 - (void)layoutRow {
-    if (!_isValid) {
+    [self layoutRowAndGenerateRectArray:NO];
+}
+
+- (NSArray *)layoutRowAndGenerateRectArray:(BOOL)generateRectArray {
+    NSMutableArray *rects = generateRectArray ? [NSMutableArray array] : nil;
+    if (!_isValid || generateRectArray) {
+        // properties for aligning
+        BOOL isHorizontal = self.section.layoutInfo.horizontal;
+        BOOL isLastRow = self.section.indexOfImcompleteRow == self.index;
+        PSFlowLayoutHorizontalAlignment horizontalAlignment = [self.section.rowAlignmentOptions[isLastRow ? PSFlowLayoutLastRowHorizontalAlignmentKey : PSFlowLayoutCommonRowHorizontalAlignmentKey] integerValue];
+
+        // calculate space that's left over if we would align it from left to right.
+        CGFloat leftOverSpace = self.section.layoutInfo.dimension;
+        if (isHorizontal) {
+            leftOverSpace -= self.section.sectionMargins.top + self.section.sectionMargins.bottom;
+        }else {
+            leftOverSpace -= self.section.sectionMargins.left + self.section.sectionMargins.right;
+        }
+
+        for (NSUInteger itemIndex = 0; itemIndex < self.itemCount; itemIndex++) {
+            if (!self.fixedItemSize) {
+                PSGridLayoutItem *item = self.items[itemIndex];
+                leftOverSpace -= isHorizontal ? item.itemFrame.size.height : item.itemFrame.size.width;
+            }else {
+                leftOverSpace -= isHorizontal ? self.section.itemSize.height : self.section.itemSize.width;
+            }
+            // separator starts after first item
+            if (itemIndex > 0) {
+                leftOverSpace -= isHorizontal ? self.section.verticalInterstice : self.section.horizontalInterstice;
+            }
+        }
+        CGPoint itemOffset = CGPointZero;
+        if (horizontalAlignment == PSFlowLayoutHorizontalAlignmentRight) {
+            itemOffset.x += leftOverSpace;
+        }else if(horizontalAlignment == PSFlowLayoutHorizontalAlignmentCentered) {
+            itemOffset.x += leftOverSpace/2;
+        }
 
         // calculate row frame as union of all items
         CGRect frame = CGRectZero;
         CGRect itemFrame = (CGRect){.size=self.section.itemSize};
-        CGPoint itemOffset = CGPointZero;
         for (NSUInteger itemIndex = 0; itemIndex < self.itemCount; itemIndex++) {
             PSGridLayoutItem *item = nil;
             if (!self.fixedItemSize) {
                 item = self.items[itemIndex];
                 itemFrame = [item itemFrame];
             }
-            if (self.section.layoutInfo.horizontal) {
+            if (isHorizontal) {
                 itemFrame.origin.y = itemOffset.y;
                 itemOffset.y += itemFrame.size.height + self.section.verticalInterstice;
+                if (horizontalAlignment == PSFlowLayoutHorizontalAlignmentJustify) {
+                    itemOffset.y += leftOverSpace/(CGFloat)self.itemCount;
+                }
             }else {
                 itemFrame.origin.x = itemOffset.x;
                 itemOffset.x += itemFrame.size.width + self.section.horizontalInterstice;
+                if (horizontalAlignment == PSFlowLayoutHorizontalAlignmentJustify) {
+                    itemOffset.x += leftOverSpace/(CGFloat)self.itemCount;
+                }
             }
-            item.itemFrame = itemFrame; // might call nil; don't care
-
+            item.itemFrame = CGRectIntegral(itemFrame); // might call nil; don't care
+            [rects addObject:[NSValue valueWithCGRect:CGRectIntegral(itemFrame)]];
             frame = CGRectUnion(frame, itemFrame);
         }
         _rowSize = frame.size;
-//        _rowFrame = frame; // set externally
+        //        _rowFrame = frame; // set externally
         _isValid = YES;
     }
+    return rects;
 }
 
 - (void)addItem:(PSGridLayoutItem *)item {

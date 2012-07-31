@@ -65,11 +65,9 @@ typedef NS_ENUM(NSInteger, PSFlowLayoutHorizontalAlignment) {
     PSFlowLayoutHorizontalAlignmentLeft,
     PSFlowLayoutHorizontalAlignmentCentered,
     PSFlowLayoutHorizontalAlignmentRight,
-    PSFlowLayoutHorizontalAlignmentJustify
+    PSFlowLayoutHorizontalAlignmentJustify // 3; default except for the last row
 };
 // TODO: settings for UIFlowLayoutRowVerticalAlignmentKey
-
-
 
 
 @interface PSCollectionViewFlowLayout (Private)
