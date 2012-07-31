@@ -146,7 +146,12 @@
         if (cellClass == nil) {
             @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"Class not registered for identifier %@", identifier] userInfo:nil];
         }
-        cell = [cellClass new];
+        if (self.collectionViewLayout) {
+            PSCollectionViewLayoutAttributes *attributes = [self.collectionViewLayout layoutAttributesForItemAtIndexPath:indexPath];
+            cell = [[cellClass alloc] initWithFrame:attributes.frame];
+        } else {
+            cell = [cellClass new];
+        }
         cell.collectionView = self;
         cell.reuseIdentifier = identifier;
     }
