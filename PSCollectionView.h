@@ -6,7 +6,7 @@
 //
 
 // Define this to automatically return UICollection* variants on init if they are available.
-#define kPSCollectionViewRelayToUICollectionViewIfAvailable
+//#define kPSCollectionViewRelayToUICollectionViewIfAvailable
 
 @class PSCollectionView, PSCollectionViewCell, PSCollectionViewLayout, PSCollectionViewFlowLayout,  PSCollectionViewLayoutAttributes, PSCollectionReusableView;
 @protocol PSCollectionViewDataSource, PSCollectionViewDelegate;
@@ -18,8 +18,8 @@
 @compatibility_alias UICollectionViewCell PSCollectionViewCell;
 @compatibility_alias UICollectionViewLayout PSCollectionViewLayout;
 @compatibility_alias UICollectionViewFlowLayout PSCollectionViewFlowLayout;
-@protocol UICollectionViewDataSource <PSCollectionViewDataSource> @end
-@protocol UICollectionViewDelegate <PSCollectionViewDelegate> @end
+@compatibility_alias UICollectionViewDataSource PSCollectionViewDataSource;
+@compatibility_alias UICollectionViewDelegate PSCollectionViewDelegate;
 #endif
 
 // Newer runtimes defines this, here's a fallback for the iOS5 SDK.
