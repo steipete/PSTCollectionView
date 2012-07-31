@@ -110,6 +110,16 @@
     NSLog(@"Not yet implemented: %@", NSStringFromSelector(_cmd));
 }
 
+- (void)setBackgroundView:(UIView *)backgroundView
+{
+    if (_backgroundView != backgroundView) {
+        [_backgroundView removeFromSuperview];
+        _backgroundView = backgroundView;
+        [self addSubview:_backgroundView];
+        [self sendSubviewToBack:_backgroundView];
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - PSCollection/UICollection interoperability
 
