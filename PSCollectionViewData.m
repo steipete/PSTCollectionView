@@ -180,7 +180,7 @@
     // query cells per section
     _numItems = 0;
     for (NSInteger i=0; i<_numSections; i++) {
-        NSInteger cellCount = [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:0];
+        NSInteger cellCount = [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:i];
         _sectionItemCounts[i] = cellCount;
         _numItems += cellCount;
     }
