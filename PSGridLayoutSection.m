@@ -101,9 +101,11 @@
                 }
                 if (!finishCycle) {
                     // create new row
+                    row.complete = YES; // finish up current row
                     row = [self addRow];
                     row.fixedItemSize = self.fixedItemSize;
                     row.index = rowIndex;
+                    self.indexOfImcompleteRow = rowIndex;
                     rowIndex++;
                     itemsByRowCount = 0;
                     dimensionLeft = dimension;

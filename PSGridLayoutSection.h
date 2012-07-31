@@ -41,7 +41,7 @@
 @property (nonatomic, assign, readonly) CGFloat lastRowActualGap;
 @property (nonatomic, assign, readonly) BOOL lastRowIncomplete;
 @property (nonatomic, assign, readonly) NSInteger itemsByRowCount;
-@property (nonatomic, assign, readonly) NSInteger indexOfImcompleteRow;
+@property (nonatomic, assign, readonly) NSInteger indexOfImcompleteRow; // typo as of iOS6B3
 
 
 //- (PSGridLayoutSection *)copyFromLayoutInfo:(PSGridLayoutInfo *)layoutInfo;
