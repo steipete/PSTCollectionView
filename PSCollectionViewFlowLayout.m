@@ -44,16 +44,19 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
     id _snapshottedData; // ???
 
     CGSize _currentLayoutSize;
-
+/*
     NSMutableDictionary* _insertedItemsAttributesDict;
     NSMutableDictionary* _insertedSectionHeadersAttributesDict;
     NSMutableDictionary* _insertedSectionFootersAttributesDict;
     NSMutableDictionary* _deletedItemsAttributesDict;
     NSMutableDictionary* _deletedSectionHeadersAttributesDict;
     NSMutableDictionary* _deletedSectionFootersAttributesDict;
-
+*/
     NSDictionary *_rowAlignmentsOptionsDictionary;
     CGRect _visibleBounds;
+
+    // @steipete cache
+    NSArray *_cachedItemRects;
 }
 
 @end
@@ -99,9 +102,9 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
             // if we have fixed size, calculate item frames only once.
             // this also uses the default PSFlowLayoutCommonRowHorizontalAlignmentKey alignment
             // for the last row. (we want this effect!)
-            NSArray *itemRects = nil;
-            if (section.fixedItemSize && [section.rows count]) {
-                itemRects = [[section.rows objectAtIndex:0] itemRects];
+            NSArray *itemRects = _cachedItemRects;
+            if (!_cachedItemRects && section.fixedItemSize && [section.rows count]) {
+                itemRects = _cachedItemRects = [[section.rows objectAtIndex:0] itemRects];
             }
 
             for (PSGridLayoutRow *row in section.rows) {
@@ -156,6 +159,7 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
 #pragma mark - Invalidating the Layout
 
 - (void)invalidateLayout {
+    _cachedItemRects = nil;
 }
 
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds {
