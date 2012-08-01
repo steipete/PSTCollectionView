@@ -77,11 +77,6 @@
         _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self addSubview:_backgroundView];
 
-        _selectedBackgroundView = [[UIView alloc] initWithFrame:self.bounds];
-        _selectedBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        _selectedBackgroundView.alpha = 0.f;
-        [self addSubview:_selectedBackgroundView];
-
         _contentView = [[UIView alloc] initWithFrame:self.bounds];
         _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self addSubview:_contentView];
@@ -97,7 +92,7 @@
 - (void)setSelected:(BOOL)selected {
     if (_collectionCellFlags.selected != selected) {
         _collectionCellFlags.selected = selected;
-        _selectedBackgroundView.alpha = 1.f;
+        _selectedBackgroundView.alpha = selected ? 1.0f : 0.0f;
     }
 }
 
@@ -118,6 +113,18 @@
         _backgroundView = backgroundView;
         [self addSubview:_backgroundView];
         [self sendSubviewToBack:_backgroundView];
+    }
+}
+
+- (void)setSelectedBackgroundView:(UIView *)selectedBackgroundView
+{
+    if (_selectedBackgroundView != selectedBackgroundView) {
+        [_selectedBackgroundView removeFromSuperview];
+        _selectedBackgroundView = selectedBackgroundView;
+        _selectedBackgroundView.frame = self.bounds;
+        _selectedBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        _selectedBackgroundView.alpha = self.selected ? 1.0f : 0.0f;
+        [self insertSubview:_selectedBackgroundView aboveSubview:_backgroundView];
     }
 }
 
