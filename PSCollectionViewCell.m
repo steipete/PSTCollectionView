@@ -92,13 +92,31 @@
 - (void)setSelected:(BOOL)selected {
     if (_collectionCellFlags.selected != selected) {
         _collectionCellFlags.selected = selected;
-        _selectedBackgroundView.alpha = selected ? 1.0f : 0.0f;
+        [self _updateSelectionState];
     }
 }
 
 - (void)setHighlighted:(BOOL)highlighted {
     if (_collectionCellFlags.highlighted != highlighted) {
         _collectionCellFlags.highlighted = highlighted;
+        [self _updateSelectionState];
+    }
+}
+
+- (void)_updateSelectionState
+{
+    BOOL shouldHighlight = (self.highlighted || self.selected);
+    _selectedBackgroundView.alpha = shouldHighlight ? 1.0f : 0.0f;
+    [self _setHighlighted:shouldHighlight forViews:self.contentView.subviews];
+}
+
+- (void)_setHighlighted:(BOOL)highlighted forViews:(id)subviews
+{
+    for (id view in subviews) {
+        if ([view respondsToSelector:@selector(setHighlighted:)]) {
+            [view setHighlighted:highlighted];
+        }
+        [self _setHighlighted:highlighted forViews:[view subviews]];
     }
 }
 
