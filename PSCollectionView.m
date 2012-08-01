@@ -28,6 +28,7 @@
 
     NSUInteger _reloadingSuspendedCount;
     NSMutableSet *_indexPathsForSelectedItems;
+    NSMutableSet *_indexPathsForHighlightedItems;
 
     struct {
         /*
@@ -69,6 +70,7 @@
         layout.collectionView = self;
         _collectionViewLayout = layout;
         _indexPathsForSelectedItems = [NSMutableSet new];
+        _indexPathsForHighlightedItems = [NSMutableSet new];
         _cellReuseQueues = [NSMutableDictionary new];
         _supplementaryViewReuseQueues = [NSMutableDictionary new];
         _allVisibleViewsDict = [NSMutableDictionary new];
@@ -294,7 +296,11 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
 
-    // TODO: highlighting
+    CGPoint touchPoint = [[touches anyObject] locationInView:self];
+    NSIndexPath *indexPath = [self indexPathForItemAtPoint:touchPoint];
+    if (indexPath) {
+        [self _highlightItemAtIndexPath:indexPath animated:YES scrollPosition:PSCollectionViewScrollPositionNone notifyDelegate:YES];
+    }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -327,6 +333,8 @@
             [self.delegate collectionView:self didSelectItemAtIndexPath:indexPath];
         }
     }
+    
+    [self _unhighlightItemAtIndexPath:indexPath animated:animated notifyDelegate:YES];
 }
 
 // returns nil or an array of selected index paths
@@ -352,6 +360,38 @@
         PSCollectionViewCell *selectedCell = [self cellForItemAtIndexPath:indexPath];
         selectedCell.selected = NO;
         [_indexPathsForSelectedItems removeObject:indexPath];
+    }
+}
+
+- (BOOL)_highlightItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(PSCollectionViewScrollPosition)scrollPosition notifyDelegate:(BOOL)notifyDelegate
+{
+    BOOL shouldHighlight = YES;
+    if ([self.delegate respondsToSelector:@selector(collectionView:shouldHighlightItemAtIndexPath:)]) {
+        shouldHighlight = [self.delegate collectionView:self shouldHighlightItemAtIndexPath:indexPath];
+    }
+    
+    if (shouldHighlight) {
+        PSCollectionViewCell *highlightedCell = [self cellForItemAtIndexPath:indexPath];
+        highlightedCell.highlighted = YES;
+        [_indexPathsForHighlightedItems addObject:indexPath];
+        
+        if (notifyDelegate && [self.delegate respondsToSelector:@selector(collectionView:didHighlightItemAtIndexPath:)]) {
+            [self.delegate collectionView:self didHighlightItemAtIndexPath:indexPath];
+        }
+    }
+    return shouldHighlight;
+}
+
+- (void)_unhighlightItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated notifyDelegate:(BOOL)notifyDelegate
+{
+    if ([_indexPathsForHighlightedItems containsObject:indexPath]) {
+        PSCollectionViewCell *highlightedCell = [self cellForItemAtIndexPath:indexPath];
+        highlightedCell.highlighted = NO;
+        [_indexPathsForHighlightedItems removeObject:indexPath];
+        
+        if (notifyDelegate && [self.delegate respondsToSelector:@selector(collectionView:didUnhighlightItemAtIndexPath:)]) {
+            [self.delegate collectionView:self didUnhighlightItemAtIndexPath:indexPath];
+        }
     }
 }
 
