@@ -407,32 +407,16 @@
 - (void)updateVisibleCellsNow:(BOOL)now {
     NSArray *layoutAttributesArray = [_collectionViewData layoutAttributesForElementsInRect:self.bounds];
 
-    NSMutableSet *allVisibleItemKeys = [NSMutableSet setWithArray:[_allVisibleViewsDict allKeys]];
+    // create ItemKey/Attributes dictionary
+    NSMutableDictionary *itemKeysToAddDict = [NSMutableDictionary dictionary];
     for (PSCollectionViewLayoutAttributes *layoutAttributes in layoutAttributesArray) {
         PSCollectionViewItemKey *itemKey = [PSCollectionViewItemKey collectionItemKeyForLayoutAttributes:layoutAttributes];
-        
-        // check if cell is in visible dict; add it if not.
-        PSCollectionReusableView *view = _allVisibleViewsDict[itemKey];
-        if (!view) {
-            if (itemKey.type == PSCollectionViewItemTypeCell) {
-                view = [self _createPreparedCellForItemAtIndexPath:layoutAttributes.indexPath withLayoutAttributes:layoutAttributes];
-                
-            } else if (itemKey.type == PSCollectionViewItemTypeSupplementaryView) {
-                view = [self _createPreparedSupplementaryViewForElementOfKind:layoutAttributes.representedElementKind
-                                                                  atIndexPath:layoutAttributes.indexPath
-                                                         withLayoutAttributes:layoutAttributes];
-                
-            }
-            _allVisibleViewsDict[itemKey] = view;
-            [self addControlledSubview:view];
-        }else {
-            // just update cell
-            [view applyLayoutAttributes:layoutAttributes];
-        }
-
-        // remove from current dict
-        [allVisibleItemKeys removeObject:itemKey];
+        itemKeysToAddDict[itemKey] = layoutAttributes;
     }
+
+    // detect what items should be removed and queued back.
+    NSMutableSet *allVisibleItemKeys = [NSMutableSet setWithArray:[_allVisibleViewsDict allKeys]];
+    [allVisibleItemKeys minusSet:[NSSet setWithArray:[itemKeysToAddDict allKeys]]];
 
     // remove views that have not been processed and prepare them for re-use.
     for (PSCollectionViewItemKey *itemKey in allVisibleItemKeys) {
@@ -454,6 +438,30 @@
             // TODO: decoration views etc?
         }
     }
+
+    // finally add new cells.
+    [itemKeysToAddDict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {PSCollectionViewItemKey *itemKey = key;
+        PSCollectionViewLayoutAttributes *layoutAttributes = obj;
+
+        // check if cell is in visible dict; add it if not.
+        PSCollectionReusableView *view = _allVisibleViewsDict[itemKey];
+        if (!view) {
+            if (itemKey.type == PSCollectionViewItemTypeCell) {
+                view = [self _createPreparedCellForItemAtIndexPath:itemKey.indexPath withLayoutAttributes:layoutAttributes];
+
+            } else if (itemKey.type == PSCollectionViewItemTypeSupplementaryView) {
+                view = [self _createPreparedSupplementaryViewForElementOfKind:layoutAttributes.representedElementKind
+                                                                  atIndexPath:layoutAttributes.indexPath
+                                                         withLayoutAttributes:layoutAttributes];
+
+            }
+            _allVisibleViewsDict[itemKey] = view;
+            [self addControlledSubview:view];
+        }else {
+            // just update cell
+            [view applyLayoutAttributes:layoutAttributes];
+        }
+    }];
 }
 
 // fetches a cell from the dataSource and sets the layoutAttributes
@@ -481,6 +489,7 @@
     NSString *cellIdentifier = reusableView.reuseIdentifier;
     NSParameterAssert([cellIdentifier length]);
 
+    [reusableView removeFromSuperview];
     [reusableView prepareForReuse];
 
     // enqueue cell
