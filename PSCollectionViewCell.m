@@ -128,6 +128,11 @@
     }
 }
 
+- (BOOL)isSelected
+{
+    return _collectionCellFlags.selected;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - PSCollection/UICollection interoperability
 
