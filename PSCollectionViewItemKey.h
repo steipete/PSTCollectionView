@@ -7,14 +7,9 @@
 
 #import <Foundation/Foundation.h>
 #import "PSCollectionView.h"
+#import "PSCollectionViewLayout.h"
 
 @class PSCollectionViewLayoutAttributes;
-
-typedef NS_ENUM(NSUInteger, PSCollectionViewItemType) {
-    PSCollectionViewItemTypeCell,
-    PSCollectionViewItemTypeDecorationView,
-    PSCollectionViewItemTypeSupplementaryView
-};
 
 NSString *PSCollectionViewItemTypeToString(PSCollectionViewItemType type); // debug helper
 

@@ -9,7 +9,12 @@
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
-#import "PSCollectionViewItemKey.h"
+
+typedef NS_ENUM(NSUInteger, PSCollectionViewItemType) {
+    PSCollectionViewItemTypeCell,
+    PSCollectionViewItemTypeDecorationView,
+    PSCollectionViewItemTypeSupplementaryView
+};
 
 // The PSCollectionViewLayout class is provided as an abstract class for subclassing to define custom collection layouts.
 // Defining a custom layout is an advanced operation intended for applications with complex needs.
