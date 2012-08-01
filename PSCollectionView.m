@@ -225,11 +225,33 @@
 }
 
 - (NSIndexPath *)indexPathForItemAtPoint:(CGPoint)point {
-    return nil;
+    __block NSIndexPath *indexPath = nil;
+    [_allVisibleViewsDict enumerateKeysAndObjectsWithOptions:kNilOptions usingBlock:^(id key, id obj, BOOL *stop) {
+        PSCollectionViewItemKey *itemKey = (PSCollectionViewItemKey *)key;
+        if (itemKey.type == PSCollectionViewItemTypeCell) {
+            PSCollectionViewCell *cell = (PSCollectionViewCell *)obj;
+            if (CGRectContainsPoint(cell.frame, point)) {
+                indexPath = itemKey.indexPath;
+                *stop = YES;
+            }
+        }
+    }];
+    return indexPath;
 }
 
 - (NSIndexPath *)indexPathForCell:(PSCollectionViewCell *)cell {
-    return nil;
+    __block NSIndexPath *indexPath = nil;
+    [_allVisibleViewsDict enumerateKeysAndObjectsWithOptions:kNilOptions usingBlock:^(id key, id obj, BOOL *stop) {
+        PSCollectionViewItemKey *itemKey = (PSCollectionViewItemKey *)key;
+        if (itemKey.type == PSCollectionViewItemTypeCell) {
+            PSCollectionViewCell *currentCell = (PSCollectionViewCell *)obj;
+            if (currentCell == cell) {
+                indexPath = itemKey.indexPath;
+                *stop = YES;
+            }
+        }
+    }];
+    return indexPath;
 }
 
 - (PSCollectionViewCell *)cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -278,18 +300,11 @@
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesEnded:touches withEvent:event];
 
-    // found a cell?
     CGPoint touchPoint = [[touches anyObject] locationInView:self];
-    [_allVisibleViewsDict enumerateKeysAndObjectsWithOptions:0 usingBlock:^(id key, id obj, BOOL *stop) {
-        PSCollectionViewItemKey *itemKey = (PSCollectionViewItemKey *)key;
-        if (itemKey.type == PSCollectionViewItemTypeCell) {
-            PSCollectionViewCell *cell = (PSCollectionViewCell *)obj;
-            if (CGRectContainsPoint(cell.frame, touchPoint)) {
-                [self userSelectedItemAtIndexPath:itemKey.indexPath];
-                *stop = YES;
-            }
-        }
-    }];
+    NSIndexPath *indexPath = [self indexPathForItemAtPoint:touchPoint];
+    if (indexPath) {
+        [self userSelectedItemAtIndexPath:indexPath];
+    }
 }
 
 - (void)userSelectedItemAtIndexPath:(NSIndexPath *)indexPath {
