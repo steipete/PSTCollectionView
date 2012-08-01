@@ -203,6 +203,7 @@
 - (void)reloadData {
     if (_reloadingSuspendedCount != 0) return;
     [self invalidateLayout];
+    [_allVisibleViewsDict removeAllObjects];
     [self setNeedsLayout];
     //NSAssert(sectionCount == 1, @"Sections are currently not supported.");
 }
