@@ -321,15 +321,21 @@
 
 - (void)selectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(PSCollectionViewScrollPosition)scrollPosition {
     if (!self.allowsMultipleSelection) {
-        [_indexPathsForSelectedItems removeAllObjects];
+        for (NSIndexPath *indexPath in _indexPathsForSelectedItems) {
+            [self deselectItemAtIndexPath:indexPath animated:animated];
+        }
     }
     if (self.allowsSelection) {
+        PSCollectionViewCell *selectedCell = [self cellForItemAtIndexPath:indexPath];
+        selectedCell.selected = YES;
         [_indexPathsForSelectedItems addObject:indexPath];
     }
 }
 
 - (void)deselectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated {
     if ([_indexPathsForSelectedItems containsObject:indexPath]) {
+        PSCollectionViewCell *selectedCell = [self cellForItemAtIndexPath:indexPath];
+        selectedCell.selected = NO;
         [_indexPathsForSelectedItems removeObject:indexPath];
     }
 }
