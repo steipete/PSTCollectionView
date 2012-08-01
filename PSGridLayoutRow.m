@@ -102,13 +102,13 @@
                 itemFrame.origin.y = itemOffset.y;
                 itemOffset.y += itemFrame.size.height + self.section.verticalInterstice;
                 if (horizontalAlignment == PSFlowLayoutHorizontalAlignmentJustify) {
-                    itemOffset.y += leftOverSpace/(CGFloat)self.itemCount;
+                    itemOffset.y += leftOverSpace/(CGFloat)(self.itemCount-1);
                 }
             }else {
                 itemFrame.origin.x = itemOffset.x;
                 itemOffset.x += itemFrame.size.width + self.section.horizontalInterstice;
                 if (horizontalAlignment == PSFlowLayoutHorizontalAlignmentJustify) {
-                    itemOffset.x += leftOverSpace/(CGFloat)self.itemCount;
+                    itemOffset.x += leftOverSpace/(CGFloat)(self.itemCount-1);
                 }
             }
             item.itemFrame = CGRectIntegral(itemFrame); // might call nil; don't care
