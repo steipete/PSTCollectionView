@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
+#import "PSCollectionView.h"
 
 typedef NS_ENUM(NSUInteger, PSCollectionViewItemType) {
     PSCollectionViewItemTypeCell,
