@@ -407,9 +407,10 @@
 - (void)updateVisibleCellsNow:(BOOL)now {
     NSArray *layoutAttributesArray = [_collectionViewData layoutAttributesForElementsInRect:self.bounds];
 
-    NSMutableArray *allVisibleItemKeys = [[_allVisibleViewsDict allKeys] mutableCopy];
+    NSMutableSet *allVisibleItemKeys = [NSMutableSet setWithArray:[_allVisibleViewsDict allKeys]];
     for (PSCollectionViewLayoutAttributes *layoutAttributes in layoutAttributesArray) {
         PSCollectionViewItemKey *itemKey = [PSCollectionViewItemKey collectionItemKeyForLayoutAttributes:layoutAttributes];
+        
         // check if cell is in visible dict; add it if not.
         PSCollectionReusableView *view = _allVisibleViewsDict[itemKey];
         if (!view) {
@@ -430,7 +431,6 @@
         }
 
         // remove from current dict
-        // TODO: this is slow!
         [allVisibleItemKeys removeObject:itemKey];
     }
 
