@@ -203,6 +203,11 @@
 - (void)reloadData {
     if (_reloadingSuspendedCount != 0) return;
     [self invalidateLayout];
+    [_allVisibleViewsDict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        if ([obj isKindOfClass:[UIView class]]) {
+            [obj removeFromSuperview];
+        }
+    }];
     [_allVisibleViewsDict removeAllObjects];
     [self setNeedsLayout];
     //NSAssert(sectionCount == 1, @"Sections are currently not supported.");
