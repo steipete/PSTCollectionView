@@ -133,6 +133,11 @@
     return _collectionCellFlags.selected;
 }
 
+- (BOOL)isHighlighted
+{
+    return _collectionCellFlags.highlighted;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - PSCollection/UICollection interoperability
 
