@@ -75,6 +75,7 @@
         _cellClassDict = [NSMutableDictionary new];
         _supplementaryViewClassDict = [NSMutableDictionary new];
         _collectionViewData = [[PSCollectionViewData alloc] initWithCollectionView:self layout:layout];
+        _allowsSelection = YES;
     }
     return self;
 }
