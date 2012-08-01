@@ -3,6 +3,8 @@ PSCollectionView
 
 Open Source, 100% API compatible replacement of UICollectionView for iOS4+
 
+I've originally started this to replace the thumbnail grid in my iOS PDF Framework/SDK [PSPDFKit](http://pspdfkit.com), but seemed way too useful for others to keep it for myself.
+
 **The goal is to make UICollectionView instantly usable to anyone**, using "the real thing" on iOS6 and PSCollectionView as a fallback for iOS4/5.
 We even use certain runtime tricks to create UICollectionView at runtime for older versions of iOS. Ideally, you just link the files and everything works on older systems.
 PSCollectionView is also internally designed very closesly to UICollectionView and thus a great study if you're wondering how UICollectionView works. See [HowTo](PSCollectionView/blob/master/HowTo.md) for helpful details.
@@ -15,6 +17,7 @@ PSCollectionView is also internally designed very closesly to UICollectionView a
 Most basic features work, including the flow layout with fixed or dynamic cell sizes.
 
 Currently there are still some problems, e.g. the cell that's either a subclass of PSCollectionViewCell or UICollectionViewCell, and there are problems for interoperabilty. [See Issue #1](https://github.com/steipete/PSCollectionView/issues/1)
+
 You can control if PSCollectionView should relay to UICollectionView with the global define `kPSCollectionViewRelayToUICollectionViewIfAvailable` in PSCollectionView.h.
 
 The current goal is to make layouts and all common features workable.
@@ -24,6 +27,7 @@ Animations are a whole different problem, we might tackle them at a later date. 
 
 The best way is if you're already using UICollectionView somewhere. Add PSCollectionView and try it on iOS5. Check if everything works, fix bugs until the result is 1:1 the one of iOS6.
 You can also just pick an Issue fron the Issue Tracker and start working there.
+
 Or start playing around with one of the WWDC examples and try to make them work with PSCollectionView. There sure will be problems/bugs/missing features with more difficult layouts.
 
 ## ARC
