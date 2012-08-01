@@ -299,7 +299,7 @@
     CGPoint touchPoint = [[touches anyObject] locationInView:self];
     NSIndexPath *indexPath = [self indexPathForItemAtPoint:touchPoint];
     if (indexPath) {
-        [self _highlightItemAtIndexPath:indexPath animated:YES scrollPosition:PSCollectionViewScrollPositionNone notifyDelegate:YES];
+        [self highlightItemAtIndexPath:indexPath animated:YES scrollPosition:PSCollectionViewScrollPositionNone notifyDelegate:YES];
     }
 }
 
@@ -334,7 +334,7 @@
         }
     }
     
-    [self _unhighlightItemAtIndexPath:indexPath animated:animated notifyDelegate:YES];
+    [self unhighlightItemAtIndexPath:indexPath animated:animated notifyDelegate:YES];
 }
 
 // returns nil or an array of selected index paths
@@ -363,7 +363,7 @@
     }
 }
 
-- (BOOL)_highlightItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(PSCollectionViewScrollPosition)scrollPosition notifyDelegate:(BOOL)notifyDelegate
+- (BOOL)highlightItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(PSCollectionViewScrollPosition)scrollPosition notifyDelegate:(BOOL)notifyDelegate
 {
     BOOL shouldHighlight = YES;
     if ([self.delegate respondsToSelector:@selector(collectionView:shouldHighlightItemAtIndexPath:)]) {
@@ -382,7 +382,7 @@
     return shouldHighlight;
 }
 
-- (void)_unhighlightItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated notifyDelegate:(BOOL)notifyDelegate
+- (void)unhighlightItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated notifyDelegate:(BOOL)notifyDelegate
 {
     if ([_indexPathsForHighlightedItems containsObject:indexPath]) {
         PSCollectionViewCell *highlightedCell = [self cellForItemAtIndexPath:indexPath];
