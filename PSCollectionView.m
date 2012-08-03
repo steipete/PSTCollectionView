@@ -294,6 +294,10 @@
 // Interacting with the collection view.
 - (void)scrollToItemAtIndexPath:(NSIndexPath *)indexPath atScrollPosition:(PSCollectionViewScrollPosition)scrollPosition animated:(BOOL)animated {
 
+    PSCollectionViewLayoutAttributes *layoutAttributes = [self.collectionViewLayout layoutAttributesForItemAtIndexPath:indexPath];
+    if (layoutAttributes) {
+        [self scrollRectToVisible:layoutAttributes.frame animated:animated];
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////

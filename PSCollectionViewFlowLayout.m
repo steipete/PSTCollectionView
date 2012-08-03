@@ -44,14 +44,14 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
     id _snapshottedData; // ???
 
     CGSize _currentLayoutSize;
-/*
-    NSMutableDictionary* _insertedItemsAttributesDict;
-    NSMutableDictionary* _insertedSectionHeadersAttributesDict;
-    NSMutableDictionary* _insertedSectionFootersAttributesDict;
-    NSMutableDictionary* _deletedItemsAttributesDict;
-    NSMutableDictionary* _deletedSectionHeadersAttributesDict;
-    NSMutableDictionary* _deletedSectionFootersAttributesDict;
-*/
+    /*
+     NSMutableDictionary* _insertedItemsAttributesDict;
+     NSMutableDictionary* _insertedSectionHeadersAttributesDict;
+     NSMutableDictionary* _insertedSectionFootersAttributesDict;
+     NSMutableDictionary* _deletedItemsAttributesDict;
+     NSMutableDictionary* _deletedSectionHeadersAttributesDict;
+     NSMutableDictionary* _deletedSectionFootersAttributesDict;
+     */
     NSDictionary *_rowAlignmentsOptionsDictionary;
     CGRect _visibleBounds;
 
@@ -139,7 +139,30 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
 }
 
 - (PSCollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return nil;
+    // TODO: check if index path is valid?
+    PSGridLayoutSection *section = _data.sections[indexPath.section];
+    PSGridLayoutRow *row = nil;
+    CGRect itemFrame;
+    if (section.fixedItemSize) {
+        row = section.rows[indexPath.item/section.itemsByRowCount];
+        NSUInteger itemIndex = indexPath.item % section.itemsByRowCount;
+        NSArray *itemRects = [row itemRects];
+        itemFrame = [itemRects[itemIndex] CGRectValue];
+    }else {
+        PSGridLayoutItem *item = section.items[indexPath.item];
+        row = item.rowObject;
+        itemFrame = item.itemFrame;
+    }
+
+    PSCollectionViewLayoutAttributes *layoutAttributes = [PSCollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
+
+    // calculate item rect
+    CGRect normalizedRowFrame = row.rowFrame;
+    normalizedRowFrame.origin.x += section.frame.origin.x;
+    normalizedRowFrame.origin.y += section.frame.origin.y;
+    layoutAttributes.frame = CGRectMake(normalizedRowFrame.origin.x + itemFrame.origin.x, normalizedRowFrame.origin.y + itemFrame.origin.y, itemFrame.size.width, itemFrame.size.height);
+
+    return layoutAttributes;
 }
 
 - (PSCollectionViewLayoutAttributes *)layoutAttributesForSupplementaryViewOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {

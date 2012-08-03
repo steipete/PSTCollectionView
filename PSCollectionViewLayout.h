@@ -60,6 +60,7 @@ typedef NS_ENUM(NSInteger, PSCollectionUpdateAction) {
     PSCollectionUpdateActionNone
 };
 
+/*
 @interface PSCollectionViewUpdateItem : NSObject {
 @private
     NSIndexPath* _initialIndexPath;
@@ -71,8 +72,8 @@ typedef NS_ENUM(NSInteger, PSCollectionUpdateAction) {
 @property (nonatomic, readonly) NSIndexPath *indexPathBeforeUpdate; // nil for PSCollectionUpdateActionInsert
 @property (nonatomic, readonly) NSIndexPath *indexPathAfterUpdate; // nil for PSCollectionUpdateActionDelete
 @property (nonatomic, readonly) PSCollectionUpdateAction updateAction;
-
 @end
+*/
 
 
 

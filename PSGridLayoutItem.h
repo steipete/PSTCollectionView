@@ -9,7 +9,7 @@
 
 @class PSGridLayoutSection, PSGridLayoutRow;
 
-// _UIGridLayoutItem
+// Represents a single grid item; only created for non-uniform-sized grids.
 @interface PSGridLayoutItem : NSObject
 
 @property (nonatomic, unsafe_unretained) PSGridLayoutSection *section;
