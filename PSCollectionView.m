@@ -319,6 +319,13 @@
     }
 }
 
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [super touchesCancelled:touches withEvent:event];
+    
+    [self unhighlightAllItems];
+}
+
 - (void)userSelectedItemAtIndexPath:(NSIndexPath *)indexPath {
     [self selectItemAtIndexPath:indexPath animated:YES scrollPosition:PSCollectionViewScrollPositionNone notifyDelegate:YES];
 }
@@ -398,6 +405,13 @@
         if (notifyDelegate && [self.delegate respondsToSelector:@selector(collectionView:didUnhighlightItemAtIndexPath:)]) {
             [self.delegate collectionView:self didUnhighlightItemAtIndexPath:indexPath];
         }
+    }
+}
+
+- (void)unhighlightAllItems
+{
+    for (NSIndexPath *indexPath in _indexPathsForHighlightedItems) {
+        [self unhighlightItemAtIndexPath:indexPath animated:NO notifyDelegate:YES];
     }
 }
 
