@@ -75,6 +75,7 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
 #endif
 
     if((self = [super init])) {
+        _itemSize = CGSizeMake(10, 10);
         _scrollDirection = PSCollectionViewScrollDirectionVertical;
 
         // set default values for row alignment.
@@ -229,6 +230,25 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
         layoutSection.verticalInterstice = _data.horizontal ? self.minimumInteritemSpacing : self.minimumLineSpacing;
         layoutSection.horizontalInterstice = !_data.horizontal ? self.minimumInteritemSpacing : self.minimumLineSpacing;
         layoutSection.sectionMargins = self.sectionInset;
+
+        if ([flowDataSource respondsToSelector:@selector(collectionView:layout:minimumLineSpacingForSectionAtIndex:)]) {
+            CGFloat minimumLineSpacing = [flowDataSource collectionView:self.collectionView layout:self minimumLineSpacingForSectionAtIndex:section];
+            if (_data.horizontal) {
+                layoutSection.horizontalInterstice = minimumLineSpacing;
+            }else {
+                layoutSection.verticalInterstice = minimumLineSpacing;
+            }
+        }
+
+        if ([flowDataSource respondsToSelector:@selector(collectionView:layout:minimumInteritemSpacingForSectionAtIndex:)]) {
+            CGFloat minimumInterimSpacing = [flowDataSource collectionView:self.collectionView layout:self minimumInteritemSpacingForSectionAtIndex:section];
+            if (_data.horizontal) {
+                layoutSection.verticalInterstice = minimumInterimSpacing;
+            }else {
+                layoutSection.horizontalInterstice = minimumInterimSpacing;
+            }
+        }
+
         NSUInteger numberOfItems = [self.collectionView numberOfItemsInSection:section];
 
         // if delegate implements size delegate, query it for all items
