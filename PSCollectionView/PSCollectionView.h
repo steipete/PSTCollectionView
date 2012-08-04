@@ -5,28 +5,27 @@
 //  Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //
 
+#import "PSCollectionViewLayout.h"
+#import "PSCollectionViewFlowLayout.h"
+#import "PSCollectionViewCell.h"
+
+@class PSCollectionViewController;
+
 // Define this to automatically return UICollection* variants on init if they are available.
 //#define kPSCollectionViewRelayToUICollectionViewIfAvailable
-
-@class PSCollectionView, PSCollectionViewCell, PSCollectionViewLayout, PSCollectionViewFlowLayout,  PSCollectionViewLayoutAttributes, PSCollectionReusableView;
-@protocol PSCollectionViewDataSource, PSCollectionViewDelegate;
 
 // Allows code to just use UICollectionView as if it would be avaiable on iOS SDK 5.
 // http://developer.apple.com/legacy/mac/library/#documentation/DeveloperTools/gcc-3.3/gcc/compatibility_005falias.html
 #if __IPHONE_OS_VERSION_MAX_ALLOWED < 60000
+@compatibility_alias UICollectionViewController PSCollectionViewController;
 @compatibility_alias UICollectionView PSCollectionView;
 @compatibility_alias UICollectionReusableView PSCollectionReusableView;
 @compatibility_alias UICollectionViewCell PSCollectionViewCell;
 @compatibility_alias UICollectionViewLayout PSCollectionViewLayout;
 @compatibility_alias UICollectionViewFlowLayout PSCollectionViewFlowLayout;
+@compatibility_alias UICollectionViewLayoutAttributes PSCollectionViewLayoutAttributes;
 @protocol UICollectionViewDataSource <PSCollectionViewDataSource> @end
 @protocol UICollectionViewDelegate <PSCollectionViewDelegate> @end
-#endif
-
-// Newer runtimes defines this, here's a fallback for the iOS5 SDK.
-#ifndef NS_ENUM
-#define NS_ENUM(_type, _name) _type _name; enum
-#define NS_OPTIONS(_type, _name) _type _name; enum
 #endif
 
 @protocol PSCollectionViewDataSource <NSObject>
@@ -93,6 +92,8 @@ typedef NS_OPTIONS(NSUInteger, PSCollectionViewScrollPosition) {
     PSCollectionViewScrollPositionCenteredHorizontally = 1 << 4,
     PSCollectionViewScrollPositionRight                = 1 << 5
 };
+
+#import "PSCollectionViewController.h"
 
 /**
     Replacement for UICollectionView for iOS4/5.
@@ -165,29 +166,3 @@ typedef NS_OPTIONS(NSUInteger, PSCollectionViewScrollPosition) {
 - (void)performBatchUpdates:(void (^)(void))updates completion:(void (^)(BOOL finished))completion; // allows multiple insert/delete/reload/move calls to be animated simultaneously. Nestable.
 
 @end
-
-// Category exists in iOS6.
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-@interface NSIndexPath (PSCollectionViewAdditions)
-+ (NSIndexPath *)indexPathForItem:(NSInteger)item inSection:(NSInteger)section;
-@property (nonatomic, readonly) NSInteger item;
-@end
-#endif
-
-// compatibility
-#ifndef kCFCoreFoundationVersionNumber_iOS_6_0
-#define kCFCoreFoundationVersionNumber_iOS_6_0 788.0
-#endif
-
-// imp_implementationWithBlock changed it's type in iOS6.
-#if __IPHONE_OS_VERSION_MAX_ALLOWED < 60000
-#define PSBlockImplCast (__bridge void *)
-@interface NSObject (PSSubscriptingSupport)
-- (id)objectAtIndexedSubscript:(NSUInteger)idx;
-- (void)setObject:(id)obj atIndexedSubscript:(NSUInteger)idx;
-- (void)setObject:(id)obj forKeyedSubscript:(id <NSCopying>)key;
-- (id)objectForKeyedSubscript:(id)key;
-@end
-#else
-#define PSBlockImplCast
-#endif

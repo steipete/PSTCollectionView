@@ -5,8 +5,7 @@
 //  Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import "PSCollectionView.h"
+#import "PSCollectionViewCommon.h"
 #import "PSCollectionViewLayout.h"
 
 @class PSCollectionViewLayoutAttributes;

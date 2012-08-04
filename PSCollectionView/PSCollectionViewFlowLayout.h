@@ -5,10 +5,7 @@
 //  Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import <Foundation/Foundation.h>
 #import "PSCollectionViewLayout.h"
-#import "PSCollectionView.h"
 
 NSString *const PSCollectionElementKindSectionHeader;
 NSString *const PSCollectionElementKindSectionFooter;
@@ -17,6 +14,13 @@ typedef NS_ENUM(NSInteger, PSCollectionViewScrollDirection) {
     PSCollectionViewScrollDirectionVertical,
     PSCollectionViewScrollDirectionHorizontal
 };
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < 60000
+typedef NS_ENUM(NSInteger, UICollectionViewScrollDirection) {
+    UICollectionViewScrollDirectionVertical,
+    UICollectionViewScrollDirectionHorizontal
+};
+#endif
 
 @protocol PSCollectionViewDelegateFlowLayout <PSCollectionViewDelegate>
 @optional

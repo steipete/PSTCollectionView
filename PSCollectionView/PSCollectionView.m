@@ -6,6 +6,7 @@
 //
 
 #import "PSCollectionView.h"
+#import "PSCollectionViewController.h"
 #import "PSCollectionViewData.h"
 #import "PSCollectionViewCell.h"
 #import "PSCollectionViewLayout.h"
@@ -661,6 +662,7 @@
 __attribute__((constructor)) static void PSCreateUICollectionViewClasses(void) {
     @autoreleasepool {
         if (kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_6_0) {
+            objc_registerClassPair(objc_allocateClassPair([PSCollectionViewController class], "UICollectionViewController", 0));
             objc_registerClassPair(objc_allocateClassPair([PSCollectionView class], "UICollectionView", 0));
             objc_registerClassPair(objc_allocateClassPair([PSCollectionViewCell class], "UICollectionViewCell", 0));
             objc_registerClassPair(objc_allocateClassPair([PSCollectionViewLayout class], "UICollectionViewLayout", 0));

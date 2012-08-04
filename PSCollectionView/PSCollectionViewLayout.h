@@ -5,11 +5,9 @@
 //  Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //
 
-#import <UIKit/UIKitDefines.h>
-#import <Foundation/Foundation.h>
+#import "PSCollectionViewCommon.h"
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
-#import "PSCollectionView.h"
 
 typedef NS_ENUM(NSUInteger, PSCollectionViewItemType) {
     PSCollectionViewItemTypeCell,
