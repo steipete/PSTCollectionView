@@ -1,0 +1,370 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		77AF0077157FA442001EC3FB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77AF0076157FA442001EC3FB /* UIKit.framework */; };
+		77AF0079157FA442001EC3FB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77AF0078157FA442001EC3FB /* Foundation.framework */; };
+		77AF007B157FA442001EC3FB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77AF007A157FA442001EC3FB /* CoreGraphics.framework */; };
+		77AF0081157FA442001EC3FB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 77AF007F157FA442001EC3FB /* InfoPlist.strings */; };
+		77AF0083157FA442001EC3FB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 77AF0082157FA442001EC3FB /* main.m */; };
+		77AF0087157FA442001EC3FB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 77AF0086157FA442001EC3FB /* AppDelegate.m */; };
+		77AF008A157FA442001EC3FB /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77AF0089157FA442001EC3FB /* ViewController.m */; };
+		77AF0097157FA528001EC3FB /* Cell.m in Sources */ = {isa = PBXBuildFile; fileRef = 77AF0094157FA528001EC3FB /* Cell.m */; };
+		77AF0098157FA528001EC3FB /* CircleLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 77AF0096157FA528001EC3FB /* CircleLayout.m */; };
+		77C30BB5157FB7EB005E487B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77C30BB4157FB7EB005E487B /* QuartzCore.framework */; };
+		78EB4CCD15CD31E2002A67E0 /* PSCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 78EB4CB715CD31E2002A67E0 /* PSCollectionView.m */; };
+		78EB4CCE15CD31E2002A67E0 /* PSCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 78EB4CB915CD31E2002A67E0 /* PSCollectionViewCell.m */; };
+		78EB4CCF15CD31E2002A67E0 /* PSCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78EB4CBC15CD31E2002A67E0 /* PSCollectionViewController.m */; };
+		78EB4CD015CD31E2002A67E0 /* PSCollectionViewData.m in Sources */ = {isa = PBXBuildFile; fileRef = 78EB4CBE15CD31E2002A67E0 /* PSCollectionViewData.m */; };
+		78EB4CD115CD31E2002A67E0 /* PSCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 78EB4CC015CD31E2002A67E0 /* PSCollectionViewFlowLayout.m */; };
+		78EB4CD215CD31E2002A67E0 /* PSCollectionViewItemKey.m in Sources */ = {isa = PBXBuildFile; fileRef = 78EB4CC215CD31E2002A67E0 /* PSCollectionViewItemKey.m */; };
+		78EB4CD315CD31E2002A67E0 /* PSCollectionViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 78EB4CC415CD31E2002A67E0 /* PSCollectionViewLayout.m */; };
+		78EB4CD415CD31E2002A67E0 /* PSGridLayoutInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 78EB4CC615CD31E2002A67E0 /* PSGridLayoutInfo.m */; };
+		78EB4CD515CD31E2002A67E0 /* PSGridLayoutItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 78EB4CC815CD31E2002A67E0 /* PSGridLayoutItem.m */; };
+		78EB4CD615CD31E2002A67E0 /* PSGridLayoutRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 78EB4CCA15CD31E2002A67E0 /* PSGridLayoutRow.m */; };
+		78EB4CD715CD31E2002A67E0 /* PSGridLayoutSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 78EB4CCC15CD31E2002A67E0 /* PSGridLayoutSection.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		28B8D5C415817E9B00386DDB /* ReadMe.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; };
+		77AF0072157FA442001EC3FB /* CircleLayout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CircleLayout.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		77AF0076157FA442001EC3FB /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		77AF0078157FA442001EC3FB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		77AF007A157FA442001EC3FB /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		77AF007E157FA442001EC3FB /* CircleLayout-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CircleLayout-Info.plist"; sourceTree = "<group>"; };
+		77AF0080157FA442001EC3FB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		77AF0082157FA442001EC3FB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		77AF0084157FA442001EC3FB /* CircleLayout-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CircleLayout-Prefix.pch"; sourceTree = "<group>"; };
+		77AF0085157FA442001EC3FB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		77AF0086157FA442001EC3FB /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		77AF0088157FA442001EC3FB /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		77AF0089157FA442001EC3FB /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		77AF0093157FA528001EC3FB /* Cell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cell.h; sourceTree = "<group>"; };
+		77AF0094157FA528001EC3FB /* Cell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Cell.m; sourceTree = "<group>"; };
+		77AF0095157FA528001EC3FB /* CircleLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleLayout.h; sourceTree = "<group>"; };
+		77AF0096157FA528001EC3FB /* CircleLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleLayout.m; sourceTree = "<group>"; };
+		77C30BB4157FB7EB005E487B /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		78EB4CB615CD31E2002A67E0 /* PSCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSCollectionView.h; sourceTree = "<group>"; };
+		78EB4CB715CD31E2002A67E0 /* PSCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSCollectionView.m; sourceTree = "<group>"; };
+		78EB4CB815CD31E2002A67E0 /* PSCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSCollectionViewCell.h; sourceTree = "<group>"; };
+		78EB4CB915CD31E2002A67E0 /* PSCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSCollectionViewCell.m; sourceTree = "<group>"; };
+		78EB4CBA15CD31E2002A67E0 /* PSCollectionViewCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSCollectionViewCommon.h; sourceTree = "<group>"; };
+		78EB4CBB15CD31E2002A67E0 /* PSCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSCollectionViewController.h; sourceTree = "<group>"; };
+		78EB4CBC15CD31E2002A67E0 /* PSCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSCollectionViewController.m; sourceTree = "<group>"; };
+		78EB4CBD15CD31E2002A67E0 /* PSCollectionViewData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSCollectionViewData.h; sourceTree = "<group>"; };
+		78EB4CBE15CD31E2002A67E0 /* PSCollectionViewData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSCollectionViewData.m; sourceTree = "<group>"; };
+		78EB4CBF15CD31E2002A67E0 /* PSCollectionViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSCollectionViewFlowLayout.h; sourceTree = "<group>"; };
+		78EB4CC015CD31E2002A67E0 /* PSCollectionViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSCollectionViewFlowLayout.m; sourceTree = "<group>"; };
+		78EB4CC115CD31E2002A67E0 /* PSCollectionViewItemKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSCollectionViewItemKey.h; sourceTree = "<group>"; };
+		78EB4CC215CD31E2002A67E0 /* PSCollectionViewItemKey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSCollectionViewItemKey.m; sourceTree = "<group>"; };
+		78EB4CC315CD31E2002A67E0 /* PSCollectionViewLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSCollectionViewLayout.h; sourceTree = "<group>"; };
+		78EB4CC415CD31E2002A67E0 /* PSCollectionViewLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSCollectionViewLayout.m; sourceTree = "<group>"; };
+		78EB4CC515CD31E2002A67E0 /* PSGridLayoutInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSGridLayoutInfo.h; sourceTree = "<group>"; };
+		78EB4CC615CD31E2002A67E0 /* PSGridLayoutInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSGridLayoutInfo.m; sourceTree = "<group>"; };
+		78EB4CC715CD31E2002A67E0 /* PSGridLayoutItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSGridLayoutItem.h; sourceTree = "<group>"; };
+		78EB4CC815CD31E2002A67E0 /* PSGridLayoutItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSGridLayoutItem.m; sourceTree = "<group>"; };
+		78EB4CC915CD31E2002A67E0 /* PSGridLayoutRow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSGridLayoutRow.h; sourceTree = "<group>"; };
+		78EB4CCA15CD31E2002A67E0 /* PSGridLayoutRow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSGridLayoutRow.m; sourceTree = "<group>"; };
+		78EB4CCB15CD31E2002A67E0 /* PSGridLayoutSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSGridLayoutSection.h; sourceTree = "<group>"; };
+		78EB4CCC15CD31E2002A67E0 /* PSGridLayoutSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSGridLayoutSection.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		77AF006F157FA442001EC3FB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77C30BB5157FB7EB005E487B /* QuartzCore.framework in Frameworks */,
+				77AF0077157FA442001EC3FB /* UIKit.framework in Frameworks */,
+				77AF0079157FA442001EC3FB /* Foundation.framework in Frameworks */,
+				77AF007B157FA442001EC3FB /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		77AF0067157FA442001EC3FB = {
+			isa = PBXGroup;
+			children = (
+				28B8D5C415817E9B00386DDB /* ReadMe.txt */,
+				78EB4CB515CD31E2002A67E0 /* PSCollectionView */,
+				77AF007C157FA442001EC3FB /* CircleLayout */,
+				77AF0075157FA442001EC3FB /* Frameworks */,
+				77AF0073157FA442001EC3FB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		77AF0073157FA442001EC3FB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				77AF0072157FA442001EC3FB /* CircleLayout.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		77AF0075157FA442001EC3FB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				77C30BB4157FB7EB005E487B /* QuartzCore.framework */,
+				77AF0076157FA442001EC3FB /* UIKit.framework */,
+				77AF0078157FA442001EC3FB /* Foundation.framework */,
+				77AF007A157FA442001EC3FB /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		77AF007C157FA442001EC3FB /* CircleLayout */ = {
+			isa = PBXGroup;
+			children = (
+				77AF0085157FA442001EC3FB /* AppDelegate.h */,
+				77AF0086157FA442001EC3FB /* AppDelegate.m */,
+				77AF0088157FA442001EC3FB /* ViewController.h */,
+				77AF0089157FA442001EC3FB /* ViewController.m */,
+				77AF0093157FA528001EC3FB /* Cell.h */,
+				77AF0094157FA528001EC3FB /* Cell.m */,
+				77AF0095157FA528001EC3FB /* CircleLayout.h */,
+				77AF0096157FA528001EC3FB /* CircleLayout.m */,
+				77AF007D157FA442001EC3FB /* Supporting Files */,
+			);
+			path = CircleLayout;
+			sourceTree = "<group>";
+		};
+		77AF007D157FA442001EC3FB /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				77AF007E157FA442001EC3FB /* CircleLayout-Info.plist */,
+				77AF007F157FA442001EC3FB /* InfoPlist.strings */,
+				77AF0082157FA442001EC3FB /* main.m */,
+				77AF0084157FA442001EC3FB /* CircleLayout-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		78EB4CB515CD31E2002A67E0 /* PSCollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				78EB4CB615CD31E2002A67E0 /* PSCollectionView.h */,
+				78EB4CB715CD31E2002A67E0 /* PSCollectionView.m */,
+				78EB4CB815CD31E2002A67E0 /* PSCollectionViewCell.h */,
+				78EB4CB915CD31E2002A67E0 /* PSCollectionViewCell.m */,
+				78EB4CBA15CD31E2002A67E0 /* PSCollectionViewCommon.h */,
+				78EB4CBB15CD31E2002A67E0 /* PSCollectionViewController.h */,
+				78EB4CBC15CD31E2002A67E0 /* PSCollectionViewController.m */,
+				78EB4CBD15CD31E2002A67E0 /* PSCollectionViewData.h */,
+				78EB4CBE15CD31E2002A67E0 /* PSCollectionViewData.m */,
+				78EB4CBF15CD31E2002A67E0 /* PSCollectionViewFlowLayout.h */,
+				78EB4CC015CD31E2002A67E0 /* PSCollectionViewFlowLayout.m */,
+				78EB4CC115CD31E2002A67E0 /* PSCollectionViewItemKey.h */,
+				78EB4CC215CD31E2002A67E0 /* PSCollectionViewItemKey.m */,
+				78EB4CC315CD31E2002A67E0 /* PSCollectionViewLayout.h */,
+				78EB4CC415CD31E2002A67E0 /* PSCollectionViewLayout.m */,
+				78EB4CC515CD31E2002A67E0 /* PSGridLayoutInfo.h */,
+				78EB4CC615CD31E2002A67E0 /* PSGridLayoutInfo.m */,
+				78EB4CC715CD31E2002A67E0 /* PSGridLayoutItem.h */,
+				78EB4CC815CD31E2002A67E0 /* PSGridLayoutItem.m */,
+				78EB4CC915CD31E2002A67E0 /* PSGridLayoutRow.h */,
+				78EB4CCA15CD31E2002A67E0 /* PSGridLayoutRow.m */,
+				78EB4CCB15CD31E2002A67E0 /* PSGridLayoutSection.h */,
+				78EB4CCC15CD31E2002A67E0 /* PSGridLayoutSection.m */,
+			);
+			name = PSCollectionView;
+			path = ../../PSCollectionView;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		77AF0071157FA442001EC3FB /* CircleLayout */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 77AF0090157FA442001EC3FB /* Build configuration list for PBXNativeTarget "CircleLayout" */;
+			buildPhases = (
+				77AF006E157FA442001EC3FB /* Sources */,
+				77AF006F157FA442001EC3FB /* Frameworks */,
+				77AF0070157FA442001EC3FB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CircleLayout;
+			productName = CircleLayout;
+			productReference = 77AF0072157FA442001EC3FB /* CircleLayout.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		77AF0069157FA442001EC3FB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0450;
+				ORGANIZATIONNAME = "Olivier Gutknecht";
+			};
+			buildConfigurationList = 77AF006C157FA442001EC3FB /* Build configuration list for PBXProject "CircleLayout" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 77AF0067157FA442001EC3FB;
+			productRefGroup = 77AF0073157FA442001EC3FB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				77AF0071157FA442001EC3FB /* CircleLayout */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		77AF0070157FA442001EC3FB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77AF0081157FA442001EC3FB /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		77AF006E157FA442001EC3FB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77AF0083157FA442001EC3FB /* main.m in Sources */,
+				77AF0087157FA442001EC3FB /* AppDelegate.m in Sources */,
+				77AF008A157FA442001EC3FB /* ViewController.m in Sources */,
+				77AF0097157FA528001EC3FB /* Cell.m in Sources */,
+				77AF0098157FA528001EC3FB /* CircleLayout.m in Sources */,
+				78EB4CCD15CD31E2002A67E0 /* PSCollectionView.m in Sources */,
+				78EB4CCE15CD31E2002A67E0 /* PSCollectionViewCell.m in Sources */,
+				78EB4CCF15CD31E2002A67E0 /* PSCollectionViewController.m in Sources */,
+				78EB4CD015CD31E2002A67E0 /* PSCollectionViewData.m in Sources */,
+				78EB4CD115CD31E2002A67E0 /* PSCollectionViewFlowLayout.m in Sources */,
+				78EB4CD215CD31E2002A67E0 /* PSCollectionViewItemKey.m in Sources */,
+				78EB4CD315CD31E2002A67E0 /* PSCollectionViewLayout.m in Sources */,
+				78EB4CD415CD31E2002A67E0 /* PSGridLayoutInfo.m in Sources */,
+				78EB4CD515CD31E2002A67E0 /* PSGridLayoutItem.m in Sources */,
+				78EB4CD615CD31E2002A67E0 /* PSGridLayoutRow.m in Sources */,
+				78EB4CD715CD31E2002A67E0 /* PSGridLayoutSection.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		77AF007F157FA442001EC3FB /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				77AF0080157FA442001EC3FB /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		77AF008E157FA442001EC3FB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+		77AF008F157FA442001EC3FB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		77AF0091157FA442001EC3FB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CircleLayout/CircleLayout-Prefix.pch";
+				INFOPLIST_FILE = "CircleLayout/CircleLayout-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		77AF0092157FA442001EC3FB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CircleLayout/CircleLayout-Prefix.pch";
+				INFOPLIST_FILE = "CircleLayout/CircleLayout-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		77AF006C157FA442001EC3FB /* Build configuration list for PBXProject "CircleLayout" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				77AF008E157FA442001EC3FB /* Debug */,
+				77AF008F157FA442001EC3FB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		77AF0090157FA442001EC3FB /* Build configuration list for PBXNativeTarget "CircleLayout" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				77AF0091157FA442001EC3FB /* Debug */,
+				77AF0092157FA442001EC3FB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 77AF0069157FA442001EC3FB /* Project object */;
+}
