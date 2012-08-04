@@ -41,10 +41,11 @@
 }
 
 - (void)loadView {
-    self.collectionView = [[PSCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:self.layout];
+    [super loadView];
+    self.collectionView = [[PSCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:self.layout];
+    [self.view addSubview:self.collectionView];
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
-    self.view = self.collectionView;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
