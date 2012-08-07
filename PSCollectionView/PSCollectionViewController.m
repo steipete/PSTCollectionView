@@ -42,7 +42,10 @@
 
 - (void)loadView {
     [super loadView];
-    self.collectionView = [[PSCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:self.layout];
+    self.collectionView = [[PSCollectionView alloc] initWithFrame:CGRectMake(0, 0,
+                                                                             CGRectGetWidth(self.view.bounds),
+                                                                             CGRectGetHeight(self.view.bounds))
+                                             collectionViewLayout:self.layout];
     [self.view addSubview:self.collectionView];
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
