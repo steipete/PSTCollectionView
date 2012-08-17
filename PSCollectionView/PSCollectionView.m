@@ -18,6 +18,8 @@
 @property (nonatomic, unsafe_unretained) PSCollectionView *collectionView;
 @end
 
+CGFloat PSSimulatorAnimationDragCoefficient(void);
+
 @interface PSCollectionView() {
     BOOL _rotationActive;
     NSMutableDictionary *_allVisibleViewsDict;
@@ -68,6 +70,7 @@
 
     if ((self = [super initWithFrame:frame])) {
         // UICollectionViewCommonSetup
+        self.delaysContentTouches = NO;
         layout.collectionView = self;
         _collectionViewLayout = layout;
         _indexPathsForSelectedItems = [NSMutableSet new];
@@ -96,26 +99,39 @@
     // Adding alpha animation to make the relayouting smooth
     if (_collectionViewFlags.fadeCellsForBoundsChange) {
         CATransition *transition = [CATransition animation];
-        transition.duration = 0.25f;
+        transition.duration = 0.25f * PSSimulatorAnimationDragCoefficient();
         transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
         transition.type = kCATransitionFade;
         [self.layer addAnimation:transition forKey:@"rotationAnimation"];
-        _collectionViewFlags.fadeCellsForBoundsChange = NO;
     }
 
-    // TODO: don't always call
     [_collectionViewData validateLayoutInRect:self.bounds];
 
     // update cells
+    if (_collectionViewFlags.fadeCellsForBoundsChange) {
+        [CATransaction begin];
+        [CATransaction setDisableActions:YES];
+    }
+
     [self updateVisibleCellsNow:YES];
+
+    if (_collectionViewFlags.fadeCellsForBoundsChange) {
+        [CATransaction commit];
+    }
 
     // do we need to update contentSize?
     CGSize contentSize = [_collectionViewData collectionViewContentRect].size;
     if (!CGSizeEqualToSize(self.contentSize, contentSize)) {
         self.contentSize = contentSize;
+
+        // if contentSize is different, we need to re-evaluate layout, bounds (contentOffset) might changed
+        [_collectionViewData validateLayoutInRect:self.bounds];
+        [self updateVisibleCellsNow:YES];
     }
 
     _backgroundView.frame = (CGRect){.size=self.bounds.size};
+
+    _collectionViewFlags.fadeCellsForBoundsChange = NO;
 }
 
 - (void)setFrame:(CGRect)frame {
@@ -297,7 +313,16 @@
 
     PSCollectionViewLayoutAttributes *layoutAttributes = [self.collectionViewLayout layoutAttributesForItemAtIndexPath:indexPath];
     if (layoutAttributes) {
-        [self scrollRectToVisible:layoutAttributes.frame animated:animated];
+        CGRect targetRect = layoutAttributes.frame;
+
+        // hack to add proper margins to flowlayout.
+        // TODO: how to pack this into PSCollectionViewFlowLayout?
+        if ([self.collectionViewLayout isKindOfClass:[PSCollectionViewFlowLayout class]]) {
+            PSCollectionViewFlowLayout *flowLayout = (PSCollectionViewFlowLayout *)self.collectionViewLayout;
+            targetRect.size.height += flowLayout.scrollDirection == UICollectionViewScrollDirectionVertical ? flowLayout.minimumLineSpacing : flowLayout.minimumInteritemSpacing;
+            targetRect.size.width += flowLayout.scrollDirection == UICollectionViewScrollDirectionVertical ? flowLayout.minimumInteritemSpacing : flowLayout.minimumLineSpacing;
+        }
+        [self scrollRectToVisible:targetRect animated:animated];
     }
 }
 
@@ -555,6 +580,10 @@
 - (PSCollectionViewCell *)_createPreparedCellForItemAtIndexPath:(NSIndexPath *)indexPath withLayoutAttributes:(PSCollectionViewLayoutAttributes *)layoutAttributes {
 
     PSCollectionViewCell *cell = [self.dataSource collectionView:self cellForItemAtIndexPath:indexPath];
+
+    // voiceover support
+    cell.isAccessibilityElement = YES;
+
     [cell applyLayoutAttributes:layoutAttributes];
     return cell;
 }
@@ -669,4 +698,17 @@ __attribute__((constructor)) static void PSCreateUICollectionViewClasses(void) {
             objc_registerClassPair(objc_allocateClassPair([PSCollectionViewFlowLayout class], "UICollectionViewFlowLayout", 0));
         }
     }
+}
+
+CGFloat PSSimulatorAnimationDragCoefficient(void) {
+    static CGFloat (*UIAnimationDragCoefficient)(void) = NULL;
+#if TARGET_IPHONE_SIMULATOR
+#import <dlfcn.h>
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        void *UIKit = dlopen([[[NSBundle bundleForClass:[UIApplication class]] executablePath] fileSystemRepresentation], RTLD_LAZY);
+        UIAnimationDragCoefficient = (CGFloat (*)(void))dlsym(UIKit, "UIAnimationDragCoefficient");
+    });
+#endif
+    return UIAnimationDragCoefficient ? UIAnimationDragCoefficient() : 1.f;
 }
