@@ -33,11 +33,17 @@
 // imp_implementationWithBlock changed it's type in iOS6.
 #if __IPHONE_OS_VERSION_MAX_ALLOWED < 60000
 #define PSBlockImplCast (__bridge void *)
-@interface NSObject (PSSubscriptingSupport)
-- (id)objectAtIndexedSubscript:(NSUInteger)idx;
-- (void)setObject:(id)obj atIndexedSubscript:(NSUInteger)idx;
-- (void)setObject:(id)obj forKeyedSubscript:(id <NSCopying>)key;
+@interface NSDictionary(PSSubscriptingSupport)
 - (id)objectForKeyedSubscript:(id)key;
+@end
+@interface NSMutableDictionary(PSSubscriptingSupport)
+- (void)setObject:(id)obj forKeyedSubscript:(id <NSCopying>)key;
+@end
+@interface NSArray(PSSubscriptingSupport)
+- (id)objectAtIndexedSubscript:(NSUInteger)idx;
+@end
+@interface NSMutableArray(PSSubscriptingSupport)
+- (void)setObject:(id)obj atIndexedSubscript:(NSUInteger)idx;
 @end
 #else
 #define PSBlockImplCast
