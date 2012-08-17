@@ -74,6 +74,7 @@ typedef NS_ENUM(NSInteger, PSFlowLayoutHorizontalAlignment) {
 // TODO: settings for UIFlowLayoutRowVerticalAlignmentKey
 
 
+/*
 @interface PSCollectionViewFlowLayout (Private)
 
 - (CGSize)synchronizeLayout;
@@ -118,3 +119,4 @@ typedef NS_ENUM(NSInteger, PSFlowLayoutHorizontalAlignment) {
 - (id)layoutAttributesForItemAtIndexPath:(id)arg1;
 
 @end
+*/

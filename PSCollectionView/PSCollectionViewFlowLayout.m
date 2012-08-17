@@ -79,11 +79,10 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
         _scrollDirection = PSCollectionViewScrollDirectionVertical;
 
         // set default values for row alignment.
-        // TODO: those values are some enum. find out what what is.
-        // 3 = justified; 0 = left;  center, right?
         _rowAlignmentsOptionsDictionary = @{
         PSFlowLayoutCommonRowHorizontalAlignmentKey : @(PSFlowLayoutHorizontalAlignmentJustify),
         PSFlowLayoutLastRowHorizontalAlignmentKey : @(PSFlowLayoutHorizontalAlignmentLeft),
+        // TODO: those values are some enum. find out what what is.
         PSFlowLayoutRowVerticalAlignmentKey : @(1),
         };
     }
