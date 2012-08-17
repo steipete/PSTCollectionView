@@ -61,9 +61,9 @@
 
         // iterate over all items, turning them into rows.
         CGSize sectionSize = CGSizeZero;
-        NSUInteger rowIndex = 0;
-        NSUInteger itemIndex = 0;
-        NSUInteger itemsByRowCount = 0;
+        NSInteger rowIndex = 0;
+        NSInteger itemIndex = 0;
+        NSInteger itemsByRowCount = 0;
         CGFloat dimensionLeft = 0;
         PSGridLayoutRow *row = nil;
         // get dimension and compensate for section margin

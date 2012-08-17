@@ -114,7 +114,7 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
                 if (CGRectIntersectsRect(normalizedRowFrame, rect)) {
                     // TODO be more fine-graind for items
 
-                    for (NSUInteger itemIndex = 0; itemIndex < row.itemCount; itemIndex++) {
+                    for (NSInteger itemIndex = 0; itemIndex < row.itemCount; itemIndex++) {
                         PSCollectionViewLayoutAttributes *layoutAttributes;
                         NSUInteger sectionIndex = [section.layoutInfo.sections indexOfObject:section];
                         NSUInteger sectionItemIndex;

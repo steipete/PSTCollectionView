@@ -70,7 +70,7 @@
             leftOverSpace -= self.section.sectionMargins.left + self.section.sectionMargins.right;
         }
 
-        for (NSUInteger itemIndex = 0; itemIndex < self.itemCount; itemIndex++) {
+        for (NSInteger itemIndex = 0; itemIndex < self.itemCount; itemIndex++) {
             if (!self.fixedItemSize) {
                 PSGridLayoutItem *item = self.items[itemIndex];
                 leftOverSpace -= isHorizontal ? item.itemFrame.size.height : item.itemFrame.size.width;
@@ -92,7 +92,7 @@
         // calculate row frame as union of all items
         CGRect frame = CGRectZero;
         CGRect itemFrame = (CGRect){.size=self.section.itemSize};
-        for (NSUInteger itemIndex = 0; itemIndex < self.itemCount; itemIndex++) {
+        for (NSInteger itemIndex = 0; itemIndex < self.itemCount; itemIndex++) {
             PSGridLayoutItem *item = nil;
             if (!self.fixedItemSize) {
                 item = self.items[itemIndex];
