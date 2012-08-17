@@ -5,6 +5,7 @@
 //  Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //
 
+#import "PSCollectionViewCommon.h"
 #import "PSGridLayoutSection.h"
 #import "PSGridLayoutItem.h"
 #import "PSGridLayoutRow.h"
@@ -77,7 +78,7 @@
             // TODO: fast path could even remove row creation and just calculate on the fly
             PSGridLayoutItem *item = nil;
             if (!finishCycle) {
-                item = self.fixedItemSize ? nil : [self.items objectAtIndex:itemIndex];
+                item = self.fixedItemSize ? nil : self.items[itemIndex];
             }
             CGSize itemSize = self.fixedItemSize ? self.itemSize : item.itemFrame.size;
             CGFloat itemDimension = self.layoutInfo.horizontal ? itemSize.height : itemSize.width;

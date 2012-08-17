@@ -104,7 +104,7 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
             // for the last row. (we want this effect!)
             NSArray *itemRects = _cachedItemRects;
             if (!_cachedItemRects && section.fixedItemSize && [section.rows count]) {
-                itemRects = _cachedItemRects = [[section.rows objectAtIndex:0] itemRects];
+                itemRects = _cachedItemRects = [(section.rows)[0] itemRects];
             }
 
             for (PSGridLayoutRow *row in section.rows) {
