@@ -387,8 +387,8 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
 
 - (void)selectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(PSCollectionViewScrollPosition)scrollPosition {
     if (!self.allowsMultipleSelection) {
-        for (NSIndexPath *indexPath in _indexPathsForSelectedItems) {
-            [self deselectItemAtIndexPath:indexPath animated:animated];
+        for (NSIndexPath *selectedIndexPath in _indexPathsForSelectedItems) {
+            [self deselectItemAtIndexPath:selectedIndexPath animated:animated];
         }
     }
     if (self.allowsSelection) {
