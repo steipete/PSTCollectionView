@@ -57,7 +57,7 @@
     }
     
     if (_collectionViewControllerFlags.clearsSelectionOnViewWillAppear) {
-        for (NSIndexPath* aIndexPath in [_collectionView indexPathsForSelectedItems]) {
+        for (NSIndexPath* aIndexPath in [[_collectionView indexPathsForSelectedItems] copy]) {
             [_collectionView deselectItemAtIndexPath:aIndexPath animated:animated];
         }
     }

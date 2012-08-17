@@ -387,7 +387,7 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
 
 - (void)selectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(PSCollectionViewScrollPosition)scrollPosition {
     if (!self.allowsMultipleSelection) {
-        for (NSIndexPath *selectedIndexPath in _indexPathsForSelectedItems) {
+        for (NSIndexPath *selectedIndexPath in [_indexPathsForSelectedItems copy]) {
             [self deselectItemAtIndexPath:selectedIndexPath animated:animated];
         }
     }
@@ -440,7 +440,7 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
 
 - (void)unhighlightAllItems
 {
-    for (NSIndexPath *indexPath in _indexPathsForHighlightedItems) {
+    for (NSIndexPath *indexPath in [_indexPathsForHighlightedItems copy]) {
         [self unhighlightItemAtIndexPath:indexPath animated:NO notifyDelegate:YES];
     }
 }
