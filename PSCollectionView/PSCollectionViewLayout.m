@@ -119,7 +119,7 @@ NSString *const PSCollectionElementKindDecorationView = @"PSCollectionElementKin
 - (void)setCenter:(CGPoint)center
 {
     _center = center;
-    _frame = (CGRect){_center.x - _frame.size.width / 2, _center.y - _frame.size.height / 2, _frame.size};
+    _frame = (CGRect){{_center.x - _frame.size.width / 2, _center.y - _frame.size.height / 2}, _frame.size};
 }
 
 - (void)setFrame:(CGRect)frame
