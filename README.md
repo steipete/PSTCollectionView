@@ -8,7 +8,7 @@ I've originally started this to replace the thumbnail grid in my iOS PDF Framewo
 **The goal is to make UICollectionView instantly usable to anyone**, using "the real thing" on iOS6 and PSCollectionView as a fallback for iOS4/5.
 We even use certain runtime tricks to create UICollectionView at runtime for older versions of iOS. Ideally, **you just link the files and everything works on older systems.**
 
-PSCollectionView is also internally designed very closesly to UICollectionView and thus a great study if you're wondering how UICollectionView works. See [HowTo](/steipetePSCollectionView/blob/master/HowTo.md) for helpful details.
+PSCollectionView is also internally designed very closesly to UICollectionView and thus a great study if you're wondering how UICollectionView works. See [HowTo](/steipete/PSCollectionView/blob/master/HowTo.md) for helpful details.
 
 
 *Important: Since iSO6 is not yet released, this repository needs to be private to not break the NDA.*
