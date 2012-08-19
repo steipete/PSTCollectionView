@@ -131,8 +131,9 @@ typedef NS_OPTIONS(NSUInteger, UICollectionViewScrollPosition) {
 // If a class is registered, it will be instantiated via alloc/initWithFrame:
 - (void)registerClass:(Class)cellClass forCellWithReuseIdentifier:(NSString *)identifier;
 - (void)registerClass:(Class)viewClass forSupplementaryViewOfKind:(NSString *)elementKind withReuseIdentifier:(NSString *)identifier;
-/*
 - (void)registerNib:(UINib *)nib forCellWithReuseIdentifier:(NSString *)identifier;
+
+/*
 - (void)registerNib:(UINib *)nib forSupplementaryViewOfKind:(NSString *)kind withReuseIdentifier:(NSString *)identifier;
  */
 

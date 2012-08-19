@@ -30,6 +30,11 @@
     return self;
 }
 
+- (void) awakeFromNib {    
+    self.reuseIdentifier = [self valueForKeyPath:@"reuseIdentifier"];
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Public
 
