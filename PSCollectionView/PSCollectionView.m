@@ -26,7 +26,7 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
     NSMutableDictionary *_cellReuseQueues;
     NSMutableDictionary *_supplementaryViewReuseQueues;
 
-    NSMutableDictionary *_cellClassDict;
+    NSMutableDictionary *_cellClassDict, *_cellNibDict;
     NSMutableDictionary *_supplementaryViewClassDict;
 
     NSUInteger _reloadingSuspendedCount;
@@ -53,6 +53,8 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
     } _collectionViewFlags;
 }
 @property (nonatomic, strong) PSCollectionViewData *collectionViewData;
+@property (strong) NSString *collectionViewClassString;
+
 @end
 
 @implementation PSCollectionView
@@ -79,11 +81,39 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
         _supplementaryViewReuseQueues = [NSMutableDictionary new];
         _allVisibleViewsDict = [NSMutableDictionary new];
         _cellClassDict = [NSMutableDictionary new];
+        _cellNibDict = [NSMutableDictionary new];
         _supplementaryViewClassDict = [NSMutableDictionary new];
         _collectionViewData = [[PSCollectionViewData alloc] initWithCollectionView:self layout:layout];
         _allowsSelection = YES;
     }
     return self;
+}
+
+
+- (id)initWithCoder:(NSCoder *)inCoder {
+    
+    
+    if ((self = [super initWithCoder:inCoder])) {
+        self = [self initWithFrame:self.frame collectionViewLayout:nil];
+    }
+    
+    return self;
+    
+}
+
+- (void) awakeFromNib {
+    
+    NSString *collectionViewClassString = [self valueForKeyPath:@"collectionViewClassString"];
+    
+    if (! collectionViewClassString) {
+        NSLog(@"Please set the collection view class string in user defined runtime attributes");
+    } else {
+        PSCollectionViewLayout *layout = [[NSClassFromString(collectionViewClassString) alloc] init];
+        
+        layout.collectionView = self;
+        _collectionViewLayout = layout;
+        _collectionViewData = [[PSCollectionViewData alloc] initWithCollectionView:self layout:layout];
+    }
 }
 
 - (NSString *)description {
@@ -160,6 +190,16 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
     _supplementaryViewClassDict[identifier] = viewClass;
 }
 
+
+- (void)registerNib:(UINib *)nib forCellWithReuseIdentifier:(NSString *)identifier {
+    NSArray *topLevelObjects = [nib instantiateWithOwner:nil options:nil];
+   
+    NSAssert(topLevelObjects.count == 1 && [topLevelObjects[0] isKindOfClass:PSCollectionViewCell.class], @"must contain exactly 1 top level object which is a PSCollectionViewCell");
+    
+    _cellNibDict[identifier] = nib;
+}
+
+
 - (id)dequeueReusableCellWithReuseIdentifier:(NSString *)identifier forIndexPath:(NSIndexPath *)indexPath {
     // dequeue cell (if available)
     NSMutableArray *reusableCells = _cellReuseQueues[identifier];
@@ -167,19 +207,27 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
     if (cell) {
         [reusableCells removeObjectAtIndex:[reusableCells count]-1];
     }else {
-        Class cellClass = _cellClassDict[identifier];
-        // compatiblity layer
-        if ([cellClass isEqual:[UICollectionViewCell class]]) {
-            cellClass = [PSCollectionViewCell class];
-        }
-        if (cellClass == nil) {
-            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"Class not registered for identifier %@", identifier] userInfo:nil];
-        }
-        if (self.collectionViewLayout) {
-            PSCollectionViewLayoutAttributes *attributes = [self.collectionViewLayout layoutAttributesForItemAtIndexPath:indexPath];
-            cell = [[cellClass alloc] initWithFrame:attributes.frame];
+        if (_cellNibDict[identifier]) {
+            // Cell was registered via registerNib: forCellWithReuseIdentifier:
+            UINib *cellNib = _cellNibDict[identifier];
+            
+            cell = [cellNib instantiateWithOwner:self options:0][0];
         } else {
-            cell = [cellClass new];
+
+            Class cellClass = _cellClassDict[identifier];
+            // compatiblity layer
+            if ([cellClass isEqual:[UICollectionViewCell class]]) {
+                cellClass = [PSCollectionViewCell class];
+            }
+            if (cellClass == nil) {
+                @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"Class not registered for identifier %@", identifier] userInfo:nil];
+            }
+            if (self.collectionViewLayout) {
+                PSCollectionViewLayoutAttributes *attributes = [self.collectionViewLayout layoutAttributesForItemAtIndexPath:indexPath];
+                cell = [[cellClass alloc] initWithFrame:attributes.frame];
+            } else {
+                cell = [cellClass new];
+            }
         }
         cell.collectionView = self;
         cell.reuseIdentifier = identifier;
