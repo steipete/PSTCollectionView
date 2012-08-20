@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
     :git => 'https://github.com/steipete/PSCollectionView.git',
     :commit => 'HEAD'
   }
-  s.platform = :ios, '4.0'
+  s.platform = :ios, '4.3'
   s.source_files = 'PSCollectionView/'
   s.public_header_files = 'PSCollectionView/'
   s.frameworks = 'UIKit', 'QuartzCore'
