@@ -370,7 +370,11 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
             targetRect.size.height += flowLayout.scrollDirection == UICollectionViewScrollDirectionVertical ? flowLayout.minimumLineSpacing : flowLayout.minimumInteritemSpacing;
             targetRect.size.width += flowLayout.scrollDirection == UICollectionViewScrollDirectionVertical ? flowLayout.minimumInteritemSpacing : flowLayout.minimumLineSpacing;
         }
-        [self scrollRectToVisible:targetRect animated:animated];
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // This somehow needs to happen in the next run loop iteration.
+            [self scrollRectToVisible:targetRect animated:animated];
+        });
     }
 }
 
