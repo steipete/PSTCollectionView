@@ -1,6 +1,8 @@
 PSCollectionView
 ================
 
+IMPORTANT: DO NOT BRANCH THIS REPO, OR YOU WILL SEND HUNDRETHS OF EMAILS AS EVERY SINGLE DEVELOPER ADDED HERE WILL GET ACCESS TO YOUR REPO. USE BRANCHES.
+
 Open Source, 100% API compatible replacement of UICollectionView for iOS4+
 
 I've originally started this to replace the thumbnail grid in my iOS PDF Framework/SDK [PSPDFKit](http://pspdfkit.com), but seemed way too useful for others to keep it for myself.
