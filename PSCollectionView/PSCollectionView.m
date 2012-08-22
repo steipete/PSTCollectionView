@@ -359,6 +359,9 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
 // Interacting with the collection view.
 - (void)scrollToItemAtIndexPath:(NSIndexPath *)indexPath atScrollPosition:(PSCollectionViewScrollPosition)scrollPosition animated:(BOOL)animated {
 
+    // ensure grid is layouted; else we can't scroll.
+    [self layoutSubviews];
+
     PSCollectionViewLayoutAttributes *layoutAttributes = [self.collectionViewLayout layoutAttributesForItemAtIndexPath:indexPath];
     if (layoutAttributes) {
         CGRect targetRect = layoutAttributes.frame;
