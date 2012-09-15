@@ -91,21 +91,17 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
 
 
 - (id)initWithCoder:(NSCoder *)inCoder {
-    
-    
     if ((self = [super initWithCoder:inCoder])) {
         self = [self initWithFrame:self.frame collectionViewLayout:nil];
     }
     
-    return self;
-    
+    return self;    
 }
 
-- (void) awakeFromNib {
-    
+- (void)awakeFromNib {
     NSString *collectionViewClassString = [self valueForKeyPath:@"collectionViewClassString"];
     
-    if (! collectionViewClassString) {
+    if (!collectionViewClassString) {
         NSLog(@"Please set the collection view class string in user defined runtime attributes");
     } else {
         PSCollectionViewLayout *layout = [[NSClassFromString(collectionViewClassString) alloc] init];
@@ -216,7 +212,8 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
 
             Class cellClass = _cellClassDict[identifier];
             // compatiblity layer
-            if ([cellClass isEqual:[UICollectionViewCell class]]) {
+            Class collectionViewCellClass = NSClassFromString(@"UICollectionViewCell");
+            if (collectionViewCellClass && [cellClass isEqual:collectionViewCellClass]) {
                 cellClass = [PSCollectionViewCell class];
             }
             if (cellClass == nil) {
@@ -242,7 +239,8 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
         [reusableViews removeObjectAtIndex:reusableViews.count - 1];
     } else {
         Class viewClass = _supplementaryViewClassDict[identifier];
-        if ([viewClass isEqual:[UICollectionReusableView class]]) {
+        Class reusableViewClass = NSClassFromString(@"UICollectionReusableView");
+        if (reusableViewClass && [viewClass isEqual:reusableViewClass]) {
             viewClass = [PSCollectionReusableView class];
         }
         if (viewClass == nil) {
