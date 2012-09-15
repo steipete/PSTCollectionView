@@ -7,8 +7,8 @@
 
 #import "PSCollectionViewLayout.h"
 
-NSString *const PSCollectionElementKindSectionHeader;
-NSString *const PSCollectionElementKindSectionFooter;
+extern NSString *const PSCollectionElementKindSectionHeader;
+extern NSString *const PSCollectionElementKindSectionFooter;
 
 typedef NS_ENUM(NSInteger, PSCollectionViewScrollDirection) {
     PSCollectionViewScrollDirectionVertical,
