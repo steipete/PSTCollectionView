@@ -93,7 +93,7 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "PSCollectionViewController.h"
-@interface ViewController : UICollectionViewController
+
+@interface ViewController : PSTCollectionViewController
 
 @end

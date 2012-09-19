@@ -1,13 +1,13 @@
 //
-//  PSGridLayoutItem.m
+//  PSTGridLayoutItem.m
 //  PSPDFKit
 //
 //  Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //
 
-#import "PSGridLayoutItem.h"
+#import "PSTGridLayoutItem.h"
 
-@implementation PSGridLayoutItem
+@implementation PSTGridLayoutItem
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject

@@ -93,7 +93,7 @@
  */
 
 #import "PinchLayout.h"
-#import "PSCollectionViewLayout.h"
+
 @implementation PinchLayout
 
 -(void)applyPinchToLayoutAttributes:(UICollectionViewLayoutAttributes*)layoutAttributes
@@ -120,7 +120,7 @@
 
 -(UICollectionViewLayoutAttributes*)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    UICollectionViewLayoutAttributes* attributes = [super layoutAttributesForItemAtIndexPath:indexPath];
+    UICollectionViewLayoutAttributes* attributes = (UICollectionViewLayoutAttributes*)[super layoutAttributesForItemAtIndexPath:indexPath];
     
     [self applyPinchToLayoutAttributes:attributes];
 

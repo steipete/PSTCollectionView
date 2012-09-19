@@ -1,18 +1,18 @@
 //
-//  PSGridLayoutRow.m
+//  PSTGridLayoutRow.m
 //  PSPDFKit
 //
 //  Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //
 
-#import "PSCollectionView.h"
-#import "PSGridLayoutRow.h"
-#import "PSGridLayoutSection.h"
-#import "PSGridLayoutItem.h"
-#import "PSGridLayoutInfo.h"
-#import "PSCollectionViewFlowLayout.h"
+#import "PSTCollectionView.h"
+#import "PSTGridLayoutRow.h"
+#import "PSTGridLayoutSection.h"
+#import "PSTGridLayoutItem.h"
+#import "PSTGridLayoutInfo.h"
+#import "PSTCollectionViewFlowLayout.h"
 
-@interface PSGridLayoutRow() {
+@interface PSTGridLayoutRow() {
     NSMutableArray *_items;
     BOOL _isValid;
     int _verticalAlignement;
@@ -21,7 +21,7 @@
 @property (nonatomic, strong) NSArray *items;
 @end
 
-@implementation PSGridLayoutRow
+@implementation PSTGridLayoutRow
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject
@@ -72,7 +72,7 @@
 
         for (NSInteger itemIndex = 0; itemIndex < self.itemCount; itemIndex++) {
             if (!self.fixedItemSize) {
-                PSGridLayoutItem *item = self.items[itemIndex];
+                PSTGridLayoutItem *item = self.items[itemIndex];
                 leftOverSpace -= isHorizontal ? item.itemFrame.size.height : item.itemFrame.size.width;
             }else {
                 leftOverSpace -= isHorizontal ? self.section.itemSize.height : self.section.itemSize.width;
@@ -93,7 +93,7 @@
         CGRect frame = CGRectZero;
         CGRect itemFrame = (CGRect){.size=self.section.itemSize};
         for (NSInteger itemIndex = 0; itemIndex < self.itemCount; itemIndex++) {
-            PSGridLayoutItem *item = nil;
+            PSTGridLayoutItem *item = nil;
             if (!self.fixedItemSize) {
                 item = self.items[itemIndex];
                 itemFrame = [item itemFrame];
@@ -122,14 +122,14 @@
     return rects;
 }
 
-- (void)addItem:(PSGridLayoutItem *)item {
+- (void)addItem:(PSTGridLayoutItem *)item {
     [_items addObject:item];
     item.rowObject = self;
     [self invalidate];
 }
 
-- (PSGridLayoutRow *)snapshot {
-    PSGridLayoutRow *snapshotRow = [[self class] new];
+- (PSTGridLayoutRow *)snapshot {
+    PSTGridLayoutRow *snapshotRow = [[self class] new];
     snapshotRow.section = self.section;
     snapshotRow.items = self.items;
     snapshotRow.rowSize = self.rowSize;
@@ -141,7 +141,7 @@
     return snapshotRow;
 }
 
-- (PSGridLayoutRow *)copyFromSection:(PSGridLayoutSection *)section {
+- (PSTGridLayoutRow *)copyFromSection:(PSTGridLayoutSection *)section {
     return nil; // ???
 }
 

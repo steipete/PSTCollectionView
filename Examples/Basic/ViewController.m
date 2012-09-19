@@ -17,14 +17,14 @@
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark - PSCollectionViewDataSource
+#pragma mark - PSTCollectionViewDataSource
 
 - (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section {
     return 63;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark - PSCollectionViewDelegate
+#pragma mark - PSTCollectionViewDelegate
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     Cell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MY_CELL" forIndexPath:indexPath];
@@ -32,17 +32,17 @@
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark - PSCollectionViewDelegateFlowLayout
+#pragma mark - PSTCollectionViewDelegateFlowLayout
 
-- (CGSize)collectionView:(PSCollectionView *)collectionView layout:(PSCollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+- (CGSize)collectionView:(PSTCollectionView *)collectionView layout:(PSTCollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     return CGSizeMake(200, 200);
 }
 
-- (CGFloat)collectionView:(PSCollectionView *)collectionView layout:(PSCollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
+- (CGFloat)collectionView:(PSTCollectionView *)collectionView layout:(PSTCollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     return 10;
 }
 
-- (CGFloat)collectionView:(PSCollectionView *)collectionView layout:(PSCollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
+- (CGFloat)collectionView:(PSTCollectionView *)collectionView layout:(PSTCollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     return 50;
 }
 

@@ -93,8 +93,7 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "PSCollectionView.h"
 
-@interface LineLayout : UICollectionViewFlowLayout
+@interface LineLayout : PSTCollectionViewFlowLayout
 
 @end

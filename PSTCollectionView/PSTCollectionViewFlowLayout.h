@@ -5,14 +5,14 @@
 //  Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //
 
-#import "PSCollectionViewLayout.h"
+#import "PSTCollectionViewLayout.h"
 
-extern NSString *const PSCollectionElementKindSectionHeader;
-extern NSString *const PSCollectionElementKindSectionFooter;
+extern NSString *const PSTCollectionElementKindSectionHeader;
+extern NSString *const PSTCollectionElementKindSectionFooter;
 
-typedef NS_ENUM(NSInteger, PSCollectionViewScrollDirection) {
-    PSCollectionViewScrollDirectionVertical,
-    PSCollectionViewScrollDirectionHorizontal
+typedef NS_ENUM(NSInteger, PSTCollectionViewScrollDirection) {
+    PSTCollectionViewScrollDirectionVertical,
+    PSTCollectionViewScrollDirectionHorizontal
 };
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED < 60000
@@ -22,24 +22,24 @@ typedef NS_ENUM(NSInteger, UICollectionViewScrollDirection) {
 };
 #endif
 
-@protocol PSCollectionViewDelegateFlowLayout <PSCollectionViewDelegate>
+@protocol PSTCollectionViewDelegateFlowLayout <PSTCollectionViewDelegate>
 @optional
 
-- (CGSize)collectionView:(PSCollectionView *)collectionView layout:(PSCollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
-- (UIEdgeInsets)collectionView:(PSCollectionView *)collectionView layout:(PSCollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section;
-- (CGFloat)collectionView:(PSCollectionView *)collectionView layout:(PSCollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section;
-- (CGFloat)collectionView:(PSCollectionView *)collectionView layout:(PSCollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section;
-- (CGSize)collectionView:(PSCollectionView *)collectionView layout:(PSCollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section;
-- (CGSize)collectionView:(PSCollectionView *)collectionView layout:(PSCollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section;
+- (CGSize)collectionView:(PSTCollectionView *)collectionView layout:(PSTCollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
+- (UIEdgeInsets)collectionView:(PSTCollectionView *)collectionView layout:(PSTCollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section;
+- (CGFloat)collectionView:(PSTCollectionView *)collectionView layout:(PSTCollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section;
+- (CGFloat)collectionView:(PSTCollectionView *)collectionView layout:(PSTCollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section;
+- (CGSize)collectionView:(PSTCollectionView *)collectionView layout:(PSTCollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section;
+- (CGSize)collectionView:(PSTCollectionView *)collectionView layout:(PSTCollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section;
 
 @end
 
-@interface PSCollectionViewFlowLayout : PSCollectionViewLayout
+@interface PSTCollectionViewFlowLayout : PSTCollectionViewLayout
 
 @property (nonatomic) CGFloat minimumLineSpacing;
 @property (nonatomic) CGFloat minimumInteritemSpacing;
 @property (nonatomic) CGSize itemSize; // for the cases the delegate method is not implemented
-@property (nonatomic) PSCollectionViewScrollDirection scrollDirection; // default is PSCollectionViewScrollDirectionVertical
+@property (nonatomic) PSTCollectionViewScrollDirection scrollDirection; // default is PSTCollectionViewScrollDirectionVertical
 @property (nonatomic) CGSize headerReferenceSize;
 @property (nonatomic) CGSize footerReferenceSize;
 
@@ -75,27 +75,27 @@ typedef NS_ENUM(NSInteger, PSFlowLayoutHorizontalAlignment) {
 
 
 /*
-@interface PSCollectionViewFlowLayout (Private)
+@interface PSTCollectionViewFlowLayout (Private)
 
 - (CGSize)synchronizeLayout;
 
 // For items being inserted or deleted, the collection view calls some different methods, which you should override to provide the appropriate layout information.
-- (PSCollectionViewLayoutAttributes *)initialLayoutAttributesForFooterInInsertedSection:(NSInteger)section;
-- (PSCollectionViewLayoutAttributes *)initialLayoutAttributesForHeaderInInsertedSection:(NSInteger)section;
-- (PSCollectionViewLayoutAttributes *)initialLayoutAttributesForInsertedItemAtIndexPath:(NSIndexPath *)indexPath;
-- (PSCollectionViewLayoutAttributes *)finalLayoutAttributesForFooterInDeletedSection:(NSInteger)section;
-- (PSCollectionViewLayoutAttributes *)finalLayoutAttributesForHeaderInDeletedSection:(NSInteger)section;
-- (PSCollectionViewLayoutAttributes *)finalLayoutAttributesForDeletedItemAtIndexPath:(NSIndexPath *)indexPath;
+- (PSTCollectionViewLayoutAttributes *)initialLayoutAttributesForFooterInInsertedSection:(NSInteger)section;
+- (PSTCollectionViewLayoutAttributes *)initialLayoutAttributesForHeaderInInsertedSection:(NSInteger)section;
+- (PSTCollectionViewLayoutAttributes *)initialLayoutAttributesForInsertedItemAtIndexPath:(NSIndexPath *)indexPath;
+- (PSTCollectionViewLayoutAttributes *)finalLayoutAttributesForFooterInDeletedSection:(NSInteger)section;
+- (PSTCollectionViewLayoutAttributes *)finalLayoutAttributesForHeaderInDeletedSection:(NSInteger)section;
+- (PSTCollectionViewLayoutAttributes *)finalLayoutAttributesForDeletedItemAtIndexPath:(NSIndexPath *)indexPath;
 
 - (void)_updateItemsLayout;
 - (void)_getSizingInfos;
 - (void)_updateDelegateFlags;
 
-- (PSCollectionViewLayoutAttributes *)layoutAttributesForFooterInSection:(NSInteger)section;
-- (PSCollectionViewLayoutAttributes *)layoutAttributesForHeaderInSection:(NSInteger)section;
-- (PSCollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath usingData:(id)data;
-- (PSCollectionViewLayoutAttributes *)layoutAttributesForFooterInSection:(NSInteger)section usingData:(id)data;
-- (PSCollectionViewLayoutAttributes *)layoutAttributesForHeaderInSection:(NSInteger)section usingData:(id)data;
+- (PSTCollectionViewLayoutAttributes *)layoutAttributesForFooterInSection:(NSInteger)section;
+- (PSTCollectionViewLayoutAttributes *)layoutAttributesForHeaderInSection:(NSInteger)section;
+- (PSTCollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath usingData:(id)data;
+- (PSTCollectionViewLayoutAttributes *)layoutAttributesForFooterInSection:(NSInteger)section usingData:(id)data;
+- (PSTCollectionViewLayoutAttributes *)layoutAttributesForHeaderInSection:(NSInteger)section usingData:(id)data;
 
 - (id)indexesForSectionFootersInRect:(CGRect)rect;
 - (id)indexesForSectionHeadersInRect:(CGRect)rect;
@@ -107,10 +107,10 @@ typedef NS_ENUM(NSInteger, PSFlowLayoutHorizontalAlignment) {
 - (CGRect)_frameForHeaderInSection:(int)arg1 usingData:(id)arg2;
 - (void)_invalidateLayout;
 - (NSIndexPath *)indexPathForItemAtPoint:(CGPoint)arg1;
-- (PSCollectionViewLayoutAttributes *)_layoutAttributesForItemsInRect:(CGRect)arg1;
+- (PSTCollectionViewLayoutAttributes *)_layoutAttributesForItemsInRect:(CGRect)arg1;
 - (CGSize)collectionViewContentSize;
 - (void)finalizeCollectionViewUpdates;
-- (PSCollectionViewLayoutAttributes *)layoutAttributesForSupplementaryViewOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath;
+- (PSTCollectionViewLayoutAttributes *)layoutAttributesForSupplementaryViewOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath;
 - (void)_invalidateButKeepDelegateInfo;
 - (void)_invalidateButKeepAllInfo;
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)arg1;

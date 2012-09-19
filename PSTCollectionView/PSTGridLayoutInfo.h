@@ -1,5 +1,5 @@
 //
-//  PSCollectionLayoutInfo.h
+//  PSTCollectionLayoutInfo.h
 //  PSPDFKit
 //
 //  Copyright (c) 2012 Peter Steinberger. All rights reserved.
@@ -7,13 +7,13 @@
 
 #import <Foundation/Foundation.h>
 
-@class PSGridLayoutSection;
+@class PSTGridLayoutSection;
 
 /*
-    Every PSCollectionViewLayout has a PSGridLayoutInfo attached. 
-    Is used extensively in PSCollectionViewFlowLayout.
+    Every PSTCollectionViewLayout has a PSTGridLayoutInfo attached. 
+    Is used extensively in PSTCollectionViewFlowLayout.
  */
-@interface PSGridLayoutInfo : NSObject
+@interface PSTGridLayoutInfo : NSObject
 
 @property (nonatomic, strong, readonly) NSArray *sections;
 @property (nonatomic, strong) NSDictionary *rowAlignmentOptions;
@@ -27,17 +27,17 @@
 @property (nonatomic, assign) BOOL leftToRight;
 @property (nonatomic, assign) CGSize contentSize;
 
-// Frame for specific PSGridLayoutItem.
+// Frame for specific PSTGridLayoutItem.
 - (CGRect)frameForItemAtIndexPath:(NSIndexPath *)indexPath;
 
 // Add new section. Invalidates layout.
-- (PSGridLayoutSection *)addSection;
+- (PSTGridLayoutSection *)addSection;
 
 // forces the layout to recompute on next access
 // TODO; what's the parameter for?
 - (void)invalidate:(BOOL)arg;
 
 // Make a copy of the current state.
-- (PSGridLayoutInfo *)snapshot;
+- (PSTGridLayoutInfo *)snapshot;
 
 @end

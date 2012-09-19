@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PSCollectionViewCell.h"
+#import "PSTCollectionViewCell.h"
 
 @interface Cell : UICollectionViewCell
 

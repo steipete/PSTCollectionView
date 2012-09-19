@@ -103,7 +103,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    
+
     LineLayout* lineLayout = [[LineLayout alloc] init];
     self.viewController = [[ViewController alloc] initWithCollectionViewLayout:lineLayout];
     

@@ -1,26 +1,26 @@
 //
-//  PSCollectionViewItemKey.h
+//  PSTCollectionViewItemKey.h
 //  PSPDFKit
 //
 //  Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //
 
-#import "PSCollectionViewCommon.h"
-#import "PSCollectionViewLayout.h"
+#import "PSTCollectionViewCommon.h"
+#import "PSTCollectionViewLayout.h"
 
-@class PSCollectionViewLayoutAttributes;
+@class PSTCollectionViewLayoutAttributes;
 
-NSString *PSCollectionViewItemTypeToString(PSCollectionViewItemType type); // debug helper
+NSString *PSTCollectionViewItemTypeToString(PSTCollectionViewItemType type); // debug helper
 
 // Used in NSDictionaries
-@interface PSCollectionViewItemKey : NSObject <NSCopying>
+@interface PSTCollectionViewItemKey : NSObject <NSCopying>
 
-+ (id)collectionItemKeyForLayoutAttributes:(PSCollectionViewLayoutAttributes *)layoutAttributes;
++ (id)collectionItemKeyForLayoutAttributes:(PSTCollectionViewLayoutAttributes *)layoutAttributes;
 + (id)collectionItemKeyForDecorationViewOfKind:(NSString *)elementKind andIndexPath:(NSIndexPath *)indexPath;
 + (id)collectionItemKeyForSupplementaryViewOfKind:(NSString *)elementKind andIndexPath:(NSIndexPath *)indexPath;
 + (id)collectionItemKeyForCellWithIndexPath:(NSIndexPath *)indexPath;
 
-@property(nonatomic, assign) PSCollectionViewItemType type;
+@property(nonatomic, assign) PSTCollectionViewItemType type;
 @property(nonatomic, strong) NSIndexPath *indexPath;
 @property(nonatomic, strong) NSString *identifier;
 

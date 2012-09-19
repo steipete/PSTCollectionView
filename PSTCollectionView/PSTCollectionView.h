@@ -1,51 +1,51 @@
 //
-//  PSCollectionView.h
+//  PSTCollectionView.h
 //  PSPDFKit
 //
 //  Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //
 
-#import "PSCollectionViewLayout.h"
-#import "PSCollectionViewFlowLayout.h"
-#import "PSCollectionViewCell.h"
+#import "PSTCollectionViewLayout.h"
+#import "PSTCollectionViewFlowLayout.h"
+#import "PSTCollectionViewCell.h"
 
-@class PSCollectionViewController;
+@class PSTCollectionViewController;
 
 // Define this to automatically return UICollection* variants on init if they are available.
-//#define kPSCollectionViewRelayToUICollectionViewIfAvailable
+//#define kPSTCollectionViewRelayToUICollectionViewIfAvailable
 
 // Allows code to just use UICollectionView as if it would be avaiable on iOS SDK 5.
 // http://developer.apple.com/legacy/mac/library/#documentation/DeveloperTools/gcc-3.3/gcc/compatibility_005falias.html
 #if __IPHONE_OS_VERSION_MAX_ALLOWED < 60000
-@compatibility_alias UICollectionViewController PSCollectionViewController;
-@compatibility_alias UICollectionView PSCollectionView;
-@compatibility_alias UICollectionReusableView PSCollectionReusableView;
-@compatibility_alias UICollectionViewCell PSCollectionViewCell;
-@compatibility_alias UICollectionViewLayout PSCollectionViewLayout;
-@compatibility_alias UICollectionViewFlowLayout PSCollectionViewFlowLayout;
-@compatibility_alias UICollectionViewLayoutAttributes PSCollectionViewLayoutAttributes;
-@protocol UICollectionViewDataSource <PSCollectionViewDataSource> @end
-@protocol UICollectionViewDelegate <PSCollectionViewDelegate> @end
+@compatibility_alias UICollectionViewController PSTCollectionViewController;
+@compatibility_alias UICollectionView PSTCollectionView;
+@compatibility_alias UICollectionReusableView PSTCollectionReusableView;
+@compatibility_alias UICollectionViewCell PSTCollectionViewCell;
+@compatibility_alias UICollectionViewLayout PSTCollectionViewLayout;
+@compatibility_alias UICollectionViewFlowLayout PSTCollectionViewFlowLayout;
+@compatibility_alias UICollectionViewLayoutAttributes PSTCollectionViewLayoutAttributes;
+@protocol UICollectionViewDataSource <PSTCollectionViewDataSource> @end
+@protocol UICollectionViewDelegate <PSTCollectionViewDelegate> @end
 #endif
 
-@protocol PSCollectionViewDataSource <NSObject>
+@protocol PSTCollectionViewDataSource <NSObject>
 @required
 
-- (NSInteger)collectionView:(PSCollectionView *)collectionView numberOfItemsInSection:(NSInteger)section;
+- (NSInteger)collectionView:(PSTCollectionView *)collectionView numberOfItemsInSection:(NSInteger)section;
 
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
-- (PSCollectionViewCell *)collectionView:(PSCollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath;
+- (PSTCollectionViewCell *)collectionView:(PSTCollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath;
 
 @optional
 
-- (NSInteger)numberOfSectionsInCollectionView:(PSCollectionView *)collectionView;
+- (NSInteger)numberOfSectionsInCollectionView:(PSTCollectionView *)collectionView;
 
 // The view that is returned must be retrieved from a call to -dequeueReusableSupplementaryViewOfKind:withReuseIdentifier:forIndexPath:
-- (PSCollectionReusableView *)collectionView:(PSCollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath;
+- (PSTCollectionReusableView *)collectionView:(PSTCollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath;
 
 @end
 
-@protocol PSCollectionViewDelegate <UIScrollViewDelegate>
+@protocol PSTCollectionViewDelegate <UIScrollViewDelegate>
 @optional
 
 // Methods for notification of selection/deselection and highlight/unhighlight events.
@@ -59,38 +59,38 @@
 // 3. -collectionView:shouldSelectItemAtIndexPath: or -collectionView:shouldDeselectItemAtIndexPath:
 // 4. -collectionView:didSelectItemAtIndexPath: or -collectionView:didDeselectItemAtIndexPath:
 // 5. -collectionView:didUnhighlightItemAtIndexPath:
-- (BOOL)collectionView:(PSCollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath;
-- (void)collectionView:(PSCollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath;
-- (void)collectionView:(PSCollectionView *)collectionView didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath;
-- (BOOL)collectionView:(PSCollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath;
-- (BOOL)collectionView:(PSCollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath; // called when the user taps on an already-selected item in multi-select mode
-- (void)collectionView:(PSCollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath;
-- (void)collectionView:(PSCollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath;
+- (BOOL)collectionView:(PSTCollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath;
+- (void)collectionView:(PSTCollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath;
+- (void)collectionView:(PSTCollectionView *)collectionView didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath;
+- (BOOL)collectionView:(PSTCollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath;
+- (BOOL)collectionView:(PSTCollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath; // called when the user taps on an already-selected item in multi-select mode
+- (void)collectionView:(PSTCollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath;
+- (void)collectionView:(PSTCollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath;
 
-- (void)collectionView:(PSCollectionView *)collectionView didEndDisplayingCell:(PSCollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath;
-- (void)collectionView:(PSCollectionView *)collectionView didEndDisplayingSupplementaryView:(PSCollectionReusableView *)view forElementOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)indexPath;
+- (void)collectionView:(PSTCollectionView *)collectionView didEndDisplayingCell:(PSTCollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath;
+- (void)collectionView:(PSTCollectionView *)collectionView didEndDisplayingSupplementaryView:(PSTCollectionReusableView *)view forElementOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)indexPath;
 
 // These methods provide support for copy/paste actions on cells.
 // All three should be implemented if any are.
-- (BOOL)collectionView:(PSCollectionView *)collectionView shouldShowMenuForItemAtIndexPath:(NSIndexPath *)indexPath;
-- (BOOL)collectionView:(PSCollectionView *)collectionView canPerformAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender;
-- (void)collectionView:(PSCollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender;
+- (BOOL)collectionView:(PSTCollectionView *)collectionView shouldShowMenuForItemAtIndexPath:(NSIndexPath *)indexPath;
+- (BOOL)collectionView:(PSTCollectionView *)collectionView canPerformAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender;
+- (void)collectionView:(PSTCollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender;
 
 @end
 
-typedef NS_OPTIONS(NSUInteger, PSCollectionViewScrollPosition) {
-    PSCollectionViewScrollPositionNone                 = 0,
+typedef NS_OPTIONS(NSUInteger, PSTCollectionViewScrollPosition) {
+    PSTCollectionViewScrollPositionNone                 = 0,
 
     // The vertical positions are mutually exclusive to each other, but are bitwise or-able with the horizontal scroll positions.
     // Combining positions from the same grouping (horizontal or vertical) will result in an NSInvalidArgumentException.
-    PSCollectionViewScrollPositionTop                  = 1 << 0,
-    PSCollectionViewScrollPositionCenteredVertically   = 1 << 1,
-    PSCollectionViewScrollPositionBottom               = 1 << 2,
+    PSTCollectionViewScrollPositionTop                  = 1 << 0,
+    PSTCollectionViewScrollPositionCenteredVertically   = 1 << 1,
+    PSTCollectionViewScrollPositionBottom               = 1 << 2,
 
     // Likewise, the horizontal positions are mutually exclusive to each other.
-    PSCollectionViewScrollPositionLeft                 = 1 << 3,
-    PSCollectionViewScrollPositionCenteredHorizontally = 1 << 4,
-    PSCollectionViewScrollPositionRight                = 1 << 5
+    PSTCollectionViewScrollPositionLeft                 = 1 << 3,
+    PSTCollectionViewScrollPositionCenteredHorizontally = 1 << 4,
+    PSTCollectionViewScrollPositionRight                = 1 << 5
 };
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED < 60000
@@ -110,24 +110,24 @@ typedef NS_OPTIONS(NSUInteger, UICollectionViewScrollPosition) {
 };
 #endif
 
-#import "PSCollectionViewController.h"
+#import "PSTCollectionViewController.h"
 
 /**
     Replacement for UICollectionView for iOS4/5.
     Only supports a subset of the features of UICollectionView.
     e.g. animations won't be handled.
  */
-@interface PSCollectionView : UIScrollView
+@interface PSTCollectionView : UIScrollView
 
-- (id)initWithFrame:(CGRect)frame collectionViewLayout:(PSCollectionViewLayout *)layout; // the designated initializer
+- (id)initWithFrame:(CGRect)frame collectionViewLayout:(PSTCollectionViewLayout *)layout; // the designated initializer
 
-@property (nonatomic, retain) PSCollectionViewLayout *collectionViewLayout;
-@property (nonatomic, assign) id <PSCollectionViewDelegate> delegate;
-@property (nonatomic, assign) id <PSCollectionViewDataSource> dataSource;
+@property (nonatomic, retain) PSTCollectionViewLayout *collectionViewLayout;
+@property (nonatomic, assign) id <PSTCollectionViewDelegate> delegate;
+@property (nonatomic, assign) id <PSTCollectionViewDataSource> dataSource;
 @property (nonatomic, retain) UIView *backgroundView; // will be automatically resized to track the size of the collection view and placed behind all cells and supplementary views.
 
 // For each reuse identifier that the collection view will use, register either a class or a nib from which to instantiate a cell.
-// If a nib is registered, it must contain exactly 1 top level object which is a PSCollectionViewCell.
+// If a nib is registered, it must contain exactly 1 top level object which is a PSTCollectionViewCell.
 // If a class is registered, it will be instantiated via alloc/initWithFrame:
 - (void)registerClass:(Class)cellClass forCellWithReuseIdentifier:(NSString *)identifier;
 - (void)registerClass:(Class)viewClass forSupplementaryViewOfKind:(NSString *)elementKind withReuseIdentifier:(NSString *)identifier;
@@ -144,31 +144,31 @@ typedef NS_OPTIONS(NSUInteger, UICollectionViewScrollPosition) {
 @property (nonatomic) BOOL allowsMultipleSelection; // default is NO
 
 - (NSArray *)indexPathsForSelectedItems; // returns nil or an array of selected index paths
-- (void)selectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(PSCollectionViewScrollPosition)scrollPosition;
+- (void)selectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(PSTCollectionViewScrollPosition)scrollPosition;
 - (void)deselectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated;
 
 - (void)reloadData; // discard the dataSource and delegate data and requery as necessary
 
-- (void)setCollectionViewLayout:(PSCollectionViewLayout *)layout animated:(BOOL)animated; // transition from one layout to another
+- (void)setCollectionViewLayout:(PSTCollectionViewLayout *)layout animated:(BOOL)animated; // transition from one layout to another
 
 // Information about the current state of the collection view.
 
 - (NSInteger)numberOfSections;
 - (NSInteger)numberOfItemsInSection:(NSInteger)section;
 
-- (PSCollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath;
-- (PSCollectionViewLayoutAttributes *)layoutAttributesForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath;
+- (PSTCollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath;
+- (PSTCollectionViewLayoutAttributes *)layoutAttributesForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath;
 
 - (NSIndexPath *)indexPathForItemAtPoint:(CGPoint)point;
-- (NSIndexPath *)indexPathForCell:(PSCollectionViewCell *)cell;
+- (NSIndexPath *)indexPathForCell:(PSTCollectionViewCell *)cell;
 
-- (PSCollectionViewCell *)cellForItemAtIndexPath:(NSIndexPath *)indexPath;
+- (PSTCollectionViewCell *)cellForItemAtIndexPath:(NSIndexPath *)indexPath;
 - (NSArray *)visibleCells;
 - (NSArray *)indexPathsForVisibleItems;
 
 // Interacting with the collection view.
 
-- (void)scrollToItemAtIndexPath:(NSIndexPath *)indexPath atScrollPosition:(PSCollectionViewScrollPosition)scrollPosition animated:(BOOL)animated;
+- (void)scrollToItemAtIndexPath:(NSIndexPath *)indexPath atScrollPosition:(PSTCollectionViewScrollPosition)scrollPosition animated:(BOOL)animated;
 
 // These methods allow dynamic modification of the current set of items in the collection view
 - (void)insertSections:(NSIndexSet *)sections;

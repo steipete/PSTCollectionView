@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PSCollectionView.h"
+#import "PSTCollectionView.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 

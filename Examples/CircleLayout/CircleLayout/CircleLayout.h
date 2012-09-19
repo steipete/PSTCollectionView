@@ -93,9 +93,8 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "PSCollectionView.h"
 
-@interface CircleLayout : UICollectionViewLayout
+@interface CircleLayout : PSTCollectionViewLayout
 
 @property (nonatomic, assign) CGPoint center;
 @property (nonatomic, assign) CGFloat radius;

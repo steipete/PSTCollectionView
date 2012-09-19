@@ -1,5 +1,5 @@
 //
-//  PSGridLayoutRow.h
+//  PSTGridLayoutRow.h
 //  PSPDFKit
 //
 //  Copyright (c) 2012 Peter Steinberger. All rights reserved.
@@ -7,11 +7,11 @@
 
 #import <Foundation/Foundation.h>
 
-@class PSGridLayoutSection, PSGridLayoutItem;
+@class PSTGridLayoutSection, PSTGridLayoutItem;
 
-@interface PSGridLayoutRow : NSObject
+@interface PSTGridLayoutRow : NSObject
 
-@property (nonatomic, unsafe_unretained) PSGridLayoutSection *section;
+@property (nonatomic, unsafe_unretained) PSTGridLayoutSection *section;
 @property (nonatomic, strong, readonly) NSArray *items;
 @property (nonatomic, assign) CGSize rowSize;
 @property (nonatomic, assign) CGRect rowFrame;
@@ -22,15 +22,15 @@
 // @steipete addition for row-fastPath
 @property (nonatomic, assign) NSInteger itemCount;
 
-//- (PSGridLayoutRow *)copyFromSection:(PSGridLayoutSection *)section; // ???
+//- (PSTGridLayoutRow *)copyFromSection:(PSTGridLayoutSection *)section; // ???
 
 // Add new item to items array.
-- (void)addItem:(PSGridLayoutItem *)item;
+- (void)addItem:(PSTGridLayoutItem *)item;
 
 // Layout current row (if invalid)
 - (void)layoutRow;
 
-// @steipete: Helper to save code in PSCollectionViewFlowLayout.
+// @steipete: Helper to save code in PSTCollectionViewFlowLayout.
 // Returns the item rects when fixedItemSize is enabled.
 - (NSArray *)itemRects;
 
@@ -38,6 +38,6 @@
 - (void)invalidate;
 
 // Copy a snapshot of the current row data
-- (PSGridLayoutRow *)snapshot;
+- (PSTGridLayoutRow *)snapshot;
 
 @end

@@ -1,28 +1,28 @@
 //
-//  PSCollectionViewController.m
+//  PSTCollectionViewController.m
 //  PSPDFKit
 //
 //  Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //
 
-#import "PSCollectionViewController.h"
-#import "PSCollectionView.h"
+#import "PSTCollectionViewController.h"
+#import "PSTCollectionView.h"
 
-@interface PSCollectionViewController () {
+@interface PSTCollectionViewController () {
     struct {
         unsigned int clearsSelectionOnViewWillAppear:1;
     } _collectionViewControllerFlags;
 }
-@property (nonatomic, strong) PSCollectionViewLayout* layout;
+@property (nonatomic, strong) PSTCollectionViewLayout* layout;
 @property (nonatomic, assign) BOOL appearsFirstTime;
 @end
 
-@implementation PSCollectionViewController
+@implementation PSTCollectionViewController
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject
 
-- (id)initWithCollectionViewLayout:(PSCollectionViewLayout *)layout {
+- (id)initWithCollectionViewLayout:(PSTCollectionViewLayout *)layout {
     if((self = [super init])) {
         self.layout = layout;
         self.clearsSelectionOnViewWillAppear = YES;
@@ -42,7 +42,7 @@
 
 - (void)loadView {
     [super loadView];
-    self.collectionView = [[PSCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:self.layout];
+    self.collectionView = [[PSTCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:self.layout];
     [self.view addSubview:self.collectionView];
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
@@ -75,13 +75,13 @@
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark - PSCollectionViewDataSource
+#pragma mark - PSTCollectionViewDataSource
 
-- (NSInteger)collectionView:(PSCollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+- (NSInteger)collectionView:(PSTCollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return 0;
 }
 
-- (PSCollectionViewCell *)collectionView:(PSCollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+- (PSTCollectionViewCell *)collectionView:(PSTCollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }

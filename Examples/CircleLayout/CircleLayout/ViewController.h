@@ -93,8 +93,8 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "PSCollectionViewController.h"
-@interface ViewController : UICollectionViewController
+
+@interface ViewController : PSTCollectionViewController
 
 @property (nonatomic, assign) NSInteger cellCount;
 

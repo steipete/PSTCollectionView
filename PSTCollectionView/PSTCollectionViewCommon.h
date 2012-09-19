@@ -1,5 +1,5 @@
 //
-//  PSCollectionViewCommon.h
+//  PSTCollectionViewCommon.h
 //  PSPDFKit
 //
 //  Copyright (c) 2012 Peter Steinberger. All rights reserved.
@@ -8,8 +8,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@class PSCollectionView;
-@protocol PSCollectionViewDataSource, PSCollectionViewDelegate;
+@class PSTCollectionView;
+@protocol PSTCollectionViewDataSource, PSTCollectionViewDelegate;
 
 // Newer runtimes defines this, here's a fallback for the iOS5 SDK.
 #ifndef NS_ENUM
@@ -19,7 +19,7 @@
 
 // Category exists in iOS6.
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-@interface NSIndexPath (PSCollectionViewAdditions)
+@interface NSIndexPath (PSTCollectionViewAdditions)
 + (NSIndexPath *)indexPathForItem:(NSInteger)item inSection:(NSInteger)section;
 @property (nonatomic, readonly) NSInteger item;
 @end

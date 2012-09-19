@@ -114,7 +114,7 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath;
 {
     Cell *cell = [cv dequeueReusableCellWithReuseIdentifier:@"MY_CELL" forIndexPath:indexPath];
-    return cell;
+    return (UICollectionViewCell *)cell;
 }
 
 - (void)handlePinchGesture:(UIPinchGestureRecognizer *)sender

@@ -1,27 +1,27 @@
 //
-//  PSCollectionViewItemKey.m
+//  PSTCollectionViewItemKey.m
 //  PSPDFKit
 //
 //  Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //
 
-#import "PSCollectionViewItemKey.h"
-#import "PSCollectionViewLayout.h"
+#import "PSTCollectionViewItemKey.h"
+#import "PSTCollectionViewLayout.h"
 
-@implementation PSCollectionViewItemKey
+@implementation PSTCollectionViewItemKey
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Static
 
 + (id)collectionItemKeyForCellWithIndexPath:(NSIndexPath *)indexPath {
-    PSCollectionViewItemKey *key = [[self class] new];
+    PSTCollectionViewItemKey *key = [[self class] new];
     key.indexPath = indexPath;
-    key.type = PSCollectionViewItemTypeCell;
+    key.type = PSTCollectionViewItemTypeCell;
     return key;
 }
 
-+ (id)collectionItemKeyForLayoutAttributes:(PSCollectionViewLayoutAttributes *)layoutAttributes {
-    PSCollectionViewItemKey *key = [[self class] new];
++ (id)collectionItemKeyForLayoutAttributes:(PSTCollectionViewLayoutAttributes *)layoutAttributes {
+    PSTCollectionViewItemKey *key = [[self class] new];
     key.indexPath = layoutAttributes.indexPath;
     key.type = layoutAttributes.representedElementCategory;
     return key;
@@ -29,26 +29,26 @@
 
 // elementKind or reuseIdentifier?
 + (id)collectionItemKeyForDecorationViewOfKind:(NSString *)elementKind andIndexPath:(NSIndexPath *)indexPath {
-    PSCollectionViewItemKey *key = [[self class] new];
+    PSTCollectionViewItemKey *key = [[self class] new];
     key.indexPath = indexPath;
     key.identifier = elementKind;
-    key.type = PSCollectionViewItemTypeDecorationView;
+    key.type = PSTCollectionViewItemTypeDecorationView;
     return key;
 }
 
 + (id)collectionItemKeyForSupplementaryViewOfKind:(NSString *)elementKind andIndexPath:(NSIndexPath *)indexPath {
-    PSCollectionViewItemKey *key = [[self class] new];
+    PSTCollectionViewItemKey *key = [[self class] new];
     key.indexPath = indexPath;
     key.identifier = elementKind;
-    key.type = PSCollectionViewItemTypeSupplementaryView;
+    key.type = PSTCollectionViewItemTypeSupplementaryView;
     return key;
 }
 
-NSString *PSCollectionViewItemTypeToString(PSCollectionViewItemType type) {
+NSString *PSTCollectionViewItemTypeToString(PSTCollectionViewItemType type) {
     switch (type) {
-        case PSCollectionViewItemTypeCell: return @"Cell";
-        case PSCollectionViewItemTypeDecorationView: return @"Decoration";
-        case PSCollectionViewItemTypeSupplementaryView: return @"Supplementary";
+        case PSTCollectionViewItemTypeCell: return @"Cell";
+        case PSTCollectionViewItemTypeDecorationView: return @"Decoration";
+        case PSTCollectionViewItemTypeSupplementaryView: return @"Supplementary";
         default: return @"<INVALID>";
     }
 }
@@ -57,7 +57,7 @@ NSString *PSCollectionViewItemTypeToString(PSCollectionViewItemType type) {
 #pragma mark - NSObject
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p> Type = %@ IndexPath = %@", NSStringFromClass([self class]), self, PSCollectionViewItemTypeToString(self.type), self.indexPath];
+    return [NSString stringWithFormat:@"<%@: %p> Type = %@ IndexPath = %@", NSStringFromClass([self class]), self, PSTCollectionViewItemTypeToString(self.type), self.indexPath];
 }
 
 - (NSUInteger)hash {
@@ -66,7 +66,7 @@ NSString *PSCollectionViewItemTypeToString(PSCollectionViewItemType type) {
 
 - (BOOL)isEqual:(id)other {
     if ([other isKindOfClass:[self class]]) {
-        PSCollectionViewItemKey *otherKeyItem = (PSCollectionViewItemKey *)other;
+        PSTCollectionViewItemKey *otherKeyItem = (PSTCollectionViewItemKey *)other;
         // identifier might be nil?
         if (_type == otherKeyItem.type && [_indexPath isEqual:otherKeyItem.indexPath] && ([_identifier isEqual:otherKeyItem.identifier] || _identifier == otherKeyItem.identifier)) {
             return YES;
@@ -79,7 +79,7 @@ NSString *PSCollectionViewItemTypeToString(PSCollectionViewItemType type) {
 #pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone {
-    PSCollectionViewItemKey *itemKey = [[self class] new];
+    PSTCollectionViewItemKey *itemKey = [[self class] new];
     itemKey.indexPath = self.indexPath;
     itemKey.type = self.type;
     itemKey.identifier = self.identifier;

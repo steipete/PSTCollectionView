@@ -1,25 +1,25 @@
 //
-//  PSCollectionViewCell.m
+//  PSTCollectionViewCell.m
 //  PSPDFKit
 //
 //  Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //
 
-#import "PSCollectionView.h"
-#import "PSCollectionViewCell.h"
-#import "PSCollectionViewLayout.h"
+#import "PSTCollectionView.h"
+#import "PSTCollectionViewCell.h"
+#import "PSTCollectionViewLayout.h"
 
-@interface PSCollectionReusableView() {
+@interface PSTCollectionReusableView() {
     struct {
         unsigned int inUpdateAnimation:1;
     } _reusableViewFlags;
 }
 @property (nonatomic, copy) NSString *reuseIdentifier;
-@property (nonatomic, unsafe_unretained) PSCollectionView *collectionView;
-@property (nonatomic, strong) PSCollectionViewLayoutAttributes *layoutAttributes;
+@property (nonatomic, unsafe_unretained) PSTCollectionView *collectionView;
+@property (nonatomic, strong) PSTCollectionViewLayoutAttributes *layoutAttributes;
 @end
 
-@implementation PSCollectionReusableView
+@implementation PSTCollectionReusableView
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject
@@ -42,7 +42,7 @@
     self.layoutAttributes = nil;
 }
 
-- (void)applyLayoutAttributes:(PSCollectionViewLayoutAttributes *)layoutAttributes {
+- (void)applyLayoutAttributes:(PSTCollectionViewLayoutAttributes *)layoutAttributes {
     if (layoutAttributes != _layoutAttributes) {
         _layoutAttributes = layoutAttributes;
         self.frame = layoutAttributes.frame;
@@ -54,10 +54,10 @@
     }
 }
 
-- (void)willTransitionFromLayout:(PSCollectionViewLayout *)oldLayout toLayout:(PSCollectionViewLayout *)newLayout {
+- (void)willTransitionFromLayout:(PSTCollectionViewLayout *)oldLayout toLayout:(PSTCollectionViewLayout *)newLayout {
     _reusableViewFlags.inUpdateAnimation = YES;
 }
-- (void)didTransitionFromLayout:(PSCollectionViewLayout *)oldLayout toLayout:(PSCollectionViewLayout *)newLayout {
+- (void)didTransitionFromLayout:(PSTCollectionViewLayout *)oldLayout toLayout:(PSTCollectionViewLayout *)newLayout {
     _reusableViewFlags.inUpdateAnimation = NO;
 }
 
@@ -72,7 +72,7 @@
 @end
 
 
-@implementation PSCollectionViewCell
+@implementation PSTCollectionViewCell
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject
@@ -163,7 +163,7 @@
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark - PSCollection/UICollection interoperability
+#pragma mark - PSTCollection/UICollection interoperability
 
 #import <objc/runtime.h>
 #import <objc/message.h>

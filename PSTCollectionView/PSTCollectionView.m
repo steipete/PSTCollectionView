@@ -1,26 +1,26 @@
 //
-//  PSCollectionView.m
+//  PSTCollectionView.m
 //  PSPDFKit
 //
 //  Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //
 
-#import "PSCollectionView.h"
-#import "PSCollectionViewController.h"
-#import "PSCollectionViewData.h"
-#import "PSCollectionViewCell.h"
-#import "PSCollectionViewLayout.h"
-#import "PSCollectionViewFlowLayout.h"
-#import "PSCollectionViewItemKey.h"
+#import "PSTCollectionView.h"
+#import "PSTCollectionViewController.h"
+#import "PSTCollectionViewData.h"
+#import "PSTCollectionViewCell.h"
+#import "PSTCollectionViewLayout.h"
+#import "PSTCollectionViewFlowLayout.h"
+#import "PSTCollectionViewItemKey.h"
 #import <QuartzCore/QuartzCore.h>
 
-@interface PSCollectionViewLayout (Internal)
-@property (nonatomic, unsafe_unretained) PSCollectionView *collectionView;
+@interface PSTCollectionViewLayout (Internal)
+@property (nonatomic, unsafe_unretained) PSTCollectionView *collectionView;
 @end
 
 CGFloat PSSimulatorAnimationDragCoefficient(void);
 
-@interface PSCollectionView() {
+@interface PSTCollectionView() {
     BOOL _rotationActive;
     NSMutableDictionary *_allVisibleViewsDict;
     NSMutableDictionary *_cellReuseQueues;
@@ -52,20 +52,20 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
          */
     } _collectionViewFlags;
 }
-@property (nonatomic, strong) PSCollectionViewData *collectionViewData;
+@property (nonatomic, strong) PSTCollectionViewData *collectionViewData;
 @property (strong) NSString *collectionViewClassString;
 
 @end
 
-@implementation PSCollectionView
+@implementation PSTCollectionView
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject
 
-- (id)initWithFrame:(CGRect)frame collectionViewLayout:(PSCollectionViewLayout *)layout {
-#ifdef kPSCollectionViewRelayToUICollectionViewIfAvailable
+- (id)initWithFrame:(CGRect)frame collectionViewLayout:(PSTCollectionViewLayout *)layout {
+#ifdef kPSTCollectionViewRelayToUICollectionViewIfAvailable
     if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_6_0) {
-        self = (PSCollectionView *)[[UICollectionView alloc] initWithFrame:frame collectionViewLayout:(UICollectionViewLayout *)layout];
+        self = (PSTCollectionView *)[[UICollectionView alloc] initWithFrame:frame collectionViewLayout:(UICollectionViewLayout *)layout];
         return self;
     }
 #endif
@@ -83,7 +83,7 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
         _cellClassDict = [NSMutableDictionary new];
         _cellNibDict = [NSMutableDictionary new];
         _supplementaryViewClassDict = [NSMutableDictionary new];
-        _collectionViewData = [[PSCollectionViewData alloc] initWithCollectionView:self layout:layout];
+        _collectionViewData = [[PSTCollectionViewData alloc] initWithCollectionView:self layout:layout];
         _allowsSelection = YES;
     }
     return self;
@@ -104,11 +104,11 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
     if (!collectionViewClassString) {
         NSLog(@"Please set the collection view class string in user defined runtime attributes");
     } else {
-        PSCollectionViewLayout *layout = [[NSClassFromString(collectionViewClassString) alloc] init];
+        PSTCollectionViewLayout *layout = [[NSClassFromString(collectionViewClassString) alloc] init];
         
         layout.collectionView = self;
         _collectionViewLayout = layout;
-        _collectionViewData = [[PSCollectionViewData alloc] initWithCollectionView:self layout:layout];
+        _collectionViewData = [[PSTCollectionViewData alloc] initWithCollectionView:self layout:layout];
     }
 }
 
@@ -190,7 +190,7 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
 - (void)registerNib:(UINib *)nib forCellWithReuseIdentifier:(NSString *)identifier {
     NSArray *topLevelObjects = [nib instantiateWithOwner:nil options:nil];
    
-    NSAssert(topLevelObjects.count == 1 && [topLevelObjects[0] isKindOfClass:PSCollectionViewCell.class], @"must contain exactly 1 top level object which is a PSCollectionViewCell");
+    NSAssert(topLevelObjects.count == 1 && [topLevelObjects[0] isKindOfClass:PSTCollectionViewCell.class], @"must contain exactly 1 top level object which is a PSTCollectionViewCell");
     
     _cellNibDict[identifier] = nib;
 }
@@ -199,7 +199,7 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
 - (id)dequeueReusableCellWithReuseIdentifier:(NSString *)identifier forIndexPath:(NSIndexPath *)indexPath {
     // dequeue cell (if available)
     NSMutableArray *reusableCells = _cellReuseQueues[identifier];
-    PSCollectionViewCell *cell = [reusableCells lastObject];
+    PSTCollectionViewCell *cell = [reusableCells lastObject];
     if (cell) {
         [reusableCells removeObjectAtIndex:[reusableCells count]-1];
     }else {
@@ -214,13 +214,13 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
             // compatiblity layer
             Class collectionViewCellClass = NSClassFromString(@"UICollectionViewCell");
             if (collectionViewCellClass && [cellClass isEqual:collectionViewCellClass]) {
-                cellClass = [PSCollectionViewCell class];
+                cellClass = [PSTCollectionViewCell class];
             }
             if (cellClass == nil) {
                 @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"Class not registered for identifier %@", identifier] userInfo:nil];
             }
             if (self.collectionViewLayout) {
-                PSCollectionViewLayoutAttributes *attributes = [self.collectionViewLayout layoutAttributesForItemAtIndexPath:indexPath];
+                PSTCollectionViewLayoutAttributes *attributes = [self.collectionViewLayout layoutAttributesForItemAtIndexPath:indexPath];
                 cell = [[cellClass alloc] initWithFrame:attributes.frame];
             } else {
                 cell = [cellClass new];
@@ -234,20 +234,20 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
 
 - (id)dequeueReusableSupplementaryViewOfKind:(NSString *)elementKind withReuseIdentifier:(NSString *)identifier forIndexPath:(NSIndexPath *)indexPath {
     NSMutableArray *reusableViews = _supplementaryViewReuseQueues[identifier];
-    PSCollectionReusableView *view = [reusableViews lastObject];
+    PSTCollectionReusableView *view = [reusableViews lastObject];
     if (view) {
         [reusableViews removeObjectAtIndex:reusableViews.count - 1];
     } else {
         Class viewClass = _supplementaryViewClassDict[identifier];
         Class reusableViewClass = NSClassFromString(@"UICollectionReusableView");
         if (reusableViewClass && [viewClass isEqual:reusableViewClass]) {
-            viewClass = [PSCollectionReusableView class];
+            viewClass = [PSTCollectionReusableView class];
         }
         if (viewClass == nil) {
             @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"Class not registered for identifier %@", identifier] userInfo:nil];
         }
         if (self.collectionViewLayout) {
-            PSCollectionViewLayoutAttributes *attributes = [self.collectionViewLayout layoutAttributesForSupplementaryViewOfKind:elementKind
+            PSTCollectionViewLayoutAttributes *attributes = [self.collectionViewLayout layoutAttributesForSupplementaryViewOfKind:elementKind
                                                                                                                      atIndexPath:indexPath];
             view = [[viewClass alloc] initWithFrame:attributes.frame];
         } else {
@@ -287,20 +287,20 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
     return [_collectionViewData numberOfItemsInSection:section];
 }
 
-- (PSCollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath {
+- (PSTCollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath {
     return nil;
 }
 
-- (PSCollectionViewLayoutAttributes *)layoutAttributesForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
+- (PSTCollectionViewLayoutAttributes *)layoutAttributesForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
     return nil;
 }
 
 - (NSIndexPath *)indexPathForItemAtPoint:(CGPoint)point {
     __block NSIndexPath *indexPath = nil;
     [_allVisibleViewsDict enumerateKeysAndObjectsWithOptions:kNilOptions usingBlock:^(id key, id obj, BOOL *stop) {
-        PSCollectionViewItemKey *itemKey = (PSCollectionViewItemKey *)key;
-        if (itemKey.type == PSCollectionViewItemTypeCell) {
-            PSCollectionViewCell *cell = (PSCollectionViewCell *)obj;
+        PSTCollectionViewItemKey *itemKey = (PSTCollectionViewItemKey *)key;
+        if (itemKey.type == PSTCollectionViewItemTypeCell) {
+            PSTCollectionViewCell *cell = (PSTCollectionViewCell *)obj;
             if (CGRectContainsPoint(cell.frame, point)) {
                 indexPath = itemKey.indexPath;
                 *stop = YES;
@@ -310,12 +310,12 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
     return indexPath;
 }
 
-- (NSIndexPath *)indexPathForCell:(PSCollectionViewCell *)cell {
+- (NSIndexPath *)indexPathForCell:(PSTCollectionViewCell *)cell {
     __block NSIndexPath *indexPath = nil;
     [_allVisibleViewsDict enumerateKeysAndObjectsWithOptions:kNilOptions usingBlock:^(id key, id obj, BOOL *stop) {
-        PSCollectionViewItemKey *itemKey = (PSCollectionViewItemKey *)key;
-        if (itemKey.type == PSCollectionViewItemTypeCell) {
-            PSCollectionViewCell *currentCell = (PSCollectionViewCell *)obj;
+        PSTCollectionViewItemKey *itemKey = (PSTCollectionViewItemKey *)key;
+        if (itemKey.type == PSTCollectionViewItemTypeCell) {
+            PSTCollectionViewCell *currentCell = (PSTCollectionViewCell *)obj;
             if (currentCell == cell) {
                 indexPath = itemKey.indexPath;
                 *stop = YES;
@@ -325,13 +325,13 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
     return indexPath;
 }
 
-- (PSCollectionViewCell *)cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+- (PSTCollectionViewCell *)cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     //NSInteger index = [_collectionViewData globalIndexForItemAtIndexPath:indexPath];
     // TODO Apple uses some kind of globalIndex for this.
-    __block PSCollectionViewCell *cell = nil;
+    __block PSTCollectionViewCell *cell = nil;
     [_allVisibleViewsDict enumerateKeysAndObjectsWithOptions:0 usingBlock:^(id key, id obj, BOOL *stop) {
-        PSCollectionViewItemKey *itemKey = (PSCollectionViewItemKey *)key;
-        if (itemKey.type == PSCollectionViewItemTypeCell) {
+        PSTCollectionViewItemKey *itemKey = (PSTCollectionViewItemKey *)key;
+        if (itemKey.type == PSTCollectionViewItemTypeCell) {
             if ([itemKey.indexPath isEqual:indexPath]) {
                 cell = obj;
                 *stop = YES;
@@ -343,7 +343,7 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
 
 - (NSArray *)indexPathsForVisibleItems {
     NSMutableArray *visibleItems = [NSMutableArray array];
-    for (PSCollectionViewCell *cell in [self visibleCells]) {
+    for (PSTCollectionViewCell *cell in [self visibleCells]) {
         NSIndexPath *indexPath = [self indexPathForCell:cell];
         if (indexPath) {
             [visibleItems addObject:indexPath];
@@ -355,19 +355,19 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
 }
 
 // Interacting with the collection view.
-- (void)scrollToItemAtIndexPath:(NSIndexPath *)indexPath atScrollPosition:(PSCollectionViewScrollPosition)scrollPosition animated:(BOOL)animated {
+- (void)scrollToItemAtIndexPath:(NSIndexPath *)indexPath atScrollPosition:(PSTCollectionViewScrollPosition)scrollPosition animated:(BOOL)animated {
 
     // ensure grid is layouted; else we can't scroll.
     [self layoutSubviews];
 
-    PSCollectionViewLayoutAttributes *layoutAttributes = [self.collectionViewLayout layoutAttributesForItemAtIndexPath:indexPath];
+    PSTCollectionViewLayoutAttributes *layoutAttributes = [self.collectionViewLayout layoutAttributesForItemAtIndexPath:indexPath];
     if (layoutAttributes) {
         CGRect targetRect = layoutAttributes.frame;
 
         // hack to add proper margins to flowlayout.
-        // TODO: how to pack this into PSCollectionViewFlowLayout?
-        if ([self.collectionViewLayout isKindOfClass:[PSCollectionViewFlowLayout class]]) {
-            PSCollectionViewFlowLayout *flowLayout = (PSCollectionViewFlowLayout *)self.collectionViewLayout;
+        // TODO: how to pack this into PSTCollectionViewFlowLayout?
+        if ([self.collectionViewLayout isKindOfClass:[PSTCollectionViewFlowLayout class]]) {
+            PSTCollectionViewFlowLayout *flowLayout = (PSTCollectionViewFlowLayout *)self.collectionViewLayout;
             targetRect.size.height += flowLayout.scrollDirection == UICollectionViewScrollDirectionVertical ? flowLayout.minimumLineSpacing : flowLayout.minimumInteritemSpacing;
             targetRect.size.width += flowLayout.scrollDirection == UICollectionViewScrollDirectionVertical ? flowLayout.minimumInteritemSpacing : flowLayout.minimumLineSpacing;
         }
@@ -384,7 +384,7 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
     CGPoint touchPoint = [[touches anyObject] locationInView:self];
     NSIndexPath *indexPath = [self indexPathForItemAtPoint:touchPoint];
     if (indexPath) {
-        [self highlightItemAtIndexPath:indexPath animated:YES scrollPosition:PSCollectionViewScrollPositionNone notifyDelegate:YES];
+        [self highlightItemAtIndexPath:indexPath animated:YES scrollPosition:PSTCollectionViewScrollPositionNone notifyDelegate:YES];
     }
 }
 
@@ -406,11 +406,11 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
 }
 
 - (void)userSelectedItemAtIndexPath:(NSIndexPath *)indexPath {
-    [self selectItemAtIndexPath:indexPath animated:YES scrollPosition:PSCollectionViewScrollPositionNone notifyDelegate:YES];
+    [self selectItemAtIndexPath:indexPath animated:YES scrollPosition:PSTCollectionViewScrollPositionNone notifyDelegate:YES];
 }
 
 // select item, notify delegate (internal)
-- (void)selectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(PSCollectionViewScrollPosition)scrollPosition notifyDelegate:(BOOL)notifyDelegate {
+- (void)selectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(PSTCollectionViewScrollPosition)scrollPosition notifyDelegate:(BOOL)notifyDelegate {
 
     BOOL shouldSelect = YES;
     if ([self.delegate respondsToSelector:@selector(collectionView:shouldSelectItemAtIndexPath:)]) {
@@ -434,14 +434,14 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
     return [_indexPathsForSelectedItems allObjects];
 }
 
-- (void)selectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(PSCollectionViewScrollPosition)scrollPosition {
+- (void)selectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(PSTCollectionViewScrollPosition)scrollPosition {
     if (!self.allowsMultipleSelection) {
         for (NSIndexPath *selectedIndexPath in [_indexPathsForSelectedItems copy]) {
             [self deselectItemAtIndexPath:selectedIndexPath animated:animated];
         }
     }
     if (self.allowsSelection) {
-        PSCollectionViewCell *selectedCell = [self cellForItemAtIndexPath:indexPath];
+        PSTCollectionViewCell *selectedCell = [self cellForItemAtIndexPath:indexPath];
         selectedCell.selected = YES;
         [_indexPathsForSelectedItems addObject:indexPath];
     }
@@ -449,13 +449,13 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
 
 - (void)deselectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated {
     if ([_indexPathsForSelectedItems containsObject:indexPath]) {
-        PSCollectionViewCell *selectedCell = [self cellForItemAtIndexPath:indexPath];
+        PSTCollectionViewCell *selectedCell = [self cellForItemAtIndexPath:indexPath];
         selectedCell.selected = NO;
         [_indexPathsForSelectedItems removeObject:indexPath];
     }
 }
 
-- (BOOL)highlightItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(PSCollectionViewScrollPosition)scrollPosition notifyDelegate:(BOOL)notifyDelegate
+- (BOOL)highlightItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(PSTCollectionViewScrollPosition)scrollPosition notifyDelegate:(BOOL)notifyDelegate
 {
     BOOL shouldHighlight = YES;
     if ([self.delegate respondsToSelector:@selector(collectionView:shouldHighlightItemAtIndexPath:)]) {
@@ -463,7 +463,7 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
     }
     
     if (shouldHighlight) {
-        PSCollectionViewCell *highlightedCell = [self cellForItemAtIndexPath:indexPath];
+        PSTCollectionViewCell *highlightedCell = [self cellForItemAtIndexPath:indexPath];
         highlightedCell.highlighted = YES;
         [_indexPathsForHighlightedItems addObject:indexPath];
         
@@ -477,7 +477,7 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
 - (void)unhighlightItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated notifyDelegate:(BOOL)notifyDelegate
 {
     if ([_indexPathsForHighlightedItems containsObject:indexPath]) {
-        PSCollectionViewCell *highlightedCell = [self cellForItemAtIndexPath:indexPath];
+        PSTCollectionViewCell *highlightedCell = [self cellForItemAtIndexPath:indexPath];
         highlightedCell.highlighted = NO;
         [_indexPathsForHighlightedItems removeObject:indexPath];
         
@@ -497,7 +497,7 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Update Grid
 
-- (void)setCollectionViewLayout:(PSCollectionViewLayout *)layout animated:(BOOL)animated {
+- (void)setCollectionViewLayout:(PSTCollectionViewLayout *)layout animated:(BOOL)animated {
     if (layout != _collectionViewLayout) {
         _collectionViewLayout = layout;
         [self reloadData];
@@ -570,8 +570,8 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
 
     // create ItemKey/Attributes dictionary
     NSMutableDictionary *itemKeysToAddDict = [NSMutableDictionary dictionary];
-    for (PSCollectionViewLayoutAttributes *layoutAttributes in layoutAttributesArray) {
-        PSCollectionViewItemKey *itemKey = [PSCollectionViewItemKey collectionItemKeyForLayoutAttributes:layoutAttributes];
+    for (PSTCollectionViewLayoutAttributes *layoutAttributes in layoutAttributesArray) {
+        PSTCollectionViewItemKey *itemKey = [PSTCollectionViewItemKey collectionItemKeyForLayoutAttributes:layoutAttributes];
         itemKeysToAddDict[itemKey] = layoutAttributes;
     }
 
@@ -580,17 +580,17 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
     [allVisibleItemKeys minusSet:[NSSet setWithArray:[itemKeysToAddDict allKeys]]];
 
     // remove views that have not been processed and prepare them for re-use.
-    for (PSCollectionViewItemKey *itemKey in allVisibleItemKeys) {
-        PSCollectionReusableView *reusableView = _allVisibleViewsDict[itemKey];
+    for (PSTCollectionViewItemKey *itemKey in allVisibleItemKeys) {
+        PSTCollectionReusableView *reusableView = _allVisibleViewsDict[itemKey];
         if (reusableView) {
             [reusableView removeFromSuperview];
             [_allVisibleViewsDict removeObjectForKey:itemKey];
-            if (itemKey.type == PSCollectionViewItemTypeCell) {
+            if (itemKey.type == PSTCollectionViewItemTypeCell) {
                 if ([self.delegate respondsToSelector:@selector(collectionView:didEndDisplayingCell:forItemAtIndexPath:)]) {
-                    [self.delegate collectionView:self didEndDisplayingCell:(PSCollectionViewCell *)reusableView forItemAtIndexPath:itemKey.indexPath];
+                    [self.delegate collectionView:self didEndDisplayingCell:(PSTCollectionViewCell *)reusableView forItemAtIndexPath:itemKey.indexPath];
                 }
-                [self reuseCell:(PSCollectionViewCell *)reusableView];
-            }else if(itemKey.type == PSCollectionViewItemTypeSupplementaryView) {
+                [self reuseCell:(PSTCollectionViewCell *)reusableView];
+            }else if(itemKey.type == PSTCollectionViewItemTypeSupplementaryView) {
                 if ([self.delegate respondsToSelector:@selector(collectionView:didEndDisplayingSupplementaryView:forElementOfKind:atIndexPath:)]) {
                     [self.delegate collectionView:self didEndDisplayingSupplementaryView:reusableView forElementOfKind:itemKey.identifier atIndexPath:itemKey.indexPath];
                 }
@@ -601,16 +601,16 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
     }
 
     // finally add new cells.
-    [itemKeysToAddDict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {PSCollectionViewItemKey *itemKey = key;
-        PSCollectionViewLayoutAttributes *layoutAttributes = obj;
+    [itemKeysToAddDict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {PSTCollectionViewItemKey *itemKey = key;
+        PSTCollectionViewLayoutAttributes *layoutAttributes = obj;
 
         // check if cell is in visible dict; add it if not.
-        PSCollectionReusableView *view = _allVisibleViewsDict[itemKey];
+        PSTCollectionReusableView *view = _allVisibleViewsDict[itemKey];
         if (!view) {
-            if (itemKey.type == PSCollectionViewItemTypeCell) {
+            if (itemKey.type == PSTCollectionViewItemTypeCell) {
                 view = [self _createPreparedCellForItemAtIndexPath:itemKey.indexPath withLayoutAttributes:layoutAttributes];
 
-            } else if (itemKey.type == PSCollectionViewItemTypeSupplementaryView) {
+            } else if (itemKey.type == PSTCollectionViewItemTypeSupplementaryView) {
                 view = [self _createPreparedSupplementaryViewForElementOfKind:layoutAttributes.representedElementKind
                                                                   atIndexPath:layoutAttributes.indexPath
                                                          withLayoutAttributes:layoutAttributes];
@@ -626,9 +626,9 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
 }
 
 // fetches a cell from the dataSource and sets the layoutAttributes
-- (PSCollectionViewCell *)_createPreparedCellForItemAtIndexPath:(NSIndexPath *)indexPath withLayoutAttributes:(PSCollectionViewLayoutAttributes *)layoutAttributes {
+- (PSTCollectionViewCell *)_createPreparedCellForItemAtIndexPath:(NSIndexPath *)indexPath withLayoutAttributes:(PSTCollectionViewLayoutAttributes *)layoutAttributes {
 
-    PSCollectionViewCell *cell = [self.dataSource collectionView:self cellForItemAtIndexPath:indexPath];
+    PSTCollectionViewCell *cell = [self.dataSource collectionView:self cellForItemAtIndexPath:indexPath];
 
     // voiceover support
     cell.isAccessibilityElement = YES;
@@ -637,11 +637,11 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
     return cell;
 }
 
-- (PSCollectionReusableView *)_createPreparedSupplementaryViewForElementOfKind:(NSString *)kind
+- (PSTCollectionReusableView *)_createPreparedSupplementaryViewForElementOfKind:(NSString *)kind
                                                                    atIndexPath:(NSIndexPath *)indexPath
-                                                          withLayoutAttributes:(PSCollectionViewLayoutAttributes *)layoutAttributes
+                                                          withLayoutAttributes:(PSTCollectionViewLayoutAttributes *)layoutAttributes
 {
-    PSCollectionReusableView *view = [self.dataSource collectionView:self
+    PSTCollectionReusableView *view = [self.dataSource collectionView:self
                                    viewForSupplementaryElementOfKind:kind
                                                          atIndexPath:indexPath];
     [view applyLayoutAttributes:layoutAttributes];
@@ -650,7 +650,7 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
 
 
 // @steipete optimization
-- (void)queueReusableView:(PSCollectionReusableView *)reusableView inQueue:(NSMutableDictionary *)queue {
+- (void)queueReusableView:(PSTCollectionReusableView *)reusableView inQueue:(NSMutableDictionary *)queue {
     NSString *cellIdentifier = reusableView.reuseIdentifier;
     NSParameterAssert([cellIdentifier length]);
 
@@ -668,21 +668,21 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
 
 
 // enqueue cell for reuse
-- (void)reuseCell:(PSCollectionViewCell *)cell {
+- (void)reuseCell:(PSTCollectionViewCell *)cell {
     [self queueReusableView:cell inQueue:_cellReuseQueues];
 }
 
 // enqueue supplementary view for reuse
-- (void)reuseSupplementaryView:(PSCollectionReusableView *)supplementaryView {
+- (void)reuseSupplementaryView:(PSTCollectionReusableView *)supplementaryView {
     [self queueReusableView:supplementaryView inQueue:_supplementaryViewReuseQueues];
 }
 
-- (void)addControlledSubview:(PSCollectionReusableView *)subview {
+- (void)addControlledSubview:(PSTCollectionReusableView *)subview {
     [self addSubview:subview];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark - PSCollection/UICollection interoperability
+#pragma mark - PSTCollection/UICollection interoperability
 
 #import <objc/runtime.h>
 #import <objc/message.h>
@@ -720,7 +720,7 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
 @end
 
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-@implementation NSIndexPath (PSCollectionViewAdditions)
+@implementation NSIndexPath (PSTCollectionViewAdditions)
 
 // Simple NSIndexPath addition to allow using "item" instead of "row".
 + (NSIndexPath *)indexPathForItem:(NSInteger)item inSection:(NSInteger)section {
@@ -740,11 +740,11 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
 __attribute__((constructor)) static void PSCreateUICollectionViewClasses(void) {
     @autoreleasepool {
         if (kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_6_0) {
-            objc_registerClassPair(objc_allocateClassPair([PSCollectionViewController class], "UICollectionViewController", 0));
-            objc_registerClassPair(objc_allocateClassPair([PSCollectionView class], "UICollectionView", 0));
-            objc_registerClassPair(objc_allocateClassPair([PSCollectionViewCell class], "UICollectionViewCell", 0));
-            objc_registerClassPair(objc_allocateClassPair([PSCollectionViewLayout class], "UICollectionViewLayout", 0));
-            objc_registerClassPair(objc_allocateClassPair([PSCollectionViewFlowLayout class], "UICollectionViewFlowLayout", 0));
+            objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewController class], "UICollectionViewController", 0));
+            objc_registerClassPair(objc_allocateClassPair([PSTCollectionView class], "UICollectionView", 0));
+            objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewCell class], "UICollectionViewCell", 0));
+            objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewLayout class], "UICollectionViewLayout", 0));
+            objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewFlowLayout class], "UICollectionViewFlowLayout", 0));
         }
     }
 }

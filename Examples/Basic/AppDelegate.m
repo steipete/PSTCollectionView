@@ -7,7 +7,7 @@
 
 #import "AppDelegate.h"
 #import "ViewController.h"
-#import "PSCollectionViewFlowLayout.h"
+#import "PSTCollectionViewFlowLayout.h"
 
 @interface AppDelegate ()
 @property (strong, nonatomic) ViewController *viewController;

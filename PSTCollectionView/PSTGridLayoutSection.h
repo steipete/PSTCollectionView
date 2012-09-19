@@ -1,5 +1,5 @@
 //
-//  PSCollectionLayoutSection.h
+//  PSTCollectionLayoutSection.h
 //  PSPDFKit
 //
 //  Copyright (c) 2012 Peter Steinberger. All rights reserved.
@@ -7,9 +7,9 @@
 
 #import <Foundation/Foundation.h>
 
-@class PSGridLayoutInfo, PSGridLayoutRow, PSGridLayoutItem;
+@class PSTGridLayoutInfo, PSTGridLayoutRow, PSTGridLayoutItem;
 
-@interface PSGridLayoutSection : NSObject
+@interface PSTGridLayoutSection : NSObject
 
 @property (nonatomic, strong, readonly) NSArray *items;
 @property (nonatomic, strong, readonly) NSArray *rows;
@@ -29,7 +29,7 @@
 @property (nonatomic, assign) CGRect footerFrame;
 @property (nonatomic, assign) CGFloat headerDimension;
 @property (nonatomic, assign) CGFloat footerDimension;
-@property (nonatomic, unsafe_unretained) PSGridLayoutInfo *layoutInfo;
+@property (nonatomic, unsafe_unretained) PSTGridLayoutInfo *layoutInfo;
 @property (nonatomic, strong) NSDictionary *rowAlignmentOptions;
 
 @property (nonatomic, assign, readonly) CGFloat otherMargin;
@@ -44,7 +44,7 @@
 @property (nonatomic, assign, readonly) NSInteger indexOfImcompleteRow; // typo as of iOS6B3
 
 
-//- (PSGridLayoutSection *)copyFromLayoutInfo:(PSGridLayoutInfo *)layoutInfo;
+//- (PSTGridLayoutSection *)copyFromLayoutInfo:(PSTGridLayoutInfo *)layoutInfo;
 
 // Faster variant of invalidate/compute
 - (void)recomputeFromIndex:(NSInteger)index;
@@ -55,10 +55,10 @@
 // Compute layout. Creates rows.
 - (void)computeLayout;
 
-- (PSGridLayoutItem *)addItem;
-- (PSGridLayoutRow *)addRow;
+- (PSTGridLayoutItem *)addItem;
+- (PSTGridLayoutRow *)addRow;
 
 // Copy snapshot of current object
-- (PSGridLayoutSection *)snapshot;
+- (PSTGridLayoutSection *)snapshot;
 
 @end

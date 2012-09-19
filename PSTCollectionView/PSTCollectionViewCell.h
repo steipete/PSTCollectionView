@@ -1,15 +1,15 @@
 //
-//  PSCollectionViewCell.h
+//  PSTCollectionViewCell.h
 //  PSPDFKit
 //
 //  Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //
 
-#import "PSCollectionViewCommon.h"
+#import "PSTCollectionViewCommon.h"
 
-@class PSCollectionViewLayout, PSCollectionView, PSCollectionViewLayoutAttributes;
+@class PSTCollectionViewLayout, PSTCollectionView, PSTCollectionViewLayoutAttributes;
 
-@interface PSCollectionReusableView : UIView
+@interface PSTCollectionReusableView : UIView
 
 @property (nonatomic, readonly, copy) NSString *reuseIdentifier;
 
@@ -17,21 +17,21 @@
 - (void)prepareForReuse;
 
 // Apply layout attributes on cell.
-- (void)applyLayoutAttributes:(PSCollectionViewLayoutAttributes *)layoutAttributes;
+- (void)applyLayoutAttributes:(PSTCollectionViewLayoutAttributes *)layoutAttributes;
 
-- (void)willTransitionFromLayout:(PSCollectionViewLayout *)oldLayout toLayout:(PSCollectionViewLayout *)newLayout;
-- (void)didTransitionFromLayout:(PSCollectionViewLayout *)oldLayout toLayout:(PSCollectionViewLayout *)newLayout;
+- (void)willTransitionFromLayout:(PSTCollectionViewLayout *)oldLayout toLayout:(PSTCollectionViewLayout *)newLayout;
+- (void)didTransitionFromLayout:(PSTCollectionViewLayout *)oldLayout toLayout:(PSTCollectionViewLayout *)newLayout;
 
 @end
 
-@interface PSCollectionReusableView (Internal)
-@property (nonatomic, unsafe_unretained) PSCollectionView *collectionView;
+@interface PSTCollectionReusableView (Internal)
+@property (nonatomic, unsafe_unretained) PSTCollectionView *collectionView;
 @property (nonatomic, copy) NSString *reuseIdentifier;
-@property (nonatomic, strong, readonly) PSCollectionViewLayoutAttributes *layoutAttributes;
+@property (nonatomic, strong, readonly) PSTCollectionViewLayoutAttributes *layoutAttributes;
 @end
 
 
-@interface PSCollectionViewCell : PSCollectionReusableView {
+@interface PSTCollectionViewCell : PSTCollectionReusableView {
     UILongPressGestureRecognizer *_menuGesture;
 //    id _selectionSegueTemplate;
 //    id _highlightingSupport;

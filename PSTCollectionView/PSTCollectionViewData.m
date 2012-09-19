@@ -1,15 +1,15 @@
 //
-//  PSCollectionViewData.m
+//  PSTCollectionViewData.m
 //  PSPDFKit
 //
 //  Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //
 
-#import "PSCollectionViewData.h"
-#import "PSCollectionView.h"
-#import "PSCollectionViewLayout.h"
+#import "PSTCollectionViewData.h"
+#import "PSTCollectionView.h"
+#import "PSTCollectionViewLayout.h"
 
-@interface PSCollectionViewData () {
+@interface PSTCollectionViewData () {
     CGRect _validLayoutRect;
     
     NSInteger _numItems;
@@ -44,16 +44,16 @@
         unsigned int layoutIsPrepared:1;
     } _collectionViewDataFlags;
 }
-@property (nonatomic, strong) PSCollectionView *collectionView;
-@property (nonatomic, strong) PSCollectionViewLayout *layout;
+@property (nonatomic, strong) PSTCollectionView *collectionView;
+@property (nonatomic, strong) PSTCollectionViewLayout *layout;
 @end
 
-@implementation PSCollectionViewData
+@implementation PSTCollectionViewData
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject
 
-- (id)initWithCollectionView:(PSCollectionView *)collectionView layout:(PSCollectionViewLayout *)layout {
+- (id)initWithCollectionView:(PSTCollectionView *)collectionView layout:(PSTCollectionViewLayout *)layout {
     if((self = [super init])) {
         _globalItems = [NSArray new];
         _collectionView = collectionView;

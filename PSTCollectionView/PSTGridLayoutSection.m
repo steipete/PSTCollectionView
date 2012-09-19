@@ -1,17 +1,17 @@
 //
-//  PSCollectionLayoutSection.m
+//  PSTCollectionLayoutSection.m
 //  PSPDFKit
 //
 //  Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //
 
-#import "PSCollectionViewCommon.h"
-#import "PSGridLayoutSection.h"
-#import "PSGridLayoutItem.h"
-#import "PSGridLayoutRow.h"
-#import "PSGridLayoutInfo.h"
+#import "PSTCollectionViewCommon.h"
+#import "PSTGridLayoutSection.h"
+#import "PSTGridLayoutItem.h"
+#import "PSTGridLayoutRow.h"
+#import "PSTGridLayoutInfo.h"
 
-@interface PSGridLayoutSection() {
+@interface PSTGridLayoutSection() {
     NSMutableArray *_items;
     NSMutableArray *_rows;
     BOOL _isValid;
@@ -30,7 +30,7 @@
 @property (nonatomic, assign) NSInteger indexOfImcompleteRow;
 @end
 
-@implementation PSGridLayoutSection
+@implementation PSTGridLayoutSection
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject
@@ -65,7 +65,7 @@
         NSInteger itemIndex = 0;
         NSInteger itemsByRowCount = 0;
         CGFloat dimensionLeft = 0;
-        PSGridLayoutRow *row = nil;
+        PSTGridLayoutRow *row = nil;
         // get dimension and compensate for section margin
         CGFloat dimension = self.layoutInfo.dimension;
         if (self.layoutInfo.horizontal) {
@@ -76,7 +76,7 @@
         do {
             BOOL finishCycle = itemIndex >= self.itemsCount;
             // TODO: fast path could even remove row creation and just calculate on the fly
-            PSGridLayoutItem *item = nil;
+            PSTGridLayoutItem *item = nil;
             if (!finishCycle) {
                 item = self.fixedItemSize ? nil : self.items[itemIndex];
             }
@@ -133,22 +133,22 @@
     [self computeLayout];
 }
 
-- (PSGridLayoutItem *)addItem {
-    PSGridLayoutItem *item = [PSGridLayoutItem new];
+- (PSTGridLayoutItem *)addItem {
+    PSTGridLayoutItem *item = [PSTGridLayoutItem new];
     item.section = self;
     [_items addObject:item];
     return item;
 }
 
-- (PSGridLayoutRow *)addRow {
-    PSGridLayoutRow *row = [PSGridLayoutRow new];
+- (PSTGridLayoutRow *)addRow {
+    PSTGridLayoutRow *row = [PSTGridLayoutRow new];
     row.section = self;
     [_rows addObject:row];
     return row;
 }
 
-- (PSGridLayoutSection *)snapshot {
-    PSGridLayoutSection *snapshotSection = [PSGridLayoutSection new];
+- (PSTGridLayoutSection *)snapshot {
+    PSTGridLayoutSection *snapshotSection = [PSTGridLayoutSection new];
     snapshotSection.items = [self.items copy];
     snapshotSection.rows = [self.items copy];
     snapshotSection.verticalInterstice = self.verticalInterstice;

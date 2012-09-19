@@ -1,17 +1,17 @@
 //
-//  PSCollectionLayoutInfo.m
+//  PSTCollectionLayoutInfo.m
 //  PSPDFKit
 //
 //  Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //
 
-#import "PSGridLayoutInfo.h"
-#import "PSGridLayoutSection.h"
-#import "PSGridLayoutRow.h"
-#import "PSGridLayoutItem.h"
-#import "PSCollectionView.h"
+#import "PSTGridLayoutInfo.h"
+#import "PSTGridLayoutSection.h"
+#import "PSTGridLayoutRow.h"
+#import "PSTGridLayoutItem.h"
+#import "PSTCollectionView.h"
 
-@interface PSGridLayoutInfo() {
+@interface PSTGridLayoutInfo() {
     NSMutableArray *_sections;
     CGRect _visibleBounds;
     CGSize _layoutSize;
@@ -20,7 +20,7 @@
 @property (nonatomic, strong) NSMutableArray *sections;
 @end
 
-@implementation PSGridLayoutInfo
+@implementation PSTGridLayoutInfo
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject
@@ -39,8 +39,8 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Public
 
-- (PSGridLayoutInfo *)snapshot {
-    PSGridLayoutInfo *layoutInfo = [[self class] new];
+- (PSTGridLayoutInfo *)snapshot {
+    PSTGridLayoutInfo *layoutInfo = [[self class] new];
     layoutInfo.sections = self.sections;
     layoutInfo.rowAlignmentOptions = self.rowAlignmentOptions;
     layoutInfo.usesFloatingHeaderFooter = self.usesFloatingHeaderFooter;
@@ -52,7 +52,7 @@
 }
 
 - (CGRect)frameForItemAtIndexPath:(NSIndexPath *)indexPath {
-    PSGridLayoutSection *section = self.sections[indexPath.section];
+    PSTGridLayoutSection *section = self.sections[indexPath.section];
     CGRect itemFrame;
     if (section.fixedItemSize) {
         itemFrame = (CGRect){.size=section.itemSize};
@@ -63,7 +63,7 @@
 }
 
 - (id)addSection {
-    PSGridLayoutSection *section = [PSGridLayoutSection new];
+    PSTGridLayoutSection *section = [PSTGridLayoutSection new];
     section.rowAlignmentOptions = self.rowAlignmentOptions;
     section.layoutInfo = self;
     [_sections addObject:section];

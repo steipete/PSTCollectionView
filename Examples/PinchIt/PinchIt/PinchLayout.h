@@ -93,9 +93,8 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "PSCollectionView.h"
 
-@interface PinchLayout : UICollectionViewFlowLayout
+@interface PinchLayout : PSTCollectionViewFlowLayout
 
 @property (nonatomic, assign) CGFloat pinchedCellScale;
 @property (nonatomic, assign) CGPoint pinchedCellCenter;
