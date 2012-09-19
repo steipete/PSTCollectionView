@@ -149,7 +149,7 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
         NSArray *itemRects = [row itemRects];
         itemFrame = [itemRects[itemIndex] CGRectValue];
     } else if (indexPath.item < (NSInteger)[section.items count]) {
-        PSGridLayoutItem *item = section.items[indexPath.item];
+        PSTGridLayoutItem *item = section.items[indexPath.item];
         row = item.rowObject;
         itemFrame = item.itemFrame;
     }
