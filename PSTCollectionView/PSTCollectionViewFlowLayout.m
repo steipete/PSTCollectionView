@@ -139,17 +139,17 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
 }
 
 - (PSTCollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath {
-    // TODO: check if index path is valid?
     PSTGridLayoutSection *section = _data.sections[indexPath.section];
     PSTGridLayoutRow *row = nil;
     CGRect itemFrame;
-    if (section.fixedItemSize) {
-        row = section.rows[indexPath.item/section.itemsByRowCount];
+    
+    if (section.fixedItemSize && indexPath.item / section.itemsByRowCount < (NSInteger)[section.rows count]) {
+        row = section.rows[indexPath.item / section.itemsByRowCount];
         NSUInteger itemIndex = indexPath.item % section.itemsByRowCount;
         NSArray *itemRects = [row itemRects];
         itemFrame = [itemRects[itemIndex] CGRectValue];
-    }else {
-        PSTGridLayoutItem *item = section.items[indexPath.item];
+    } else if (indexPath.item < (NSInteger)[section.items count]) {
+        PSGridLayoutItem *item = section.items[indexPath.item];
         row = item.rowObject;
         itemFrame = item.itemFrame;
     }
