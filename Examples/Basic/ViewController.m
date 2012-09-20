@@ -11,8 +11,8 @@
 @implementation ViewController
 
 - (void)viewDidLoad {
-    UIPinchGestureRecognizer* pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchGesture:)];
-    [self.collectionView addGestureRecognizer:pinchRecognizer];
+    //UIPinchGestureRecognizer* pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchGesture:)];
+    //[self.collectionView addGestureRecognizer:pinchRecognizer];
     [self.collectionView registerClass:[Cell class] forCellWithReuseIdentifier:@"MY_CELL"];
 }
 
@@ -28,7 +28,7 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     Cell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MY_CELL" forIndexPath:indexPath];
-    return cell;
+    return (UICollectionViewCell *)cell;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
