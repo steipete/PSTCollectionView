@@ -18,7 +18,7 @@
 @property (nonatomic, unsafe_unretained) PSTCollectionView *collectionView;
 @end
 
-CGFloat PSSimulatorAnimationDragCoefficient(void);
+CGFloat PSTSimulatorAnimationDragCoefficient(void);
 
 @interface PSTCollectionView() {
     BOOL _rotationActive;
@@ -125,7 +125,7 @@ CGFloat PSSimulatorAnimationDragCoefficient(void);
     // Adding alpha animation to make the relayouting smooth
     if (_collectionViewFlags.fadeCellsForBoundsChange) {
         CATransition *transition = [CATransition animation];
-        transition.duration = 0.25f * PSSimulatorAnimationDragCoefficient();
+        transition.duration = 0.25f * PSTSimulatorAnimationDragCoefficient();
         transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
         transition.type = kCATransitionFade;
         [self.layer addAnimation:transition forKey:@"rotationAnimation"];
@@ -749,7 +749,7 @@ __attribute__((constructor)) static void PSCreateUICollectionViewClasses(void) {
     }
 }
 
-CGFloat PSSimulatorAnimationDragCoefficient(void) {
+CGFloat PSTSimulatorAnimationDragCoefficient(void) {
     static CGFloat (*UIAnimationDragCoefficient)(void) = NULL;
 #if TARGET_IPHONE_SIMULATOR
 #import <dlfcn.h>
