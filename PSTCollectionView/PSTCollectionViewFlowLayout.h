@@ -61,15 +61,15 @@ typedef NS_ENUM(NSInteger, UICollectionViewScrollDirection) {
 @end
 
 // @steipete addition, private API in UICollectionViewFlowLayout
-NSString *const PSFlowLayoutCommonRowHorizontalAlignmentKey;
-NSString *const PSFlowLayoutLastRowHorizontalAlignmentKey;
-NSString *const PSFlowLayoutRowVerticalAlignmentKey;
+NSString *const PSTFlowLayoutCommonRowHorizontalAlignmentKey;
+NSString *const PSTFlowLayoutLastRowHorizontalAlignmentKey;
+NSString *const PSTFlowLayoutRowVerticalAlignmentKey;
 
-typedef NS_ENUM(NSInteger, PSFlowLayoutHorizontalAlignment) {
-    PSFlowLayoutHorizontalAlignmentLeft,
-    PSFlowLayoutHorizontalAlignmentCentered,
-    PSFlowLayoutHorizontalAlignmentRight,
-    PSFlowLayoutHorizontalAlignmentJustify // 3; default except for the last row
+typedef NS_ENUM(NSInteger, PSTFlowLayoutHorizontalAlignment) {
+    PSTFlowLayoutHorizontalAlignmentLeft,
+    PSTFlowLayoutHorizontalAlignmentCentered,
+    PSTFlowLayoutHorizontalAlignmentRight,
+    PSTFlowLayoutHorizontalAlignmentJustify // 3; default except for the last row
 };
 // TODO: settings for UIFlowLayoutRowVerticalAlignmentKey
 

@@ -16,9 +16,9 @@ NSString *const PSTCollectionElementKindSectionHeader = @"UICollectionElementKin
 NSString *const PSTCollectionElementKindSectionFooter = @"UICollectionElementKindSectionFooter";
 
 // this is not exposed in UICollectionViewFlowLayout
-NSString *const PSFlowLayoutCommonRowHorizontalAlignmentKey = @"UIFlowLayoutCommonRowHorizontalAlignmentKey";
-NSString *const PSFlowLayoutLastRowHorizontalAlignmentKey = @"UIFlowLayoutLastRowHorizontalAlignmentKey";
-NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalAlignmentKey";
+NSString *const PSTFlowLayoutCommonRowHorizontalAlignmentKey = @"UIFlowLayoutCommonRowHorizontalAlignmentKey";
+NSString *const PSTFlowLayoutLastRowHorizontalAlignmentKey = @"UIFlowLayoutLastRowHorizontalAlignmentKey";
+NSString *const PSTFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalAlignmentKey";
 
 
 @interface PSTCollectionViewFlowLayout() {
@@ -80,10 +80,10 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
 
         // set default values for row alignment.
         _rowAlignmentsOptionsDictionary = @{
-        PSFlowLayoutCommonRowHorizontalAlignmentKey : @(PSFlowLayoutHorizontalAlignmentJustify),
-        PSFlowLayoutLastRowHorizontalAlignmentKey : @(PSFlowLayoutHorizontalAlignmentLeft),
+        PSTFlowLayoutCommonRowHorizontalAlignmentKey : @(PSTFlowLayoutHorizontalAlignmentJustify),
+        PSTFlowLayoutLastRowHorizontalAlignmentKey : @(PSTFlowLayoutHorizontalAlignmentLeft),
         // TODO: those values are some enum. find out what what is.
-        PSFlowLayoutRowVerticalAlignmentKey : @(1),
+        PSTFlowLayoutRowVerticalAlignmentKey : @(1),
         };
     }
     return self;
@@ -100,7 +100,7 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
         if (CGRectIntersectsRect(section.frame, rect)) {
 
             // if we have fixed size, calculate item frames only once.
-            // this also uses the default PSFlowLayoutCommonRowHorizontalAlignmentKey alignment
+            // this also uses the default PSTFlowLayoutCommonRowHorizontalAlignmentKey alignment
             // for the last row. (we want this effect!)
             NSArray *itemRects = _cachedItemRects;
             if (!_cachedItemRects && section.fixedItemSize && [section.rows count]) {
@@ -141,7 +141,7 @@ NSString *const PSFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
 - (PSTCollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath {
     PSTGridLayoutSection *section = _data.sections[indexPath.section];
     PSTGridLayoutRow *row = nil;
-    CGRect itemFrame;
+    CGRect itemFrame = CGRectZero;
     
     if (section.fixedItemSize && indexPath.item / section.itemsByRowCount < (NSInteger)[section.rows count]) {
         row = section.rows[indexPath.item / section.itemsByRowCount];
