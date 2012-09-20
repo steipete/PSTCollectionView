@@ -60,7 +60,7 @@
         // properties for aligning
         BOOL isHorizontal = self.section.layoutInfo.horizontal;
         BOOL isLastRow = self.section.indexOfImcompleteRow == self.index;
-        PSFlowLayoutHorizontalAlignment horizontalAlignment = [self.section.rowAlignmentOptions[isLastRow ? PSFlowLayoutLastRowHorizontalAlignmentKey : PSFlowLayoutCommonRowHorizontalAlignmentKey] integerValue];
+        PSTFlowLayoutHorizontalAlignment horizontalAlignment = [self.section.rowAlignmentOptions[isLastRow ? PSTFlowLayoutLastRowHorizontalAlignmentKey : PSTFlowLayoutCommonRowHorizontalAlignmentKey] integerValue];
 
         // calculate space that's left over if we would align it from left to right.
         CGFloat leftOverSpace = self.section.layoutInfo.dimension;
@@ -83,9 +83,9 @@
             }
         }
         CGPoint itemOffset = CGPointZero;
-        if (horizontalAlignment == PSFlowLayoutHorizontalAlignmentRight) {
+        if (horizontalAlignment == PSTFlowLayoutHorizontalAlignmentRight) {
             itemOffset.x += leftOverSpace;
-        }else if(horizontalAlignment == PSFlowLayoutHorizontalAlignmentCentered) {
+        }else if(horizontalAlignment == PSTFlowLayoutHorizontalAlignmentCentered) {
             itemOffset.x += leftOverSpace/2;
         }
 
@@ -101,13 +101,13 @@
             if (isHorizontal) {
                 itemFrame.origin.y = itemOffset.y;
                 itemOffset.y += itemFrame.size.height + self.section.verticalInterstice;
-                if (horizontalAlignment == PSFlowLayoutHorizontalAlignmentJustify) {
+                if (horizontalAlignment == PSTFlowLayoutHorizontalAlignmentJustify) {
                     itemOffset.y += leftOverSpace/(CGFloat)(self.itemCount-1);
                 }
             }else {
                 itemFrame.origin.x = itemOffset.x;
                 itemOffset.x += itemFrame.size.width + self.section.horizontalInterstice;
-                if (horizontalAlignment == PSFlowLayoutHorizontalAlignmentJustify) {
+                if (horizontalAlignment == PSTFlowLayoutHorizontalAlignmentJustify) {
                     itemOffset.x += leftOverSpace/(CGFloat)(self.itemCount-1);
                 }
             }
