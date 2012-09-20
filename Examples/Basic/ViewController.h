@@ -8,6 +8,6 @@
 #import <UIKit/UIKit.h>
 #import "PSTCollectionViewController.h"
 
-@interface ViewController : UICollectionViewController
+@interface ViewController : PSTCollectionViewController
 
 @end
