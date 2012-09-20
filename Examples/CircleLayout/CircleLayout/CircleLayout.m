@@ -115,7 +115,7 @@
 
 - (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)path
 {
-    UICollectionViewLayoutAttributes* attributes = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:path];
+    UICollectionViewLayoutAttributes* attributes = (UICollectionViewLayoutAttributes*)[PSTCollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:path];
     attributes.size = CGSizeMake(ITEM_SIZE, ITEM_SIZE);
     attributes.center = CGPointMake(_center.x + _radius * cosf(2 * path.item * M_PI / _cellCount),
                                     _center.y + _radius * sinf(2 * path.item * M_PI / _cellCount));
