@@ -141,7 +141,7 @@ NSString *const PSTFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVertical
 - (PSTCollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath {
     PSTGridLayoutSection *section = _data.sections[indexPath.section];
     PSTGridLayoutRow *row = nil;
-    CGRect itemFrame;
+    CGRect itemFrame = CGRectZero;
     
     if (section.fixedItemSize && indexPath.item / section.itemsByRowCount < (NSInteger)[section.rows count]) {
         row = section.rows[indexPath.item / section.itemsByRowCount];
