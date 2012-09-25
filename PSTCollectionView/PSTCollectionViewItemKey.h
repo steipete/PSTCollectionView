@@ -20,8 +20,8 @@ NSString *PSTCollectionViewItemTypeToString(PSTCollectionViewItemType type); // 
 + (id)collectionItemKeyForSupplementaryViewOfKind:(NSString *)elementKind andIndexPath:(NSIndexPath *)indexPath;
 + (id)collectionItemKeyForCellWithIndexPath:(NSIndexPath *)indexPath;
 
-@property(nonatomic, assign) PSTCollectionViewItemType type;
-@property(nonatomic, strong) NSIndexPath *indexPath;
-@property(nonatomic, strong) NSString *identifier;
+@property (nonatomic, assign) PSTCollectionViewItemType type;
+@property (nonatomic, strong) NSIndexPath *indexPath;
+@property (nonatomic, strong) NSString *identifier;
 
 @end
