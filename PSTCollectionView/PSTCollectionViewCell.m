@@ -94,21 +94,27 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Public
 
+- (void)prepareForReuse {
+    self.layoutAttributes = nil;
+    self.selected = NO;
+    self.highlighted = NO;
+}
+
 - (void)setSelected:(BOOL)selected {
     if (_collectionCellFlags.selected != selected) {
         _collectionCellFlags.selected = selected;
-        [self updateSelectionState];
+        [self updateBackgroundView];
     }
 }
 
 - (void)setHighlighted:(BOOL)highlighted {
     if (_collectionCellFlags.highlighted != highlighted) {
         _collectionCellFlags.highlighted = highlighted;
-        [self updateSelectionState];
+        [self updateBackgroundView];
     }
 }
 
-- (void)updateSelectionState {
+- (void)updateBackgroundView {
     BOOL shouldHighlight = (self.highlighted || self.selected);
     _selectedBackgroundView.alpha = shouldHighlight ? 1.0f : 0.0f;
     [self setHighlighted:shouldHighlight forViews:self.contentView.subviews];
