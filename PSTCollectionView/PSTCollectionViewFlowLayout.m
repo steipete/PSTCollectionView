@@ -133,6 +133,9 @@ NSString *const PSTFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVertical
                     }
                 }
             }
+            
+            // Reset the item rect cache for this section
+            _cachedItemRects = nil;
         }
     }
     return layoutAttributesArray;
