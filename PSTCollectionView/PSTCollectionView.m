@@ -88,6 +88,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (id)initWithCoder:(NSCoder *)inCoder {
     if ((self = [super initWithCoder:inCoder])) {
+
         PSTCollectionViewCommonSetup(self);
         // add observer for nib deserialization.
         _nibObserverToken = [[NSNotificationCenter defaultCenter] addObserverForName:PSTCollectionViewLayoutAwokeFromNib object:nil queue:nil usingBlock:^(NSNotification *note) { _nibLayout = note.object; }];
@@ -97,10 +98,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    
-    NSString *collectionViewClassString = [self valueForKeyPath:@"collectionViewClassString"];
-    if (collectionViewClassString) {
-        self.collectionViewLayout = [NSClassFromString(collectionViewClassString) new];
+
+    if (self.collectionViewClassString) {
+        self.collectionViewLayout = [NSClassFromString(self.collectionViewClassString) new];
     }
 
     // check if NIB deserialization found a layout.

@@ -30,6 +30,12 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    if((self = [super initWithCoder:aDecoder])) {
+    }
+    return self;
+}
+
 - (void)awakeFromNib {    
     self.reuseIdentifier = [self valueForKeyPath:@"reuseIdentifier"];
 }
@@ -56,6 +62,7 @@
 - (void)willTransitionFromLayout:(PSTCollectionViewLayout *)oldLayout toLayout:(PSTCollectionViewLayout *)newLayout {
     _reusableViewFlags.inUpdateAnimation = YES;
 }
+
 - (void)didTransitionFromLayout:(PSTCollectionViewLayout *)oldLayout toLayout:(PSTCollectionViewLayout *)newLayout {
     _reusableViewFlags.inUpdateAnimation = NO;
 }

@@ -110,20 +110,17 @@ NSString *const PSTCollectionElementKindDecorationView = @"PSTCollectionElementK
     return self.representedElementCategory == PSTCollectionViewItemTypeCell;
 }
 
-- (void)setSize:(CGSize)size
-{
+- (void)setSize:(CGSize)size {
     _size = size;
     _frame = (CGRect){_frame.origin, _size};
 }
 
-- (void)setCenter:(CGPoint)center
-{
+- (void)setCenter:(CGPoint)center {
     _center = center;
     _frame = (CGRect){{_center.x - _frame.size.width / 2, _center.y - _frame.size.height / 2}, _frame.size};
 }
 
-- (void)setFrame:(CGRect)frame
-{
+- (void)setFrame:(CGRect)frame {
     _frame = frame;
     _size = _frame.size;
     _center = (CGPoint){CGRectGetMidX(_frame), CGRectGetMidY(_frame)};
@@ -162,6 +159,7 @@ NSString *const PSTCollectionElementKindDecorationView = @"PSTCollectionElementK
     }
     return signature;
 }
+
 - (void)forwardInvocation:(NSInvocation *)invocation {
     NSString *selString = NSStringFromSelector([invocation selector]);
     if ([selString hasPrefix:@"_"]) {
