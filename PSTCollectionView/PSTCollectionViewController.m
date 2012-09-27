@@ -42,10 +42,19 @@
 
 - (void)loadView {
     [super loadView];
-    self.collectionView = [[PSTCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:self.layout];
-    [self.view addSubview:self.collectionView];
-    self.collectionView.delegate = self;
-    self.collectionView.dataSource = self;
+
+    // if this is restored from IB, we don't have plain main view.
+    if ([self.view isKindOfClass:[PSTCollectionView class]]) {
+        _collectionView = (PSTCollectionView *)self.view;
+    }
+
+    // only create the collection view if it is not already created (by IB)
+    if (!_collectionView) {
+        self.collectionView = [[PSTCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:self.layout];
+        [self.view addSubview:self.collectionView];
+        self.collectionView.delegate = self;
+        self.collectionView.dataSource = self;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {

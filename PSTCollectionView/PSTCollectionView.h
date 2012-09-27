@@ -119,10 +119,10 @@ typedef NS_OPTIONS(NSUInteger, UICollectionViewScrollPosition) {
 
 - (id)initWithFrame:(CGRect)frame collectionViewLayout:(PSTCollectionViewLayout *)layout; // the designated initializer
 
-@property (nonatomic, retain) PSTCollectionViewLayout *collectionViewLayout;
+@property (nonatomic, strong) PSTCollectionViewLayout *collectionViewLayout;
 @property (nonatomic, assign) IBOutlet id <PSTCollectionViewDelegate> delegate;
 @property (nonatomic, assign) IBOutlet id <PSTCollectionViewDataSource> dataSource;
-@property (nonatomic, retain) UIView *backgroundView; // will be automatically resized to track the size of the collection view and placed behind all cells and supplementary views.
+@property (nonatomic, strong) UIView *backgroundView; // will be automatically resized to track the size of the collection view and placed behind all cells and supplementary views.
 
 // For each reuse identifier that the collection view will use, register either a class or a nib from which to instantiate a cell.
 // If a nib is registered, it must contain exactly 1 top level object which is a PSTCollectionViewCell.
@@ -131,9 +131,8 @@ typedef NS_OPTIONS(NSUInteger, UICollectionViewScrollPosition) {
 - (void)registerClass:(Class)viewClass forSupplementaryViewOfKind:(NSString *)elementKind withReuseIdentifier:(NSString *)identifier;
 - (void)registerNib:(UINib *)nib forCellWithReuseIdentifier:(NSString *)identifier;
 
-/*
+// TODO: implement!
 - (void)registerNib:(UINib *)nib forSupplementaryViewOfKind:(NSString *)kind withReuseIdentifier:(NSString *)identifier;
- */
 
 - (id)dequeueReusableCellWithReuseIdentifier:(NSString *)identifier forIndexPath:(NSIndexPath *)indexPath;
 - (id)dequeueReusableSupplementaryViewOfKind:(NSString *)elementKind withReuseIdentifier:(NSString *)identifier forIndexPath:(NSIndexPath *)indexPath;
@@ -187,6 +186,7 @@ typedef NS_OPTIONS(NSUInteger, UICollectionViewScrollPosition) {
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
 #define PSUICollectionView PSUICollectionView_
 #define PSUICollectionViewCell PSUICollectionViewCell_
+#define PSUICollectionReusableView PSUICollectionReusableView_
 #define PSUICollectionViewDelegate PSTCollectionViewDelegate
 #define PSUICollectionViewDataSource PSTCollectionViewDataSource
 #define PSUICollectionViewLayout PSUICollectionViewLayout_
@@ -196,6 +196,7 @@ typedef NS_OPTIONS(NSUInteger, UICollectionViewScrollPosition) {
 
 @interface PSUICollectionView_ : PSTCollectionView @end
 @interface PSUICollectionViewCell_ : PSTCollectionViewCell @end
+@interface PSUICollectionReusableView_ : PSTCollectionReusableView @end
 @interface PSUICollectionViewLayout_ : PSTCollectionViewLayout @end
 @interface PSUICollectionViewFlowLayout_ : PSTCollectionViewFlowLayout @end
 @interface PSUICollectionViewLayoutAttributes_ : PSTCollectionViewLayoutAttributes @end
@@ -203,7 +204,8 @@ typedef NS_OPTIONS(NSUInteger, UICollectionViewScrollPosition) {
 
 #else
 #define PSUICollectionView UICollectionView
-#define PSUICollectionViewCell UICollectionViewLayout
+#define PSUICollectionViewCell UICollectionViewCell
+#define PSUICollectionReusableView UICollectionReusableView
 #define PSUICollectionViewDelegate UICollectionViewDelegate
 #define PSUICollectionViewDataSource UICollectionViewDataSource
 #define PSUICollectionViewLayout UICollectionViewLayout

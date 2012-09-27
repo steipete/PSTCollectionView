@@ -30,10 +30,9 @@
     return self;
 }
 
-- (void) awakeFromNib {    
+- (void)awakeFromNib {    
     self.reuseIdentifier = [self valueForKeyPath:@"reuseIdentifier"];
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Public
@@ -98,31 +97,29 @@
 - (void)setSelected:(BOOL)selected {
     if (_collectionCellFlags.selected != selected) {
         _collectionCellFlags.selected = selected;
-        [self _updateSelectionState];
+        [self updateSelectionState];
     }
 }
 
 - (void)setHighlighted:(BOOL)highlighted {
     if (_collectionCellFlags.highlighted != highlighted) {
         _collectionCellFlags.highlighted = highlighted;
-        [self _updateSelectionState];
+        [self updateSelectionState];
     }
 }
 
-- (void)_updateSelectionState
-{
+- (void)updateSelectionState {
     BOOL shouldHighlight = (self.highlighted || self.selected);
     _selectedBackgroundView.alpha = shouldHighlight ? 1.0f : 0.0f;
-    [self _setHighlighted:shouldHighlight forViews:self.contentView.subviews];
+    [self setHighlighted:shouldHighlight forViews:self.contentView.subviews];
 }
 
-- (void)_setHighlighted:(BOOL)highlighted forViews:(id)subviews
-{
+- (void)setHighlighted:(BOOL)highlighted forViews:(id)subviews {
     for (id view in subviews) {
         if ([view respondsToSelector:@selector(setHighlighted:)]) {
             [view setHighlighted:highlighted];
         }
-        [self _setHighlighted:highlighted forViews:[view subviews]];
+        [self setHighlighted:highlighted forViews:[view subviews]];
     }
 }
 
@@ -130,8 +127,7 @@
     NSLog(@"Not yet implemented: %@", NSStringFromSelector(_cmd));
 }
 
-- (void)setBackgroundView:(UIView *)backgroundView
-{
+- (void)setBackgroundView:(UIView *)backgroundView {
     if (_backgroundView != backgroundView) {
         [_backgroundView removeFromSuperview];
         _backgroundView = backgroundView;
@@ -140,8 +136,7 @@
     }
 }
 
-- (void)setSelectedBackgroundView:(UIView *)selectedBackgroundView
-{
+- (void)setSelectedBackgroundView:(UIView *)selectedBackgroundView {
     if (_selectedBackgroundView != selectedBackgroundView) {
         [_selectedBackgroundView removeFromSuperview];
         _selectedBackgroundView = selectedBackgroundView;
@@ -152,13 +147,11 @@
     }
 }
 
-- (BOOL)isSelected
-{
+- (BOOL)isSelected {
     return _collectionCellFlags.selected;
 }
 
-- (BOOL)isHighlighted
-{
+- (BOOL)isHighlighted {
     return _collectionCellFlags.highlighted;
 }
 
@@ -166,7 +159,6 @@
 #pragma mark - PSTCollection/UICollection interoperability
 
 #import <objc/runtime.h>
-#import <objc/message.h>
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)selector {
     NSMethodSignature *sig = [super methodSignatureForSelector:selector];
     if(!sig) {
@@ -178,6 +170,7 @@
     }
     return sig;
 }
+
 - (void)forwardInvocation:(NSInvocation *)inv {
     NSString *selString = NSStringFromSelector([inv selector]);
     if ([selString hasPrefix:@"_"]) {

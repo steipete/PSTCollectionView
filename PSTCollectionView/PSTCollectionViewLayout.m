@@ -190,6 +190,8 @@ NSString *const PSTCollectionElementKindDecorationView = @"PSTCollectionElementK
 @property (nonatomic, unsafe_unretained) PSTCollectionView *collectionView;
 @end
 
+NSString *const PSTCollectionViewLayoutAwokeFromNib = @"PSTCollectionViewLayoutAwokeFromNib";
+
 @implementation PSTCollectionViewLayout
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -200,8 +202,19 @@ NSString *const PSTCollectionElementKindDecorationView = @"PSTCollectionElementK
         _decorationViewClassDict = [NSMutableDictionary new];
         _decorationViewNibDict = [NSMutableDictionary new];
         _decorationViewExternalObjectsTables = [NSMutableDictionary new];
+        [[NSNotificationCenter defaultCenter] postNotificationName:PSTCollectionViewLayoutAwokeFromNib object:self];
     }
     return self;
+}
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+}
+
+- (void)setCollectionView:(PSTCollectionView *)collectionView {
+    if (collectionView != _collectionView) {
+        _collectionView = collectionView;
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -289,6 +302,17 @@ NSString *const PSTCollectionElementKindDecorationView = @"PSTCollectionElementK
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - NSCoding
+
+- (id)initWithCoder:(NSCoder *)coder {
+    if((self = [self init])) {
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder {}
+
+///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - PSTCollection/UICollection interoperability
 
 #import <objc/runtime.h>
@@ -304,6 +328,7 @@ NSString *const PSTCollectionElementKindDecorationView = @"PSTCollectionElementK
     }
     return sig;
 }
+
 - (void)forwardInvocation:(NSInvocation *)inv {
     NSString *selString = NSStringFromSelector([inv selector]);
     if ([selString hasPrefix:@"_"]) {
@@ -322,17 +347,6 @@ NSString *const PSTCollectionElementKindDecorationView = @"PSTCollectionElementK
     }else {
         [super forwardInvocation:inv];
     }
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark - NSCoding
-
-- (id)initWithCoder:(NSCoder *)coder {
-    self = [self init];
-    return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)coder {
 }
 
 @end
