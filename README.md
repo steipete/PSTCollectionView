@@ -4,10 +4,11 @@ PSTCollectionView
 Open Source, 100% API compatible replacement of UICollectionView for iOS4.3+
 
 **You want to use UICollectionView, but still need to support iOS4/5? Then you'll gonna love this project.**
-I've originally written it for [PSPDFKit](http://PSPDFKit.com), my iOS PDF framework that supports text selection and annotations, but this project seemed way to useful for others to to keep it for myself :) Plus, I would love the influx of new gridviews to stop. Better just write layout managers and build on a great codebase.
+I've originally written it for [PSPDFKit](http://PSPDFKit.com), my iOS PDF framework that supports text selection and annotations, but this project seemed way to useful for others to to keep it for myself :)
 
-The goal is to use PSTCollectionView on iOS 4/5 as a fallback and switch to UICollectionView on iOS6. We even use certain runtime tricks to create UICollectionView at runtime for older versions of iOS. Ideally, **you just link the files and everything works on older systems.**
-*If you want to have PSTCollectionView on iOS4/5 and UICollectionView on iOS6, use PSUICollectionView (basically add PS on any UICollectionView* class to get auto-support for older iOS versions)*
+The goal is to use PSTCollectionView on iOS 4/5 as a fallback and switch to UICollectionView on iOS6. We even use certain runtime tricks to create UICollectionView at runtime for older versions of iOS.
+
+**If you want to have PSTCollectionView on iOS4/5 and UICollectionView on iOS6, use PSUICollectionView (basically add PS on any UICollectionView* class to get auto-support for older iOS versions)**
 
 PSTCollectionView is also internally designed very closesly to UICollectionView and thus a great study if you're wondering how UICollectionView works. See [HowTo](/steipete/PSTCollectionView/blob/master/HowTo.md) for helpful details.
 
