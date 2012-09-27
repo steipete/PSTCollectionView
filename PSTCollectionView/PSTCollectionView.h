@@ -8,6 +8,7 @@
 #import "PSTCollectionViewLayout.h"
 #import "PSTCollectionViewFlowLayout.h"
 #import "PSTCollectionViewCell.h"
+#import "PSTCollectionViewController.h"
 
 @class PSTCollectionViewController;
 
@@ -56,8 +57,6 @@ typedef NS_OPTIONS(NSUInteger, UICollectionViewScrollPosition) {
     UICollectionViewScrollPositionRight                = 1 << 5
 };
 #endif
-
-#import "PSTCollectionViewController.h"
 
 /**
  Replacement for UICollectionView for iOS4/5.
