@@ -67,13 +67,6 @@ NSString *const PSTFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVertical
 #pragma mark - NSObject
 
 - (id)init {
-#ifdef kPSTCollectionViewRelayToUICollectionViewIfAvailable
-    if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_6_0) {
-        self = (PSTCollectionViewFlowLayout *)[[UICollectionViewFlowLayout alloc] init];
-        return self;
-    }
-#endif
-
     if((self = [super init])) {
         _itemSize = CGSizeMake(10, 10);
         _scrollDirection = PSTCollectionViewScrollDirectionVertical;

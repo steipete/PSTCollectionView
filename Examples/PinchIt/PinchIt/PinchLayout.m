@@ -96,7 +96,7 @@
 
 @implementation PinchLayout
 
--(void)applyPinchToLayoutAttributes:(UICollectionViewLayoutAttributes*)layoutAttributes
+-(void)applyPinchToLayoutAttributes:(PSUICollectionViewLayoutAttributes*)layoutAttributes
 {
     if ([layoutAttributes.indexPath isEqual:self.pinchedCellPath])
     {
@@ -110,7 +110,7 @@
 {
     NSArray* allAttributesInRect = [super layoutAttributesForElementsInRect:rect];
     
-    for (UICollectionViewLayoutAttributes* cellAttributes in allAttributesInRect)
+    for (PSUICollectionViewLayoutAttributes* cellAttributes in allAttributesInRect)
     {
         [self applyPinchToLayoutAttributes:cellAttributes];
     }
@@ -118,9 +118,9 @@
     return allAttributesInRect;
 }
 
--(UICollectionViewLayoutAttributes*)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath
+-(PSUICollectionViewLayoutAttributes*)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    UICollectionViewLayoutAttributes* attributes = (UICollectionViewLayoutAttributes*)[super layoutAttributesForItemAtIndexPath:indexPath];
+    PSUICollectionViewLayoutAttributes* attributes = (PSUICollectionViewLayoutAttributes*)[super layoutAttributesForItemAtIndexPath:indexPath];
     
     [self applyPinchToLayoutAttributes:attributes];
 

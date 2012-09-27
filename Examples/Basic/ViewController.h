@@ -6,8 +6,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PSTCollectionViewController.h"
+#import "PSTCollectionView.h"
 
-@interface ViewController : UICollectionViewController
+@interface ViewController : PSUICollectionViewController
 
 @end

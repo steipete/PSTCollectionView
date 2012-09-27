@@ -11,9 +11,6 @@
 
 @class PSTCollectionViewController;
 
-// Define this to automatically return UICollection* variants on init if they are available.
-//#define kPSTCollectionViewRelayToUICollectionViewIfAvailable
-
 // Allows code to just use UICollectionView as if it would be avaiable on iOS SDK 5.
 // http://developer.apple.com/legacy/mac/library/#documentation/DeveloperTools/gcc-3.3/gcc/compatibility_005falias.html
 #if __IPHONE_OS_VERSION_MAX_ALLOWED < 60000
@@ -27,6 +24,7 @@
 @protocol UICollectionViewDataSource <PSTCollectionViewDataSource> @end
 @protocol UICollectionViewDelegate <PSTCollectionViewDelegate> @end
 #endif
+
 
 @protocol PSTCollectionViewDataSource <NSObject>
 @required
@@ -113,17 +111,17 @@ typedef NS_OPTIONS(NSUInteger, UICollectionViewScrollPosition) {
 #import "PSTCollectionViewController.h"
 
 /**
-    Replacement for UICollectionView for iOS4/5.
-    Only supports a subset of the features of UICollectionView.
-    e.g. animations won't be handled.
+ Replacement for UICollectionView for iOS4/5.
+ Only supports a subset of the features of UICollectionView.
+ e.g. animations won't be handled.
  */
 @interface PSTCollectionView : UIScrollView
 
 - (id)initWithFrame:(CGRect)frame collectionViewLayout:(PSTCollectionViewLayout *)layout; // the designated initializer
 
 @property (nonatomic, retain) PSTCollectionViewLayout *collectionViewLayout;
-@property (nonatomic, assign) id <PSTCollectionViewDelegate> delegate;
-@property (nonatomic, assign) id <PSTCollectionViewDataSource> dataSource;
+@property (nonatomic, assign) IBOutlet id <PSTCollectionViewDelegate> delegate;
+@property (nonatomic, assign) IBOutlet id <PSTCollectionViewDataSource> dataSource;
 @property (nonatomic, retain) UIView *backgroundView; // will be automatically resized to track the size of the collection view and placed behind all cells and supplementary views.
 
 // For each reuse identifier that the collection view will use, register either a class or a nib from which to instantiate a cell.
@@ -184,3 +182,33 @@ typedef NS_OPTIONS(NSUInteger, UICollectionViewScrollPosition) {
 - (void)performBatchUpdates:(void (^)(void))updates completion:(void (^)(BOOL finished))completion; // allows multiple insert/delete/reload/move calls to be animated simultaneously. Nestable.
 
 @end
+
+// To dynamically switch between PSTCollectionView and UICollectionView, use the PSUICollectionView* classes.
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
+#define PSUICollectionView PSUICollectionView_
+#define PSUICollectionViewCell PSUICollectionViewCell_
+#define PSUICollectionViewDelegate PSTCollectionViewDelegate
+#define PSUICollectionViewDataSource PSTCollectionViewDataSource
+#define PSUICollectionViewLayout PSUICollectionViewLayout_
+#define PSUICollectionViewFlowLayout PSUICollectionViewFlowLayout_
+#define PSUICollectionViewLayoutAttributes PSUICollectionViewLayoutAttributes_
+#define PSUICollectionViewController PSUICollectionViewController_
+
+@interface PSUICollectionView_ : PSTCollectionView @end
+@interface PSUICollectionViewCell_ : PSTCollectionViewCell @end
+@interface PSUICollectionViewLayout_ : PSTCollectionViewLayout @end
+@interface PSUICollectionViewFlowLayout_ : PSTCollectionViewFlowLayout @end
+@interface PSUICollectionViewLayoutAttributes_ : PSTCollectionViewLayoutAttributes @end
+@interface PSUICollectionViewController_ : PSTCollectionViewController <PSUICollectionViewDelegate, PSUICollectionViewDataSource> @end
+
+#else
+#define PSUICollectionView UICollectionView
+#define PSUICollectionViewCell UICollectionViewLayout
+#define PSUICollectionViewDelegate UICollectionViewDelegate
+#define PSUICollectionViewDataSource UICollectionViewDataSource
+#define PSUICollectionViewLayout UICollectionViewLayout
+#define PSUICollectionViewFlowLayout UICollectionViewCell
+#define PSUICollectionViewLayoutAttributes UICollectionViewLayoutAttributes
+#define PSUICollectionViewController UICollectionViewController
+
+#endif

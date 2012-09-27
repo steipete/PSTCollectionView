@@ -94,6 +94,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : PSTCollectionViewController
+@interface ViewController : PSUICollectionViewController
 
 @end

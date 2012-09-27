@@ -111,10 +111,10 @@
     return 63;
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath;
+- (PSUICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath;
 {
     Cell *cell = [cv dequeueReusableCellWithReuseIdentifier:@"MY_CELL" forIndexPath:indexPath];
-    return (UICollectionViewCell *)cell;
+    return (PSUICollectionViewCell *)cell;
 }
 
 - (void)handlePinchGesture:(UIPinchGestureRecognizer *)sender

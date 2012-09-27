@@ -63,13 +63,6 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
 #pragma mark - NSObject
 
 - (id)initWithFrame:(CGRect)frame collectionViewLayout:(PSTCollectionViewLayout *)layout {
-#ifdef kPSTCollectionViewRelayToUICollectionViewIfAvailable
-    if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_6_0) {
-        self = (PSTCollectionView *)[[UICollectionView alloc] initWithFrame:frame collectionViewLayout:(UICollectionViewLayout *)layout];
-        return self;
-    }
-#endif
-
     if ((self = [super initWithFrame:frame])) {
         // UICollectionViewCommonSetup
         self.delaysContentTouches = NO;
@@ -89,27 +82,26 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
     return self;
 }
 
-
 - (id)initWithCoder:(NSCoder *)inCoder {
     if ((self = [super initWithCoder:inCoder])) {
         self = [self initWithFrame:self.frame collectionViewLayout:nil];
     }
-    
-    return self;    
+
+    return self;
 }
 
 - (void)awakeFromNib {
     NSString *collectionViewClassString = [self valueForKeyPath:@"collectionViewClassString"];
-    
+
     if (!collectionViewClassString) {
         NSLog(@"Please set the collection view class string in user defined runtime attributes");
-    } else {
-        PSTCollectionViewLayout *layout = [[NSClassFromString(collectionViewClassString) alloc] init];
-        
-        layout.collectionView = self;
-        _collectionViewLayout = layout;
-        _collectionViewData = [[PSTCollectionViewData alloc] initWithCollectionView:self layout:layout];
+        collectionViewClassString = NSStringFromClass([PSUICollectionViewFlowLayout class]);
     }
+    PSTCollectionViewLayout *layout = [[NSClassFromString(collectionViewClassString) alloc] init];
+
+    layout.collectionView = self;
+    _collectionViewLayout = layout;
+    _collectionViewData = [[PSTCollectionViewData alloc] initWithCollectionView:self layout:layout];
 }
 
 - (NSString *)description {
@@ -189,9 +181,9 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
 
 - (void)registerNib:(UINib *)nib forCellWithReuseIdentifier:(NSString *)identifier {
     NSArray *topLevelObjects = [nib instantiateWithOwner:nil options:nil];
-   
+
     NSAssert(topLevelObjects.count == 1 && [topLevelObjects[0] isKindOfClass:PSTCollectionViewCell.class], @"must contain exactly 1 top level object which is a PSTCollectionViewCell");
-    
+
     _cellNibDict[identifier] = nib;
 }
 
@@ -206,7 +198,7 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
         if (_cellNibDict[identifier]) {
             // Cell was registered via registerNib: forCellWithReuseIdentifier:
             UINib *cellNib = _cellNibDict[identifier];
-            
+
             cell = [cellNib instantiateWithOwner:self options:0][0];
         } else {
 
@@ -248,7 +240,7 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
         }
         if (self.collectionViewLayout) {
             PSTCollectionViewLayoutAttributes *attributes = [self.collectionViewLayout layoutAttributesForSupplementaryViewOfKind:elementKind
-                                                                                                                     atIndexPath:indexPath];
+                                                                                                                      atIndexPath:indexPath];
             view = [[viewClass alloc] initWithFrame:attributes.frame];
         } else {
             view = [viewClass new];
@@ -401,7 +393,7 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
     [super touchesCancelled:touches withEvent:event];
-    
+
     [self unhighlightAllItems];
 }
 
@@ -425,7 +417,7 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
             [self.delegate collectionView:self didSelectItemAtIndexPath:indexPath];
         }
     }
-    
+
     [self unhighlightItemAtIndexPath:indexPath animated:animated notifyDelegate:YES];
 }
 
@@ -461,12 +453,12 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
     if ([self.delegate respondsToSelector:@selector(collectionView:shouldHighlightItemAtIndexPath:)]) {
         shouldHighlight = [self.delegate collectionView:self shouldHighlightItemAtIndexPath:indexPath];
     }
-    
+
     if (shouldHighlight) {
         PSTCollectionViewCell *highlightedCell = [self cellForItemAtIndexPath:indexPath];
         highlightedCell.highlighted = YES;
         [_indexPathsForHighlightedItems addObject:indexPath];
-        
+
         if (notifyDelegate && [self.delegate respondsToSelector:@selector(collectionView:didHighlightItemAtIndexPath:)]) {
             [self.delegate collectionView:self didHighlightItemAtIndexPath:indexPath];
         }
@@ -480,7 +472,7 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
         PSTCollectionViewCell *highlightedCell = [self cellForItemAtIndexPath:indexPath];
         highlightedCell.highlighted = NO;
         [_indexPathsForHighlightedItems removeObject:indexPath];
-        
+
         if (notifyDelegate && [self.delegate respondsToSelector:@selector(collectionView:didUnhighlightItemAtIndexPath:)]) {
             [self.delegate collectionView:self didUnhighlightItemAtIndexPath:indexPath];
         }
@@ -638,12 +630,12 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
 }
 
 - (PSTCollectionReusableView *)_createPreparedSupplementaryViewForElementOfKind:(NSString *)kind
-                                                                   atIndexPath:(NSIndexPath *)indexPath
-                                                          withLayoutAttributes:(PSTCollectionViewLayoutAttributes *)layoutAttributes
+                                                                    atIndexPath:(NSIndexPath *)indexPath
+                                                           withLayoutAttributes:(PSTCollectionViewLayoutAttributes *)layoutAttributes
 {
     PSTCollectionReusableView *view = [self.dataSource collectionView:self
-                                   viewForSupplementaryElementOfKind:kind
-                                                         atIndexPath:indexPath];
+                                    viewForSupplementaryElementOfKind:kind
+                                                          atIndexPath:indexPath];
     [view applyLayoutAttributes:layoutAttributes];
     return view;
 }
@@ -736,18 +728,45 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Runtime Additions to create UICollectionView
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
+@implementation PSUICollectionView_ @end
+@implementation PSUICollectionViewCell_ @end
+@implementation PSUICollectionViewLayout_ @end
+@implementation PSUICollectionViewFlowLayout_ @end
+@implementation PSUICollectionViewLayoutAttributes_ @end
+@implementation PSUICollectionViewController_ @end
+
 // Create subclasses that pose as UICollectionView et al, if not available at runtime.
-__attribute__((constructor)) static void PSCreateUICollectionViewClasses(void) {
+__attribute__((constructor)) static void PSTCreateUICollectionViewClasses(void) {
     @autoreleasepool {
+        // Dynamically change superclasses of the PSUICollectionView* clases to UICollectioView*. Crazy stuff.
+        if ([UICollectionView class]) class_setSuperclass([PSUICollectionView_ class], [UICollectionView class]);
+		if ([UICollectionViewCell class]) class_setSuperclass([PSUICollectionViewCell_ class], [UICollectionViewCell class]);
+		if ([UICollectionViewLayout class]) class_setSuperclass([PSUICollectionViewLayout_ class], [UICollectionViewLayout class]);
+		if ([UICollectionViewFlowLayout class]) class_setSuperclass([PSUICollectionViewFlowLayout_ class], [UICollectionViewFlowLayout class]);
+		if ([UICollectionViewLayoutAttributes class]) class_setSuperclass([PSUICollectionViewLayoutAttributes_ class], [UICollectionViewLayoutAttributes class]);
+		if ([UICollectionViewController class]) class_setSuperclass([PSUICollectionViewController_ class], [UICollectionViewController class]);
+
         if (kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_6_0) {
-            objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewController class], "UICollectionViewController", 0));
             objc_registerClassPair(objc_allocateClassPair([PSTCollectionView class], "UICollectionView", 0));
             objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewCell class], "UICollectionViewCell", 0));
             objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewLayout class], "UICollectionViewLayout", 0));
             objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewFlowLayout class], "UICollectionViewFlowLayout", 0));
+            objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewLayoutAttributes class], "UICollectionViewLayoutAttributes", 0));
+            objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewController class], "UICollectionViewController", 0));
         }
+
+        // add PSUI classes at rumtime to make Interface Builder sane.
+        objc_registerClassPair(objc_allocateClassPair([PSUICollectionView_ class], "PSUICollectionView", 0));
+        objc_registerClassPair(objc_allocateClassPair([PSUICollectionViewCell_ class], "PSUICollectionViewCell", 0));
+        objc_registerClassPair(objc_allocateClassPair([PSUICollectionViewLayout_ class], "PSUICollectionViewLayout", 0));
+        objc_registerClassPair(objc_allocateClassPair([PSUICollectionViewFlowLayout_ class], "PSUICollectionViewFlowLayout", 0));
+        objc_registerClassPair(objc_allocateClassPair([PSUICollectionViewLayoutAttributes_ class], "PSUICollectionViewLayoutAttributes", 0));
+        objc_registerClassPair(objc_allocateClassPair([PSUICollectionViewController_ class], "PSUICollectionViewController", 0));
     }
 }
+
+#endif
 
 CGFloat PSTSimulatorAnimationDragCoefficient(void) {
     static CGFloat (*UIAnimationDragCoefficient)(void) = NULL;
