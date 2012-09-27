@@ -786,7 +786,8 @@ __attribute__((constructor)) static void PSTCreateUICollectionViewClasses(void) 
             objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewController class], "UICollectionViewController", 0));
         }
 
-        // add PSUI classes at rumtime to make Interface Builder sane.
+        // add PSUI classes at runtime to make Interface Builder sane
+        // (IB doesn't allow adding the PSUICollectionView_ types but doesn't complain on unknown classes)
         objc_registerClassPair(objc_allocateClassPair([PSUICollectionView_ class], "PSUICollectionView", 0));
         objc_registerClassPair(objc_allocateClassPair([PSUICollectionViewCell_ class], "PSUICollectionViewCell", 0));
         objc_registerClassPair(objc_allocateClassPair([PSUICollectionReusableView_ class], "PSUICollectionReusableView", 0));
