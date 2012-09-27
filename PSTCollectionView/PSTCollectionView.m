@@ -65,7 +65,7 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject
 
-void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
+static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     _self.delaysContentTouches = NO;
     _self->_indexPathsForSelectedItems = [NSMutableSet new];
     _self->_indexPathsForHighlightedItems = [NSMutableSet new];
