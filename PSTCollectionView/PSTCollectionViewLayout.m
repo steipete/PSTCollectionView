@@ -110,20 +110,17 @@ NSString *const PSTCollectionElementKindDecorationView = @"PSTCollectionElementK
     return self.representedElementCategory == PSTCollectionViewItemTypeCell;
 }
 
-- (void)setSize:(CGSize)size
-{
+- (void)setSize:(CGSize)size {
     _size = size;
     _frame = (CGRect){_frame.origin, _size};
 }
 
-- (void)setCenter:(CGPoint)center
-{
+- (void)setCenter:(CGPoint)center {
     _center = center;
     _frame = (CGRect){{_center.x - _frame.size.width / 2, _center.y - _frame.size.height / 2}, _frame.size};
 }
 
-- (void)setFrame:(CGRect)frame
-{
+- (void)setFrame:(CGRect)frame {
     _frame = frame;
     _size = _frame.size;
     _center = (CGPoint){CGRectGetMidX(_frame), CGRectGetMidY(_frame)};
@@ -162,6 +159,7 @@ NSString *const PSTCollectionElementKindDecorationView = @"PSTCollectionElementK
     }
     return signature;
 }
+
 - (void)forwardInvocation:(NSInvocation *)invocation {
     NSString *selString = NSStringFromSelector([invocation selector]);
     if ([selString hasPrefix:@"_"]) {
@@ -190,6 +188,8 @@ NSString *const PSTCollectionElementKindDecorationView = @"PSTCollectionElementK
 @property (nonatomic, unsafe_unretained) PSTCollectionView *collectionView;
 @end
 
+NSString *const PSTCollectionViewLayoutAwokeFromNib = @"PSTCollectionViewLayoutAwokeFromNib";
+
 @implementation PSTCollectionViewLayout
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -200,8 +200,19 @@ NSString *const PSTCollectionElementKindDecorationView = @"PSTCollectionElementK
         _decorationViewClassDict = [NSMutableDictionary new];
         _decorationViewNibDict = [NSMutableDictionary new];
         _decorationViewExternalObjectsTables = [NSMutableDictionary new];
+        [[NSNotificationCenter defaultCenter] postNotificationName:PSTCollectionViewLayoutAwokeFromNib object:self];
     }
     return self;
+}
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+}
+
+- (void)setCollectionView:(PSTCollectionView *)collectionView {
+    if (collectionView != _collectionView) {
+        _collectionView = collectionView;
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -289,6 +300,17 @@ NSString *const PSTCollectionElementKindDecorationView = @"PSTCollectionElementK
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - NSCoding
+
+- (id)initWithCoder:(NSCoder *)coder {
+    if((self = [self init])) {
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder {}
+
+///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - PSTCollection/UICollection interoperability
 
 #import <objc/runtime.h>
@@ -304,6 +326,7 @@ NSString *const PSTCollectionElementKindDecorationView = @"PSTCollectionElementK
     }
     return sig;
 }
+
 - (void)forwardInvocation:(NSInvocation *)inv {
     NSString *selString = NSStringFromSelector([inv selector]);
     if ([selString hasPrefix:@"_"]) {
@@ -322,17 +345,6 @@ NSString *const PSTCollectionElementKindDecorationView = @"PSTCollectionElementK
     }else {
         [super forwardInvocation:inv];
     }
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark - NSCoding
-
-- (id)initWithCoder:(NSCoder *)coder {
-    self = [self init];
-    return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)coder {
 }
 
 @end

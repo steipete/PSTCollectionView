@@ -6,7 +6,6 @@
 //
 
 #import "PSTCollectionViewCommon.h"
-#import "PSTCollectionView.h"
 
 @class PSTCollectionViewLayout, PSTCollectionViewController;
 

@@ -8,7 +8,7 @@
 #import <UIKit/UIKit.h>
 #import "PSTCollectionViewCell.h"
 
-@interface Cell : UICollectionViewCell
+@interface Cell : PSUICollectionViewCell
 
 @property (strong, nonatomic) UILabel* label;
 

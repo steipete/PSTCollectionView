@@ -67,13 +67,6 @@ NSString *const PSTFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVertical
 #pragma mark - NSObject
 
 - (id)init {
-#ifdef kPSTCollectionViewRelayToUICollectionViewIfAvailable
-    if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_6_0) {
-        self = (PSTCollectionViewFlowLayout *)[[UICollectionViewFlowLayout alloc] init];
-        return self;
-    }
-#endif
-
     if((self = [super init])) {
         _itemSize = CGSizeMake(10, 10);
         _scrollDirection = PSTCollectionViewScrollDirectionVertical;
@@ -231,7 +224,12 @@ NSString *const PSTFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVertical
         PSTGridLayoutSection *layoutSection = [_data addSection];
         layoutSection.verticalInterstice = _data.horizontal ? self.minimumInteritemSpacing : self.minimumLineSpacing;
         layoutSection.horizontalInterstice = !_data.horizontal ? self.minimumInteritemSpacing : self.minimumLineSpacing;
-        layoutSection.sectionMargins = self.sectionInset;
+
+        if ([flowDataSource respondsToSelector:@selector(collectionView:layout:insetForSectionAtIndex:)]) {
+            layoutSection.sectionMargins = [flowDataSource collectionView:self.collectionView layout:self insetForSectionAtIndex:section];
+        } else {
+            layoutSection.sectionMargins = self.sectionInset;
+        }
 
         if ([flowDataSource respondsToSelector:@selector(collectionView:layout:minimumLineSpacingForSectionAtIndex:)]) {
             CGFloat minimumLineSpacing = [flowDataSource collectionView:self.collectionView layout:self minimumLineSpacingForSectionAtIndex:section];

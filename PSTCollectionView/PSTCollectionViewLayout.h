@@ -73,7 +73,8 @@ typedef NS_ENUM(NSInteger, PSTCollectionUpdateAction) {
 @end
 */
 
-
+// used internally for deserialization until I figure out the proper way.
+extern NSString *const PSTCollectionViewLayoutAwokeFromNib;
 
 @interface PSTCollectionViewLayout : NSObject <NSCoding>
 
