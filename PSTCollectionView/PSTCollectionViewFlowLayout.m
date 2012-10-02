@@ -11,6 +11,7 @@
 #import "PSTGridLayoutInfo.h"
 #import "PSTGridLayoutRow.h"
 #import "PSTGridLayoutSection.h"
+#import <objc/runtime.h>
 
 NSString *const PSTCollectionElementKindSectionHeader = @"UICollectionElementKindSectionHeader";
 NSString *const PSTCollectionElementKindSectionFooter = @"UICollectionElementKindSectionFooter";
@@ -19,47 +20,6 @@ NSString *const PSTCollectionElementKindSectionFooter = @"UICollectionElementKin
 NSString *const PSTFlowLayoutCommonRowHorizontalAlignmentKey = @"UIFlowLayoutCommonRowHorizontalAlignmentKey";
 NSString *const PSTFlowLayoutLastRowHorizontalAlignmentKey = @"UIFlowLayoutLastRowHorizontalAlignmentKey";
 NSString *const PSTFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalAlignmentKey";
-
-
-@interface PSTCollectionViewFlowLayout() {
-    struct {
-        unsigned int delegateSizeForItem:1;
-        unsigned int delegateReferenceSizeForHeader:1;
-        unsigned int delegateReferenceSizeForFooter:1;
-        unsigned int delegateInsetForSection:1;
-        unsigned int delegateInteritemSpacingForSection:1;
-        unsigned int delegateLineSpacingForSection:1;
-        unsigned int delegateAlignmentOptions:1;
-
-        unsigned int keepDelegateInfoWhileInvalidating:1;
-        unsigned int keepAllDataWhileInvalidating:1;
-        unsigned int layoutDataIsValid:1;
-        unsigned int delegateInfoIsValid:1;
-    } _gridLayoutFlags;
-
-    CGFloat _interitemSpacing;
-    CGFloat _lineSpacing;
-
-    PSTGridLayoutInfo *_data;
-    id _snapshottedData; // ???
-
-    CGSize _currentLayoutSize;
-    /*
-     NSMutableDictionary* _insertedItemsAttributesDict;
-     NSMutableDictionary* _insertedSectionHeadersAttributesDict;
-     NSMutableDictionary* _insertedSectionFootersAttributesDict;
-     NSMutableDictionary* _deletedItemsAttributesDict;
-     NSMutableDictionary* _deletedSectionHeadersAttributesDict;
-     NSMutableDictionary* _deletedSectionFootersAttributesDict;
-     */
-    NSDictionary *_rowAlignmentsOptionsDictionary;
-    CGRect _visibleBounds;
-
-    // @steipete cache
-    NSArray *_cachedItemRects;
-}
-
-@end
 
 @implementation PSTCollectionViewFlowLayout
 
@@ -78,12 +38,17 @@ NSString *const PSTFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVertical
         // TODO: those values are some enum. find out what what is.
         PSTFlowLayoutRowVerticalAlignmentKey : @(1),
         };
+
+        // custom ivars
+        objc_setAssociatedObject(self, &kPSTCachedItemRectsKey, [NSMutableArray array], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return self;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - PSTCollectionViewLayout
+
+static char kPSTCachedItemRectsKey;
 
 - (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect {
     // Apple calls _layoutAttributesForItemsInRect
@@ -95,9 +60,12 @@ NSString *const PSTFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVertical
             // if we have fixed size, calculate item frames only once.
             // this also uses the default PSTFlowLayoutCommonRowHorizontalAlignmentKey alignment
             // for the last row. (we want this effect!)
-            NSArray *itemRects = _cachedItemRects;
-            if (!_cachedItemRects && section.fixedItemSize && [section.rows count]) {
-                itemRects = _cachedItemRects = [(section.rows)[0] itemRects];
+            NSMutableDictionary *rectCache = objc_getAssociatedObject(self, &kPSTCachedItemRectsKey);
+            NSUInteger sectionIndex = [_data.sections indexOfObjectIdenticalTo:section];
+            NSArray *itemRects = rectCache[@(sectionIndex)];
+            if (!itemRects && section.fixedItemSize && [section.rows count]) {
+                itemRects = [(section.rows)[0] itemRects];
+                if(itemRects) rectCache[@(sectionIndex)] = itemRects;
             }
 
             for (PSTGridLayoutRow *row in section.rows) {
@@ -126,9 +94,6 @@ NSString *const PSTFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVertical
                     }
                 }
             }
-            
-            // Reset the item rect cache for this section
-            _cachedItemRects = nil;
         }
     }
     return layoutAttributesArray;
@@ -178,7 +143,7 @@ NSString *const PSTFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVertical
 #pragma mark - Invalidating the Layout
 
 - (void)invalidateLayout {
-    _cachedItemRects = nil;
+    objc_setAssociatedObject(self, &kPSTCachedItemRectsKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds {

@@ -34,7 +34,41 @@ typedef NS_ENUM(NSInteger, UICollectionViewScrollDirection) {
 
 @end
 
-@interface PSTCollectionViewFlowLayout : PSTCollectionViewLayout
+@class PSTGridLayoutInfo;
+
+@interface PSTCollectionViewFlowLayout : PSTCollectionViewLayout {
+    // class needs to have same iVar layout as UICollectionViewLayout
+    struct {
+        unsigned int delegateSizeForItem : 1;
+        unsigned int delegateReferenceSizeForHeader : 1;
+        unsigned int delegateReferenceSizeForFooter : 1;
+        unsigned int delegateInsetForSection : 1;
+        unsigned int delegateInteritemSpacingForSection : 1;
+        unsigned int delegateLineSpacingForSection : 1;
+        unsigned int delegateAlignmentOptions : 1;
+        unsigned int keepDelegateInfoWhileInvalidating : 1;
+        unsigned int keepAllDataWhileInvalidating : 1;
+        unsigned int layoutDataIsValid : 1;
+        unsigned int delegateInfoIsValid : 1;
+    } _gridLayoutFlags;
+    float _interitemSpacing;
+    float _lineSpacing;
+    CGSize _itemSize;
+    CGSize _headerReferenceSize;
+    CGSize _footerReferenceSize;
+    UIEdgeInsets _sectionInset;
+    PSTGridLayoutInfo *_data;
+    CGSize _currentLayoutSize;
+    NSMutableDictionary *_insertedItemsAttributesDict;
+    NSMutableDictionary *_insertedSectionHeadersAttributesDict;
+    NSMutableDictionary *_insertedSectionFootersAttributesDict;
+    NSMutableDictionary *_deletedItemsAttributesDict;
+    NSMutableDictionary *_deletedSectionHeadersAttributesDict;
+    NSMutableDictionary *_deletedSectionFootersAttributesDict;
+    PSTCollectionViewScrollDirection _scrollDirection;
+    NSDictionary *_rowAlignmentsOptionsDictionary;
+    CGRect _visibleBounds;
+}
 
 @property (nonatomic) CGFloat minimumLineSpacing;
 @property (nonatomic) CGFloat minimumInteritemSpacing;
