@@ -10,8 +10,11 @@
 #import "PSTCollectionViewLayout.h"
 
 @interface PSTCollectionReusableView() {
+    PSTCollectionViewLayoutAttributes *_layoutAttributes;
+    NSString *_reuseIdentifier;
+    __unsafe_unretained PSTCollectionView *_collectionView;
     struct {
-        unsigned int inUpdateAnimation:1;
+        unsigned int inUpdateAnimation : 1;
     } _reusableViewFlags;
 }
 @property (nonatomic, copy) NSString *reuseIdentifier;
@@ -78,7 +81,23 @@
 @end
 
 
-@implementation PSTCollectionViewCell
+@implementation PSTCollectionViewCell {
+    UIView *_contentView;
+    UIView *_backgroundView;
+    UIView *_selectedBackgroundView;
+    UILongPressGestureRecognizer *_menuGesture;
+    id _selectionSegueTemplate;
+    id _highlightingSupport;
+    struct {
+        unsigned int selected : 1;
+        unsigned int highlighted : 1;
+        unsigned int showingMenu : 1;
+        unsigned int clearSelectionWhenMenuDisappears : 1;
+        unsigned int waitingForSelectionAnimationHalfwayPoint : 1;
+    } _collectionCellFlags;
+    BOOL _selected;
+    BOOL _highlighted;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject

@@ -31,21 +31,7 @@
 @end
 
 
-// We need to be careful and keep the same ivar layout as UICollectionViewCell,
-// else we might crash with after using class_setSuperclass if subclasses change the ivar layout.
-@interface PSTCollectionViewCell : PSTCollectionReusableView {
-    UILongPressGestureRecognizer *_menuGesture; // unused
-    id _selectionSegueTemplate; // unused.
-    id _highlightingSupport; // Apple uses UICellHighlightingSupport. Currently unused.
-    struct {
-        unsigned int selected:1;
-        unsigned int highlighted:1;
-        // currently unused
-        unsigned int showingMenu:1;
-        unsigned int clearSelectionWhenMenuDisappears:1;
-        unsigned int waitingForSelectionAnimationHalfwayPoint:1;
-    } _collectionCellFlags;
-}
+@interface PSTCollectionViewCell : PSTCollectionReusableView
 
 @property (nonatomic, readonly) UIView *contentView; // add custom subviews to the cell's contentView
 

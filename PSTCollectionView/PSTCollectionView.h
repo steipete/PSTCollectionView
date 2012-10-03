@@ -84,6 +84,7 @@ typedef NS_OPTIONS(NSUInteger, UICollectionViewScrollPosition) {
 
 - (id)dequeueReusableCellWithReuseIdentifier:(NSString *)identifier forIndexPath:(NSIndexPath *)indexPath;
 - (id)dequeueReusableSupplementaryViewOfKind:(NSString *)elementKind withReuseIdentifier:(NSString *)identifier forIndexPath:(NSIndexPath *)indexPath;
+
 // These properties control whether items can be selected, and if so, whether multiple items can be simultaneously selected.
 @property (nonatomic) BOOL allowsSelection; // default is YES
 @property (nonatomic) BOOL allowsMultipleSelection; // default is NO
@@ -160,5 +161,4 @@ typedef NS_OPTIONS(NSUInteger, UICollectionViewScrollPosition) {
 #define PSUICollectionViewFlowLayout UICollectionViewCell
 #define PSUICollectionViewLayoutAttributes UICollectionViewLayoutAttributes
 #define PSUICollectionViewController UICollectionViewController
-
 #endif

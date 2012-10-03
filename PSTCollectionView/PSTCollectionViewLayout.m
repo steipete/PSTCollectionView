@@ -177,13 +177,15 @@ NSString *const PSTCollectionElementKindDecorationView = @"PSTCollectionElementK
 
 
 @interface PSTCollectionViewLayout() {
+    __unsafe_unretained PSTCollectionView *_collectionView;
     CGSize _collectionViewBoundsSize;
+    NSMutableDictionary *_initialAnimationLayoutAttributesDict;
+    NSMutableDictionary *_finalAnimationLayoutAttributesDict;
+    NSMutableIndexSet *_deletedSectionsSet;
+    NSMutableIndexSet *_insertedSectionsSet;
     NSMutableDictionary *_decorationViewClassDict;
     NSMutableDictionary *_decorationViewNibDict;
     NSMutableDictionary *_decorationViewExternalObjectsTables;
-
-    NSMutableDictionary *_initialAnimationLayoutAttributesDict;
-    NSMutableDictionary *_finalAnimationLayoutAttributesDict;
 }
 @property (nonatomic, unsafe_unretained) PSTCollectionView *collectionView;
 @end

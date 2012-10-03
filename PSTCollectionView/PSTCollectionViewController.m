@@ -9,12 +9,14 @@
 #import "PSTCollectionView.h"
 
 @interface PSTCollectionViewController () {
+    PSTCollectionViewLayout *_layout;
+    PSTCollectionView *_collectionView;
     struct {
-        unsigned int clearsSelectionOnViewWillAppear:1;
+        unsigned int clearsSelectionOnViewWillAppear : 1;
+        unsigned int appearsFirstTime : 1; // PST exension!
     } _collectionViewControllerFlags;
 }
 @property (nonatomic, strong) PSTCollectionViewLayout* layout;
-@property (nonatomic, assign) BOOL appearsFirstTime;
 @end
 
 @implementation PSTCollectionViewController
@@ -26,7 +28,7 @@
     if((self = [super init])) {
         self.layout = layout;
         self.clearsSelectionOnViewWillAppear = YES;
-        self.appearsFirstTime = YES;
+        _collectionViewControllerFlags.appearsFirstTime = YES;
     }
     return self;
 }
@@ -61,9 +63,9 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
-    if (_appearsFirstTime) {
+    if (_collectionViewControllerFlags.appearsFirstTime) {
         [_collectionView reloadData];
-        self.appearsFirstTime = NO;
+        _collectionViewControllerFlags.appearsFirstTime = NO;
     }
     
     if (_collectionViewControllerFlags.clearsSelectionOnViewWillAppear) {
