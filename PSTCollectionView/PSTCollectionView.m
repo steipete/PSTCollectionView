@@ -353,11 +353,11 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (PSTCollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return nil;
+    return [[self collectionViewLayout] layoutAttributesForItemAtIndexPath:indexPath];
 }
 
 - (PSTCollectionViewLayoutAttributes *)layoutAttributesForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
-    return nil;
+    return [[self collectionViewLayout] layoutAttributesForSupplementaryViewOfKind:kind atIndexPath:indexPath];
 }
 
 - (NSIndexPath *)indexPathForItemAtPoint:(CGPoint)point {
