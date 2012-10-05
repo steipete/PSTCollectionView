@@ -158,7 +158,7 @@ typedef NS_OPTIONS(NSUInteger, UICollectionViewScrollPosition) {
 #define PSUICollectionViewDelegate UICollectionViewDelegate
 #define PSUICollectionViewDataSource UICollectionViewDataSource
 #define PSUICollectionViewLayout UICollectionViewLayout
-#define PSUICollectionViewFlowLayout UICollectionViewCell
+#define PSUICollectionViewFlowLayout UICollectionViewFlowLayout
 #define PSUICollectionViewLayoutAttributes UICollectionViewLayoutAttributes
 #define PSUICollectionViewController UICollectionViewController
 #endif
