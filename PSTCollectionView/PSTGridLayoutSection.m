@@ -93,10 +93,10 @@
                     if (self.layoutInfo.horizontal) {
                         row.rowFrame = CGRectMake(sectionSize.width, 0, row.rowSize.width, row.rowSize.height);
                         sectionSize.height = fmaxf(row.rowSize.height, sectionSize.height);
-                        sectionSize.width += row.rowSize.width + self.horizontalInterstice;
+                        sectionSize.width += row.rowSize.width + (itemIndex == self.itemsCount ? 0 : self.horizontalInterstice);
                     }else {
                         row.rowFrame = CGRectMake(0, sectionSize.height, row.rowSize.width, row.rowSize.height);
-                        sectionSize.height += row.rowSize.height + self.verticalInterstice;
+                        sectionSize.height += row.rowSize.height + (itemIndex == self.itemsCount ? 0 : self.verticalInterstice);
                         sectionSize.width = fmaxf(row.rowSize.width, sectionSize.width);
                     }
                 }
