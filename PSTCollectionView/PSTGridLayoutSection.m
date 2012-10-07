@@ -106,8 +106,8 @@
                     row = [self addRow];
                     row.fixedItemSize = self.fixedItemSize;
                     row.index = rowIndex;
-                    self.indexOfImcompleteRow = rowIndex;
                     rowIndex++;
+                    self.indexOfImcompleteRow = rowIndex;
                     itemsByRowCount = 0;
                     dimensionLeft = dimension;
                 }
