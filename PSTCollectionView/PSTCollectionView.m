@@ -102,6 +102,7 @@ const char kPSTNibLayout;
 #pragma mark - NSObject
 
 static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
+    _self.allowsSelection = YES;
     _self.delaysContentTouches = NO;
     _self->_indexPathsForSelectedItems = [NSMutableSet new];
     _self->_indexPathsForHighlightedItems = [NSMutableSet new];
