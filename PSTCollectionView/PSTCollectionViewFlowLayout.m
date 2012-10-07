@@ -64,9 +64,14 @@ NSString *const PSTFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVertical
 
 - (id)init {
     if((self = [super init])) {
-        _itemSize = CGSizeMake(10, 10);
+        _itemSize = CGSizeMake(50.f, 50.f);
+        _lineSpacing = 10.f;
+        _interitemSpacing = 10.f;
+        _sectionInset = UIEdgeInsetsZero;
         _scrollDirection = PSTCollectionViewScrollDirectionVertical;
-
+        _headerReferenceSize = CGSizeZero;
+        _footerReferenceSize = CGSizeZero;
+        
         // set default values for row alignment.
         _rowAlignmentsOptionsDictionary = @{
         PSTFlowLayoutCommonRowHorizontalAlignmentKey : @(PSTFlowLayoutHorizontalAlignmentJustify),
