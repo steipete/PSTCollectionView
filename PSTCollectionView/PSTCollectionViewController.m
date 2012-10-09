@@ -24,6 +24,16 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super initWithCoder:coder];
+    if (self) {
+		self.layout = [PSUICollectionViewFlowLayout new];
+        self.clearsSelectionOnViewWillAppear = YES;
+        _collectionViewControllerFlags.appearsFirstTime = YES;
+    }
+    return self;
+}
+
 - (id)initWithCollectionViewLayout:(PSTCollectionViewLayout *)layout {
     if((self = [super init])) {
         self.layout = layout;
