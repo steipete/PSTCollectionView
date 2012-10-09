@@ -93,6 +93,7 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
 
 const char kPSTNibObserverToken;
 const char kPSTNibLayout;
+const char kPSTNibCellsExternalObjects;
 
 @implementation PSTCollectionView
 
@@ -131,6 +132,14 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         
         id nibObserverToken = [[NSNotificationCenter defaultCenter] addObserverForName:PSTCollectionViewLayoutAwokeFromNib object:nil queue:nil usingBlock:^(NSNotification *note) { objc_setAssociatedObject(self, &kPSTNibLayout, note.object, OBJC_ASSOCIATION_RETAIN_NONATOMIC); }];
         objc_setAssociatedObject(self, &kPSTNibObserverToken, nibObserverToken, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+
+        NSDictionary *cellExternalObjects =  [inCoder decodeObjectForKey:@"UICollectionViewCellPrototypeNibExternalObjects"];
+        NSDictionary *cellNibs =  [inCoder decodeObjectForKey:@"UICollectionViewCellNibDict"];
+
+        for (NSString *identifier in cellNibs.allKeys) {
+            _cellNibDict[identifier] = [cellNibs objectForKey:identifier];
+        }
+        objc_setAssociatedObject(self, &kPSTNibCellsExternalObjects, cellExternalObjects, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return self;
 }
@@ -252,7 +261,12 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         if (_cellNibDict[identifier]) {
             // Cell was registered via registerNib:forCellWithReuseIdentifier:
             UINib *cellNib = _cellNibDict[identifier];
-            cell = [cellNib instantiateWithOwner:self options:0][0];
+            NSDictionary *externalObjects = objc_getAssociatedObject(self, &kPSTNibCellsExternalObjects)[identifier];
+            if (externalObjects) {
+                cell = [cellNib instantiateWithOwner:self options:@{UINibExternalObjects:externalObjects}][0];
+            } else {
+                cell = [cellNib instantiateWithOwner:self options:0][0];
+            }
         } else {
 
             Class cellClass = _cellClassDict[identifier];
