@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2840" systemVersion="12C54" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="Pxb-db-V9M">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2840" systemVersion="12C54" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="Pxb-db-V9M">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1926"/>
     </dependencies>
@@ -40,31 +40,19 @@
                                     <rect key="frame" x="0.0" y="0.0" width="153" height="128"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9IX-OE-Trn">
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="18" id="YsV-1J-e99"/>
-                                            </constraints>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="9IX-OE-Trn">
+                                            <rect key="frame" x="0.0" y="109" width="153" height="18"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="MGy-P6-tia">
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="105" id="edW-yw-lMB"/>
-                                                <constraint firstAttribute="width" constant="144" id="lMc-vz-AAG"/>
-                                            </constraints>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" id="MGy-P6-tia">
+                                            <rect key="frame" x="5" y="7" width="144" height="105"/>
                                         </imageView>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                                 <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <constraints>
-                                    <constraint firstItem="9IX-OE-Trn" firstAttribute="trailing" secondItem="85c-5p-sGb" secondAttribute="trailing" type="default" id="MjW-iz-cda"/>
-                                    <constraint firstItem="MGy-P6-tia" firstAttribute="leading" secondItem="85c-5p-sGb" secondAttribute="leading" constant="5" id="OSS-jb-Mfr"/>
-                                    <constraint firstItem="MGy-P6-tia" firstAttribute="top" secondItem="85c-5p-sGb" secondAttribute="top" constant="7" id="gtH-gS-J2g"/>
-                                    <constraint firstAttribute="bottom" secondItem="9IX-OE-Trn" secondAttribute="bottom" constant="1" id="peg-Q1-bLd"/>
-                                    <constraint firstItem="9IX-OE-Trn" firstAttribute="leading" secondItem="85c-5p-sGb" secondAttribute="leading" type="default" id="sh8-U0-gIc"/>
-                                </constraints>
                                 <connections>
                                     <outlet property="image" destination="MGy-P6-tia" id="xfE-Pm-iCH"/>
                                     <outlet property="label" destination="9IX-OE-Trn" id="DZ5-WF-dqy"/>
@@ -92,15 +80,11 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="fAT-Gn-JJ0"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" id="fAT-Gn-JJ0">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="fAT-Gn-JJ0" firstAttribute="trailing" secondItem="28J-zl-sFH" secondAttribute="trailing" type="default" id="QeV-Kl-OdX"/>
-                            <constraint firstItem="fAT-Gn-JJ0" firstAttribute="leading" secondItem="28J-zl-sFH" secondAttribute="leading" type="default" id="XSD-P9-T5O"/>
-                            <constraint firstItem="fAT-Gn-JJ0" firstAttribute="bottom" secondItem="28J-zl-sFH" secondAttribute="bottom" type="default" id="e73-dT-LLU"/>
-                            <constraint firstItem="fAT-Gn-JJ0" firstAttribute="top" secondItem="28J-zl-sFH" secondAttribute="top" type="default" id="gZg-PY-hCp"/>
-                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="h9O-C4-liR"/>
                     <connections>
@@ -126,9 +110,6 @@
             <relationships>
                 <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
             </relationships>
-        </class>
-        <class className="NSLayoutConstraint" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
         </class>
         <class className="PSTCollectionReusableView" superclassName="UIView">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/PSTCollectionReusableView.h"/>
