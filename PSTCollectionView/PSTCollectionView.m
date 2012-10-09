@@ -55,7 +55,6 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
     id _updateCompletionHandler;
     NSMutableDictionary *_cellClassDict;
     NSMutableDictionary *_cellNibDict;
-    NSMutableDictionary *_cellObjectsDict;
     NSMutableDictionary *_supplementaryViewClassDict;
     NSMutableDictionary *_supplementaryViewNibDict;
     NSMutableDictionary *_cellNibExternalObjectsTables;
@@ -94,6 +93,7 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
 
 const char kPSTNibObserverToken;
 const char kPSTNibLayout;
+const char kPSTNibCellsExternalObjects;
 
 @implementation PSTCollectionView
 
@@ -112,7 +112,6 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     _self->_allVisibleViewsDict = [NSMutableDictionary new];
     _self->_cellClassDict = [NSMutableDictionary new];
     _self->_cellNibDict = [NSMutableDictionary new];
-    _self->_cellObjectsDict = [NSMutableDictionary new];
     _self->_supplementaryViewClassDict = [NSMutableDictionary new];
 }
 
@@ -139,8 +138,8 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
         for (NSString *identifier in cellNibs.allKeys) {
             _cellNibDict[identifier] = [cellNibs objectForKey:identifier];
-            _cellObjectsDict[identifier] = [cellExternalObjects objectForKey:identifier];
         }
+        objc_setAssociatedObject(self, &kPSTNibCellsExternalObjects, cellExternalObjects, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return self;
 }
@@ -262,7 +261,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         if (_cellNibDict[identifier]) {
             // Cell was registered via registerNib:forCellWithReuseIdentifier:
             UINib *cellNib = _cellNibDict[identifier];
-            NSDictionary *externalObjects = _cellObjectsDict[identifier];
+            NSDictionary *externalObjects = objc_getAssociatedObject(self, &kPSTNibCellsExternalObjects)[identifier];
             if (externalObjects) {
                 cell = [cellNib instantiateWithOwner:self options:@{UINibExternalObjects:externalObjects}][0];
             } else {
