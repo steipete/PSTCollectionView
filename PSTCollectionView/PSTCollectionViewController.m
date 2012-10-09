@@ -46,19 +46,16 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - UIViewController
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    if (_collectionView.delegate == nil) _collectionView.delegate = self;
-    if (_collectionView.dataSource == nil) _collectionView.dataSource = self;
-}
-
 - (void)loadView {
     [super loadView];
-
+	
     // if this is restored from IB, we don't have plain main view.
     if ([self.view isKindOfClass:[PSTCollectionView class]]) {
         _collectionView = (PSTCollectionView *)self.view;
     }
+	
+	if (_collectionView.delegate == nil) _collectionView.delegate = self;
+    if (_collectionView.dataSource == nil) _collectionView.dataSource = self;
 
     // only create the collection view if it is not already created (by IB)
     if (!_collectionView) {
