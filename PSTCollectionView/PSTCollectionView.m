@@ -713,6 +713,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
     PSTCollectionViewCell *cell = [self.dataSource collectionView:self cellForItemAtIndexPath:indexPath];
 
+    // reset selected/highlight state
+    [cell setHighlighted:[_indexPathsForHighlightedItems containsObject:indexPath]];
+    [cell setSelected:[_indexPathsForSelectedItems containsObject:indexPath]];
+
     // voiceover support
     cell.isAccessibilityElement = YES;
 
