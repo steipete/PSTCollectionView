@@ -691,10 +691,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         PSTCollectionReusableView *view = _allVisibleViewsDict[itemKey];
         if (!view) {
             if (itemKey.type == PSTCollectionViewItemTypeCell) {
-                view = [self _createPreparedCellForItemAtIndexPath:itemKey.indexPath withLayoutAttributes:layoutAttributes];
+                view = [self createPreparedCellForItemAtIndexPath:itemKey.indexPath withLayoutAttributes:layoutAttributes];
 
             } else if (itemKey.type == PSTCollectionViewItemTypeSupplementaryView) {
-                view = [self _createPreparedSupplementaryViewForElementOfKind:layoutAttributes.representedElementKind
+                view = [self createPreparedSupplementaryViewForElementOfKind:layoutAttributes.representedElementKind
                                                                   atIndexPath:layoutAttributes.indexPath
                                                          withLayoutAttributes:layoutAttributes];
 
@@ -709,7 +709,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 // fetches a cell from the dataSource and sets the layoutAttributes
-- (PSTCollectionViewCell *)_createPreparedCellForItemAtIndexPath:(NSIndexPath *)indexPath withLayoutAttributes:(PSTCollectionViewLayoutAttributes *)layoutAttributes {
+- (PSTCollectionViewCell *)createPreparedCellForItemAtIndexPath:(NSIndexPath *)indexPath withLayoutAttributes:(PSTCollectionViewLayoutAttributes *)layoutAttributes {
 
     PSTCollectionViewCell *cell = [self.dataSource collectionView:self cellForItemAtIndexPath:indexPath];
 
@@ -720,7 +720,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     return cell;
 }
 
-- (PSTCollectionReusableView *)_createPreparedSupplementaryViewForElementOfKind:(NSString *)kind
+- (PSTCollectionReusableView *)createPreparedSupplementaryViewForElementOfKind:(NSString *)kind
                                                                     atIndexPath:(NSIndexPath *)indexPath
                                                            withLayoutAttributes:(PSTCollectionViewLayoutAttributes *)layoutAttributes
 {
