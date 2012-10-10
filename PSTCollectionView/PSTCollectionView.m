@@ -582,6 +582,21 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (void)reloadItemsAtIndexPaths:(NSArray *)indexPaths {
+	// check to see if reload should hold off
+	if (_reloadingSuspendedCount != 0 && _collectionViewFlags.reloadSkippedDuringSuspension) {
+		[_reloadItems addObjectsFromArray:indexPaths];
+		_collectionViewFlags.needsReload = YES;
+		
+		return;
+	}
+	
+	_collectionViewFlags.reloading = YES;
+	NSArray *visibleCells = [_vis]
+	for (NSIndexPath *indexPath in indexPaths) {
+	}
+	
+	_collectionViewFlags.reloading = NO;
+	
     [self reloadData];
 }
 
