@@ -583,48 +583,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     [self reloadData];
 }
 
-
-// Profiling
-#import <mach/mach.h>
-#import <mach/mach_time.h>
-
-#define PX_PROFILING 1
-
-void PXComputeDelta(uint64_t start, uint64_t end, const char *methodName)
-{
-	uint64_t elapsed = end - start;
-	uint64_t elapsedNano;
-	static mach_timebase_info_data_t    sTimebaseInfo;
-	
-    if ( sTimebaseInfo.denom == 0 ) {
-        (void) mach_timebase_info(&sTimebaseInfo);
-    }
-	
-    elapsedNano = elapsed * sTimebaseInfo.numer / sTimebaseInfo.denom;
-	
-	
-
-	NSLog(@"INFO: %s took %llu ns", methodName, elapsedNano);
-}
-
-#if PX_PROFILING
-#define PX_PROFILE_START uint64_t start = mach_absolute_time();
-#else
-#define PX_PROFILE_START
-#endif
-
-#if PX_PROFILING
-#define PX_PROFILE_END uint64_t end = mach_absolute_time(); PXComputeDelta(start, end, __PRETTY_FUNCTION__);
-#else
-#define PX_PROFILE_END
-#endif
-
-#define MINE 1
-
 - (void)reloadItemsAtIndexPaths:(NSArray *)indexPaths {
-	PX_PROFILE_START
-	
-#if MINE
 	// check to see if reload should hold off
 	if (_reloadingSuspendedCount != 0 && _collectionViewFlags.reloadSkippedDuringSuspension) {
 		[_reloadItems addObjectsFromArray:indexPaths];
@@ -665,11 +624,6 @@ void PXComputeDelta(uint64_t start, uint64_t end, const char *methodName)
 	}
 	
 	_collectionViewFlags.reloading = NO;
-#else
-	[self reloadData];
-#endif
-	
-	PX_PROFILE_END
 }
 
 - (void)moveItemAtIndexPath:(NSIndexPath *)indexPath toIndexPath:(NSIndexPath *)newIndexPath {
