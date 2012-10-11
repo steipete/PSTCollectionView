@@ -584,7 +584,46 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (void)reloadItemsAtIndexPaths:(NSArray *)indexPaths {
-    [self reloadData];
+	// check to see if reload should hold off
+	if (_reloadingSuspendedCount != 0 && _collectionViewFlags.reloadSkippedDuringSuspension) {
+		[_reloadItems addObjectsFromArray:indexPaths];
+		_collectionViewFlags.needsReload = YES;
+
+		return;
+	}
+
+	_collectionViewFlags.reloading = YES;
+
+	NSSet *visibleCellKeys = [_allVisibleViewsDict keysOfEntriesPassingTest:^BOOL(id key, id obj, BOOL *stop) {
+		PSTCollectionViewItemKey *itemKey = (PSTCollectionViewItemKey *)key;
+		if (itemKey.type == PSTCollectionViewItemTypeCell && [indexPaths containsObject:itemKey.indexPath]) {
+			return YES;
+		}
+
+		return NO;
+	}];
+
+	for (PSTCollectionViewItemKey *itemKey in visibleCellKeys) {
+		PSTCollectionViewCell *reusableView = (PSTCollectionViewCell *)[_allVisibleViewsDict objectForKey:itemKey];
+
+		//Remove the old cell
+		[reusableView removeFromSuperview];
+		[_allVisibleViewsDict removeObjectForKey:itemKey];
+
+		if ([self.delegate respondsToSelector:@selector(collectionView:didEndDisplayingCell:forItemAtIndexPath:)]) {
+			[self.delegate collectionView:self didEndDisplayingCell:(PSTCollectionViewCell *)reusableView forItemAtIndexPath:itemKey.indexPath];
+		}
+
+		[self reuseCell:(PSTCollectionViewCell *)reusableView];
+
+		//Reload the cell and redisplay
+		PSTCollectionViewLayoutAttributes *layoutAttributes = [self.collectionViewLayout layoutAttributesForItemAtIndexPath:itemKey.indexPath];
+		PSTCollectionViewCell *newCell = [self createPreparedCellForItemAtIndexPath:itemKey.indexPath withLayoutAttributes:layoutAttributes];
+		_allVisibleViewsDict[itemKey] = newCell;
+		[self addControlledSubview:newCell];
+	}
+
+	_collectionViewFlags.reloading = NO;
 }
 
 - (void)moveItemAtIndexPath:(NSIndexPath *)indexPath toIndexPath:(NSIndexPath *)newIndexPath {
@@ -727,7 +766,8 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     }
 
     // finally add new cells.
-    [itemKeysToAddDict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {PSTCollectionViewItemKey *itemKey = key;
+    [itemKeysToAddDict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        PSTCollectionViewItemKey *itemKey = key;
         PSTCollectionViewLayoutAttributes *layoutAttributes = obj;
 
         // check if cell is in visible dict; add it if not.
