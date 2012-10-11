@@ -325,7 +325,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (NSArray *)visibleCells {
-    return [_allVisibleViewsDict allValues];
+    return [[_allVisibleViewsDict allValues] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        return [evaluatedObject isKindOfClass:[PSTCollectionViewCell class]];
+    }]];
 }
 
 - (void)reloadData {
