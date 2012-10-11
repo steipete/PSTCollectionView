@@ -581,7 +581,48 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     [self reloadData];
 }
 
+
+// Profiling
+#import <mach/mach.h>
+#import <mach/mach_time.h>
+
+#define PX_PROFILING 1
+
+void PXComputeDelta(uint64_t start, uint64_t end, const char *methodName)
+{
+	uint64_t elapsed = end - start;
+	uint64_t elapsedNano;
+	static mach_timebase_info_data_t    sTimebaseInfo;
+	
+    if ( sTimebaseInfo.denom == 0 ) {
+        (void) mach_timebase_info(&sTimebaseInfo);
+    }
+	
+    elapsedNano = elapsed * sTimebaseInfo.numer / sTimebaseInfo.denom;
+	
+	
+
+	NSLog(@"INFO: %s took %llu ns", methodName, elapsedNano);
+}
+
+#if PX_PROFILING
+#define PX_PROFILE_START uint64_t start = mach_absolute_time();
+#else
+#define PX_PROFILE_START
+#endif
+
+#if PX_PROFILING
+#define PX_PROFILE_END uint64_t end = mach_absolute_time(); PXComputeDelta(start, end, __PRETTY_FUNCTION__);
+#else
+#define PX_PROFILE_END
+#endif
+
+#define MINE 1
+
 - (void)reloadItemsAtIndexPaths:(NSArray *)indexPaths {
+	PX_PROFILE_START
+	
+#if MINE
 	// check to see if reload should hold off
 	if (_reloadingSuspendedCount != 0 && _collectionViewFlags.reloadSkippedDuringSuspension) {
 		[_reloadItems addObjectsFromArray:indexPaths];
@@ -589,15 +630,44 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 		
 		return;
 	}
-	
+
 	_collectionViewFlags.reloading = YES;
-	NSArray *visibleCells = [_vis]
-	for (NSIndexPath *indexPath in indexPaths) {
+
+	NSSet *visibleCellKeys = [_allVisibleViewsDict keysOfEntriesPassingTest:^BOOL(id key, id obj, BOOL *stop) {
+		PSTCollectionViewItemKey *itemKey = (PSTCollectionViewItemKey *)key;
+		if (itemKey.type == PSTCollectionViewItemTypeCell && [indexPaths containsObject:itemKey.indexPath]) {
+			return YES;
+		}
+		
+		return NO;
+	}];
+	
+	for (PSTCollectionViewItemKey *itemKey in visibleCellKeys) {
+		PSTCollectionViewCell *reusableView = (PSTCollectionViewCell *)[_allVisibleViewsDict objectForKey:itemKey];
+
+		//Remove the old cell
+		[reusableView removeFromSuperview];
+		[_allVisibleViewsDict removeObjectForKey:itemKey];
+		
+		if ([self.delegate respondsToSelector:@selector(collectionView:didEndDisplayingCell:forItemAtIndexPath:)]) {
+			[self.delegate collectionView:self didEndDisplayingCell:(PSTCollectionViewCell *)reusableView forItemAtIndexPath:itemKey.indexPath];
+		}
+		
+		[self reuseCell:(PSTCollectionViewCell *)reusableView];
+
+		//Reload the cell and redisplay
+		PSTCollectionViewLayoutAttributes *layoutAttributes = [self.collectionViewLayout layoutAttributesForItemAtIndexPath:itemKey.indexPath];
+		PSTCollectionViewCell *newCell = [self createPreparedCellForItemAtIndexPath:itemKey.indexPath withLayoutAttributes:layoutAttributes];
+		_allVisibleViewsDict[itemKey] = newCell;
+		[self addControlledSubview:newCell];
 	}
 	
 	_collectionViewFlags.reloading = NO;
+#else
+	[self reloadData];
+#endif
 	
-    [self reloadData];
+	PX_PROFILE_END
 }
 
 - (void)moveItemAtIndexPath:(NSIndexPath *)indexPath toIndexPath:(NSIndexPath *)newIndexPath {
@@ -699,7 +769,8 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     }
 
     // finally add new cells.
-    [itemKeysToAddDict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {PSTCollectionViewItemKey *itemKey = key;
+    [itemKeysToAddDict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+		PSTCollectionViewItemKey *itemKey = key;
         PSTCollectionViewLayoutAttributes *layoutAttributes = obj;
 
         // check if cell is in visible dict; add it if not.
