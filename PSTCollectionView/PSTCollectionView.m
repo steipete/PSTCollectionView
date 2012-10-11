@@ -409,16 +409,16 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (NSArray *)indexPathsForVisibleItems {
-    NSMutableArray *visibleItems = [NSMutableArray array];
-    for (PSTCollectionViewCell *cell in [self visibleCells]) {
-        NSIndexPath *indexPath = [self indexPathForCell:cell];
-        if (indexPath) {
-            [visibleItems addObject:indexPath];
-        }else {
-            NSLog(@"Error: indexPath not found");
-        }
-    }
-    return visibleItems;
+	NSMutableArray *indexPaths = [NSMutableArray arrayWithCapacity:[_allVisibleViewsDict count]];
+	
+	[_allVisibleViewsDict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+		PSTCollectionViewItemKey *itemKey = (PSTCollectionViewItemKey *)key;
+        if (itemKey.type == PSTCollectionViewItemTypeCell) {
+			[indexPaths addObject:itemKey.indexPath];
+		}
+	}];
+	
+	return indexPaths;
 }
 
 // Interacting with the collection view.
