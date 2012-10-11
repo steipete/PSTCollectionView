@@ -624,27 +624,26 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     [self setCollectionViewLayout:layout animated:NO];
 }
 
-- (void)setDelegate:(id<PSTCollectionViewDelegate>)delegate
-{
+- (void)setDelegate:(id<PSTCollectionViewDelegate>)delegate {
 	super.delegate = delegate;
 	
 	//	Managing the Selected Cells
-	_collectionViewFlags.delegateShouldSelectItemAtIndexPath		= [self.delegate respondsToSelector:@selector(collectionView:shouldSelectItemAtIndexPath:)];
-	_collectionViewFlags.delegateDidSelectItemAtIndexPath			= [self.delegate respondsToSelector:@selector(collectionView:didSelectItemAtIndexPath:)];
-	_collectionViewFlags.delegateShouldDeselectItemAtIndexPath		= [self.delegate respondsToSelector:@selector(collectionView:shouldDeselectItemAtIndexPath:)];
-	_collectionViewFlags.delegateDidDeselectItemAtIndexPath			= [self.delegate respondsToSelector:@selector(collectionView:didDeselectItemAtIndexPath:)];
+	_collectionViewFlags.delegateShouldSelectItemAtIndexPath       = [self.delegate respondsToSelector:@selector(collectionView:shouldSelectItemAtIndexPath:)];
+	_collectionViewFlags.delegateDidSelectItemAtIndexPath          = [self.delegate respondsToSelector:@selector(collectionView:didSelectItemAtIndexPath:)];
+	_collectionViewFlags.delegateShouldDeselectItemAtIndexPath     = [self.delegate respondsToSelector:@selector(collectionView:shouldDeselectItemAtIndexPath:)];
+	_collectionViewFlags.delegateDidDeselectItemAtIndexPath        = [self.delegate respondsToSelector:@selector(collectionView:didDeselectItemAtIndexPath:)];
 
 	//	Managing Cell Highlighting
-	_collectionViewFlags.delegateShouldHighlightItemAtIndexPath		= [self.delegate respondsToSelector:@selector(collectionView:shouldHighlightItemAtIndexPath:)];
-	_collectionViewFlags.delegateDidHighlightItemAtIndexPath		= [self.delegate respondsToSelector:@selector(collectionView:didHighlightItemAtIndexPath:)];
-	_collectionViewFlags.delegateDidUnhighlightItemAtIndexPath		= [self.delegate respondsToSelector:@selector(collectionView:didUnhighlightItemAtIndexPath:)];
+	_collectionViewFlags.delegateShouldHighlightItemAtIndexPath    = [self.delegate respondsToSelector:@selector(collectionView:shouldHighlightItemAtIndexPath:)];
+	_collectionViewFlags.delegateDidHighlightItemAtIndexPath       = [self.delegate respondsToSelector:@selector(collectionView:didHighlightItemAtIndexPath:)];
+	_collectionViewFlags.delegateDidUnhighlightItemAtIndexPath     = [self.delegate respondsToSelector:@selector(collectionView:didUnhighlightItemAtIndexPath:)];
 
 	//	Tracking the Removal of Views
-	_collectionViewFlags.delegateDidEndDisplayingCell				= [self.delegate respondsToSelector:@selector(collectionView:didEndDisplayingCell:forItemAtIndexPath:)];
-	_collectionViewFlags.delegateDidEndDisplayingSupplementaryView	= [self.delegate respondsToSelector:@selector(collectionView:didEndDisplayingSupplementaryView:forElementOfKind:atIndexPath:)];
+	_collectionViewFlags.delegateDidEndDisplayingCell              = [self.delegate respondsToSelector:@selector(collectionView:didEndDisplayingCell:forItemAtIndexPath:)];
+	_collectionViewFlags.delegateDidEndDisplayingSupplementaryView = [self.delegate respondsToSelector:@selector(collectionView:didEndDisplayingSupplementaryView:forElementOfKind:atIndexPath:)];
 
 	//	Managing Actions for Cells
-	_collectionViewFlags.delegateSupportsMenus						= [self.delegate respondsToSelector:@selector(collectionView:shouldShowMenuForItemAtIndexPath:)];
+	_collectionViewFlags.delegateSupportsMenus                     = [self.delegate respondsToSelector:@selector(collectionView:shouldShowMenuForItemAtIndexPath:)];
 	
 	// These aren't present in the flags which is a little strange. Not adding them because thet will mess with byte alignment which will affect cross compatibility.
 	// The flag names are guesses and are there for documentation purposes.
@@ -654,10 +653,8 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 // Might be overkill since two are required and two are handled by PSTCollectionViewData leaving only one flag we actually need to check for
-- (void)setDataSource:(id<PSTCollectionViewDataSource>)dataSource
-{
-	if ([dataSource respondsToSelector:@selector(collectionView:numberOfItemsInSection:)] &&
-		[dataSource respondsToSelector:@selector(collectionView:cellForItemAtIndexPath:)]) {
+- (void)setDataSource:(id<PSTCollectionViewDataSource>)dataSource {
+    if (dataSource != _dataSource) {
 		_dataSource = dataSource;
 		
 		//	Getting Item and Section Metrics
@@ -665,11 +662,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 		
 		//	Getting Views for Items
 		_collectionViewFlags.dataSourceViewForSupplementaryElement = [_dataSource respondsToSelector:@selector(collectionView:viewForSupplementaryElementOfKind:atIndexPath:)];
-	}
-	
-	// Not sure if we should enforce protocol conformance here or not.
-	// If conformance fails do we nil out the delegate or leave the old one?
-	//_dataSource = nil;
+    }
 }
 
 - (BOOL)allowsSelection {
