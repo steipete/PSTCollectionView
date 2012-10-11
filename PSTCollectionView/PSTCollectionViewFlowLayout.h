@@ -34,6 +34,8 @@ typedef NS_ENUM(NSInteger, UICollectionViewScrollDirection) {
 
 @end
 
+@class PSTGridLayoutInfo;
+
 @interface PSTCollectionViewFlowLayout : PSTCollectionViewLayout
 
 @property (nonatomic) CGFloat minimumLineSpacing;
@@ -56,6 +58,7 @@ typedef NS_ENUM(NSInteger, UICollectionViewScrollDirection) {
     rowAlign[@"UIFlowLayoutLastRowHorizontalAlignmentKey"] = @(3);
     [flowLayout setValue:rowAlign forKey:@"_rowAlignmentsOptionsDictionary"];
  */
+
 @property (nonatomic, strong) NSDictionary *rowAlignmentOptions;
 
 @end

@@ -24,6 +24,7 @@
     PSTCollectionViewItemKey *key = [[self class] new];
     key.indexPath = layoutAttributes.indexPath;
     key.type = layoutAttributes.representedElementCategory;
+    key.identifier = layoutAttributes.representedElementKind;
     return key;
 }
 

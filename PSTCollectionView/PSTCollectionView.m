@@ -21,51 +21,89 @@
 CGFloat PSTSimulatorAnimationDragCoefficient(void);
 
 @interface PSTCollectionView() {
-    id _nibObserverToken;
-    PSTCollectionViewLayout *_nibLayout;
-    
-    BOOL _rotationActive;
-    NSMutableDictionary *_allVisibleViewsDict;
+    // ivar layout needs to EQUAL to UICollectionView.
+    PSTCollectionViewLayout *_layout;
+    __unsafe_unretained id<PSTCollectionViewDataSource> _dataSource;
+    UIView *_backgroundView;
+    NSMutableSet *_indexPathsForSelectedItems;
     NSMutableDictionary *_cellReuseQueues;
     NSMutableDictionary *_supplementaryViewReuseQueues;
-
-    NSMutableDictionary *_cellClassDict, *_cellNibDict;
-    NSMutableDictionary *_supplementaryViewClassDict, *_supplementaryViewNibDict;
-
-    NSUInteger _reloadingSuspendedCount;
-    NSMutableSet *_indexPathsForSelectedItems;
     NSMutableSet *_indexPathsForHighlightedItems;
-
+    int _reloadingSuspendedCount;
+    PSTCollectionReusableView *_firstResponderView;
+    UIView *_newContentView;
+    int _firstResponderViewType;
+    NSString *_firstResponderViewKind;
+    NSIndexPath *_firstResponderIndexPath;
+    NSMutableDictionary *_allVisibleViewsDict;
+    NSIndexPath *_pendingSelectionIndexPath;
+    NSMutableSet *_pendingDeselectionIndexPaths;
+    PSTCollectionViewData *_collectionViewData;
+    id _update;
+    CGRect _visibleBounds;
+    CGRect _preRotationBounds;
+    CGPoint _rotationBoundsOffset;
+    int _rotationAnimationCount;
+    int _updateCount;
+    NSMutableArray *_insertItems;
+    NSMutableArray *_deleteItems;
+    NSMutableArray *_reloadItems;
+    NSMutableArray *_moveItems;
+    NSArray *_originalInsertItems;
+    NSArray *_originalDeleteItems;
+    UITouch *_currentTouch;
+    id _updateCompletionHandler;
+    NSMutableDictionary *_cellClassDict;
+    NSMutableDictionary *_cellNibDict;
+    NSMutableDictionary *_supplementaryViewClassDict;
+    NSMutableDictionary *_supplementaryViewNibDict;
+    NSMutableDictionary *_cellNibExternalObjectsTables;
+    NSMutableDictionary *_supplementaryViewNibExternalObjectsTables;
     struct {
-        /*
-         unsigned int reloadSkippedDuringSuspension : 1;
-         unsigned int scheduledUpdateVisibleCells : 1;
-         unsigned int scheduledUpdateVisibleCellLayoutAttributes : 1;
-         unsigned int allowsSelection : 1;
-         unsigned int allowsMultipleSelection : 1;
-         unsigned int updating : 1;
-         */
+        unsigned int delegateShouldHighlightItemAtIndexPath : 1;
+        unsigned int delegateDidHighlightItemAtIndexPath : 1;
+        unsigned int delegateDidUnhighlightItemAtIndexPath : 1;
+        unsigned int delegateShouldSelectItemAtIndexPath : 1;
+        unsigned int delegateShouldDeselectItemAtIndexPath : 1;
+        unsigned int delegateDidSelectItemAtIndexPath : 1;
+        unsigned int delegateDidDeselectItemAtIndexPath : 1;
+        unsigned int delegateSupportsMenus : 1;
+        unsigned int delegateDidEndDisplayingCell : 1;
+        unsigned int delegateDidEndDisplayingSupplementaryView : 1;
+        unsigned int dataSourceNumberOfSections : 1;
+        unsigned int dataSourceViewForSupplementaryElement : 1;
+        unsigned int reloadSkippedDuringSuspension : 1;
+        unsigned int scheduledUpdateVisibleCells : 1;
+        unsigned int scheduledUpdateVisibleCellLayoutAttributes : 1;
+        unsigned int allowsSelection : 1;
+        unsigned int allowsMultipleSelection : 1;
+        unsigned int updating : 1;
         unsigned int fadeCellsForBoundsChange : 1;
-        /*
-         unsigned int updatingLayout : 1;
-         unsigned int needsReload : 1;
-         unsigned int reloading : 1;
-         unsigned int skipLayoutDuringSnapshotting : 1;
-         unsigned int layoutInvalidatedSinceLastCellUpdate : 1;
-         */
+        unsigned int updatingLayout : 1;
+        unsigned int needsReload : 1;
+        unsigned int reloading : 1;
+        unsigned int skipLayoutDuringSnapshotting : 1;
+        unsigned int layoutInvalidatedSinceLastCellUpdate : 1;
+        unsigned int doneFirstLayout : 1;
     } _collectionViewFlags;
+    CGPoint _lastLayoutOffset;
 }
 @property (nonatomic, strong) PSTCollectionViewData *collectionViewData;
-@property (nonatomic, strong) NSString *collectionViewClassString;
-
 @end
 
+const char kPSTNibObserverToken;
+const char kPSTNibLayout;
+const char kPSTNibCellsExternalObjects;
+
 @implementation PSTCollectionView
+
+@synthesize collectionViewLayout = _layout;
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject
 
 static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
+    _self.allowsSelection = YES;
     _self.delaysContentTouches = NO;
     _self->_indexPathsForSelectedItems = [NSMutableSet new];
     _self->_indexPathsForHighlightedItems = [NSMutableSet new];
@@ -91,7 +129,17 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
         PSTCollectionViewCommonSetup(self);
         // add observer for nib deserialization.
-        _nibObserverToken = [[NSNotificationCenter defaultCenter] addObserverForName:PSTCollectionViewLayoutAwokeFromNib object:nil queue:nil usingBlock:^(NSNotification *note) { _nibLayout = note.object; }];
+        
+        id nibObserverToken = [[NSNotificationCenter defaultCenter] addObserverForName:PSTCollectionViewLayoutAwokeFromNib object:nil queue:nil usingBlock:^(NSNotification *note) { objc_setAssociatedObject(self, &kPSTNibLayout, note.object, OBJC_ASSOCIATION_RETAIN_NONATOMIC); }];
+        objc_setAssociatedObject(self, &kPSTNibObserverToken, nibObserverToken, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+
+        NSDictionary *cellExternalObjects =  [inCoder decodeObjectForKey:@"UICollectionViewCellPrototypeNibExternalObjects"];
+        NSDictionary *cellNibs =  [inCoder decodeObjectForKey:@"UICollectionViewCellNibDict"];
+
+        for (NSString *identifier in cellNibs.allKeys) {
+            _cellNibDict[identifier] = [cellNibs objectForKey:identifier];
+        }
+        objc_setAssociatedObject(self, &kPSTNibCellsExternalObjects, cellExternalObjects, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return self;
 }
@@ -99,15 +147,14 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 - (void)awakeFromNib {
     [super awakeFromNib];
 
-    if (self.collectionViewClassString) {
-        self.collectionViewLayout = [NSClassFromString(self.collectionViewClassString) new];
-    }
-
     // check if NIB deserialization found a layout.
     // TODO: is there no better way for this???
-    [[NSNotificationCenter defaultCenter] removeObserver:_nibObserverToken]; _nibObserverToken = nil;
-    if (_nibLayout) {
-        self.collectionViewLayout = _nibLayout; _nibLayout = nil;
+    id nibObserverToken = objc_getAssociatedObject(self, &kPSTNibObserverToken);
+    [[NSNotificationCenter defaultCenter] removeObserver:nibObserverToken]; objc_setAssociatedObject(self, &kPSTNibObserverToken, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+
+    PSTCollectionViewLayout *nibLayout = objc_getAssociatedObject(self, &kPSTNibLayout);
+    if (nibLayout) {
+        self.collectionViewLayout = nibLayout; objc_setAssociatedObject(self, &kPSTNibLayout, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
 }
 
@@ -116,7 +163,8 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (void)dealloc {
-    if (_nibObserverToken) [[NSNotificationCenter defaultCenter] removeObserver:_nibObserverToken];
+    id nibObserverToken = objc_getAssociatedObject(self, &kPSTNibObserverToken);
+    if (nibObserverToken) [[NSNotificationCenter defaultCenter] removeObserver:nibObserverToken];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -213,7 +261,12 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         if (_cellNibDict[identifier]) {
             // Cell was registered via registerNib:forCellWithReuseIdentifier:
             UINib *cellNib = _cellNibDict[identifier];
-            cell = [cellNib instantiateWithOwner:self options:0][0];
+            NSDictionary *externalObjects = objc_getAssociatedObject(self, &kPSTNibCellsExternalObjects)[identifier];
+            if (externalObjects) {
+                cell = [cellNib instantiateWithOwner:self options:@{UINibExternalObjects:externalObjects}][0];
+            } else {
+                cell = [cellNib instantiateWithOwner:self options:0][0];
+            }
         } else {
 
             Class cellClass = _cellClassDict[identifier];
@@ -556,9 +609,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (void)setCollectionViewLayout:(PSTCollectionViewLayout *)layout animated:(BOOL)animated {
-    if (layout != _collectionViewLayout) {
-        _collectionViewLayout.collectionView = nil;
-        _collectionViewLayout = layout;
+    if (layout != _layout) {
+        _layout.collectionView = nil;
+        _layout = layout;
         layout.collectionView = self;
         _collectionViewData = [[PSTCollectionViewData alloc] initWithCollectionView:self layout:layout];
         [self reloadData];
@@ -567,6 +620,22 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)setCollectionViewLayout:(PSTCollectionViewLayout *)layout {
     [self setCollectionViewLayout:layout animated:NO];
+}
+
+- (BOOL)allowsSelection {
+    return _collectionViewFlags.allowsSelection;
+}
+
+- (void)setAllowsSelection:(BOOL)allowsSelection {
+    _collectionViewFlags.allowsSelection = allowsSelection;
+}
+
+- (BOOL)allowsMultipleSelection {
+    return _collectionViewFlags.allowsMultipleSelection;
+}
+
+- (void)setAllowsMultipleSelection:(BOOL)allowsMultipleSelection {
+    _collectionViewFlags.allowsMultipleSelection = allowsMultipleSelection;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -622,10 +691,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         PSTCollectionReusableView *view = _allVisibleViewsDict[itemKey];
         if (!view) {
             if (itemKey.type == PSTCollectionViewItemTypeCell) {
-                view = [self _createPreparedCellForItemAtIndexPath:itemKey.indexPath withLayoutAttributes:layoutAttributes];
+                view = [self createPreparedCellForItemAtIndexPath:itemKey.indexPath withLayoutAttributes:layoutAttributes];
 
             } else if (itemKey.type == PSTCollectionViewItemTypeSupplementaryView) {
-                view = [self _createPreparedSupplementaryViewForElementOfKind:layoutAttributes.representedElementKind
+                view = [self createPreparedSupplementaryViewForElementOfKind:layoutAttributes.representedElementKind
                                                                   atIndexPath:layoutAttributes.indexPath
                                                          withLayoutAttributes:layoutAttributes];
 
@@ -640,9 +709,13 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 // fetches a cell from the dataSource and sets the layoutAttributes
-- (PSTCollectionViewCell *)_createPreparedCellForItemAtIndexPath:(NSIndexPath *)indexPath withLayoutAttributes:(PSTCollectionViewLayoutAttributes *)layoutAttributes {
+- (PSTCollectionViewCell *)createPreparedCellForItemAtIndexPath:(NSIndexPath *)indexPath withLayoutAttributes:(PSTCollectionViewLayoutAttributes *)layoutAttributes {
 
     PSTCollectionViewCell *cell = [self.dataSource collectionView:self cellForItemAtIndexPath:indexPath];
+
+    // reset selected/highlight state
+    [cell setHighlighted:[_indexPathsForHighlightedItems containsObject:indexPath]];
+    [cell setSelected:[_indexPathsForSelectedItems containsObject:indexPath]];
 
     // voiceover support
     cell.isAccessibilityElement = YES;
@@ -651,7 +724,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     return cell;
 }
 
-- (PSTCollectionReusableView *)_createPreparedSupplementaryViewForElementOfKind:(NSString *)kind
+- (PSTCollectionReusableView *)createPreparedSupplementaryViewForElementOfKind:(NSString *)kind
                                                                     atIndexPath:(NSIndexPath *)indexPath
                                                            withLayoutAttributes:(PSTCollectionViewLayoutAttributes *)layoutAttributes
 {
@@ -815,3 +888,26 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void) {
 #endif
     return UIAnimationDragCoefficient ? UIAnimationDragCoefficient() : 1.f;
 }
+
+// helper to check for ivar layout
+#if 0
+static void PSTPrintIvarsForClass(Class aClass) {
+    unsigned int varCount;
+    Ivar *vars = class_copyIvarList(aClass, &varCount);
+    for (int i = 0; i < varCount; i++) {
+        NSLog(@"%s %s", ivar_getTypeEncoding(vars[i]), ivar_getName(vars[i]));
+    }
+    free(vars);
+}
+
+__attribute__((constructor)) static void PSTCheckIfIVarLayoutIsEqualSize(void) {
+    @autoreleasepool {
+        NSLog(@"PSTCollectionView size = %zd, UICollectionView size = %zd", class_getInstanceSize([PSTCollectionView class]),class_getInstanceSize([UICollectionView class]));
+        NSLog(@"PSTCollectionViewCell size = %zd, UICollectionViewCell size = %zd", class_getInstanceSize([PSTCollectionViewCell class]),class_getInstanceSize([UICollectionViewCell class]));
+        NSLog(@"PSTCollectionViewController size = %zd, UICollectionViewController size = %zd", class_getInstanceSize([PSTCollectionViewController class]),class_getInstanceSize([UICollectionViewController class]));
+        NSLog(@"PSTCollectionViewLayout size = %zd, UICollectionViewLayout size = %zd", class_getInstanceSize([PSTCollectionViewLayout class]),class_getInstanceSize([UICollectionViewLayout class]));
+        NSLog(@"PSTCollectionViewFlowLayout size = %zd, UICollectionViewFlowLayout size = %zd", class_getInstanceSize([PSTCollectionViewFlowLayout class]),class_getInstanceSize([UICollectionViewFlowLayout class]));
+        //PSTPrintIvarsForClass([PSTCollectionViewFlowLayout class]); NSLog(@"\n\n\n");PSTPrintIvarsForClass([UICollectionViewFlowLayout class]);
+    }
+}
+#endif

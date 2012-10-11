@@ -9,12 +9,14 @@
 #import "PSTCollectionView.h"
 
 @interface PSTCollectionViewController () {
+    PSTCollectionViewLayout *_layout;
+    PSTCollectionView *_collectionView;
     struct {
-        unsigned int clearsSelectionOnViewWillAppear:1;
+        unsigned int clearsSelectionOnViewWillAppear : 1;
+        unsigned int appearsFirstTime : 1; // PST exension!
     } _collectionViewControllerFlags;
 }
 @property (nonatomic, strong) PSTCollectionViewLayout* layout;
-@property (nonatomic, assign) BOOL appearsFirstTime;
 @end
 
 @implementation PSTCollectionViewController
@@ -22,11 +24,21 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super initWithCoder:coder];
+    if (self) {
+		self.layout = [PSUICollectionViewFlowLayout new];
+        self.clearsSelectionOnViewWillAppear = YES;
+        _collectionViewControllerFlags.appearsFirstTime = YES;
+    }
+    return self;
+}
+
 - (id)initWithCollectionViewLayout:(PSTCollectionViewLayout *)layout {
     if((self = [super init])) {
         self.layout = layout;
         self.clearsSelectionOnViewWillAppear = YES;
-        self.appearsFirstTime = YES;
+        _collectionViewControllerFlags.appearsFirstTime = YES;
     }
     return self;
 }
@@ -34,19 +46,16 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - UIViewController
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    if (_collectionView.delegate == nil) _collectionView.delegate = self;
-    if (_collectionView.dataSource == nil) _collectionView.dataSource = self;
-}
-
 - (void)loadView {
     [super loadView];
-
+	
     // if this is restored from IB, we don't have plain main view.
     if ([self.view isKindOfClass:[PSTCollectionView class]]) {
         _collectionView = (PSTCollectionView *)self.view;
     }
+	
+	if (_collectionView.delegate == nil) _collectionView.delegate = self;
+    if (_collectionView.dataSource == nil) _collectionView.dataSource = self;
 
     // only create the collection view if it is not already created (by IB)
     if (!_collectionView) {
@@ -61,9 +70,9 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
-    if (_appearsFirstTime) {
+    if (_collectionViewControllerFlags.appearsFirstTime) {
         [_collectionView reloadData];
-        self.appearsFirstTime = NO;
+        _collectionViewControllerFlags.appearsFirstTime = NO;
     }
     
     if (_collectionViewControllerFlags.clearsSelectionOnViewWillAppear) {
