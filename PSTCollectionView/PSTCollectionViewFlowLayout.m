@@ -118,7 +118,6 @@ static char kPSTCachedItemRectsKey;
 
                     for (NSInteger itemIndex = 0; itemIndex < row.itemCount; itemIndex++) {
                         PSTCollectionViewLayoutAttributes *layoutAttributes;
-                        NSUInteger sectionIndex = [section.layoutInfo.sections indexOfObjectIdenticalTo:section];
                         NSUInteger sectionItemIndex;
                         CGRect itemFrame;
                         if (row.fixedItemSize) {
