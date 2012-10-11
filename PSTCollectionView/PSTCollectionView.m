@@ -478,7 +478,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 - (void)selectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(PSTCollectionViewScrollPosition)scrollPosition notifyDelegate:(BOOL)notifyDelegate {
 
     BOOL shouldSelect = YES;
-    if ([self.delegate respondsToSelector:@selector(collectionView:shouldSelectItemAtIndexPath:)]) {
+	if (_collectionViewFlags.delegateShouldSelectItemAtIndexPath) {
         shouldSelect = [self.delegate collectionView:self shouldSelectItemAtIndexPath:indexPath];
     }
 
@@ -486,7 +486,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         [self selectItemAtIndexPath:indexPath animated:animated scrollPosition:scrollPosition];
 
         // call delegate
-        if (notifyDelegate && [self.delegate respondsToSelector:@selector(collectionView:didSelectItemAtIndexPath:)]) {
+        if (notifyDelegate && _collectionViewFlags.delegateDidSelectItemAtIndexPath) {
             [self.delegate collectionView:self didSelectItemAtIndexPath:indexPath];
         }
     }
@@ -522,7 +522,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (BOOL)highlightItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(PSTCollectionViewScrollPosition)scrollPosition notifyDelegate:(BOOL)notifyDelegate {
     BOOL shouldHighlight = YES;
-    if ([self.delegate respondsToSelector:@selector(collectionView:shouldHighlightItemAtIndexPath:)]) {
+    if (_collectionViewFlags.delegateShouldHighlightItemAtIndexPath) {
         shouldHighlight = [self.delegate collectionView:self shouldHighlightItemAtIndexPath:indexPath];
     }
 
@@ -531,7 +531,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         highlightedCell.highlighted = YES;
         [_indexPathsForHighlightedItems addObject:indexPath];
 
-        if (notifyDelegate && [self.delegate respondsToSelector:@selector(collectionView:didHighlightItemAtIndexPath:)]) {
+        if (notifyDelegate && _collectionViewFlags.delegateDidHighlightItemAtIndexPath) {
             [self.delegate collectionView:self didHighlightItemAtIndexPath:indexPath];
         }
     }
@@ -544,7 +544,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         highlightedCell.highlighted = NO;
         [_indexPathsForHighlightedItems removeObject:indexPath];
 
-        if (notifyDelegate && [self.delegate respondsToSelector:@selector(collectionView:didUnhighlightItemAtIndexPath:)]) {
+        if (notifyDelegate && _collectionViewFlags.delegateDidUnhighlightItemAtIndexPath) {
             [self.delegate collectionView:self didUnhighlightItemAtIndexPath:indexPath];
         }
     }
@@ -624,6 +624,54 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     [self setCollectionViewLayout:layout animated:NO];
 }
 
+- (void)setDelegate:(id<PSTCollectionViewDelegate>)delegate
+{
+	super.delegate = delegate;
+	
+	//	Managing the Selected Cells
+	_collectionViewFlags.delegateShouldSelectItemAtIndexPath		= [self.delegate respondsToSelector:@selector(collectionView:shouldSelectItemAtIndexPath:)];
+	_collectionViewFlags.delegateDidSelectItemAtIndexPath			= [self.delegate respondsToSelector:@selector(collectionView:didSelectItemAtIndexPath:)];
+	_collectionViewFlags.delegateShouldDeselectItemAtIndexPath		= [self.delegate respondsToSelector:@selector(collectionView:shouldDeselectItemAtIndexPath:)];
+	_collectionViewFlags.delegateDidDeselectItemAtIndexPath			= [self.delegate respondsToSelector:@selector(collectionView:didDeselectItemAtIndexPath:)];
+
+	//	Managing Cell Highlighting
+	_collectionViewFlags.delegateShouldHighlightItemAtIndexPath		= [self.delegate respondsToSelector:@selector(collectionView:shouldHighlightItemAtIndexPath:)];
+	_collectionViewFlags.delegateDidHighlightItemAtIndexPath		= [self.delegate respondsToSelector:@selector(collectionView:didHighlightItemAtIndexPath:)];
+	_collectionViewFlags.delegateDidUnhighlightItemAtIndexPath		= [self.delegate respondsToSelector:@selector(collectionView:didUnhighlightItemAtIndexPath:)];
+
+	//	Tracking the Removal of Views
+	_collectionViewFlags.delegateDidEndDisplayingCell				= [self.delegate respondsToSelector:@selector(collectionView:didEndDisplayingCell:forItemAtIndexPath:)];
+	_collectionViewFlags.delegateDidEndDisplayingSupplementaryView	= [self.delegate respondsToSelector:@selector(collectionView:didEndDisplayingSupplementaryView:forElementOfKind:atIndexPath:)];
+
+	//	Managing Actions for Cells
+	_collectionViewFlags.delegateSupportsMenus						= [self.delegate respondsToSelector:@selector(collectionView:shouldShowMenuForItemAtIndexPath:)];
+	
+	// These aren't present in the flags which is a little strange. Not adding them because thet will mess with byte alignment which will affect cross compatibility.
+	// The flag names are guesses and are there for documentation purposes.
+	//
+	// _collectionViewFlags.delegateCanPerformActionForItemAtIndexPath	= [self.delegate respondsToSelector:@selector(collectionView:canPerformAction:forItemAtIndexPath:withSender:)];
+	// _collectionViewFlags.delegatePerformActionForItemAtIndexPath		= [self.delegate respondsToSelector:@selector(collectionView:performAction:forItemAtIndexPath:withSender:)];
+}
+
+// Might be overkill since two are required and two are handled by PSTCollectionViewData leaving only one flag we actually need to check for
+- (void)setDataSource:(id<PSTCollectionViewDataSource>)dataSource
+{
+	if ([dataSource respondsToSelector:@selector(collectionView:numberOfItemsInSection:)] &&
+		[dataSource respondsToSelector:@selector(collectionView:cellForItemAtIndexPath:)]) {
+		_dataSource = dataSource;
+		
+		//	Getting Item and Section Metrics
+		_collectionViewFlags.dataSourceNumberOfSections = [_dataSource respondsToSelector:@selector(numberOfSectionsInCollectionView:)];
+		
+		//	Getting Views for Items
+		_collectionViewFlags.dataSourceViewForSupplementaryElement = [_dataSource respondsToSelector:@selector(collectionView:viewForSupplementaryElementOfKind:atIndexPath:)];
+	}
+	
+	// Not sure if we should enforce protocol conformance here or not.
+	// If conformance fails do we nil out the delegate or leave the old one?
+	//_dataSource = nil;
+}
+
 - (BOOL)allowsSelection {
     return _collectionViewFlags.allowsSelection;
 }
@@ -671,12 +719,12 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             [reusableView removeFromSuperview];
             [_allVisibleViewsDict removeObjectForKey:itemKey];
             if (itemKey.type == PSTCollectionViewItemTypeCell) {
-                if ([self.delegate respondsToSelector:@selector(collectionView:didEndDisplayingCell:forItemAtIndexPath:)]) {
+                if (_collectionViewFlags.delegateDidEndDisplayingCell) {
                     [self.delegate collectionView:self didEndDisplayingCell:(PSTCollectionViewCell *)reusableView forItemAtIndexPath:itemKey.indexPath];
                 }
                 [self reuseCell:(PSTCollectionViewCell *)reusableView];
             }else if(itemKey.type == PSTCollectionViewItemTypeSupplementaryView) {
-                if ([self.delegate respondsToSelector:@selector(collectionView:didEndDisplayingSupplementaryView:forElementOfKind:atIndexPath:)]) {
+                if (_collectionViewFlags.delegateDidEndDisplayingSupplementaryView) {
                     [self.delegate collectionView:self didEndDisplayingSupplementaryView:reusableView forElementOfKind:itemKey.identifier atIndexPath:itemKey.indexPath];
                 }
                 [self reuseSupplementaryView:reusableView];
@@ -697,12 +745,16 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
             } else if (itemKey.type == PSTCollectionViewItemTypeSupplementaryView) {
                 view = [self createPreparedSupplementaryViewForElementOfKind:layoutAttributes.representedElementKind
-                                                                  atIndexPath:layoutAttributes.indexPath
-                                                         withLayoutAttributes:layoutAttributes];
+																 atIndexPath:layoutAttributes.indexPath
+														withLayoutAttributes:layoutAttributes];
 
             }
-            _allVisibleViewsDict[itemKey] = view;
-            [self addControlledSubview:view];
+			
+			//Supplementary views are optional
+			if (view) {
+				_allVisibleViewsDict[itemKey] = view;
+				[self addControlledSubview:view];
+			}
         }else {
             // just update cell
             [view applyLayoutAttributes:layoutAttributes];
@@ -727,14 +779,18 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (PSTCollectionReusableView *)createPreparedSupplementaryViewForElementOfKind:(NSString *)kind
-                                                                    atIndexPath:(NSIndexPath *)indexPath
-                                                           withLayoutAttributes:(PSTCollectionViewLayoutAttributes *)layoutAttributes
+																   atIndexPath:(NSIndexPath *)indexPath
+														  withLayoutAttributes:(PSTCollectionViewLayoutAttributes *)layoutAttributes
 {
-    PSTCollectionReusableView *view = [self.dataSource collectionView:self
-                                    viewForSupplementaryElementOfKind:kind
-                                                          atIndexPath:indexPath];
-    [view applyLayoutAttributes:layoutAttributes];
-    return view;
+	if (_collectionViewFlags.dataSourceViewForSupplementaryElement) {
+		PSTCollectionReusableView *view = [self.dataSource collectionView:self
+										viewForSupplementaryElementOfKind:kind
+															  atIndexPath:indexPath];
+		[view applyLayoutAttributes:layoutAttributes];
+		return view;
+	}
+	
+	return nil;
 }
 
 
