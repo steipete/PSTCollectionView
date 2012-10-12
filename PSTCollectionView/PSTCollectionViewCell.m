@@ -175,7 +175,13 @@
         _selectedBackgroundView.frame = self.bounds;
         _selectedBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _selectedBackgroundView.alpha = self.selected ? 1.0f : 0.0f;
-        [self insertSubview:_selectedBackgroundView aboveSubview:_backgroundView];
+        if (_backgroundView) {
+            [self insertSubview:_selectedBackgroundView aboveSubview:_backgroundView];
+        }
+        else {
+            [self addSubview:_selectedBackgroundView];
+            [self sendSubviewToBack:_selectedBackgroundView];
+        }
     }
 }
 
