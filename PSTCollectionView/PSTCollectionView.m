@@ -87,7 +87,6 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
         unsigned int doneFirstLayout : 1;
     } _collectionViewFlags;
     CGPoint _lastLayoutOffset;
-    NSIndexPath *_touchingIndexPath;
 }
 @property (nonatomic, strong) PSTCollectionViewData *collectionViewData;
 @end
@@ -95,6 +94,7 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
 const char kPSTNibObserverToken;
 const char kPSTNibLayout;
 const char kPSTNibCellsExternalObjects;
+const char kPSTTouchingIndexPath;
 
 @implementation PSTCollectionView
 
@@ -471,21 +471,21 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
         [self highlightItemAtIndexPath:indexPath animated:YES scrollPosition:PSTCollectionViewScrollPositionNone notifyDelegate:YES];
 
-        _touchingIndexPath = [indexPath copy];
+        [self setTouchingIndexPath:indexPath];
     }
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesMoved:touches withEvent:event];
 
-    if (_touchingIndexPath) {
+    if ([self touchingIndexPath]) {
         CGPoint touchPoint = [[touches anyObject] locationInView:self];
         NSIndexPath *indexPath = [self indexPathForItemAtPoint:touchPoint];
-        if ([indexPath isEqual:_touchingIndexPath]) {
+        if ([indexPath isEqual:[self touchingIndexPath]]) {
             [self highlightItemAtIndexPath:indexPath animated:YES scrollPosition:PSTCollectionViewScrollPositionNone notifyDelegate:YES];
         }
         else {
-            [self unhighlightItemAtIndexPath:_touchingIndexPath animated:YES notifyDelegate:YES];
+            [self unhighlightItemAtIndexPath:[self touchingIndexPath] animated:YES notifyDelegate:YES];
         }
     }
 }
@@ -495,11 +495,11 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
     CGPoint touchPoint = [[touches anyObject] locationInView:self];
     NSIndexPath *indexPath = [self indexPathForItemAtPoint:touchPoint];
-    if ([indexPath isEqual:_touchingIndexPath]) {
+    if ([indexPath isEqual:[self touchingIndexPath]]) {
         [self userSelectedItemAtIndexPath:indexPath];
 
         [self unhighlightAllItems];
-        _touchingIndexPath = nil;
+        [self setTouchingIndexPath:nil];
     }
     else {
         [self cellTouchCancelled];
@@ -513,6 +513,16 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     [self cellTouchCancelled];
 }
 
+- (NSIndexPath*)touchingIndexPath
+{
+    return objc_getAssociatedObject(self, &kPSTTouchingIndexPath);
+}
+
+- (void)setTouchingIndexPath:(NSIndexPath*)indexPath
+{
+    objc_setAssociatedObject(self, &kPSTTouchingIndexPath, indexPath, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
 - (void)cellTouchCancelled {
     // TODO: improve behavior on touchesCancelled
     if (!self.allowsMultipleSelection) {
@@ -524,7 +534,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     }
 
     [self unhighlightAllItems];
-    _touchingIndexPath = nil;
+    [self setTouchingIndexPath:nil];
 }
 
 - (void)userSelectedItemAtIndexPath:(NSIndexPath *)indexPath {

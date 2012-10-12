@@ -163,8 +163,7 @@
     if (_backgroundView != backgroundView) {
         [_backgroundView removeFromSuperview];
         _backgroundView = backgroundView;
-        [self addSubview:_backgroundView];
-        [self sendSubviewToBack:_backgroundView];
+        [self insertSubview:_backgroundView atIndex:0];
     }
 }
 
@@ -179,8 +178,7 @@
             [self insertSubview:_selectedBackgroundView aboveSubview:_backgroundView];
         }
         else {
-            [self addSubview:_selectedBackgroundView];
-            [self sendSubviewToBack:_selectedBackgroundView];
+            [self insertSubview:_selectedBackgroundView atIndex:0];
         }
     }
 }
