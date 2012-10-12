@@ -86,6 +86,20 @@ NSString *const PSTFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVertical
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        self.itemSize = [aDecoder decodeCGSizeForKey:@"UIItemSize"];
+        self.minimumInteritemSpacing = [aDecoder decodeFloatForKey:@"UIInteritemSpacing"];
+        self.minimumLineSpacing = [aDecoder decodeFloatForKey:@"UILineSpacing"];
+        self.footerReferenceSize = [aDecoder decodeCGSizeForKey:@"UIFooterReferenceSize"];
+        self.headerReferenceSize = [aDecoder decodeCGSizeForKey:@"UIHeaderReferenceSize"];
+        self.sectionInset = [aDecoder decodeUIEdgeInsetsForKey:@"UISectionInset"];
+        self.scrollDirection = [aDecoder decodeIntegerForKey:@"UIScrollDirection"];
+    }
+    return self;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - PSTCollectionViewLayout
 
