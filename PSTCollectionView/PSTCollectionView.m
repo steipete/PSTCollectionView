@@ -13,12 +13,14 @@
 #import "PSTCollectionViewFlowLayout.h"
 #import "PSTCollectionViewItemKey.h"
 #import <QuartzCore/QuartzCore.h>
+#import <objc/runtime.h>
 
 @interface PSTCollectionViewLayout (Internal)
 @property (nonatomic, unsafe_unretained) PSTCollectionView *collectionView;
 @end
 
 CGFloat PSTSimulatorAnimationDragCoefficient(void);
+@class PSTCollectionViewExt;
 
 @interface PSTCollectionView() {
     // ivar layout needs to EQUAL to UICollectionView.
@@ -89,12 +91,20 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
     CGPoint _lastLayoutOffset;
 }
 @property (nonatomic, strong) PSTCollectionViewData *collectionViewData;
+@property (nonatomic, strong, readonly) PSTCollectionViewExt *extVars;
 @end
 
-const char kPSTNibObserverToken;
-const char kPSTNibLayout;
-const char kPSTNibCellsExternalObjects;
-const char kPSTTouchingIndexPath;
+// Used by PSTCollectionView for external variables.
+// (We need to keep the total class size equal to the UICollectionView variant)
+@interface PSTCollectionViewExt : NSObject
+@property (nonatomic, strong) id nibObserverToken;
+@property (nonatomic, strong) PSTCollectionViewLayout *nibLayout;
+@property (nonatomic, strong) NSDictionary *nibCellsExternalObjects;
+@property (nonatomic, strong) NSIndexPath *touchingIndexPath;
+@end
+
+@implementation PSTCollectionViewExt @end
+const char kPSTColletionViewExt;
 
 @implementation PSTCollectionView
 
@@ -105,7 +115,6 @@ const char kPSTTouchingIndexPath;
 
 static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     _self.allowsSelection = YES;
-    _self.delaysContentTouches = NO;
     _self->_indexPathsForSelectedItems = [NSMutableSet new];
     _self->_indexPathsForHighlightedItems = [NSMutableSet new];
     _self->_cellReuseQueues = [NSMutableDictionary new];
@@ -114,6 +123,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     _self->_cellClassDict = [NSMutableDictionary new];
     _self->_cellNibDict = [NSMutableDictionary new];
     _self->_supplementaryViewClassDict = [NSMutableDictionary new];
+
+    // add class that saves additional ivars
+    objc_setAssociatedObject(_self, &kPSTColletionViewExt, [PSTCollectionViewExt new], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (id)initWithFrame:(CGRect)frame collectionViewLayout:(PSTCollectionViewLayout *)layout {
@@ -131,16 +143,18 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         PSTCollectionViewCommonSetup(self);
         // add observer for nib deserialization.
         
-        id nibObserverToken = [[NSNotificationCenter defaultCenter] addObserverForName:PSTCollectionViewLayoutAwokeFromNib object:nil queue:nil usingBlock:^(NSNotification *note) { objc_setAssociatedObject(self, &kPSTNibLayout, note.object, OBJC_ASSOCIATION_RETAIN_NONATOMIC); }];
-        objc_setAssociatedObject(self, &kPSTNibObserverToken, nibObserverToken, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        id nibObserverToken = [[NSNotificationCenter defaultCenter] addObserverForName:PSTCollectionViewLayoutAwokeFromNib object:nil queue:nil usingBlock:^(NSNotification *note) {
+            self.extVars.nibLayout = note.object;
+        }];
+        self.extVars.nibObserverToken = nibObserverToken;
 
         NSDictionary *cellExternalObjects =  [inCoder decodeObjectForKey:@"UICollectionViewCellPrototypeNibExternalObjects"];
         NSDictionary *cellNibs =  [inCoder decodeObjectForKey:@"UICollectionViewCellNibDict"];
 
         for (NSString *identifier in cellNibs.allKeys) {
-            _cellNibDict[identifier] = [cellNibs objectForKey:identifier];
+            _cellNibDict[identifier] = cellNibs[identifier];
         }
-        objc_setAssociatedObject(self, &kPSTNibCellsExternalObjects, cellExternalObjects, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        self.extVars.nibCellsExternalObjects = cellExternalObjects;
     }
     return self;
 }
@@ -149,13 +163,16 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     [super awakeFromNib];
 
     // check if NIB deserialization found a layout.
-    // TODO: is there no better way for this???
-    id nibObserverToken = objc_getAssociatedObject(self, &kPSTNibObserverToken);
-    [[NSNotificationCenter defaultCenter] removeObserver:nibObserverToken]; objc_setAssociatedObject(self, &kPSTNibObserverToken, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    id nibObserverToken = self.extVars.nibObserverToken;
+    if (nibObserverToken) {
+        [[NSNotificationCenter defaultCenter] removeObserver:nibObserverToken];
+        self.extVars.nibObserverToken = nil;
+    }
 
-    PSTCollectionViewLayout *nibLayout = objc_getAssociatedObject(self, &kPSTNibLayout);
+    PSTCollectionViewLayout *nibLayout = self.extVars.nibLayout;
     if (nibLayout) {
-        self.collectionViewLayout = nibLayout; objc_setAssociatedObject(self, &kPSTNibLayout, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        self.collectionViewLayout = nibLayout;
+        self.extVars.nibLayout = nil;
     }
 }
 
@@ -164,7 +181,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (void)dealloc {
-    id nibObserverToken = objc_getAssociatedObject(self, &kPSTNibObserverToken);
+    id nibObserverToken = self.extVars.nibObserverToken;
     if (nibObserverToken) [[NSNotificationCenter defaultCenter] removeObserver:nibObserverToken];
 }
 
@@ -262,7 +279,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         if (_cellNibDict[identifier]) {
             // Cell was registered via registerNib:forCellWithReuseIdentifier:
             UINib *cellNib = _cellNibDict[identifier];
-            NSDictionary *externalObjects = objc_getAssociatedObject(self, &kPSTNibCellsExternalObjects)[identifier];
+            NSDictionary *externalObjects = self.extVars.nibCellsExternalObjects[identifier];
             if (externalObjects) {
                 cell = [cellNib instantiateWithOwner:self options:@{UINibExternalObjects:externalObjects}][0];
             } else {
@@ -471,21 +488,21 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
         [self highlightItemAtIndexPath:indexPath animated:YES scrollPosition:PSTCollectionViewScrollPositionNone notifyDelegate:YES];
 
-        [self setTouchingIndexPath:indexPath];
+        self.extVars.touchingIndexPath = indexPath;
     }
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesMoved:touches withEvent:event];
 
-    if ([self touchingIndexPath]) {
+    if (self.extVars.touchingIndexPath) {
         CGPoint touchPoint = [[touches anyObject] locationInView:self];
         NSIndexPath *indexPath = [self indexPathForItemAtPoint:touchPoint];
-        if ([indexPath isEqual:[self touchingIndexPath]]) {
+        if ([indexPath isEqual:self.extVars.touchingIndexPath]) {
             [self highlightItemAtIndexPath:indexPath animated:YES scrollPosition:PSTCollectionViewScrollPositionNone notifyDelegate:YES];
         }
         else {
-            [self unhighlightItemAtIndexPath:[self touchingIndexPath] animated:YES notifyDelegate:YES];
+            [self unhighlightItemAtIndexPath:self.extVars.touchingIndexPath animated:YES notifyDelegate:YES];
         }
     }
 }
@@ -495,32 +512,21 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
     CGPoint touchPoint = [[touches anyObject] locationInView:self];
     NSIndexPath *indexPath = [self indexPathForItemAtPoint:touchPoint];
-    if ([indexPath isEqual:[self touchingIndexPath]]) {
+    if ([indexPath isEqual:self.extVars.touchingIndexPath]) {
         [self userSelectedItemAtIndexPath:indexPath];
 
         [self unhighlightAllItems];
-        [self setTouchingIndexPath:nil];
+        self.extVars.touchingIndexPath = nil;
     }
     else {
         [self cellTouchCancelled];
     }
-
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesCancelled:touches withEvent:event];
 
     [self cellTouchCancelled];
-}
-
-- (NSIndexPath*)touchingIndexPath
-{
-    return objc_getAssociatedObject(self, &kPSTTouchingIndexPath);
-}
-
-- (void)setTouchingIndexPath:(NSIndexPath*)indexPath
-{
-    objc_setAssociatedObject(self, &kPSTTouchingIndexPath, indexPath, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
 - (void)cellTouchCancelled {
@@ -534,7 +540,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     }
 
     [self unhighlightAllItems];
-    [self setTouchingIndexPath:nil];
+    self.extVars.touchingIndexPath = nil;
 }
 
 - (void)userSelectedItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -792,6 +798,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Private
 
+- (PSTCollectionViewExt *)extVars {
+    return objc_getAssociatedObject(self, &kPSTColletionViewExt);
+}
+
 - (void)invalidateLayout {
     [self.collectionViewLayout invalidateLayout];
     [self.collectionViewData invalidate]; // invalidate layout cache
@@ -931,7 +941,6 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - PSTCollection/UICollection interoperability
 
-#import <objc/runtime.h>
 #import <objc/message.h>
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)selector {
     NSMethodSignature *sig = [super methodSignatureForSelector:selector];
