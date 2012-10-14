@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2840" systemVersion="12C54" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="Pxb-db-V9M">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2843" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="Pxb-db-V9M">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1926"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1929"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -56,7 +56,6 @@
                                 <connections>
                                     <outlet property="image" destination="MGy-P6-tia" id="xfE-Pm-iCH"/>
                                     <outlet property="label" destination="9IX-OE-Trn" id="DZ5-WF-dqy"/>
-                                    <segue destination="7D1-T4-6U4" kind="push" identifier="showDetail" id="MWj-WA-tOE"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
@@ -77,11 +76,11 @@
             <objects>
                 <viewController storyboardIdentifier="DetailView" id="7D1-T4-6U4" customClass="DetailViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="28J-zl-sFH">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" id="fAT-Gn-JJ0">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
+                                <rect key="frame" x="0.0" y="22" width="320" height="416"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -126,7 +125,7 @@
         <class className="PSUICollectionViewController_" superclassName="PSTCollectionViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/PSUICollectionViewController_.h"/>
         </class>
-        <class className="ViewController" superclassName="PSUICollectionViewController_">
+        <class className="ViewController" superclassName="PSUICollectionViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
         </class>
     </classes>

@@ -163,8 +163,7 @@
     if (_backgroundView != backgroundView) {
         [_backgroundView removeFromSuperview];
         _backgroundView = backgroundView;
-        [self addSubview:_backgroundView];
-        [self sendSubviewToBack:_backgroundView];
+        [self insertSubview:_backgroundView atIndex:0];
     }
 }
 
@@ -175,7 +174,12 @@
         _selectedBackgroundView.frame = self.bounds;
         _selectedBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _selectedBackgroundView.alpha = self.selected ? 1.0f : 0.0f;
-        [self insertSubview:_selectedBackgroundView aboveSubview:_backgroundView];
+        if (_backgroundView) {
+            [self insertSubview:_selectedBackgroundView aboveSubview:_backgroundView];
+        }
+        else {
+            [self insertSubview:_selectedBackgroundView atIndex:0];
+        }
     }
 }
 
