@@ -82,7 +82,9 @@
             }
             CGSize itemSize = self.fixedItemSize ? self.itemSize : item.itemFrame.size;
             CGFloat itemDimension = self.layoutInfo.horizontal ? itemSize.height : itemSize.width;
-            itemDimension += self.layoutInfo.horizontal ? self.verticalInterstice : self.horizontalInterstice;
+            // first item does not add spacing
+            if (row)
+                itemDimension += self.layoutInfo.horizontal ? self.verticalInterstice : self.horizontalInterstice;
             if (dimensionLeft < itemDimension || finishCycle) {
                 // finish current row
                 if (row) {
