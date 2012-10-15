@@ -73,25 +73,29 @@
         }else {
             dimension -= self.sectionMargins.left + self.sectionMargins.right;
         }
+        
         do {
             BOOL finishCycle = itemIndex >= self.itemsCount;
             // TODO: fast path could even remove row creation and just calculate on the fly
             PSTGridLayoutItem *item = nil;
-            if (!finishCycle) {
-                item = self.fixedItemSize ? nil : self.items[itemIndex];
-            }
+            if (!finishCycle) item = self.fixedItemSize ? nil : self.items[itemIndex];
+            
             CGSize itemSize = self.fixedItemSize ? self.itemSize : item.itemFrame.size;
             CGFloat itemDimension = self.layoutInfo.horizontal ? itemSize.height : itemSize.width;
             // first item does not add spacing
-            if (row)
-                itemDimension += self.layoutInfo.horizontal ? self.verticalInterstice : self.horizontalInterstice;
+            if (row) itemDimension += self.layoutInfo.horizontal ? self.verticalInterstice : self.horizontalInterstice;
             if (dimensionLeft < itemDimension || finishCycle) {
                 // finish current row
                 if (row) {
                     // compensate last row
                     self.itemsByRowCount = fmaxf(itemsByRowCount, self.itemsByRowCount);
                     row.itemCount = itemsByRowCount;
+
+                    // if current row is done but there are still items left, increase the incomplete row counter
+                    if (!finishCycle) self.indexOfImcompleteRow = rowIndex;
+
                     [row layoutRow];
+                    
                     if (self.layoutInfo.horizontal) {
                         row.rowFrame = CGRectMake(sectionSize.width, 0, row.rowSize.width, row.rowSize.height);
                         sectionSize.height = fmaxf(row.rowSize.height, sectionSize.height);
@@ -102,14 +106,15 @@
                         sectionSize.width = fmaxf(row.rowSize.width, sectionSize.width);
                     }
                 }
+                // add new rows until the section is fully layouted
                 if (!finishCycle) {
                     // create new row
                     row.complete = YES; // finish up current row
                     row = [self addRow];
                     row.fixedItemSize = self.fixedItemSize;
                     row.index = rowIndex;
-                    rowIndex++;
                     self.indexOfImcompleteRow = rowIndex;
+                    rowIndex++;
                     itemsByRowCount = 0;
                     dimensionLeft = dimension;
                 }
@@ -117,9 +122,8 @@
             dimensionLeft -= itemDimension;
 
             // add item on slow path
-            if (item) {
-                [row addItem:item];
-            }
+            if (item) [row addItem:item];
+            
             itemIndex++;
             itemsByRowCount++;
         }while (itemIndex <= self.itemsCount); // cycle once more to finish last row
