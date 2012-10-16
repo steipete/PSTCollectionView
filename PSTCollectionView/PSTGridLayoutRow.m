@@ -61,7 +61,7 @@
         BOOL isHorizontal = self.section.layoutInfo.horizontal;
         BOOL isLastRow = self.section.indexOfImcompleteRow == self.index;
         PSTFlowLayoutHorizontalAlignment horizontalAlignment = [self.section.rowAlignmentOptions[isLastRow ? PSTFlowLayoutLastRowHorizontalAlignmentKey : PSTFlowLayoutCommonRowHorizontalAlignmentKey] integerValue];
-
+        
         // calculate space that's left over if we would align it from left to right.
         CGFloat leftOverSpace = self.section.layoutInfo.dimension;
         if (isHorizontal) {
@@ -100,7 +100,6 @@
         }else if(horizontalAlignment == PSTFlowLayoutHorizontalAlignmentCentered) {
             itemOffset.x += leftOverSpace/2;
         }
-
         // calculate row frame as union of all items
         CGRect frame = CGRectZero;
         CGRect itemFrame = (CGRect){.size=self.section.itemSize};

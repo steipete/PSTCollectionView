@@ -110,7 +110,7 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
     PinchLayout* pinchLayout = [[PinchLayout alloc] init];
-    pinchLayout.itemSize = CGSizeMake(100.0, 100.0);
+    pinchLayout.itemSize = CGSizeMake(45.0, 35.0);
     self.viewController = [[ViewController alloc] initWithCollectionViewLayout:pinchLayout];
     
     self.window.rootViewController = self.viewController;

@@ -79,7 +79,7 @@ NSString *const PSTFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVertical
         // set default values for row alignment.
         _rowAlignmentsOptionsDictionary = @{
         PSTFlowLayoutCommonRowHorizontalAlignmentKey : @(PSTFlowLayoutHorizontalAlignmentJustify),
-        PSTFlowLayoutLastRowHorizontalAlignmentKey : @(PSTFlowLayoutHorizontalAlignmentJustify),
+        PSTFlowLayoutLastRowHorizontalAlignmentKey : @(PSTFlowLayoutHorizontalAlignmentLeft),
         // TODO: those values are some enum. find out what what is.
         PSTFlowLayoutRowVerticalAlignmentKey : @(1),
         };
