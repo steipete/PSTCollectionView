@@ -115,12 +115,19 @@
                 if (horizontalAlignment == PSTFlowLayoutHorizontalAlignmentJustify) {
                     itemOffset.y += leftOverSpace/(CGFloat)(usedItemCount-1);
                 }
+                if (horizontalAlignment == PSTFlowLayoutHorizontalAlignmentLeft){ 
+                    itemOffset.y += leftOverSpace/(CGFloat)(usedItemCount-1);
+                }
             }else {
                 itemFrame.origin.x = itemOffset.x;
                 itemOffset.x += itemFrame.size.width + self.section.horizontalInterstice;
                 if (horizontalAlignment == PSTFlowLayoutHorizontalAlignmentJustify) {
                     itemOffset.x += leftOverSpace/(CGFloat)(usedItemCount-1);
                 }
+                if (horizontalAlignment == PSTFlowLayoutHorizontalAlignmentLeft){
+                    itemOffset.x += leftOverSpace/(CGFloat)(usedItemCount-1);
+                }
+                
             }
             item.itemFrame = CGRectIntegral(itemFrame); // might call nil; don't care
             [rects addObject:[NSValue valueWithCGRect:CGRectIntegral(itemFrame)]];
