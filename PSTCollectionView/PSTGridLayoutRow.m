@@ -77,7 +77,7 @@
         NSUInteger usedItemCount = 0;
         NSInteger itemIndex = 0;
         BOOL canFitMoreItems = itemIndex < self.itemCount;
-        while (itemIndex < self.itemCount || canFitMoreItems) {
+        while (canFitMoreItems) {
             if (!self.fixedItemSize) {
                 PSTGridLayoutItem *item = self.items[MIN(itemIndex, self.itemCount-1)];
                 leftOverSpace -= isHorizontal ? item.itemFrame.size.height : item.itemFrame.size.width;
@@ -90,8 +90,9 @@
             if (itemIndex > 0) {
                 leftOverSpace -= isHorizontal ? self.section.verticalInterstice : self.section.horizontalInterstice;
             }
-            itemIndex++;
-            usedItemCount = itemIndex;
+            if (itemIndex < self.itemCount ) itemIndex++;
+            
+            usedItemCount ++;  //i suppose usedItemCount indicates how much item could be placed in this row
         }
 
         CGPoint itemOffset = CGPointZero;
