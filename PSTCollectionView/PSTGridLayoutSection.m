@@ -88,6 +88,8 @@
                 // finish current row
                 if (row) {
                     // compensate last row
+                    NSLog(@"row.itemCount %d",itemsByRowCount);
+                    
                     self.itemsByRowCount = fmaxf(itemsByRowCount, self.itemsByRowCount);
                     row.itemCount = itemsByRowCount;
 

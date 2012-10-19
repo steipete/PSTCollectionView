@@ -69,7 +69,8 @@
         }else {
             leftOverSpace -= self.section.sectionMargins.left + self.section.sectionMargins.right;
         }
-
+        
+        NSLog(@"leftover space before %f",leftOverSpace);
         // calculate the space that we have left after counting all items.
         // UICollectionView is smart and lays out items like they would have been placed on a full row
         // So we need to calculate the "usedItemCount" with using the last item as a reference size.
@@ -77,24 +78,38 @@
         NSUInteger usedItemCount = 0;
         NSInteger itemIndex = 0;
         BOOL canFitMoreItems = itemIndex < self.itemCount;
-        while (canFitMoreItems) {
+        while (canFitMoreItems)
+        {            
             if (!self.fixedItemSize) {
                 PSTGridLayoutItem *item = self.items[MIN(itemIndex, self.itemCount-1)];
                 leftOverSpace -= isHorizontal ? item.itemFrame.size.height : item.itemFrame.size.width;
-                canFitMoreItems = isHorizontal ? leftOverSpace > item.itemFrame.size.height : leftOverSpace > item.itemFrame.size.width;
+                //canFitMoreItems = isHorizontal ? leftOverSpace > item.itemFrame.size.height : leftOverSpace > item.itemFrame.size.width;
             }else {
                 leftOverSpace -= isHorizontal ? self.section.itemSize.height : self.section.itemSize.width;
-                canFitMoreItems = isHorizontal ? leftOverSpace > self.section.itemSize.height : leftOverSpace > self.section.itemSize.width;
+                //canFitMoreItems = isHorizontal ? leftOverSpace > self.section.itemSize.height : leftOverSpace > self.section.itemSize.width;
             }
             // separator starts after first item
-            if (itemIndex > 0) {
+            //if (itemIndex > 0)
+            if (itemIndex >0 && itemIndex < self.itemCount)
+            {
                 leftOverSpace -= isHorizontal ? self.section.verticalInterstice : self.section.horizontalInterstice;
             }
+            
+            //make sure if canFitMoreItems here
+            if (!self.fixedItemSize) {
+                PSTGridLayoutItem *item = self.items[MIN(itemIndex, self.itemCount-1)];
+                canFitMoreItems = isHorizontal ? leftOverSpace > item.itemFrame.size.height : leftOverSpace > item.itemFrame.size.width;
+            }else {
+                canFitMoreItems = isHorizontal ? leftOverSpace > self.section.itemSize.height : leftOverSpace > self.section.itemSize.width;
+            }
+            
             if (itemIndex < self.itemCount ) itemIndex++;
             
             usedItemCount ++;  //i suppose usedItemCount indicates how much item could be placed in this row
         }
-
+        
+        NSLog(@"leftover space after %f",leftOverSpace);
+        
         CGPoint itemOffset = CGPointZero;
         if (horizontalAlignment == PSTFlowLayoutHorizontalAlignmentRight) {
             itemOffset.x += leftOverSpace;
