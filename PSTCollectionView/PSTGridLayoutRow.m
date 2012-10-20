@@ -70,7 +70,6 @@
             leftOverSpace -= self.section.sectionMargins.left + self.section.sectionMargins.right;
         }
         
-        NSLog(@"leftover space before %f",leftOverSpace);
         // calculate the space that we have left after counting all items.
         // UICollectionView is smart and lays out items like they would have been placed on a full row
         // So we need to calculate the "usedItemCount" with using the last item as a reference size.
@@ -108,8 +107,6 @@
             usedItemCount ++;  //i suppose usedItemCount indicates how much item could be placed in this row
         }
         
-        NSLog(@"leftover space after %f",leftOverSpace);
-        
         CGPoint itemOffset = CGPointZero;
         if (horizontalAlignment == PSTFlowLayoutHorizontalAlignmentRight) {
             itemOffset.x += leftOverSpace;
@@ -131,19 +128,12 @@
                 if (horizontalAlignment == PSTFlowLayoutHorizontalAlignmentJustify) {
                     itemOffset.y += leftOverSpace/(CGFloat)(usedItemCount-1);
                 }
-                if (horizontalAlignment == PSTFlowLayoutHorizontalAlignmentLeft){ 
-                    itemOffset.y += leftOverSpace/(CGFloat)(usedItemCount-1);
-                }
             }else {
                 itemFrame.origin.x = itemOffset.x;
                 itemOffset.x += itemFrame.size.width + self.section.horizontalInterstice;
                 if (horizontalAlignment == PSTFlowLayoutHorizontalAlignmentJustify) {
                     itemOffset.x += leftOverSpace/(CGFloat)(usedItemCount-1);
-                }
-                if (horizontalAlignment == PSTFlowLayoutHorizontalAlignmentLeft){
-                    itemOffset.x += leftOverSpace/(CGFloat)(usedItemCount-1);
-                }
-                
+                }                
             }
             item.itemFrame = CGRectIntegral(itemFrame); // might call nil; don't care
             [rects addObject:[NSValue valueWithCGRect:CGRectIntegral(itemFrame)]];

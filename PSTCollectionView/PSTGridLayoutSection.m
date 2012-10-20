@@ -87,9 +87,7 @@
             if (dimensionLeft < itemDimension || finishCycle) {
                 // finish current row
                 if (row) {
-                    // compensate last row
-                    NSLog(@"row.itemCount %d",itemsByRowCount);
-                    
+                    // compensate last row                    
                     self.itemsByRowCount = fmaxf(itemsByRowCount, self.itemsByRowCount);
                     row.itemCount = itemsByRowCount;
 
