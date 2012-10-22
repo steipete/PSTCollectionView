@@ -545,7 +545,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)userSelectedItemAtIndexPath:(NSIndexPath *)indexPath {
     if (self.allowsMultipleSelection && [_indexPathsForSelectedItems containsObject:indexPath]) {
-        [self deselectItemAtIndexPath:indexPath animated:YES];
+        [self deselectItemAtIndexPath:indexPath animated:YES notifyDelegate:YES];
     }
     else {
         [self selectItemAtIndexPath:indexPath animated:YES scrollPosition:PSTCollectionViewScrollPositionNone notifyDelegate:YES];
@@ -556,14 +556,16 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 - (void)selectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(PSTCollectionViewScrollPosition)scrollPosition notifyDelegate:(BOOL)notifyDelegate {
 
     BOOL shouldSelect = YES;
-	if (_collectionViewFlags.delegateShouldSelectItemAtIndexPath) {
+	if (notifyDelegate && _collectionViewFlags.delegateShouldSelectItemAtIndexPath) {
         shouldSelect = [self.delegate collectionView:self shouldSelectItemAtIndexPath:indexPath];
     }
 
     if (shouldSelect) {
         if (!self.allowsMultipleSelection) {
             for (NSIndexPath *selectedIndexPath in [_indexPathsForSelectedItems copy]) {
-                [self deselectItemAtIndexPath:selectedIndexPath animated:animated];
+                if(![indexPath isEqual:selectedIndexPath]) {
+                    [self deselectItemAtIndexPath:selectedIndexPath animated:animated notifyDelegate:notifyDelegate];
+                }
             }
         }
         if (self.allowsSelection) {
@@ -582,22 +584,31 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (void)selectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(PSTCollectionViewScrollPosition)scrollPosition {
-    [self selectItemAtIndexPath:indexPath animated:animated scrollPosition:scrollPosition notifyDelegate:YES];
+    [self selectItemAtIndexPath:indexPath animated:animated scrollPosition:scrollPosition notifyDelegate:NO];
 }
 
-- (void)deselectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated {
+- (void)deselectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated
+{
+    [self deselectItemAtIndexPath:indexPath animated:animated notifyDelegate:NO];
+}
+
+- (void)deselectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated notifyDelegate:(BOOL)notify {
     if ([_indexPathsForSelectedItems containsObject:indexPath]) {
         PSTCollectionViewCell *selectedCell = [self cellForItemAtIndexPath:indexPath];
         selectedCell.selected = NO;
         [_indexPathsForSelectedItems removeObject:indexPath];
 
-        [self unhighlightItemAtIndexPath:indexPath animated:animated notifyDelegate:YES];
+        [self unhighlightItemAtIndexPath:indexPath animated:animated notifyDelegate:notify];
+        
+        if (notify && _collectionViewFlags.delegateDidDeselectItemAtIndexPath) {
+            [self.delegate collectionView:self didDeselectItemAtIndexPath:indexPath];
+        }
     }
 }
 
 - (BOOL)highlightItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(PSTCollectionViewScrollPosition)scrollPosition notifyDelegate:(BOOL)notifyDelegate {
     BOOL shouldHighlight = YES;
-    if (_collectionViewFlags.delegateShouldHighlightItemAtIndexPath) {
+    if (notifyDelegate && _collectionViewFlags.delegateShouldHighlightItemAtIndexPath) {
         shouldHighlight = [self.delegate collectionView:self shouldHighlightItemAtIndexPath:indexPath];
     }
 
