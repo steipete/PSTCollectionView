@@ -47,21 +47,21 @@
 }
 
 - (NSArray *)itemRects {
-    return [self layoutRowAndGenerateRectArray:YES];
+    return [self layoutRowAndGenerateRectArray:YES];  
 }
 
 - (void)layoutRow {
-    [self layoutRowAndGenerateRectArray:NO];
+    [self layoutRowAndGenerateRectArray:NO]; 
 }
 
-- (NSArray *)layoutRowAndGenerateRectArray:(BOOL)generateRectArray {
+- (NSArray *)layoutRowAndGenerateRectArray:(BOOL)generateRectArray {      
     NSMutableArray *rects = generateRectArray ? [NSMutableArray array] : nil;
     if (!_isValid || generateRectArray) {
         // properties for aligning
         BOOL isHorizontal = self.section.layoutInfo.horizontal;
         BOOL isLastRow = self.section.indexOfImcompleteRow == self.index;
         PSTFlowLayoutHorizontalAlignment horizontalAlignment = [self.section.rowAlignmentOptions[isLastRow ? PSTFlowLayoutLastRowHorizontalAlignmentKey : PSTFlowLayoutCommonRowHorizontalAlignmentKey] integerValue];
-        
+
         // calculate space that's left over if we would align it from left to right.
         CGFloat leftOverSpace = self.section.layoutInfo.dimension;
         if (isHorizontal) {
@@ -69,7 +69,7 @@
         }else {
             leftOverSpace -= self.section.sectionMargins.left + self.section.sectionMargins.right;
         }
-        
+ 
         // calculate the space that we have left after counting all items.
         // UICollectionView is smart and lays out items like they would have been placed on a full row
         // So we need to calculate the "usedItemCount" with using the last item as a reference size.
