@@ -357,7 +357,18 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         }
     }];
     [_allVisibleViewsDict removeAllObjects];
+    
+    for(NSIndexPath *indexPath in _indexPathsForSelectedItems) {
+        PSTCollectionViewCell *selectedCell = [self cellForItemAtIndexPath:indexPath];
+        selectedCell.selected = NO;
+        selectedCell.highlighted = NO;
+    }
+    [_indexPathsForSelectedItems removeAllObjects];
+    [_indexPathsForHighlightedItems removeAllObjects];
+    
     [self setNeedsLayout];
+    
+    
     //NSAssert(sectionCount == 1, @"Sections are currently not supported.");
 }
 
@@ -694,10 +705,17 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 		//Reload the cell and redisplay
 		PSTCollectionViewLayoutAttributes *layoutAttributes = [self.collectionViewLayout layoutAttributesForItemAtIndexPath:itemKey.indexPath];
 		PSTCollectionViewCell *newCell = [self createPreparedCellForItemAtIndexPath:itemKey.indexPath withLayoutAttributes:layoutAttributes];
+        newCell.selected = NO;
+        newCell.highlighted = NO;
 		_allVisibleViewsDict[itemKey] = newCell;
 		[self addControlledSubview:newCell];
 	}
-
+    
+    for(NSIndexPath *indexPath in indexPaths) {
+        [_indexPathsForHighlightedItems removeObject:indexPath];
+        [_indexPathsForSelectedItems removeObject:indexPath];
+    }
+    
 	_collectionViewFlags.reloading = NO;
 }
 
