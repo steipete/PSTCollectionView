@@ -19,6 +19,11 @@
 @property (nonatomic, unsafe_unretained) PSTCollectionView *collectionView;
 @end
 
+@interface PSTCollectionViewData (Internal)
+- (void)prepareToLoadData;
+@end
+
+
 CGFloat PSTSimulatorAnimationDragCoefficient(void);
 @class PSTCollectionViewExt;
 
@@ -208,7 +213,8 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         [CATransaction setDisableActions:YES];
     }
 
-    [self updateVisibleCellsNow:YES];
+    if(!_collectionViewFlags.updatingLayout)
+        [self updateVisibleCellsNow:YES];
 
     if (_collectionViewFlags.fadeCellsForBoundsChange) {
         [CATransaction commit];
@@ -227,6 +233,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     _backgroundView.frame = (CGRect){.size=self.bounds.size};
 
     _collectionViewFlags.fadeCellsForBoundsChange = NO;
+    _collectionViewFlags.doneFirstLayout = YES;
 }
 
 - (void)setFrame:(CGRect)frame {
@@ -360,6 +367,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     [self setNeedsLayout];
     //NSAssert(sectionCount == 1, @"Sections are currently not supported.");
 }
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Query Grid
@@ -725,12 +733,243 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (void)setCollectionViewLayout:(PSTCollectionViewLayout *)layout animated:(BOOL)animated {
-    if (layout != _layout) {
+    if (layout == _layout)
+        return;
+
+    if(CGRectIsEmpty(self.bounds)
+
+       // not sure it was it original code, but here this prevents crash
+       // in case we switch layout before previous one was initially loaded
+       ||!_collectionViewFlags.doneFirstLayout
+       )
+    {
+        _layout.collectionView = nil;
+        _collectionViewData = [[PSTCollectionViewData alloc] initWithCollectionView:self
+                                                                             layout:layout];
+        layout.collectionView = self;
+        _layout = layout;
+        
+        // originally the use method
+        // _setNeedsVisibleCellsUpdate:withLayoutAttributes:
+        // here with CellsUpdate set to YES and LayoutAttributes parameter set to NO
+        // inside this method probably some flags are set and finally
+        // setNeedsDisplay is called
+        
+        _collectionViewFlags.scheduledUpdateVisibleCells= YES;
+        _collectionViewFlags.scheduledUpdateVisibleCellLayoutAttributes = NO;
+
+        [self setNeedsDisplay];
+    }
+    else
+    {
+        layout.collectionView = self;
+        
+        _collectionViewData = [[PSTCollectionViewData alloc] initWithCollectionView:self layout:layout];
+        [_collectionViewData prepareToLoadData];
+        
+        
+        NSArray* previouslySelectedIndexPaths = [self indexPathsForSelectedItems];
+        
+        NSMutableSet* selectedCellKeys = [NSMutableSet setWithCapacity:[previouslySelectedIndexPaths count]];
+        
+        for(NSIndexPath* indexPath in previouslySelectedIndexPaths)
+        {
+            [selectedCellKeys addObject:[PSTCollectionViewItemKey collectionItemKeyForCellWithIndexPath:indexPath]];
+        }
+        
+        
+        
+        NSArray* previouslyVisibleItemsKeys = [_allVisibleViewsDict allKeys];
+        NSSet* previouslyVisibleItemsKeysSet = [NSSet setWithArray:previouslyVisibleItemsKeys];
+        NSMutableSet* previouslyVisibleItemsKeysSetMutable = [NSMutableSet setWithArray:previouslyVisibleItemsKeys];
+        
+        
+        if([selectedCellKeys intersectsSet:selectedCellKeys])
+        {
+            [previouslyVisibleItemsKeysSetMutable intersectSet:previouslyVisibleItemsKeysSetMutable];
+        }
+        
+        [self bringSubviewToFront: _allVisibleViewsDict[[previouslyVisibleItemsKeysSetMutable anyObject]]];
+        
+        
+        
+        CGRect rect = [_collectionViewData collectionViewContentRect];
+        NSArray* newlyVisibleLayoutAttrs = [_collectionViewData layoutAttributesForElementsInRect:rect];
+        
+        
+        NSMutableDictionary* layoutInterchangeData = [NSMutableDictionary dictionaryWithCapacity:
+                                                      [newlyVisibleLayoutAttrs count] + [previouslyVisibleItemsKeysSet count]];
+        
+        
+        NSMutableSet* newlyVisibleItemsKeys = [NSMutableSet set];
+        for(PSTCollectionViewLayoutAttributes* attr in newlyVisibleLayoutAttrs)
+        {
+            
+            PSTCollectionViewItemKey* newKey = [PSTCollectionViewItemKey collectionItemKeyForLayoutAttributes:attr];
+            [newlyVisibleItemsKeys addObject:newKey];
+            
+            PSTCollectionViewLayoutAttributes* prevAttr = nil;
+            PSTCollectionViewLayoutAttributes* newAttr = nil;
+            
+            if(newKey.type == PSTCollectionViewItemTypeDecorationView)
+            {
+                prevAttr = [self.collectionViewLayout layoutAttributesForDecorationViewWithReuseIdentifier:attr.representedElementKind
+                                                                                               atIndexPath:newKey.indexPath];
+                newAttr = [layout layoutAttributesForDecorationViewWithReuseIdentifier:attr.representedElementKind
+                                                                           atIndexPath:newKey.indexPath];
+            }
+            else if(newKey.type == PSTCollectionViewItemTypeCell)
+            {
+                prevAttr = [self.collectionViewLayout layoutAttributesForItemAtIndexPath:newKey.indexPath];
+                newAttr = [layout layoutAttributesForItemAtIndexPath:newKey.indexPath];
+                //                attr2.center = something(attr2.center);
+                
+            }
+            else
+            {
+                prevAttr = [self.collectionViewLayout layoutAttributesForSupplementaryViewOfKind:attr.representedElementKind
+                                                                                     atIndexPath:newKey.indexPath];
+                newAttr = [layout layoutAttributesForSupplementaryViewOfKind:attr.representedElementKind
+                                                                 atIndexPath:newKey.indexPath];
+            }
+            
+            [layoutInterchangeData setObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:prevAttr,newAttr, nil]
+                                                                         forKeys:[NSArray arrayWithObjects:@"previousLayoutInfos",@"newLayoutInfos",nil]]
+                                      forKey:newKey];
+            
+            
+        }
+        
+        for(PSTCollectionViewItemKey* key in previouslyVisibleItemsKeysSet)
+        {
+            PSTCollectionViewLayoutAttributes* prevAttr = nil;
+            PSTCollectionViewLayoutAttributes* newAttr = nil;
+            
+            if(key.type == PSTCollectionViewItemTypeDecorationView)
+            {
+                PSTCollectionReusableView* decorView = _allVisibleViewsDict[key];
+                prevAttr = [self.collectionViewLayout layoutAttributesForDecorationViewWithReuseIdentifier:decorView.reuseIdentifier
+                                                                                               atIndexPath:key.indexPath];
+                newAttr = [layout layoutAttributesForDecorationViewWithReuseIdentifier:decorView.reuseIdentifier
+                                                                           atIndexPath:key.indexPath];
+                
+            }
+            else if(key.type == PSTCollectionViewItemTypeCell)
+            {
+                prevAttr = [self.collectionViewLayout layoutAttributesForItemAtIndexPath:key.indexPath];
+                newAttr = [layout layoutAttributesForItemAtIndexPath:key.indexPath];
+                //                attr2.center = something(attr2.center);
+                
+            }
+            else
+            {
+                PSTCollectionReusableView* suuplView = _allVisibleViewsDict[key];
+                prevAttr = [self.collectionViewLayout layoutAttributesForSupplementaryViewOfKind:suuplView.layoutAttributes.representedElementKind
+                                                                                     atIndexPath:key.indexPath];
+                newAttr = [layout layoutAttributesForSupplementaryViewOfKind:suuplView.layoutAttributes.representedElementKind
+                                                                 atIndexPath:key.indexPath];
+                
+            }
+            
+            [layoutInterchangeData setObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:prevAttr,newAttr, nil]
+                                                                         forKeys:[NSArray arrayWithObjects:@"previousLayoutInfos",@"newLayoutInfos",nil]]
+                                      forKey:key];
+            
+            
+        }
+        
+        
+        for(PSTCollectionViewItemKey* key in [layoutInterchangeData keyEnumerator])
+        {
+            if(key.type == PSTCollectionViewItemTypeCell)
+            {
+                PSTCollectionViewCell* cell = _allVisibleViewsDict[key];
+                
+                if(!cell)
+                {
+                    cell = [self createPreparedCellForItemAtIndexPath:key.indexPath
+                                                 withLayoutAttributes:[[layoutInterchangeData objectForKey:key] objectForKey:@"previousLayoutInfos"]];
+                    _allVisibleViewsDict[key] = cell;
+                    [self addControlledSubview:cell];
+                }
+                else
+                    [cell applyLayoutAttributes:[[layoutInterchangeData objectForKey:key] objectForKey:@"previousLayoutInfos"]];
+            }
+            else if(key.type == PSTCollectionViewItemTypeSupplementaryView)
+            {
+                PSTCollectionReusableView* view = _allVisibleViewsDict[key];
+                if(!view)
+                {
+                    PSTCollectionViewLayoutAttributes* attrs = layoutInterchangeData[key][@"previousLayoutInfos"];
+                    view = [self createPreparedSupplementaryViewForElementOfKind:attrs.representedElementKind
+                                                                     atIndexPath:attrs.indexPath
+                                                            withLayoutAttributes:attrs];
+                }
+            }
+        };
+        
+        CGRect contentRect = [_collectionViewData collectionViewContentRect];
+        [self setContentSize:contentRect.size];
+        [self setContentOffset:contentRect.origin];
+        
+        
+        void (^applyNewLayoutBlock)(void) = ^
+        {
+            NSEnumerator* keys = [layoutInterchangeData keyEnumerator];
+            for(PSTCollectionViewItemKey* key in keys)
+            {
+                [(PSTCollectionViewCell*)_allVisibleViewsDict[key] applyLayoutAttributes:
+                 [[layoutInterchangeData objectForKey:key] objectForKey:@"newLayoutInfos"]];
+            }
+            
+        };
+        
+        void (^freeUnusedViews)(void) = ^
+        {
+            
+            for(PSTCollectionViewItemKey* key in [_allVisibleViewsDict keyEnumerator])
+            {
+                if(![newlyVisibleItemsKeys containsObject:key])
+                {
+                    if(key.type == PSTCollectionViewItemTypeCell)
+                        [self reuseCell:_allVisibleViewsDict[key]];
+                    else if(key.type == PSTCollectionViewItemTypeSupplementaryView)
+                        [self reuseSupplementaryView:_allVisibleViewsDict[key]];
+                }
+            }
+        };
+        
+        if(animated)
+        {
+            
+            [UIView animateWithDuration:.3
+                             animations:^
+             {
+                 _collectionViewFlags.updatingLayout = YES;
+                 applyNewLayoutBlock();
+             }
+                             completion:^(BOOL finished)
+             {
+                 freeUnusedViews();
+                 _collectionViewFlags.updatingLayout = NO;
+             }];
+        }
+        else
+        {
+            applyNewLayoutBlock();
+            freeUnusedViews();
+        }
+        
+        // originally they use old-fashion [UIView beginAnimations:withContext:]
+        // and use layoutInterchangeData as context. Possible they need "newLayoutObject"
+        // to get what cells to reuse for cleanup. We don't need it as we use blocks and have
+        // everything needed attached to blocks
+            
+        //        [layoutInterchangeData setObject:layout forKey:@"newLayoutObject"];
+        //
+        
         _layout.collectionView = nil;
         _layout = layout;
-        layout.collectionView = self;
-        _collectionViewData = [[PSTCollectionViewData alloc] initWithCollectionView:self layout:layout];
-        [self reloadData];
     }
 }
 
