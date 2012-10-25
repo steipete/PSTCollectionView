@@ -47,14 +47,14 @@
 }
 
 - (NSArray *)itemRects {
-    return [self layoutRowAndGenerateRectArray:YES];
+    return [self layoutRowAndGenerateRectArray:YES];  
 }
 
 - (void)layoutRow {
-    [self layoutRowAndGenerateRectArray:NO];
+    [self layoutRowAndGenerateRectArray:NO]; 
 }
 
-- (NSArray *)layoutRowAndGenerateRectArray:(BOOL)generateRectArray {
+- (NSArray *)layoutRowAndGenerateRectArray:(BOOL)generateRectArray {      
     NSMutableArray *rects = generateRectArray ? [NSMutableArray array] : nil;
     if (!_isValid || generateRectArray) {
         // properties for aligning
@@ -69,7 +69,7 @@
         }else {
             leftOverSpace -= self.section.sectionMargins.left + self.section.sectionMargins.right;
         }
-
+ 
         // calculate the space that we have left after counting all items.
         // UICollectionView is smart and lays out items like they would have been placed on a full row
         // So we need to calculate the "usedItemCount" with using the last item as a reference size.
@@ -77,30 +77,42 @@
         NSUInteger usedItemCount = 0;
         NSInteger itemIndex = 0;
         BOOL canFitMoreItems = itemIndex < self.itemCount;
-        while (itemIndex < self.itemCount || canFitMoreItems) {
+        while (canFitMoreItems)
+        {            
             if (!self.fixedItemSize) {
                 PSTGridLayoutItem *item = self.items[MIN(itemIndex, self.itemCount-1)];
                 leftOverSpace -= isHorizontal ? item.itemFrame.size.height : item.itemFrame.size.width;
-                canFitMoreItems = isHorizontal ? leftOverSpace > item.itemFrame.size.height : leftOverSpace > item.itemFrame.size.width;
+                //canFitMoreItems = isHorizontal ? leftOverSpace > item.itemFrame.size.height : leftOverSpace > item.itemFrame.size.width;
             }else {
                 leftOverSpace -= isHorizontal ? self.section.itemSize.height : self.section.itemSize.width;
-                canFitMoreItems = isHorizontal ? leftOverSpace > self.section.itemSize.height : leftOverSpace > self.section.itemSize.width;
+                //canFitMoreItems = isHorizontal ? leftOverSpace > self.section.itemSize.height : leftOverSpace > self.section.itemSize.width;
             }
             // separator starts after first item
-            if (itemIndex > 0) {
+            //if (itemIndex > 0)
+            if (itemIndex >0 && itemIndex < self.itemCount)
+            {
                 leftOverSpace -= isHorizontal ? self.section.verticalInterstice : self.section.horizontalInterstice;
             }
-            itemIndex++;
-            usedItemCount = itemIndex;
+            
+            //make sure if canFitMoreItems here
+            if (!self.fixedItemSize) {
+                PSTGridLayoutItem *item = self.items[MIN(itemIndex, self.itemCount-1)];
+                canFitMoreItems = isHorizontal ? leftOverSpace > item.itemFrame.size.height : leftOverSpace > item.itemFrame.size.width;
+            }else {
+                canFitMoreItems = isHorizontal ? leftOverSpace > self.section.itemSize.height : leftOverSpace > self.section.itemSize.width;
+            }
+            
+            if (itemIndex < self.itemCount ) itemIndex++;
+            
+            usedItemCount ++;  //i suppose usedItemCount indicates how much item could be placed in this row
         }
-
+        
         CGPoint itemOffset = CGPointZero;
         if (horizontalAlignment == PSTFlowLayoutHorizontalAlignmentRight) {
             itemOffset.x += leftOverSpace;
         }else if(horizontalAlignment == PSTFlowLayoutHorizontalAlignmentCentered) {
             itemOffset.x += leftOverSpace/2;
         }
-
         // calculate row frame as union of all items
         CGRect frame = CGRectZero;
         CGRect itemFrame = (CGRect){.size=self.section.itemSize};
@@ -121,7 +133,7 @@
                 itemOffset.x += itemFrame.size.width + self.section.horizontalInterstice;
                 if (horizontalAlignment == PSTFlowLayoutHorizontalAlignmentJustify) {
                     itemOffset.x += leftOverSpace/(CGFloat)(usedItemCount-1);
-                }
+                }                
             }
             item.itemFrame = CGRectIntegral(itemFrame); // might call nil; don't care
             [rects addObject:[NSValue valueWithCGRect:CGRectIntegral(itemFrame)]];

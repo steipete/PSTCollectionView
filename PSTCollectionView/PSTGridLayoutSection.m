@@ -82,18 +82,18 @@
             
             CGSize itemSize = self.fixedItemSize ? self.itemSize : item.itemFrame.size;
             CGFloat itemDimension = self.layoutInfo.horizontal ? itemSize.height : itemSize.width;
-            // first item does not add spacing
+            // first item does not add spacing  
             if (row) itemDimension += self.layoutInfo.horizontal ? self.verticalInterstice : self.horizontalInterstice;
             if (dimensionLeft < itemDimension || finishCycle) {
                 // finish current row
-                if (row) {
-                    // compensate last row
+                if (row) { 
+                    // compensate last row                    
                     self.itemsByRowCount = fmaxf(itemsByRowCount, self.itemsByRowCount);
                     row.itemCount = itemsByRowCount;
-
+                    
                     // if current row is done but there are still items left, increase the incomplete row counter
                     if (!finishCycle) self.indexOfImcompleteRow = rowIndex;
-
+                    
                     [row layoutRow];
                     
                     if (self.layoutInfo.horizontal) {
@@ -117,10 +117,11 @@
                     rowIndex++;
                     itemsByRowCount = 0;
                     dimensionLeft = dimension;
+                    itemDimension = self.layoutInfo.horizontal ? itemSize.height : itemSize.width; //redo the itemDimension as it's the first item in row
                 }
             }
             dimensionLeft -= itemDimension;
-
+            
             // add item on slow path
             if (item) [row addItem:item];
             
