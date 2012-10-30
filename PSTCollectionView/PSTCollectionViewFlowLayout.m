@@ -135,7 +135,7 @@ static char kPSTCachedItemRectsKey;
 			normalizedHeaderFrame.origin.x += section.frame.origin.x;
 			normalizedHeaderFrame.origin.y += section.frame.origin.y;
 			if (!CGRectIsEmpty(normalizedHeaderFrame) && CGRectIntersectsRect(normalizedHeaderFrame, rect)) {
-				PSTCollectionViewLayoutAttributes *layoutAttributes = [PSTCollectionViewLayoutAttributes layoutAttributesForSupplementaryViewOfKind:PSTCollectionElementKindSectionHeader withIndexPath:[NSIndexPath indexPathWithIndex:sectionIndex]];
+				PSTCollectionViewLayoutAttributes *layoutAttributes = [PSTCollectionViewLayoutAttributes layoutAttributesForSupplementaryViewOfKind:PSTCollectionElementKindSectionHeader withIndexPath:[NSIndexPath indexPathForItem:0 inSection:sectionIndex]];
 				layoutAttributes.frame = normalizedHeaderFrame;
 				[layoutAttributesArray addObject:layoutAttributes];
 			}
@@ -176,7 +176,7 @@ static char kPSTCachedItemRectsKey;
 			normalizedFooterFrame.origin.x += section.frame.origin.x;
 			normalizedFooterFrame.origin.y += section.frame.origin.y;
 			if (!CGRectIsEmpty(normalizedFooterFrame) && CGRectIntersectsRect(normalizedFooterFrame, rect)) {
-				PSTCollectionViewLayoutAttributes *layoutAttributes = [PSTCollectionViewLayoutAttributes layoutAttributesForSupplementaryViewOfKind:PSTCollectionElementKindSectionFooter withIndexPath:[NSIndexPath indexPathWithIndex:sectionIndex]];
+				PSTCollectionViewLayoutAttributes *layoutAttributes = [PSTCollectionViewLayoutAttributes layoutAttributesForSupplementaryViewOfKind:PSTCollectionElementKindSectionFooter withIndexPath:[NSIndexPath indexPathForItem:0 inSection:sectionIndex]];
 				layoutAttributes.frame = normalizedFooterFrame;
 				[layoutAttributesArray addObject:layoutAttributes];
 			}
@@ -213,7 +213,7 @@ static char kPSTCachedItemRectsKey;
 }
 
 - (PSTCollectionViewLayoutAttributes *)layoutAttributesForSupplementaryViewOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
-    NSUInteger sectionIndex = [indexPath indexAtPosition:0];
+    NSUInteger sectionIndex = indexPath.section;
 
     if (sectionIndex < _data.sections.count) {
         PSTGridLayoutSection *section = _data.sections[sectionIndex];
@@ -223,7 +223,7 @@ static char kPSTCachedItemRectsKey;
             normalizedHeaderFrame.origin.x += section.frame.origin.x;
             normalizedHeaderFrame.origin.y += section.frame.origin.y;
 
-            PSTCollectionViewLayoutAttributes *layoutAttributes = [PSTCollectionViewLayoutAttributes layoutAttributesForSupplementaryViewOfKind:PSTCollectionElementKindSectionHeader withIndexPath:[NSIndexPath indexPathWithIndex:sectionIndex]];
+            PSTCollectionViewLayoutAttributes *layoutAttributes = [PSTCollectionViewLayoutAttributes layoutAttributesForSupplementaryViewOfKind:PSTCollectionElementKindSectionHeader withIndexPath:[NSIndexPath indexPathForItem:0 inSection:sectionIndex]];
             layoutAttributes.frame = normalizedHeaderFrame;
 
             return layoutAttributes;
