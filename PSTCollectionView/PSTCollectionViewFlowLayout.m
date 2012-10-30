@@ -213,6 +213,23 @@ static char kPSTCachedItemRectsKey;
 }
 
 - (PSTCollectionViewLayoutAttributes *)layoutAttributesForSupplementaryViewOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
+    NSUInteger sectionIndex = indexPath.section;
+    
+    if (sectionIndex < _data.sections.count) {
+        PSTGridLayoutSection *section = _data.sections[sectionIndex];
+        CGRect normalizedHeaderFrame = section.headerFrame;
+        
+        if (!CGRectIsEmpty(normalizedHeaderFrame)) {
+            normalizedHeaderFrame.origin.x += section.frame.origin.x;
+            normalizedHeaderFrame.origin.y += section.frame.origin.y;
+            
+            PSTCollectionViewLayoutAttributes *layoutAttributes = [PSTCollectionViewLayoutAttributes layoutAttributesForSupplementaryViewOfKind:PSTCollectionElementKindSectionHeader withIndexPath:[NSIndexPath indexPathWithIndex:sectionIndex]];
+            layoutAttributes.frame = normalizedHeaderFrame;
+            
+            return layoutAttributes;
+        }
+    }
+    
     return nil;
 }
 
