@@ -1,12 +1,22 @@
 //
 //  ViewController.m
-//  CollectionExample
+//  FlowLayoutNoNIB
 //
-//  Created by Barry Haanstra on 19-10-12.
-//  Copyright (c) 2012 Haanstra. All rights reserved.
+//  Created by Beau G. Bolle on 2012.10.29.
+//
 //
 
 #import "ViewController.h"
+#import "CollectionViewCell.h"
+#import "HeaderView.h"
+#import "FooterView.h"
+
+@interface ViewController ()
+
+@property (strong, nonatomic) PSUICollectionView *collectionView;
+
+@end
+
 
 @implementation ViewController {
     NSArray *data;
@@ -47,14 +57,50 @@ static NSString *footerViewIdentifier = @"Test Footer View";
 #pragma mark -
 #pragma mark Setup
 
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+    }
+    return self;
+}
+
+- (void)loadView {
+	[super loadView];
+	
+	self.view.backgroundColor = [UIColor scrollViewTexturedBackgroundColor];
+	
+	PSUICollectionViewFlowLayout *collectionViewFlowLayout = [[PSUICollectionViewFlowLayout alloc] init];
+	
+	[collectionViewFlowLayout setScrollDirection:UICollectionViewScrollDirectionVertical];
+	[collectionViewFlowLayout setItemSize:CGSizeMake(245, 250)];
+	[collectionViewFlowLayout setHeaderReferenceSize:CGSizeMake(500, 30)];
+	[collectionViewFlowLayout setFooterReferenceSize:CGSizeMake(500, 50)];
+	[collectionViewFlowLayout setMinimumInteritemSpacing:10];
+	[collectionViewFlowLayout setMinimumLineSpacing:10];
+	[collectionViewFlowLayout setSectionInset:UIEdgeInsetsMake(10, 0, 20, 0)];
+	
+	_collectionView = [[PSUICollectionView alloc] initWithFrame:CGRectMake(floorf((CGRectGetWidth(self.view.bounds)-500)/2), 0, 500, CGRectGetHeight(self.view.bounds)) collectionViewLayout:collectionViewFlowLayout];
+	[_collectionView setDelegate:self];
+	[_collectionView setDataSource:self];
+	[_collectionView setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin];
+	[_collectionView setBackgroundColor:[UIColor redColor]];
+	
+	[_collectionView registerClass:[CollectionViewCell class] forCellWithReuseIdentifier:cellIdentifier];
+	[_collectionView registerClass:[HeaderView class] forSupplementaryViewOfKind:PSTCollectionElementKindSectionHeader withReuseIdentifier:headerViewIdentifier];
+	[_collectionView registerClass:[FooterView class] forSupplementaryViewOfKind:PSTCollectionElementKindSectionFooter withReuseIdentifier:footerViewIdentifier];
+	
+	[self.view addSubview:_collectionView];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+	
     data = @[
-        @[@"One", @"Two", @"Three"],
-        @[@"Four", @"Five", @"Six"],
-		@[],
-		@[@"Seven"],
+	@[@"One", @"Two", @"Three"],
+	@[@"Four", @"Five", @"Six"],
+	@[],
+	@[@"Seven"],
     ];
 }
 
@@ -90,9 +136,9 @@ static NSString *footerViewIdentifier = @"Test Footer View";
 		identifier = footerViewIdentifier;
 	}
     PSUICollectionReusableView *supplementaryView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:identifier forIndexPath:indexPath];
-
+	
     // TODO Setup view
-
+	
     return supplementaryView;
 }
 
