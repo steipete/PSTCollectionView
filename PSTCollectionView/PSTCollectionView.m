@@ -144,7 +144,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
         PSTCollectionViewCommonSetup(self);
         // add observer for nib deserialization.
-        
+
         id nibObserverToken = [[NSNotificationCenter defaultCenter] addObserverForName:PSTCollectionViewLayoutAwokeFromNib object:nil queue:nil usingBlock:^(NSNotification *note) {
             self.extVars.nibLayout = note.object;
         }];
@@ -156,9 +156,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         for (NSString *identifier in cellNibs.allKeys) {
             _cellNibDict[identifier] = cellNibs[identifier];
         }
-		
+
         self.extVars.nibCellsExternalObjects = cellExternalObjects;
-		
+
 		NSDictionary *supplementaryViewExternalObjects =  [inCoder decodeObjectForKey:@"UICollectionViewSupplementaryViewPrototypeNibExternalObjects"];
 		NSDictionary *supplementaryViewNibs =  [inCoder decodeObjectForKey:@"UICollectionViewSupplementaryViewNibDict"];
 
@@ -280,7 +280,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     NSArray *topLevelObjects = [nib instantiateWithOwner:nil options:nil];
 #pragma unused(topLevelObjects)
     NSAssert(topLevelObjects.count == 1 && [topLevelObjects[0] isKindOfClass:PSTCollectionReusableView.class], @"must contain exactly 1 top level object which is a PSTCollectionReusableView");
-    
+
 	NSString *kindAndIdentifier = [NSString stringWithFormat:@"%@/%@", kind, identifier];
     _supplementaryViewNibDict[kindAndIdentifier] = nib;
 }
@@ -378,7 +378,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         }
     }];
     [_allVisibleViewsDict removeAllObjects];
-    
+
     for(NSIndexPath *indexPath in _indexPathsForSelectedItems) {
         PSTCollectionViewCell *selectedCell = [self cellForItemAtIndexPath:indexPath];
         selectedCell.selected = NO;
@@ -386,10 +386,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     }
     [_indexPathsForSelectedItems removeAllObjects];
     [_indexPathsForHighlightedItems removeAllObjects];
-    
+
     [self setNeedsLayout];
-    
-    
+
+
     //NSAssert(sectionCount == 1, @"Sections are currently not supported.");
 }
 
@@ -460,14 +460,14 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (NSArray *)indexPathsForVisibleItems {
 	NSMutableArray *indexPaths = [NSMutableArray arrayWithCapacity:[_allVisibleViewsDict count]];
-	
+
 	[_allVisibleViewsDict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
 		PSTCollectionViewItemKey *itemKey = (PSTCollectionViewItemKey *)key;
         if (itemKey.type == PSTCollectionViewItemTypeCell) {
 			[indexPaths addObject:itemKey.indexPath];
 		}
 	}];
-	
+
 	return indexPaths;
 }
 
@@ -631,7 +631,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         [_indexPathsForSelectedItems removeObject:indexPath];
 
         [self unhighlightItemAtIndexPath:indexPath animated:animated notifyDelegate:notify];
-        
+
         if (notify && _collectionViewFlags.delegateDidDeselectItemAtIndexPath) {
             [self.delegate collectionView:self didDeselectItemAtIndexPath:indexPath];
         }
@@ -742,12 +742,12 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 		_allVisibleViewsDict[itemKey] = newCell;
 		[self addControlledSubview:newCell];
 	}
-    
+
     for(NSIndexPath *indexPath in indexPaths) {
         [_indexPathsForHighlightedItems removeObject:indexPath];
         [_indexPathsForSelectedItems removeObject:indexPath];
     }
-    
+
 	_collectionViewFlags.reloading = NO;
 }
 
@@ -790,7 +790,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)setDelegate:(id<PSTCollectionViewDelegate>)delegate {
 	super.delegate = delegate;
-	
+
 	//	Managing the Selected Cells
 	_collectionViewFlags.delegateShouldSelectItemAtIndexPath       = [self.delegate respondsToSelector:@selector(collectionView:shouldSelectItemAtIndexPath:)];
 	_collectionViewFlags.delegateDidSelectItemAtIndexPath          = [self.delegate respondsToSelector:@selector(collectionView:didSelectItemAtIndexPath:)];
@@ -808,7 +808,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 	//	Managing Actions for Cells
 	_collectionViewFlags.delegateSupportsMenus                     = [self.delegate respondsToSelector:@selector(collectionView:shouldShowMenuForItemAtIndexPath:)];
-	
+
 	// These aren't present in the flags which is a little strange. Not adding them because thet will mess with byte alignment which will affect cross compatibility.
 	// The flag names are guesses and are there for documentation purposes.
 	//
@@ -820,10 +820,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 - (void)setDataSource:(id<PSTCollectionViewDataSource>)dataSource {
     if (dataSource != _dataSource) {
 		_dataSource = dataSource;
-		
+
 		//	Getting Item and Section Metrics
 		_collectionViewFlags.dataSourceNumberOfSections = [_dataSource respondsToSelector:@selector(numberOfSectionsInCollectionView:)];
-		
+
 		//	Getting Views for Items
 		_collectionViewFlags.dataSourceViewForSupplementaryElement = [_dataSource respondsToSelector:@selector(collectionView:viewForSupplementaryElementOfKind:atIndexPath:)];
     }
@@ -911,7 +911,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 														withLayoutAttributes:layoutAttributes];
 
             }
-			
+
 			//Supplementary views are optional
 			if (view) {
 				_allVisibleViewsDict[itemKey] = view;
@@ -951,7 +951,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 		[view applyLayoutAttributes:layoutAttributes];
 		return view;
 	}
-	
+
 	return nil;
 }
 
@@ -1056,28 +1056,28 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 __attribute__((constructor)) static void PSTCreateUICollectionViewClasses(void) {
     @autoreleasepool {
 
-// class_setSuperclass is deprecated, but once iOS7 is out we hopefully can drop iOS5 and don't need this code anymore anyway.
+        // class_setSuperclass is deprecated, but once iOS7 is out we hopefully can drop iOS5 and don't need this code anymore anyway.
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
         // Dynamically change superclasses of the PSUICollectionView* clases to UICollectioView*. Crazy stuff.
         if ([UICollectionView class]) class_setSuperclass([PSUICollectionView_ class], [UICollectionView class]);
         else objc_registerClassPair(objc_allocateClassPair([PSTCollectionView class], "UICollectionView", 0));
-        
+
 		if ([UICollectionViewCell class]) class_setSuperclass([PSUICollectionViewCell_ class], [UICollectionViewCell class]);
         else objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewCell class], "UICollectionViewCell", 0));
 
 		if ([UICollectionReusableView class]) class_setSuperclass([PSUICollectionReusableView_ class], [UICollectionReusableView class]);
         else objc_registerClassPair(objc_allocateClassPair([PSTCollectionReusableView class], "UICollectionReusableView", 0));
-        
+
 		if ([UICollectionViewLayout class]) class_setSuperclass([PSUICollectionViewLayout_ class], [UICollectionViewLayout class]);
         else objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewLayout class], "UICollectionViewLayout", 0));
-        
+
 		if ([UICollectionViewFlowLayout class]) class_setSuperclass([PSUICollectionViewFlowLayout_ class], [UICollectionViewFlowLayout class]);
         else objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewFlowLayout class], "UICollectionViewFlowLayout", 0));
-        
+
 		if ([UICollectionViewLayoutAttributes class]) class_setSuperclass([PSUICollectionViewLayoutAttributes_ class], [UICollectionViewLayoutAttributes class]);
         else objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewLayoutAttributes class], "UICollectionViewLayoutAttributes", 0));
-        
+
 		if ([UICollectionViewController class]) class_setSuperclass([PSUICollectionViewController_ class], [UICollectionViewController class]);
         else objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewController class], "UICollectionViewController", 0));
 #pragma clang diagnostic pop

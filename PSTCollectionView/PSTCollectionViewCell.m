@@ -39,7 +39,7 @@
     return self;
 }
 
-- (void)awakeFromNib {    
+- (void)awakeFromNib {
     self.reuseIdentifier = [self valueForKeyPath:@"reuseIdentifier"];
 }
 

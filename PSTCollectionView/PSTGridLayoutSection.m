@@ -79,13 +79,13 @@
 			self.headerFrame = CGRectMake(0, sectionSize.height, headerFooterDimension, self.headerDimension);
 			sectionSize.height += self.headerDimension + self.sectionMargins.top;
         }
-        
+
         do {
             BOOL finishCycle = itemIndex >= self.itemsCount;
             // TODO: fast path could even remove row creation and just calculate on the fly
             PSTGridLayoutItem *item = nil;
             if (!finishCycle) item = self.fixedItemSize ? nil : self.items[itemIndex];
-            
+
             CGSize itemSize = self.fixedItemSize ? self.itemSize : item.itemFrame.size;
             CGFloat itemDimension = self.layoutInfo.horizontal ? itemSize.height : itemSize.width;
             // first item does not add spacing
@@ -101,7 +101,7 @@
                     if (!finishCycle) self.indexOfImcompleteRow = rowIndex;
 
                     [row layoutRow];
-                    
+
                     if (self.layoutInfo.horizontal) {
                         row.rowFrame = CGRectMake(sectionSize.width, self.sectionMargins.top, row.rowSize.width, row.rowSize.height);
                         sectionSize.height = fmaxf(row.rowSize.height, sectionSize.height);
@@ -129,7 +129,7 @@
 
             // add item on slow path
             if (item) [row addItem:item];
-            
+
             itemIndex++;
             itemsByRowCount++;
         }while (itemIndex <= self.itemsCount); // cycle once more to finish last row

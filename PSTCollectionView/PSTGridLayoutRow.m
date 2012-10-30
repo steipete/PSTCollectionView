@@ -169,37 +169,37 @@
 
 
 /*
-// _UIGridLayoutItem
-#import <objc/runtime.h>
-#import <objc/message.h>
-__attribute__((constructor)) static void PSHackUIGridLayoutItem(void) {
-    @autoreleasepool {
-        SEL itemFrameSetter = @selector(ps_dealloc);
-        IMP customImageViewDescIMP = imp_implementationWithBlock(PSBlockImplCast(^(__unsafe_unretained id _self)) {
-//            NSLog(@"deallocating %@", _self);
-            objc_msgSend(_self, itemFrameSetter);
-        });
-        PSPDFReplaceMethod(NSClassFromString(@"UICollectionViewLayoutAttributes"), NSSelectorFromString(@"dealloc"), itemFrameSetter, customImageViewDescIMP);
-    }
-}
+ // _UIGridLayoutItem
+ #import <objc/runtime.h>
+ #import <objc/message.h>
+ __attribute__((constructor)) static void PSHackUIGridLayoutItem(void) {
+ @autoreleasepool {
+ SEL itemFrameSetter = @selector(ps_dealloc);
+ IMP customImageViewDescIMP = imp_implementationWithBlock(PSBlockImplCast(^(__unsafe_unretained id _self)) {
+ //            NSLog(@"deallocating %@", _self);
+ objc_msgSend(_self, itemFrameSetter);
+ });
+ PSPDFReplaceMethod(NSClassFromString(@"UICollectionViewLayoutAttributes"), NSSelectorFromString(@"dealloc"), itemFrameSetter, customImageViewDescIMP);
+ }
+ }
 
-__attribute__((constructor)) static void PSHackUIGridLayoutSection(void) {
-    @autoreleasepool {
-        SEL itemFrameSetter = @selector(ps_addRow);
-        IMP customImageViewDescIMP = imp_implementationWithBlock(^(id _self) {
-            objc_msgSend(_self, itemFrameSetter);
-        });
-        PSPDFReplaceMethod(NSClassFromString(@"_UIGridLayoutSection"), @selector(addRow), itemFrameSetter, customImageViewDescIMP);
-    }
-}
+ __attribute__((constructor)) static void PSHackUIGridLayoutSection(void) {
+ @autoreleasepool {
+ SEL itemFrameSetter = @selector(ps_addRow);
+ IMP customImageViewDescIMP = imp_implementationWithBlock(^(id _self) {
+ objc_msgSend(_self, itemFrameSetter);
+ });
+ PSPDFReplaceMethod(NSClassFromString(@"_UIGridLayoutSection"), @selector(addRow), itemFrameSetter, customImageViewDescIMP);
+ }
+ }
 
-__attribute__((constructor)) static void PSHackUICollectionViewLayoutAttributes(void) {
-    @autoreleasepool {
-        SEL itemFrameSetter = @selector(ps_initWithCollectionView:layout:);
-        IMP customImageViewDescIMP = imp_implementationWithBlock(^(id _self, id c, id l) {
-            return objc_msgSend(_self, itemFrameSetter, c, l);
-        });
-        PSPDFReplaceMethod(NSClassFromString(@"UICollectionViewData"), @selector(initWithCollectionView:layout:), itemFrameSetter, customImageViewDescIMP);
-    }
-}
+ __attribute__((constructor)) static void PSHackUICollectionViewLayoutAttributes(void) {
+ @autoreleasepool {
+ SEL itemFrameSetter = @selector(ps_initWithCollectionView:layout:);
+ IMP customImageViewDescIMP = imp_implementationWithBlock(^(id _self, id c, id l) {
+ return objc_msgSend(_self, itemFrameSetter, c, l);
+ });
+ PSPDFReplaceMethod(NSClassFromString(@"UICollectionViewData"), @selector(initWithCollectionView:layout:), itemFrameSetter, customImageViewDescIMP);
+ }
+ }
  */

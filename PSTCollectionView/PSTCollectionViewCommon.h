@@ -60,35 +60,9 @@
 
 @end
 
-// Newer runtimes defines this, here's a fallback for the iOS5 SDK.
-#ifndef NS_ENUM
-#define NS_ENUM(_type, _name) _type _name; enum
-#define NS_OPTIONS(_type, _name) _type _name; enum
-#endif
-
-// Category exists in iOS6.
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-@interface NSIndexPath (PSTCollectionViewAdditions)
-+ (NSIndexPath *)indexPathForItem:(NSInteger)item inSection:(NSInteger)section;
-@property (nonatomic, readonly) NSInteger item;
-@end
-#endif
-
 // imp_implementationWithBlock changed it's type in iOS6.
 #if __IPHONE_OS_VERSION_MAX_ALLOWED < 60000
 #define PSBlockImplCast (__bridge void *)
-@interface NSDictionary(PSSubscriptingSupport)
-- (id)objectForKeyedSubscript:(id)key;
-@end
-@interface NSMutableDictionary(PSSubscriptingSupport)
-- (void)setObject:(id)obj forKeyedSubscript:(id <NSCopying>)key;
-@end
-@interface NSArray(PSSubscriptingSupport)
-- (id)objectAtIndexedSubscript:(NSUInteger)idx;
-@end
-@interface NSMutableArray(PSSubscriptingSupport)
-- (void)setObject:(id)obj atIndexedSubscript:(NSUInteger)idx;
-@end
 #else
 #define PSBlockImplCast
 #endif
