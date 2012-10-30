@@ -48,7 +48,7 @@
 
 - (void)loadView {
     [super loadView];
-	
+
     // if this is restored from IB, we don't have plain main view.
     if ([self.view isKindOfClass:[PSTCollectionView class]]) {
         _collectionView = (PSTCollectionView *)self.view;
@@ -64,6 +64,10 @@
         [self.view addSubview:self.collectionView];
         self.collectionView.delegate = self;
         self.collectionView.dataSource = self;
+    }
+    // on low memory event, just re-attach the view.
+    else if (self.view != self.collectionView) {
+        [self.view addSubview:self.collectionView];
     }
 }
 
