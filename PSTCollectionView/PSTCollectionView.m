@@ -100,6 +100,7 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
 @property (nonatomic, strong) id nibObserverToken;
 @property (nonatomic, strong) PSTCollectionViewLayout *nibLayout;
 @property (nonatomic, strong) NSDictionary *nibCellsExternalObjects;
+@property (nonatomic, strong) NSDictionary *supplementaryViewsExternalObjects;
 @property (nonatomic, strong) NSIndexPath *touchingIndexPath;
 @end
 
@@ -123,6 +124,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     _self->_cellClassDict = [NSMutableDictionary new];
     _self->_cellNibDict = [NSMutableDictionary new];
     _self->_supplementaryViewClassDict = [NSMutableDictionary new];
+	_self->_supplementaryViewNibDict = [NSMutableDictionary new];
 
     // add class that saves additional ivars
     objc_setAssociatedObject(_self, &kPSTColletionViewExt, [PSTCollectionViewExt new], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -154,7 +156,17 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         for (NSString *identifier in cellNibs.allKeys) {
             _cellNibDict[identifier] = cellNibs[identifier];
         }
+		
         self.extVars.nibCellsExternalObjects = cellExternalObjects;
+		
+		NSDictionary *supplementaryViewExternalObjects =  [inCoder decodeObjectForKey:@"UICollectionViewSupplementaryViewPrototypeNibExternalObjects"];
+		NSDictionary *supplementaryViewNibs =  [inCoder decodeObjectForKey:@"UICollectionViewSupplementaryViewNibDict"];
+
+		for (NSString *identifier in supplementaryViewNibs.allKeys) {
+			_supplementaryViewNibDict[identifier] = supplementaryViewNibs[identifier];
+		}
+
+		self.extVars.supplementaryViewsExternalObjects = supplementaryViewExternalObjects;
     }
     return self;
 }
@@ -252,11 +264,13 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     NSParameterAssert(viewClass);
     NSParameterAssert(elementKind);
     NSParameterAssert(identifier);
-    _supplementaryViewClassDict[identifier] = viewClass;
+	NSString *kindAndIdentifier = [NSString stringWithFormat:@"%@/%@", elementKind, identifier];
+    _supplementaryViewClassDict[kindAndIdentifier] = viewClass;
 }
 
 - (void)registerNib:(UINib *)nib forCellWithReuseIdentifier:(NSString *)identifier {
     NSArray *topLevelObjects = [nib instantiateWithOwner:nil options:nil];
+#pragma unused(topLevelObjects)
     NSAssert(topLevelObjects.count == 1 && [topLevelObjects[0] isKindOfClass:PSTCollectionViewCell.class], @"must contain exactly 1 top level object which is a PSTCollectionViewCell");
 
     _cellNibDict[identifier] = nib;
@@ -264,9 +278,11 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)registerNib:(UINib *)nib forSupplementaryViewOfKind:(NSString *)kind withReuseIdentifier:(NSString *)identifier {
     NSArray *topLevelObjects = [nib instantiateWithOwner:nil options:nil];
+#pragma unused(topLevelObjects)
     NSAssert(topLevelObjects.count == 1 && [topLevelObjects[0] isKindOfClass:PSTCollectionReusableView.class], @"must contain exactly 1 top level object which is a PSTCollectionReusableView");
     
-    _cellNibDict[identifier] = nib;
+	NSString *kindAndIdentifier = [NSString stringWithFormat:@"%@/%@", kind, identifier];
+    _supplementaryViewNibDict[kindAndIdentifier] = nib;
 }
 
 - (id)dequeueReusableCellWithReuseIdentifier:(NSString *)identifier forIndexPath:(NSIndexPath *)indexPath {
@@ -286,7 +302,6 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                 cell = [cellNib instantiateWithOwner:self options:0][0];
             }
         } else {
-
             Class cellClass = _cellClassDict[identifier];
             // compatiblity layer
             Class collectionViewCellClass = NSClassFromString(@"UICollectionViewCell");
@@ -310,31 +325,37 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (id)dequeueReusableSupplementaryViewOfKind:(NSString *)elementKind withReuseIdentifier:(NSString *)identifier forIndexPath:(NSIndexPath *)indexPath {
-    NSMutableArray *reusableViews = _supplementaryViewReuseQueues[identifier];
+	NSString *kindAndIdentifier = [NSString stringWithFormat:@"%@/%@", elementKind, identifier];
+    NSMutableArray *reusableViews = _supplementaryViewReuseQueues[kindAndIdentifier];
     PSTCollectionReusableView *view = [reusableViews lastObject];
     if (view) {
         [reusableViews removeObjectAtIndex:reusableViews.count - 1];
     } else {
-        if (_cellNibDict[identifier]) {
+        if (_supplementaryViewNibDict[kindAndIdentifier]) {
             // supplementary view was registered via registerNib:forCellWithReuseIdentifier:
-            UINib *supplementaryViewNib = _supplementaryViewNibDict[identifier];
-            view = [supplementaryViewNib instantiateWithOwner:self options:0][0];
+            UINib *supplementaryViewNib = _supplementaryViewNibDict[kindAndIdentifier];
+			NSDictionary *externalObjects = self.extVars.supplementaryViewsExternalObjects[kindAndIdentifier];
+			if (externalObjects) {
+				view = [supplementaryViewNib instantiateWithOwner:self options:@{UINibExternalObjects:externalObjects}][0];
+			} else {
+				view = [supplementaryViewNib instantiateWithOwner:self options:0][0];
+			}
         } else {
-        Class viewClass = _supplementaryViewClassDict[identifier];
-        Class reusableViewClass = NSClassFromString(@"UICollectionReusableView");
-        if (reusableViewClass && [viewClass isEqual:reusableViewClass]) {
-            viewClass = [PSTCollectionReusableView class];
-        }
-        if (viewClass == nil) {
-            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"Class not registered for identifier %@", identifier] userInfo:nil];
-        }
-        if (self.collectionViewLayout) {
-            PSTCollectionViewLayoutAttributes *attributes = [self.collectionViewLayout layoutAttributesForSupplementaryViewOfKind:elementKind
-                                                                                                                      atIndexPath:indexPath];
-            view = [[viewClass alloc] initWithFrame:attributes.frame];
-        } else {
-            view = [viewClass new];
-        }
+			Class viewClass = _supplementaryViewClassDict[kindAndIdentifier];
+			Class reusableViewClass = NSClassFromString(@"UICollectionReusableView");
+			if (reusableViewClass && [viewClass isEqual:reusableViewClass]) {
+				viewClass = [PSTCollectionReusableView class];
+			}
+			if (viewClass == nil) {
+				@throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"Class not registered for kind/identifier %@", kindAndIdentifier] userInfo:nil];
+			}
+			if (self.collectionViewLayout) {
+				PSTCollectionViewLayoutAttributes *attributes = [self.collectionViewLayout layoutAttributesForSupplementaryViewOfKind:elementKind
+																														  atIndexPath:indexPath];
+				view = [[viewClass alloc] initWithFrame:attributes.frame];
+			} else {
+				view = [viewClass new];
+			}
         }
         view.collectionView = self;
         view.reuseIdentifier = identifier;
@@ -964,7 +985,8 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (void)addControlledSubview:(PSTCollectionReusableView *)subview {
-    [self addSubview:subview];
+	// avoids placing views above the scroll indicator
+    [self insertSubview:subview atIndex:0];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
