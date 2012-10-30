@@ -6,12 +6,12 @@ Open Source, 100% API compatible replacement of UICollectionView for iOS4.3+
 **You want to use UICollectionView, but still need to support older versions of iOS? Then you'll gonna love this project.**
 Originally I wrote it for [PSPDFKit](http://PSPDFKit.com), my iOS PDF framework that supports text selection and annotations, but this project seemed way to useful for others to to keep it for myself :)
 
-**If you want to have PSTCollectionView on iOS4.3+ and UICollectionView on iOS6, use PSUICollectionView (basically add PS on any UICollectionView* class to get auto-support for older iOS versions)**
+**If you want to have PSTCollectionView on iOS4.3/5.x and UICollectionView on iOS6, use PSUICollectionView (basically add PS on any UICollectionView* class to get auto-support for older iOS versions)**
 If you always want to use PSTCollectionView, use PSTCollectionView as class names. (replace the UI with PST)
 
 ## Current State
 
-Most basic features work, including the flow layout with fixed or dynamic cell sizes. If you're not doing something fancy, it should just work.
+Most features work, including the flow layout with fixed or dynamic cell sizes and supplementary views. If you're not doing something fancy, it should just work.
 PSTCollectionView is also internally designed very closesly to UICollectionView and thus a great study if you're wondering how UICollectionView works. See [HowTo](/steipete/PSTCollectionView/blob/master/HowTo.md) for helpful details.
 
 ## How can I help?
@@ -28,7 +28,7 @@ Animations are not yet supported at all. We're currently looking for a great iOS
 
 ## ARC
 
-PSTCollectionView works with Xcode 4.4+ and ARC.
+PSTCollectionView works with Xcode 4.5+ and ARC.
 
 ## Interoperability
 
