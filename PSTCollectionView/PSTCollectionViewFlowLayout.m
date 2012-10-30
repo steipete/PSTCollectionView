@@ -171,7 +171,7 @@ static char kPSTCachedItemRectsKey;
                     }
                 }
             }
-			
+
 			CGRect normalizedFooterFrame = section.footerFrame;
 			normalizedFooterFrame.origin.x += section.frame.origin.x;
 			normalizedFooterFrame.origin.y += section.frame.origin.y;
@@ -213,23 +213,23 @@ static char kPSTCachedItemRectsKey;
 }
 
 - (PSTCollectionViewLayoutAttributes *)layoutAttributesForSupplementaryViewOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
-    NSUInteger sectionIndex = indexPath.section;
-    
+    NSUInteger sectionIndex = [indexPath indexAtPosition:0];
+
     if (sectionIndex < _data.sections.count) {
         PSTGridLayoutSection *section = _data.sections[sectionIndex];
         CGRect normalizedHeaderFrame = section.headerFrame;
-        
+
         if (!CGRectIsEmpty(normalizedHeaderFrame)) {
             normalizedHeaderFrame.origin.x += section.frame.origin.x;
             normalizedHeaderFrame.origin.y += section.frame.origin.y;
-            
+
             PSTCollectionViewLayoutAttributes *layoutAttributes = [PSTCollectionViewLayoutAttributes layoutAttributesForSupplementaryViewOfKind:PSTCollectionElementKindSectionHeader withIndexPath:[NSIndexPath indexPathWithIndex:sectionIndex]];
             layoutAttributes.frame = normalizedHeaderFrame;
-            
+
             return layoutAttributes;
         }
     }
-    
+
     return nil;
 }
 
@@ -334,7 +334,7 @@ static char kPSTCachedItemRectsKey;
 			footerReferenceSize = self.footerReferenceSize;
 		}
 		layoutSection.footerDimension = _data.horizontal ? footerReferenceSize.width : footerReferenceSize.height;
-		
+
         NSUInteger numberOfItems = [self.collectionView numberOfItemsInSection:section];
 
         // if delegate implements size delegate, query it for all items
