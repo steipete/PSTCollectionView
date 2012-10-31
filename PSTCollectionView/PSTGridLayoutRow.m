@@ -104,7 +104,7 @@
         // calculate row frame as union of all items
         CGRect frame = CGRectZero;
         CGRect itemFrame = (CGRect){.size=self.section.itemSize};
-        for (NSInteger itemIndex = 0; itemIndex < self.itemCount; itemIndex++) {
+        for (itemIndex = 0; itemIndex < self.itemCount; itemIndex++) {
             PSTGridLayoutItem *item = nil;
             if (!self.fixedItemSize) {
                 item = self.items[itemIndex];
