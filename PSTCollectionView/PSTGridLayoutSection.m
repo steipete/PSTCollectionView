@@ -124,8 +124,9 @@
                     itemsByRowCount = 0;
                     dimensionLeft = dimension;
                 }
+            } else {
+                dimensionLeft -= itemDimension;
             }
-            dimensionLeft -= itemDimension;
 
             // add item on slow path
             if (item) [row addItem:item];
