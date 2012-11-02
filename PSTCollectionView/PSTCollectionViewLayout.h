@@ -11,8 +11,8 @@
 
 typedef NS_ENUM(NSUInteger, PSTCollectionViewItemType) {
     PSTCollectionViewItemTypeCell,
-    PSTCollectionViewItemTypeDecorationView,
-    PSTCollectionViewItemTypeSupplementaryView
+    PSTCollectionViewItemTypeSupplementaryView,
+    PSTCollectionViewItemTypeDecorationView
 };
 
 // The PSTCollectionViewLayout class is provided as an abstract class for subclassing to define custom collection layouts.
