@@ -756,7 +756,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (void)performBatchUpdates:(void (^)(void))updates completion:(void (^)(BOOL finished))completion {
-    [self reloadData];
+    if (updates) {
+        updates();
+    }
     if (completion) {
         completion(YES);
     }
