@@ -588,7 +588,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 - (void)selectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(PSTCollectionViewScrollPosition)scrollPosition notifyDelegate:(BOOL)notifyDelegate {
 
     BOOL shouldSelect = YES;
-	if (_collectionViewFlags.delegateShouldSelectItemAtIndexPath) {
+	if (notifyDelegate && _collectionViewFlags.delegateShouldSelectItemAtIndexPath) {
         shouldSelect = [self.delegate collectionView:self shouldSelectItemAtIndexPath:indexPath];
     }
 
