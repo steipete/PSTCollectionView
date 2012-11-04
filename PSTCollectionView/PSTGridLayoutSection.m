@@ -80,6 +80,8 @@
 			sectionSize.height += self.headerDimension + self.sectionMargins.top;
         }
 
+        float spacing = self.layoutInfo.horizontal ? self.verticalInterstice : self.horizontalInterstice;
+        
         do {
             BOOL finishCycle = itemIndex >= self.itemsCount;
             // TODO: fast path could even remove row creation and just calculate on the fly
@@ -88,8 +90,8 @@
 
             CGSize itemSize = self.fixedItemSize ? self.itemSize : item.itemFrame.size;
             CGFloat itemDimension = self.layoutInfo.horizontal ? itemSize.height : itemSize.width;
-            // first item does not add spacing
-            if (row) itemDimension += self.layoutInfo.horizontal ? self.verticalInterstice : self.horizontalInterstice;
+            // first item of each row does not add spacing
+            if (itemsByRowCount > 0) itemDimension += spacing;
             if (dimensionLeft < itemDimension || finishCycle) {
                 // finish current row
                 if (row) {
@@ -105,10 +107,10 @@
                     if (self.layoutInfo.horizontal) {
                         row.rowFrame = CGRectMake(sectionSize.width, self.sectionMargins.top, row.rowSize.width, row.rowSize.height);
                         sectionSize.height = fmaxf(row.rowSize.height, sectionSize.height);
-                        sectionSize.width += row.rowSize.width + (itemIndex == self.itemsCount ? 0 : self.horizontalInterstice);
+                        sectionSize.width += row.rowSize.width + (finishCycle ? 0 : self.horizontalInterstice);
                     }else {
                         row.rowFrame = CGRectMake(self.sectionMargins.left, sectionSize.height, row.rowSize.width, row.rowSize.height);
-                        sectionSize.height += row.rowSize.height + (itemIndex == self.itemsCount ? 0 : self.verticalInterstice);
+                        sectionSize.height += row.rowSize.height + (finishCycle ? 0 : self.verticalInterstice);
                         sectionSize.width = fmaxf(row.rowSize.width, sectionSize.width);
                     }
                 }
@@ -121,8 +123,10 @@
                     row.index = rowIndex;
                     self.indexOfImcompleteRow = rowIndex;
                     rowIndex++;
+                    // convert an item from previous row to current, remove spacing for first item
+                    if (itemsByRowCount > 0) itemDimension -= spacing;
+                    dimensionLeft = dimension - itemDimension;
                     itemsByRowCount = 0;
-                    dimensionLeft = dimension;
                 }
             } else {
                 dimensionLeft -= itemDimension;
