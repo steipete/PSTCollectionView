@@ -588,28 +588,27 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 - (void)selectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(PSTCollectionViewScrollPosition)scrollPosition notifyDelegate:(BOOL)notifyDelegate {
 
     BOOL shouldSelect = YES;
-	if (notifyDelegate && _collectionViewFlags.delegateShouldSelectItemAtIndexPath) {
+	if (_collectionViewFlags.delegateShouldSelectItemAtIndexPath) {
         shouldSelect = [self.delegate collectionView:self shouldSelectItemAtIndexPath:indexPath];
     }
 
     if (shouldSelect) {
-        if (!self.allowsMultipleSelection) {
-            for (NSIndexPath *selectedIndexPath in [_indexPathsForSelectedItems copy]) {
-                if(![indexPath isEqual:selectedIndexPath]) {
-                    [self deselectItemAtIndexPath:selectedIndexPath animated:animated notifyDelegate:notifyDelegate];
-                }
+        if (self.allowsMultipleSelection && [_indexPathsForSelectedItems containsObject:indexPath]) {
+            [self deselectItemAtIndexPath:indexPath animated:animated];
+
+            if (notifyDelegate && _collectionViewFlags.delegateDidDeselectItemAtIndexPath) {
+                [self.delegate collectionView:self didDeselectItemAtIndexPath:indexPath];
+            }
+
+        } else {
+            // either single selection, or wasn't already selected in multiple selection mode
+            [self selectItemAtIndexPath:indexPath animated:animated scrollPosition:scrollPosition];
+
+            if (notifyDelegate && _collectionViewFlags.delegateDidSelectItemAtIndexPath) {
+                [self.delegate collectionView:self didSelectItemAtIndexPath:indexPath];
             }
         }
-        if (self.allowsSelection) {
-            PSTCollectionViewCell *selectedCell = [self cellForItemAtIndexPath:indexPath];
-            selectedCell.selected = YES;
-            [_indexPathsForSelectedItems addObject:indexPath];
-        }
 
-        // call delegate
-        if (notifyDelegate && _collectionViewFlags.delegateDidSelectItemAtIndexPath) {
-            [self.delegate collectionView:self didSelectItemAtIndexPath:indexPath];
-        }
     }
 
     [self unhighlightItemAtIndexPath:indexPath animated:animated notifyDelegate:YES];
@@ -845,6 +844,15 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)setAllowsMultipleSelection:(BOOL)allowsMultipleSelection {
     _collectionViewFlags.allowsMultipleSelection = allowsMultipleSelection;
+
+    // Deselect all objects if allows multiple selection is false
+    if (!allowsMultipleSelection && _indexPathsForSelectedItems.count) {
+        [self performBatchUpdates:^{
+            for (NSIndexPath *selectedIndex in _indexPathsForSelectedItems) {
+                [self deselectItemAtIndexPath:selectedIndex animated:YES];
+            }
+        } completion:nil];
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
