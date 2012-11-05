@@ -50,13 +50,6 @@ typedef NS_ENUM(NSUInteger, PSTCollectionViewItemType) {
 @end
 
 
-typedef NS_ENUM(NSInteger, PSTCollectionUpdateAction) {
-    PSTCollectionUpdateActionInsert,
-    PSTCollectionUpdateActionDelete,
-    PSTCollectionUpdateActionReload,
-    PSTCollectionUpdateActionMove,
-    PSTCollectionUpdateActionNone
-};
 
 /*
 @interface PSTCollectionViewUpdateItem : NSObject {
@@ -130,8 +123,8 @@ extern NSString *const PSTCollectionViewLayoutAwokeFromNib;
 - (void)finalizeCollectionViewUpdates;
 
 // Collection view calls these methods to determine the starting layout for animating in newly inserted views, or the ending layout for animating out deleted views
-- (PSTCollectionViewLayoutAttributes *)initialLayoutAttributesForInsertedItemAtIndexPath:(NSIndexPath *)itemIndexPath;
-- (PSTCollectionViewLayoutAttributes *)finalLayoutAttributesForDeletedItemAtIndexPath:(NSIndexPath *)itemIndexPath;
+- (PSTCollectionViewLayoutAttributes *)initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath*)itemIndexPath;
+- (PSTCollectionViewLayoutAttributes *)finalLayoutAttributesForDisappearingItemAtIndexPath:(NSIndexPath *)itemIndexPath;
 - (PSTCollectionViewLayoutAttributes *)initialLayoutAttributesForInsertedSupplementaryElementOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)elementIndexPath;
 - (PSTCollectionViewLayoutAttributes *)finalLayoutAttributesForDeletedSupplementaryElementOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)elementIndexPath;
 
