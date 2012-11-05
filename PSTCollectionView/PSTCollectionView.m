@@ -592,12 +592,21 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         shouldSelect = [self.delegate collectionView:self shouldSelectItemAtIndexPath:indexPath];
     }
 
+
     if (shouldSelect) {
         if (self.allowsMultipleSelection && [_indexPathsForSelectedItems containsObject:indexPath]) {
-            [self deselectItemAtIndexPath:indexPath animated:animated];
 
-            if (notifyDelegate && _collectionViewFlags.delegateDidDeselectItemAtIndexPath) {
-                [self.delegate collectionView:self didDeselectItemAtIndexPath:indexPath];
+            BOOL shouldDeselect = YES;
+            if (notifyDelegate && _collectionViewFlags.delegateShouldDeselectItemAtIndexPath) {
+                shouldDeselect = [self.delegate collectionView:self shouldDeselectItemAtIndexPath:indexPath];
+            }
+            
+            if (shouldDeselect) {
+                [self deselectItemAtIndexPath:indexPath animated:animated];
+
+                if (notifyDelegate && _collectionViewFlags.delegateDidDeselectItemAtIndexPath) {
+                    [self.delegate collectionView:self didDeselectItemAtIndexPath:indexPath];
+                }
             }
 
         } else {
@@ -608,7 +617,6 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                 [self.delegate collectionView:self didSelectItemAtIndexPath:indexPath];
             }
         }
-
     }
 
     [self unhighlightItemAtIndexPath:indexPath animated:animated notifyDelegate:YES];
