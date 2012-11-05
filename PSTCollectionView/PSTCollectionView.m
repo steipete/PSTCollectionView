@@ -587,31 +587,41 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 // select item, notify delegate (internal)
 - (void)selectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(PSTCollectionViewScrollPosition)scrollPosition notifyDelegate:(BOOL)notifyDelegate {
 
-    BOOL shouldSelect = YES;
-	if (notifyDelegate && _collectionViewFlags.delegateShouldSelectItemAtIndexPath) {
-        shouldSelect = [self.delegate collectionView:self shouldSelectItemAtIndexPath:indexPath];
-    }
+    if (self.allowsMultipleSelection && [_indexPathsForSelectedItems containsObject:indexPath]) {
 
+        BOOL shouldDeselect = YES;
+        if (notifyDelegate && _collectionViewFlags.delegateShouldDeselectItemAtIndexPath) {
+            shouldDeselect = [self.delegate collectionView:self shouldDeselectItemAtIndexPath:indexPath];
+        }
 
-    if (shouldSelect) {
-        if (self.allowsMultipleSelection && [_indexPathsForSelectedItems containsObject:indexPath]) {
+        if (shouldDeselect) {
+            [self deselectItemAtIndexPath:indexPath animated:animated];
 
-            BOOL shouldDeselect = YES;
-            if (notifyDelegate && _collectionViewFlags.delegateShouldDeselectItemAtIndexPath) {
-                shouldDeselect = [self.delegate collectionView:self shouldDeselectItemAtIndexPath:indexPath];
+            if (notifyDelegate && _collectionViewFlags.delegateDidDeselectItemAtIndexPath) {
+                [self.delegate collectionView:self didDeselectItemAtIndexPath:indexPath];
             }
-            
-            if (shouldDeselect) {
-                [self deselectItemAtIndexPath:indexPath animated:animated];
+        }
 
-                if (notifyDelegate && _collectionViewFlags.delegateDidDeselectItemAtIndexPath) {
-                    [self.delegate collectionView:self didDeselectItemAtIndexPath:indexPath];
+    } else {
+        // either single selection, or wasn't already selected in multiple selection mode
+        
+        if (!self.allowsMultipleSelection) {
+            for (NSIndexPath *selectedIndexPath in [_indexPathsForSelectedItems copy]) {
+                if(![indexPath isEqual:selectedIndexPath]) {
+                    [self deselectItemAtIndexPath:selectedIndexPath animated:animated notifyDelegate:notifyDelegate];
                 }
             }
+        }
 
-        } else {
-            // either single selection, or wasn't already selected in multiple selection mode
-            [self selectItemAtIndexPath:indexPath animated:animated scrollPosition:scrollPosition];
+        BOOL shouldSelect = YES;
+        if (notifyDelegate && _collectionViewFlags.delegateShouldSelectItemAtIndexPath) {
+            shouldSelect = [self.delegate collectionView:self shouldSelectItemAtIndexPath:indexPath];
+        }
+
+        if (shouldSelect) {
+            PSTCollectionViewCell *selectedCell = [self cellForItemAtIndexPath:indexPath];
+            selectedCell.selected = YES;
+            [_indexPathsForSelectedItems addObject:indexPath];
 
             if (notifyDelegate && _collectionViewFlags.delegateDidSelectItemAtIndexPath) {
                 [self.delegate collectionView:self didSelectItemAtIndexPath:indexPath];
