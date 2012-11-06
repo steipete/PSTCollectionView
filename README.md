@@ -24,7 +24,7 @@ You could also write a Pintrest-style layout manager. Can't be that hard.
 
 ## Animations
 
-Animations are not yet supported at all. We're currently looking for a great iOS engineer that want to tackle animations, I can connect you with a potential sponsor.
+Animations are not yet supported at all. We're currently looking for a great iOS engineer that wants to tackle animations, I can connect you with a potential sponsor.
 
 ## ARC
 
