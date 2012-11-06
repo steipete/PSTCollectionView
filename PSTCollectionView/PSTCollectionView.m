@@ -865,11 +865,16 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
     // Deselect all objects if allows multiple selection is false
     if (!allowsMultipleSelection && _indexPathsForSelectedItems.count) {
-        [self performBatchUpdates:^{
-            for (NSIndexPath *selectedIndex in _indexPathsForSelectedItems) {
-                [self deselectItemAtIndexPath:selectedIndex animated:YES];
-            }
-        } completion:nil];
+
+        // Bug: Apple's implmentation sometimes leaves the first selected object selected.
+        //      It also sometimes leaves the last object selected. Sometimes it's random.
+        //      This isn't sometime I quite understand, for now, I will make it leave one
+        //      at random.
+
+        for (NSIndexPath *selectedIndexPath in [_indexPathsForSelectedItems copy]) {
+            if (_indexPathsForSelectedItems.count == 1) continue;
+            [self deselectItemAtIndexPath:selectedIndexPath animated:YES notifyDelegate:YES];
+        }
     }
 }
 

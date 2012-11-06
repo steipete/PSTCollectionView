@@ -23,8 +23,8 @@ NSString *CollectionViewCellIdentifier = @"SelectionDelegateExample";
     [super viewDidLoad];
     [self createGridView];
 
-    UIBarButtonItem *toggleButton = [[UIBarButtonItem alloc] initWithTitle:@"Multi-Select" style:UIBarButtonItemStylePlain target:self action:@selector(toggleAllowsMultipleSelection:)];
-    [self.navigationItem setRightBarButtonItem:toggleButton];
+    UIBarButtonItem *toggleMultiSelectButton = [[UIBarButtonItem alloc] initWithTitle:@"Multi-Select" style:UIBarButtonItemStylePlain target:self action:@selector(toggleAllowsMultipleSelection:)];
+    [self.navigationItem setRightBarButtonItem:toggleMultiSelectButton];
 }
 
 - (void)createGridView {
