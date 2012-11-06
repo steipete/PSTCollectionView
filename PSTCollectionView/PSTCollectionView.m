@@ -1017,7 +1017,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)addControlledSubview:(PSTCollectionReusableView *)subview {
 	// avoids placing views above the scroll indicator
-    [self insertSubview:subview atIndex:0];
+    [self insertSubview:subview atIndex:self.subviews.count - (self.dragging ? 1 : 0)];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
