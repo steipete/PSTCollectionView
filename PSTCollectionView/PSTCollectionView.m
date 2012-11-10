@@ -670,8 +670,18 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     [self updateSections:sections updateAction:PSTCollectionUpdateActionReload];
 }
 
-- (void)moveSection:(NSInteger)section toSection:(NSInteger)newSection {
-    [self reloadData];
+- (void)moveSection:(NSInteger)section toSection:(NSInteger)newSection
+{
+    NSMutableArray* moveUpdateItems = [self arrayForUpdateAction:PSTCollectionUpdateActionMove];
+    [moveUpdateItems addObject:
+     [[PSTCollectionViewUpdateItem alloc] initWithInitialIndexPath:[NSIndexPath indexPathForItem:NSNotFound inSection:section]
+                                                    finalIndexPath:[NSIndexPath indexPathForItem:NSNotFound inSection:newSection]
+                                                      updateAction:PSTCollectionUpdateActionMove]];
+    if(!_collectionViewFlags.updating)
+    {
+        [self setupCellAnimations];
+        [self endItemAnimations];
+    }
 }
 
 - (void)insertItemsAtIndexPaths:(NSArray *)indexPaths
@@ -687,51 +697,24 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 }
 
-- (void)reloadItemsAtIndexPaths:(NSArray *)indexPaths {
-	// check to see if reload should hold off
-	if (_reloadingSuspendedCount != 0 && _collectionViewFlags.reloadSkippedDuringSuspension) {
-		[_reloadItems addObjectsFromArray:indexPaths];
-		_collectionViewFlags.needsReload = YES;
-
-		return;
-	}
-
-	_collectionViewFlags.reloading = YES;
-
-	NSSet *visibleCellKeys = [_allVisibleViewsDict keysOfEntriesPassingTest:^BOOL(id key, id obj, BOOL *stop) {
-		PSTCollectionViewItemKey *itemKey = (PSTCollectionViewItemKey *)key;
-		if (itemKey.type == PSTCollectionViewItemTypeCell && [indexPaths containsObject:itemKey.indexPath]) {
-			return YES;
-		}
-
-		return NO;
-	}];
-
-	for (PSTCollectionViewItemKey *itemKey in visibleCellKeys) {
-		PSTCollectionViewCell *reusableView = (PSTCollectionViewCell *)[_allVisibleViewsDict objectForKey:itemKey];
-
-		//Remove the old cell
-		[reusableView removeFromSuperview];
-		[_allVisibleViewsDict removeObjectForKey:itemKey];
-
-		if ([self.delegate respondsToSelector:@selector(collectionView:didEndDisplayingCell:forItemAtIndexPath:)]) {
-			[self.delegate collectionView:self didEndDisplayingCell:(PSTCollectionViewCell *)reusableView forItemAtIndexPath:itemKey.indexPath];
-		}
-
-		[self reuseCell:(PSTCollectionViewCell *)reusableView];
-
-		//Reload the cell and redisplay
-		PSTCollectionViewLayoutAttributes *layoutAttributes = [self.collectionViewLayout layoutAttributesForItemAtIndexPath:itemKey.indexPath];
-		PSTCollectionViewCell *newCell = [self createPreparedCellForItemAtIndexPath:itemKey.indexPath withLayoutAttributes:layoutAttributes];
-		_allVisibleViewsDict[itemKey] = newCell;
-		[self addControlledSubview:newCell];
-	}
-
-	_collectionViewFlags.reloading = NO;
+- (void)reloadItemsAtIndexPaths:(NSArray *)indexPaths
+{
+    [self updateRowsAtIndexPaths:indexPaths updateAction:PSTCollectionUpdateActionReload];
 }
 
-- (void)moveItemAtIndexPath:(NSIndexPath *)indexPath toIndexPath:(NSIndexPath *)newIndexPath {
-    [self reloadData];
+- (void)moveItemAtIndexPath:(NSIndexPath *)indexPath toIndexPath:(NSIndexPath *)newIndexPath
+{
+    NSMutableArray* moveUpdateItems = [self arrayForUpdateAction:PSTCollectionUpdateActionMove];
+    [moveUpdateItems addObject:
+     [[PSTCollectionViewUpdateItem alloc] initWithInitialIndexPath:indexPath
+                                                    finalIndexPath:newIndexPath
+                                                      updateAction:PSTCollectionUpdateActionMove]];
+    if(!_collectionViewFlags.updating)
+    {
+        [self setupCellAnimations];
+        [self endItemAnimations];
+    }
+
 }
 
 - (void)performBatchUpdates:(void (^)(void))updates completion:(void (^)(BOOL finished))completion
@@ -1238,6 +1221,16 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                 _deleteItems = [[NSMutableArray alloc] init];
             ret = _deleteItems;
             break;
+        case PSTCollectionUpdateActionMove:
+            if(_moveItems)
+                _moveItems = [[NSMutableArray alloc] init];
+            ret = _moveItems;
+            break;
+        case PSTCollectionUpdateActionReload:
+            if(!_reloadItems)
+                _reloadItems = [[NSMutableArray alloc] init];
+            ret = _reloadItems;
+            break;
         default:
             break;
     }
@@ -1251,7 +1244,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     NSMutableArray* arr = [[NSMutableArray alloc] init];
     
     
-    [arr addObjectsFromArray: [_deleteItems sortedArrayUsingSelector:@selector(compareIndexPaths:)]];
+    [arr addObjectsFromArray: [_originalDeleteItems sortedArrayUsingSelector:@selector(inverseCompareIndexPaths:)]];
     
     [arr addObjectsFromArray:[_originalInsertItems sortedArrayUsingSelector:@selector(compareIndexPaths:)]];
     
@@ -1335,7 +1328,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                 newAllVisibleView[key] = view;
                 [animations addObject:@{
                  @"view":view,
-                 @"previousLayoutInfos": startAttrs,
+                 @"previousLayoutInfos": startAttrs?startAttrs:finalAttrs,
                  @"newLayoutInfos": finalAttrs}];
                 
             }
@@ -1422,7 +1415,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             
             [animations addObject:@{
              @"view":view,
-             @"previousLayoutInfos": startAttrs,
+             @"previousLayoutInfos": startAttrs?startAttrs:attrs,
              @"newLayoutInfos": attrs}];
         }
     }
@@ -1545,8 +1538,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                  [oldCollectionViewData numberOfItemsInSection:updateItem.indexPathBeforeUpdate.section],
                  updateItem.indexPathBeforeUpdate.section);
         
-        [someMutableArr2 addObject:updateItem];
-        [someMutableArr3 addObject:updateItem];
+        [someMutableArr2 addObject:[[PSTCollectionViewUpdateItem alloc] initWithAction:PSTCollectionUpdateActionDelete
+                                                                          forIndexPath:updateItem.indexPathBeforeUpdate]];
+        [someMutableArr3 addObject:[[PSTCollectionViewUpdateItem alloc] initWithAction:PSTCollectionUpdateActionInsert
+                                                                          forIndexPath:updateItem.indexPathAfterUpdate]];
     }
     
     NSMutableArray* sortedDeletedMutableItems = [[_deleteItems sortedArrayUsingSelector:@selector(inverseCompareIndexPaths:)] mutableCopy];
@@ -1612,7 +1607,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         
         PSTCollectionViewUpdateItem* insertItem = [sortedInsertMutableItems objectAtIndex:i];
         
-        NSIndexPath* indexPath = [insertItem indexPath];
+        NSIndexPath* indexPath = insertItem.indexPathAfterUpdate;
         
         BOOL sectionOperation = [insertItem isSectionOperation];
         
@@ -1634,12 +1629,30 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 //                        NSAssert(NO, @"attempt to perform an insert and a move to the same index path (%@)",indexPath);
                 }
             }
+            
+            NSInteger j=i+1;
+            while(j<[sortedInsertMutableItems count])
+            {
+                PSTCollectionViewUpdateItem* nextInsertItem = sortedInsertMutableItems[j];
+                
+                if(nextInsertItem.indexPathAfterUpdate.section == indexPath.section)
+                {
+                    NSAssert(nextInsertItem.indexPathAfterUpdate.item<[_collectionViewData numberOfItemsInSection:indexPath.section],
+                             @"attempt to insert item %d into section %d, but there are only %d items in section %d after the update",
+                             nextInsertItem.indexPathAfterUpdate.item,
+                             indexPath.section,
+                             [_collectionViewData numberOfItemsInSection:indexPath.section],
+                             indexPath.section);
+                    [sortedInsertMutableItems removeObjectAtIndex:j];
+                }
+                else break;
+            }
 
         }
         else
         {
             NSAssert(indexPath.item< [_collectionViewData numberOfItemsInSection:indexPath.section],
-                     @"attempt to insert item to (%@) but there are only %d items in %d section after update",
+                     @"attempt to insert item to (%@) but there are only %d items in section %d after update",
                      indexPath,
                      [_collectionViewData numberOfItemsInSection:indexPath.section],
                      indexPath.section);
@@ -1740,6 +1753,12 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     [someMutableArr1 addObjectsFromArray:[someMutableArr3 sortedArrayUsingSelector:@selector(compareIndexPaths:)]];
     
     
+    NSMutableArray* layoutUpdateItems = [[NSMutableArray alloc] init];
+
+    [layoutUpdateItems addObjectsFromArray:sortedDeletedMutableItems];
+    [layoutUpdateItems addObjectsFromArray:sortedMutableMoveItems];
+    [layoutUpdateItems addObjectsFromArray:sortedInsertMutableItems];
+    
     
     NSMutableArray* newModel = [NSMutableArray array];
     for(NSInteger i=0;i<[oldCollectionViewData numberOfSections];i++)
@@ -1750,7 +1769,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         [newModel addObject:sectionArr];
     }
     
-    for(PSTCollectionViewUpdateItem* updateItem in someMutableArr1)
+    for(PSTCollectionViewUpdateItem* updateItem in layoutUpdateItems)
     {
         
         switch (updateItem.updateAction)

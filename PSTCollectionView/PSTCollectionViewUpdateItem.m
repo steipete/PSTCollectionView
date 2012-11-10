@@ -3,7 +3,6 @@
 //  PSCollectionViewExample
 //
 //  Created by Sergey Gavrilyuk on 12-10-28.
-//  Copyright (c) 2012 Apple Inc. All rights reserved.
 //
 
 #import "PSTCollectionViewUpdateItem.h"
@@ -50,6 +49,12 @@
         return [self initWithInitialIndexPath:indexPath
                                finalIndexPath:nil                                
                                  updateAction:updateAction];
+    else if(updateAction == PSTCollectionUpdateActionReload)
+        return [self initWithInitialIndexPath:indexPath
+                               finalIndexPath:indexPath
+                                 updateAction:updateAction];
+
+    
     return nil;
 }
 
@@ -68,13 +73,16 @@
     switch (_updateAction)
     {
         case PSTCollectionUpdateActionInsert:
-            action = @"Insert";
+            action = @"insert";
             break;
         case PSTCollectionUpdateActionDelete:
-            action = @"Delete";
+            action = @"delete";
             break;
         case PSTCollectionUpdateActionMove:
-            action = @"Move";
+            action = @"move";
+            break;
+        case PSTCollectionUpdateActionReload:
+            action = @"reload";
             break;
             
         default:
