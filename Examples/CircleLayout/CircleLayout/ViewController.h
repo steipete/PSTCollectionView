@@ -96,6 +96,6 @@
 
 @interface ViewController : PSUICollectionViewController
 
-@property (nonatomic, assign) NSInteger cellCount;
+@property (nonatomic, strong) NSMutableArray* sections;
 
 @end
