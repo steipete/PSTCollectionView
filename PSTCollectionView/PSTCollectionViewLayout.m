@@ -449,11 +449,11 @@ NSString *const PSTCollectionViewLayoutAwokeFromNib = @"PSTCollectionViewLayoutA
 #pragma mark - Registering Decoration Views
 
 - (void)registerClass:(Class)viewClass forDecorationViewWithReuseIdentifier:(NSString *)identifier {
-    
+
 }
 
 - (void)registerNib:(UINib *)nib forDecorationViewWithReuseIdentifier:(NSString *)identifier {
-    
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
