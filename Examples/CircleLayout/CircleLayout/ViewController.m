@@ -94,27 +94,54 @@
 
 #import "ViewController.h"
 #import "Cell.h"
+#import "CircleLayout.h"
+
+
+static NSInteger count;
 
 @implementation ViewController
 
 -(void)viewDidLoad
 {
-    self.cellCount = 20;
+    self.sections = [[NSMutableArray alloc] initWithArray:
+                    @[[NSMutableArray array]]];
+    
+    
+    for(NSInteger i=0;i<25;i++)
+        [self.sections[0] addObject:@(count++)];
+    
+    
     UITapGestureRecognizer* tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
     [self.collectionView addGestureRecognizer:tapRecognizer];
     [self.collectionView registerClass:[Cell class] forCellWithReuseIdentifier:@"MY_CELL"];
     [self.collectionView reloadData];
     self.collectionView.backgroundColor = [UIColor scrollViewTexturedBackgroundColor];
+    
+    UIButton* button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    button.frame = CGRectMake(10, 10, 150, 50);
+    [button addTarget:self action:@selector(buttonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [button setTitle:@"Change layout" forState:UIControlStateNormal];
+    [self.view addSubview:button];
+
+}
+
+-(NSInteger)numberOfSectionsInCollectionView:(PSTCollectionView *)collectionView
+{
+    return [self.sections count];
 }
 
 - (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section;
 {
-    return self.cellCount;
+    return [self.sections[section] count];
 }
 
 - (PSUICollectionViewCell *)collectionView:(PSUICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath;
 {
+    
+    
     Cell *cell = [cv dequeueReusableCellWithReuseIdentifier:@"MY_CELL" forIndexPath:indexPath];
+    cell.label.text = [NSString stringWithFormat:@"%@", self.sections[indexPath.section][indexPath.item]];
+    
     return (PSUICollectionViewCell *)cell;
 }
 
@@ -126,20 +153,81 @@
         NSIndexPath* tappedCellPath = [self.collectionView indexPathForItemAtPoint:initialPinchPoint];
         if (tappedCellPath!=nil)
         {
-            self.cellCount = self.cellCount - 1;
+            [self.sections[tappedCellPath.section] removeObjectAtIndex:tappedCellPath.item];
             [self.collectionView performBatchUpdates:^{
                 [self.collectionView deleteItemsAtIndexPaths:[NSArray arrayWithObject:tappedCellPath]];
                 
-            } completion:nil];
+            } completion:^(BOOL finished)
+            {
+                NSLog(@"delete finished");
+            }];
         }
         else
         {
-            self.cellCount = self.cellCount + 1;
+
+            
+            NSInteger insertElements = 10;
+            NSInteger deleteElements = 10;
+            
+            NSMutableSet* insertedIndexPaths = [NSMutableSet set];
+            NSMutableSet* deletedIndexPaths = [NSMutableSet set];
+            
+            for(NSInteger i=0;i<deleteElements;i++)
+            {
+                NSInteger index = rand()%[self.sections[0] count];
+                NSIndexPath* indexPath = [NSIndexPath indexPathForItem:index inSection:0];
+                
+                if([deletedIndexPaths containsObject:indexPath])
+                {
+                    i--;
+                    continue;
+                }
+                [self.sections[0] removeObjectAtIndex:index];
+                [deletedIndexPaths addObject:indexPath];
+            }
+
+            for(NSInteger i=0;i<insertElements;i++)
+            {
+                NSInteger index = rand()%[self.sections[0] count];
+                NSIndexPath* indexPath = [NSIndexPath indexPathForItem:index inSection:0];
+                if([insertedIndexPaths containsObject:indexPath])
+                {
+                    i--;
+                    continue;
+                }
+                
+                [self.sections[0] insertObject:@(count++)
+                                    atIndex:index];
+                [insertedIndexPaths addObject:indexPath];
+            }
+
+            
+            
+
             [self.collectionView performBatchUpdates:^{
-                [self.collectionView insertItemsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]];
-            } completion:nil];
+                
+                
+                [self.collectionView insertItemsAtIndexPaths:[insertedIndexPaths allObjects]];
+                [self.collectionView deleteItemsAtIndexPaths:[deletedIndexPaths allObjects]];
+                
+
+            } completion:^(BOOL finished)
+            {
+                NSLog(@"insert finished");
+            }];
         }
     }
+}
+
+-(void) buttonPressed
+{
+    if([self.collectionView.collectionViewLayout isKindOfClass:[CircleLayout class]])
+    {
+        [self.collectionView setCollectionViewLayout:[[PSUICollectionViewFlowLayout alloc] init] animated:YES];
+    }
+    else
+        [self.collectionView setCollectionViewLayout:[[CircleLayout alloc] init] animated:YES];
+
 }
 
 @end

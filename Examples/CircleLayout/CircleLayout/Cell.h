@@ -94,6 +94,7 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface Cell : PSUICollectionViewCell
 
 @property (strong, nonatomic) UILabel* label;

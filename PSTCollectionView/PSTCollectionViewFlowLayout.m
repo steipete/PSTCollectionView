@@ -85,7 +85,7 @@ NSString *const PSTFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVertical
         };
 
         // custom ivars
-        objc_setAssociatedObject(self, &kPSTCachedItemRectsKey, [NSMutableArray array], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, &kPSTCachedItemRectsKey, [NSMutableDictionary dictionary], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return self;
 }

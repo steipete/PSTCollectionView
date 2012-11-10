@@ -93,8 +93,15 @@
  */
 
 #import "CircleLayout.h"
-
+#import "Cell.h"
 #define ITEM_SIZE 70
+
+@interface CircleLayout()
+{
+    NSMutableArray* _insertedIndexPaths;
+}
+@end
+
 
 @implementation CircleLayout
 
@@ -108,6 +115,32 @@
     _radius = MIN(size.width, size.height) / 2.5;
 }
 
+-(void) prepareForCollectionViewUpdates:(NSArray *)updateItems
+{
+    [super prepareForCollectionViewUpdates:updateItems];
+    
+    _insertedIndexPaths = [[NSMutableArray alloc] init];
+    
+    for (PSTCollectionViewUpdateItem* update in updateItems)
+    {
+//        if (update.updateAction == PSTCollectionUpdateActionDelete)
+//        {
+//            [self.deleteIndexPaths addObject:update.indexPathBeforeUpdate];
+//        }
+//        else
+        if (update.updateAction == PSTCollectionUpdateActionInsert)
+        {
+            [_insertedIndexPaths addObject:update.indexPathAfterUpdate];
+        }
+    }
+}
+
+-(void)finalizeCollectionViewUpdates
+{
+    [super finalizeCollectionViewUpdates];
+    _insertedIndexPaths = nil;
+}
+
 -(CGSize)collectionViewContentSize
 {
     return [self collectionView].frame.size;
@@ -117,36 +150,46 @@
 {
     PSUICollectionViewLayoutAttributes* attributes = [PSUICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:path];
     attributes.size = CGSizeMake(ITEM_SIZE, ITEM_SIZE);
-    attributes.center = CGPointMake(_center.x + _radius * cosf(2 * path.item * M_PI / _cellCount),
-                                    _center.y + _radius * sinf(2 * path.item * M_PI / _cellCount));
+    attributes.center = CGPointMake(_center.x + _radius*(1-.1*path.section) * cosf(2 * path.item * M_PI / _cellCount),
+                                    _center.y + _radius*(1-.1*path.section) * sinf(2 * path.item * M_PI / _cellCount));
+
     return attributes;
 }
 
 -(NSArray*)layoutAttributesForElementsInRect:(CGRect)rect
 {
     NSMutableArray* attributes = [NSMutableArray array];
-    for (NSInteger i=0 ; i < self.cellCount; i++) {
-        NSIndexPath* indexPath = [NSIndexPath indexPathForItem:i inSection:0];
-        [attributes addObject:[self layoutAttributesForItemAtIndexPath:indexPath]];
-    }    
+    
+    
+    for(NSInteger i=0;i< [self.collectionView numberOfSections];i++)
+        for(NSInteger j=0; j<[self.collectionView numberOfItemsInSection:i];j++)
+        {
+            NSIndexPath* indexPath = [NSIndexPath indexPathForItem:j inSection:i];
+            [attributes addObject:[self layoutAttributesForItemAtIndexPath:indexPath]];
+        }
     return attributes;
 }
 
-- (PSUICollectionViewLayoutAttributes *)initialLayoutAttributesForInsertedItemAtIndexPath:(NSIndexPath *)itemIndexPath
+- (PSUICollectionViewLayoutAttributes *)initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath *)itemIndexPath
 {
-    PSUICollectionViewLayoutAttributes* attributes = (PSUICollectionViewLayoutAttributes *)[self layoutAttributesForItemAtIndexPath:itemIndexPath];
-    attributes.alpha = 0.0;
-    attributes.center = CGPointMake(_center.x, _center.y);
+    PSUICollectionViewLayoutAttributes* attributes = [super initialLayoutAttributesForAppearingItemAtIndexPath:itemIndexPath];
+    
+    if([_insertedIndexPaths containsObject:itemIndexPath] )
+    {
+        attributes = (PSUICollectionViewLayoutAttributes *)[self layoutAttributesForItemAtIndexPath:itemIndexPath];
+        attributes.alpha = 0.0;
+        attributes.center = CGPointMake(_center.x, _center.y);
+    }
     return attributes;
 }
 
-- (PSUICollectionViewLayoutAttributes *)finalLayoutAttributesForDeletedItemAtIndexPath:(NSIndexPath *)itemIndexPath
-{
-    PSUICollectionViewLayoutAttributes* attributes = (PSUICollectionViewLayoutAttributes *)[self layoutAttributesForItemAtIndexPath:itemIndexPath];
-    attributes.alpha = 0.0;
-    attributes.center = CGPointMake(_center.x, _center.y);
-    attributes.transform3D = CATransform3DMakeScale(0.1, 0.1, 1.0);
-    return attributes;
-}
+//- (PSUICollectionViewLayoutAttributes *)finalLayoutAttributesForDisappearingItemAtIndexPath:(NSIndexPath *)itemIndexPath
+//{
+//    PSUICollectionViewLayoutAttributes* attributes = (PSUICollectionViewLayoutAttributes *)[self layoutAttributesForItemAtIndexPath:itemIndexPath];
+//    attributes.alpha = 0.0;
+//    attributes.center = CGPointMake(_center.x, _center.y);
+//    attributes.transform3D = CATransform3DMakeScale(0.1, 0.1, 1.0);
+//    return attributes;
+//}
 
 @end

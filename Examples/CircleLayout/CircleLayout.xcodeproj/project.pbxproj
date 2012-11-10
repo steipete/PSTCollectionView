@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		24C656A41640C2D60084B152 /* PSTCollectionViewUpdateItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 24C656A31640C2D50084B152 /* PSTCollectionViewUpdateItem.m */; };
 		77AF0077157FA442001EC3FB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77AF0076157FA442001EC3FB /* UIKit.framework */; };
 		77AF0079157FA442001EC3FB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77AF0078157FA442001EC3FB /* Foundation.framework */; };
 		77AF007B157FA442001EC3FB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77AF007A157FA442001EC3FB /* CoreGraphics.framework */; };
@@ -31,6 +32,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		24C656A21640C2D50084B152 /* PSTCollectionViewUpdateItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTCollectionViewUpdateItem.h; sourceTree = "<group>"; };
+		24C656A31640C2D50084B152 /* PSTCollectionViewUpdateItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTCollectionViewUpdateItem.m; sourceTree = "<group>"; };
 		28B8D5C415817E9B00386DDB /* ReadMe.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; };
 		77AF0072157FA442001EC3FB /* CircleLayout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CircleLayout.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		77AF0076157FA442001EC3FB /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -149,6 +152,8 @@
 		78E8AB2D160A349B00988317 /* PSTCollectionView */ = {
 			isa = PBXGroup;
 			children = (
+				24C656A21640C2D50084B152 /* PSTCollectionViewUpdateItem.h */,
+				24C656A31640C2D50084B152 /* PSTCollectionViewUpdateItem.m */,
 				78E8AB2E160A349B00988317 /* PSTCollectionView.h */,
 				78E8AB2F160A349B00988317 /* PSTCollectionView.m */,
 				78E8AB30160A349B00988317 /* PSTCollectionViewCell.h */,
@@ -255,6 +260,7 @@
 				78E8AB4D160A349B00988317 /* PSTGridLayoutItem.m in Sources */,
 				78E8AB4E160A349B00988317 /* PSTGridLayoutRow.m in Sources */,
 				78E8AB4F160A349B00988317 /* PSTGridLayoutSection.m in Sources */,
+				24C656A41640C2D60084B152 /* PSTCollectionViewUpdateItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
