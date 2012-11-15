@@ -155,7 +155,7 @@ static NSInteger count;
         {
             [self.sections[tappedCellPath.section] removeObjectAtIndex:tappedCellPath.item];
             [self.collectionView performBatchUpdates:^{
-                [self.collectionView deleteItemsAtIndexPaths:[NSArray arrayWithObject:tappedCellPath]];
+                [self.collectionView deleteItemsAtIndexPaths:@[tappedCellPath]];
                 
             } completion:^(BOOL finished)
             {

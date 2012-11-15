@@ -11,7 +11,6 @@
 NSString *const PSTCollectionElementKindCell = @"UICollectionElementKindCell";
 NSString *const PSTCollectionElementKindDecorationView = @"PSTCollectionElementKindDecorationView";
 
-
 @implementation PSTCollectionViewItemKey
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -63,15 +62,11 @@ NSString *PSTCollectionViewItemTypeToString(PSTCollectionViewItemType type) {
 #pragma mark - NSObject
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p> Type = %@ Identifier=%@ IndexPath = %@", NSStringFromClass([self class]),
-            self,
-            PSTCollectionViewItemTypeToString(self.type),
-            _identifier,
-            self.indexPath];
+    return [NSString stringWithFormat:@"<%@: %p Type = %@ Identifier=%@ IndexPath = %@>", NSStringFromClass([self class]),
+            self, PSTCollectionViewItemTypeToString(self.type), _identifier, self.indexPath];
 }
 
-- (NSUInteger)hash
-{
+- (NSUInteger)hash {
     return (([_indexPath hash] + _type) * 31) + [_identifier hash];
 }
 

@@ -172,7 +172,7 @@
 
 - (PSUICollectionViewLayoutAttributes *)initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath *)itemIndexPath
 {
-    PSUICollectionViewLayoutAttributes* attributes = [super initialLayoutAttributesForAppearingItemAtIndexPath:itemIndexPath];
+    PSUICollectionViewLayoutAttributes* attributes = (PSUICollectionViewLayoutAttributes*)[super initialLayoutAttributesForAppearingItemAtIndexPath:itemIndexPath];
     
     if([_insertedIndexPaths containsObject:itemIndexPath] )
     {

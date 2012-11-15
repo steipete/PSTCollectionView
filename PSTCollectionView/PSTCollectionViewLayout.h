@@ -49,23 +49,6 @@ typedef NS_ENUM(NSUInteger, PSTCollectionViewItemType) {
 - (BOOL)isCell;
 @end
 
-
-
-/*
-@interface PSTCollectionViewUpdateItem : NSObject {
-@private
-    NSIndexPath* _initialIndexPath;
-    NSIndexPath* _finalIndexPath;
-    PSTCollectionUpdateAction _updateAction;
-    id _gap;
-}
-
-@property (nonatomic, readonly) NSIndexPath *indexPathBeforeUpdate; // nil for PSTCollectionUpdateActionInsert
-@property (nonatomic, readonly) NSIndexPath *indexPathAfterUpdate; // nil for PSTCollectionUpdateActionDelete
-@property (nonatomic, readonly) PSTCollectionUpdateAction updateAction;
-@end
-*/
-
 // used internally for deserialization until I figure out the proper way.
 extern NSString *const PSTCollectionViewLayoutAwokeFromNib;
 
@@ -79,9 +62,7 @@ extern NSString *const PSTCollectionViewLayoutAwokeFromNib;
 // Subclasses must always call super if they override.
 - (void)invalidateLayout;
 
-
 /// @name Registering Decoration Views
-
 - (void)registerClass:(Class)viewClass forDecorationViewWithReuseIdentifier:(NSString *)identifier;
 - (void)registerNib:(UINib *)nib forDecorationViewWithReuseIdentifier:(NSString *)identifier;
 

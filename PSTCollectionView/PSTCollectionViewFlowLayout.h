@@ -48,17 +48,15 @@ typedef NS_ENUM(NSInteger, UICollectionViewScrollDirection) {
 @property (nonatomic) UIEdgeInsets sectionInset;
 
 /*
-    Row alignment options exits in the official UICollectionView,
-    bit hasn't been made public API.
+ Row alignment options exits in the official UICollectionView, but hasn't been made public API.
  
-    Here's a snippet to test this on UICollectionView:
+ Here's a snippet to test this on UICollectionView:
 
-    NSMutableDictionary *rowAlign = [[flowLayout valueForKey:@"_rowAlignmentsOptionsDictionary"] mutableCopy];
-    rowAlign[@"UIFlowLayoutCommonRowHorizontalAlignmentKey"] = @(1);
-    rowAlign[@"UIFlowLayoutLastRowHorizontalAlignmentKey"] = @(3);
-    [flowLayout setValue:rowAlign forKey:@"_rowAlignmentsOptionsDictionary"];
+ NSMutableDictionary *rowAlign = [[flowLayout valueForKey:@"_rowAlignmentsOptionsDictionary"] mutableCopy];
+ rowAlign[@"UIFlowLayoutCommonRowHorizontalAlignmentKey"] = @(1);
+ rowAlign[@"UIFlowLayoutLastRowHorizontalAlignmentKey"] = @(3);
+ [flowLayout setValue:rowAlign forKey:@"_rowAlignmentsOptionsDictionary"];
  */
-
 @property (nonatomic, strong) NSDictionary *rowAlignmentOptions;
 
 @end
