@@ -30,6 +30,7 @@
 		4C3A073616316EB30064777C /* PSTGridLayoutRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C3A072A16316EB30064777C /* PSTGridLayoutRow.m */; };
 		4C3A073716316EB30064777C /* PSTGridLayoutSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C3A072C16316EB30064777C /* PSTGridLayoutSection.m */; };
 		4C3A073E16316F4C0064777C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C3A073D16316F4C0064777C /* QuartzCore.framework */; };
+		78E7A7651654EF00000C70BE /* PSTCollectionViewUpdateItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 78E7A7641654EF00000C70BE /* PSTCollectionViewUpdateItem.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -73,6 +74,8 @@
 		4C3A072B16316EB30064777C /* PSTGridLayoutSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTGridLayoutSection.h; sourceTree = "<group>"; };
 		4C3A072C16316EB30064777C /* PSTGridLayoutSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTGridLayoutSection.m; sourceTree = "<group>"; };
 		4C3A073D16316F4C0064777C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		78E7A7631654EF00000C70BE /* PSTCollectionViewUpdateItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTCollectionViewUpdateItem.h; sourceTree = "<group>"; };
+		78E7A7641654EF00000C70BE /* PSTCollectionViewUpdateItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTCollectionViewUpdateItem.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -164,6 +167,8 @@
 				4C3A072216316EB30064777C /* PSTCollectionViewItemKey.m */,
 				4C3A072316316EB30064777C /* PSTCollectionViewLayout.h */,
 				4C3A072416316EB30064777C /* PSTCollectionViewLayout.m */,
+				78E7A7631654EF00000C70BE /* PSTCollectionViewUpdateItem.h */,
+				78E7A7641654EF00000C70BE /* PSTCollectionViewUpdateItem.m */,
 				4C3A072516316EB30064777C /* PSTGridLayoutInfo.h */,
 				4C3A072616316EB30064777C /* PSTGridLayoutInfo.m */,
 				4C3A072716316EB30064777C /* PSTGridLayoutItem.h */,
@@ -257,6 +262,7 @@
 				4C3A073516316EB30064777C /* PSTGridLayoutItem.m in Sources */,
 				4C3A073616316EB30064777C /* PSTGridLayoutRow.m in Sources */,
 				4C3A073716316EB30064777C /* PSTGridLayoutSection.m in Sources */,
+				78E7A7651654EF00000C70BE /* PSTCollectionViewUpdateItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

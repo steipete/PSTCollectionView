@@ -62,6 +62,7 @@
 		60FF9C561648B8D800E20CD4 /* 8.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 60FF9C361648B8D800E20CD4 /* 8.JPG */; };
 		60FF9C571648B8D800E20CD4 /* 9.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 60FF9C371648B8D800E20CD4 /* 9.JPG */; };
 		60FF9C7D1648BE6100E20CD4 /* ImageGridCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF9C7C1648BE6100E20CD4 /* ImageGridCell.m */; };
+		78E7A75F1654EECE000C70BE /* PSTCollectionViewUpdateItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 78E7A75E1654EECE000C70BE /* PSTCollectionViewUpdateItem.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -138,6 +139,8 @@
 		60FF9C371648B8D800E20CD4 /* 9.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 9.JPG; sourceTree = "<group>"; };
 		60FF9C7B1648BE6100E20CD4 /* ImageGridCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageGridCell.h; sourceTree = "<group>"; };
 		60FF9C7C1648BE6100E20CD4 /* ImageGridCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageGridCell.m; sourceTree = "<group>"; };
+		78E7A75D1654EECE000C70BE /* PSTCollectionViewUpdateItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTCollectionViewUpdateItem.h; sourceTree = "<group>"; };
+		78E7A75E1654EECE000C70BE /* PSTCollectionViewUpdateItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTCollectionViewUpdateItem.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -231,6 +234,8 @@
 				60FF9BFE1648B87000E20CD4 /* PSTCollectionViewItemKey.m */,
 				60FF9BFF1648B87000E20CD4 /* PSTCollectionViewLayout.h */,
 				60FF9C001648B87000E20CD4 /* PSTCollectionViewLayout.m */,
+				78E7A75D1654EECE000C70BE /* PSTCollectionViewUpdateItem.h */,
+				78E7A75E1654EECE000C70BE /* PSTCollectionViewUpdateItem.m */,
 				60FF9C011648B87000E20CD4 /* PSTGridLayoutInfo.h */,
 				60FF9C021648B87000E20CD4 /* PSTGridLayoutInfo.m */,
 				60FF9C031648B87000E20CD4 /* PSTGridLayoutItem.h */,
@@ -404,6 +409,7 @@
 				60FF9C121648B87000E20CD4 /* PSTGridLayoutRow.m in Sources */,
 				60FF9C131648B87000E20CD4 /* PSTGridLayoutSection.m in Sources */,
 				60FF9C7D1648BE6100E20CD4 /* ImageGridCell.m in Sources */,
+				78E7A75F1654EECE000C70BE /* PSTCollectionViewUpdateItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -516,6 +522,7 @@
 				60FF9BF01648B86200E20CD4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

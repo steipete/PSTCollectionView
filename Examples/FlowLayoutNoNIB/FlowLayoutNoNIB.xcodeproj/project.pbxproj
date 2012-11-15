@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		78E7A7621654EEE7000C70BE /* PSTCollectionViewUpdateItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 78E7A7611654EEE7000C70BE /* PSTCollectionViewUpdateItem.m */; };
 		8B6FD583163EFF590064CF3D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B6FD582163EFF590064CF3D /* UIKit.framework */; };
 		8B6FD585163EFF590064CF3D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B6FD584163EFF590064CF3D /* Foundation.framework */; };
 		8B6FD587163EFF590064CF3D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B6FD586163EFF590064CF3D /* CoreGraphics.framework */; };
@@ -35,6 +36,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		78E7A7601654EEE7000C70BE /* PSTCollectionViewUpdateItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTCollectionViewUpdateItem.h; sourceTree = "<group>"; };
+		78E7A7611654EEE7000C70BE /* PSTCollectionViewUpdateItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTCollectionViewUpdateItem.m; sourceTree = "<group>"; };
 		8B6FD57E163EFF590064CF3D /* FlowLayoutNoNIB.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlowLayoutNoNIB.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B6FD582163EFF590064CF3D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		8B6FD584163EFF590064CF3D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -176,6 +179,8 @@
 				8B6FD5AC163EFF970064CF3D /* PSTCollectionViewItemKey.m */,
 				8B6FD5AD163EFF970064CF3D /* PSTCollectionViewLayout.h */,
 				8B6FD5AE163EFF970064CF3D /* PSTCollectionViewLayout.m */,
+				78E7A7601654EEE7000C70BE /* PSTCollectionViewUpdateItem.h */,
+				78E7A7611654EEE7000C70BE /* PSTCollectionViewUpdateItem.m */,
 				8B6FD5AF163EFF970064CF3D /* PSTGridLayoutInfo.h */,
 				8B6FD5B0163EFF970064CF3D /* PSTGridLayoutInfo.m */,
 				8B6FD5B1163EFF970064CF3D /* PSTGridLayoutItem.h */,
@@ -270,6 +275,7 @@
 				8B6FD5CC163F189D0064CF3D /* CollectionViewCell.m in Sources */,
 				8B6FD5CF163F1A650064CF3D /* HeaderView.m in Sources */,
 				8B6FD5D2163F1A700064CF3D /* FooterView.m in Sources */,
+				78E7A7621654EEE7000C70BE /* PSTCollectionViewUpdateItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -381,6 +387,7 @@
 				8B6FD59E163EFF590064CF3D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
