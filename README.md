@@ -24,11 +24,11 @@ You could also write a Pintrest-style layout manager. Can't be that hard.
 
 ## Animations
 
-Animations are not yet supported at all. We're currently looking for a great iOS engineer that wants to tackle animations, I can connect you with a potential sponsor.
+Thanks to Sergey Gavrilyuk ([@octogavrix](https://twitter.com/octogavrix)), animations are supported. It's not perfect yet (e.g. the LineExample is not perfect), but it's a great start.
 
 ## ARC
 
-PSTCollectionView works with Xcode 4.5+ and ARC.
+PSTCollectionView works with Xcode 4.5.2+ and ARC.
 
 ## Interoperability
 
