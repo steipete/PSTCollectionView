@@ -1,8 +1,9 @@
 //
 //  PSTCollectionViewUpdateItem.h
-//  PSCollectionViewExample
+//  PSPDFKit
 //
-//  Created by Sergey Gavrilyuk on 12-10-28.
+//  Copyright (c) 2012 Peter Steinberger. All rights reserved.
+//  Contributed by Sergey Gavrilyuk.
 //
 
 #import <Foundation/Foundation.h>
@@ -15,18 +16,11 @@ typedef NS_ENUM(NSInteger, PSTCollectionUpdateAction) {
     PSTCollectionUpdateActionNone
 };
 
-
 @interface PSTCollectionViewUpdateItem : NSObject
-{
-    NSIndexPath *_initialIndexPath;
-    NSIndexPath *_finalIndexPath;
-    PSTCollectionUpdateAction _updateAction;
-    id _gap;
-}
 
-@property(readonly) NSIndexPath * indexPathBeforeUpdate;
-@property(readonly) NSIndexPath * indexPathAfterUpdate;
-@property(readonly) PSTCollectionUpdateAction updateAction;
+@property (nonatomic, readonly, strong) NSIndexPath *indexPathBeforeUpdate; // nil for PSTCollectionUpdateActionInsert
+@property (nonatomic, readonly, strong) NSIndexPath *indexPathAfterUpdate;  // nil for PSTCollectionUpdateActionDelete
+@property (nonatomic, readonly, assign) PSTCollectionUpdateAction updateAction;
 
 
 - (id)initWithInitialIndexPath:(NSIndexPath*)arg1
@@ -39,8 +33,6 @@ typedef NS_ENUM(NSInteger, PSTCollectionUpdateAction) {
 - (id)initWithOldIndexPath:(NSIndexPath*)arg1 newIndexPath:(NSIndexPath*)arg2;
 
 - (PSTCollectionUpdateAction)updateAction;
-
-
 
 - (NSComparisonResult)compareIndexPaths:(PSTCollectionViewUpdateItem*) otherItem;
 - (NSComparisonResult)inverseCompareIndexPaths:(PSTCollectionViewUpdateItem*) otherItem;
