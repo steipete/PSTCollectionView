@@ -198,6 +198,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - PSTCollection/UICollection interoperability
 
+#ifdef kPSUIInteroperabilityEnabled
 #import <objc/runtime.h>
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)selector {
     NSMethodSignature *sig = [super methodSignatureForSelector:selector];
@@ -223,5 +224,6 @@
         [super forwardInvocation:inv];
     }
 }
+#endif
 
 @end

@@ -8,6 +8,10 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+// Mostly a debug feature, makes classes from UICollection* compatible with PSTCollection*
+// (e.g. adding the "real" UICollectionViewFlowLayout to PSTCollectionView.
+//#define kPSUIInteroperabilityEnabled
+
 @class PSTCollectionView, PSTCollectionViewCell, PSTCollectionReusableView;
 
 @protocol PSTCollectionViewDataSource <NSObject>
