@@ -44,8 +44,8 @@
         unsigned int layoutIsPrepared:1;
     } _collectionViewDataFlags;
 }
-@property (nonatomic, strong) PSTCollectionView *collectionView;
-@property (nonatomic, strong) PSTCollectionViewLayout *layout;
+@property (nonatomic, unsafe_unretained) PSTCollectionView *collectionView;
+@property (nonatomic, unsafe_unretained) PSTCollectionViewLayout *layout;
 @end
 
 @implementation PSTCollectionViewData
