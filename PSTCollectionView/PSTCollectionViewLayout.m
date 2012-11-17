@@ -9,6 +9,7 @@
 #import "PSTCollectionViewLayout.h"
 #import "PSTCollectionViewItemKey.h"
 #import "PSTCollectionViewData.h"
+#import "PSTCollectionViewUpdateItem.h"
 
 @interface PSTCollectionView()
 -(id) currentUpdate;
