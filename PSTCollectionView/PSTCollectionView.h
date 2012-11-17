@@ -9,7 +9,6 @@
 #import "PSTCollectionViewFlowLayout.h"
 #import "PSTCollectionViewCell.h"
 #import "PSTCollectionViewController.h"
-#import "PSTCollectionViewUpdateItem.h"
 
 @class PSTCollectionViewController;
 
