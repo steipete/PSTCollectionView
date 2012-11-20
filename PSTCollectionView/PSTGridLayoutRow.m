@@ -76,20 +76,28 @@
         // This allows us to correctly justify-place the items in the grid.
         NSUInteger usedItemCount = 0;
         NSInteger itemIndex = 0;
-        BOOL canFitMoreItems = itemIndex < self.itemCount;
-        while (itemIndex < self.itemCount || canFitMoreItems) {
+        CGFloat spacing = isHorizontal ? self.section.verticalInterstice : self.section.horizontalInterstice;
+        while (itemIndex < self.itemCount) {
+            CGFloat nextItemSize;
             if (!self.fixedItemSize) {
                 PSTGridLayoutItem *item = self.items[MIN(itemIndex, self.itemCount-1)];
-                leftOverSpace -= isHorizontal ? item.itemFrame.size.height : item.itemFrame.size.width;
-                canFitMoreItems = isHorizontal ? leftOverSpace > item.itemFrame.size.height : leftOverSpace > item.itemFrame.size.width;
+                nextItemSize = isHorizontal ? item.itemFrame.size.height : item.itemFrame.size.width;
             }else {
-                leftOverSpace -= isHorizontal ? self.section.itemSize.height : self.section.itemSize.width;
-                canFitMoreItems = isHorizontal ? leftOverSpace > self.section.itemSize.height : leftOverSpace > self.section.itemSize.width;
+                nextItemSize = isHorizontal ? self.section.itemSize.height : self.section.itemSize.width;
             }
+            
             // separator starts after first item
             if (itemIndex > 0) {
-                leftOverSpace -= isHorizontal ? self.section.verticalInterstice : self.section.horizontalInterstice;
+                nextItemSize += spacing;
             }
+            
+            // check to see if we can at least fit an item
+            if (leftOverSpace < nextItemSize) {
+                break;
+            }
+            
+            leftOverSpace -= nextItemSize;
+            
             itemIndex++;
             usedItemCount = itemIndex;
         }
