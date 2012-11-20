@@ -784,8 +784,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     if (backgroundView != _backgroundView) {
         [_backgroundView removeFromSuperview];
         _backgroundView = backgroundView;
-        [self.superview addSubview:_backgroundView];
-        [self.superview sendSubviewToBack:_backgroundView];
+        backgroundView.frame = self.bounds;
+        backgroundView.autoresizesSubviews = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+        [self addSubview:backgroundView];
+        [self sendSubviewToBack:backgroundView];
     }
 }
 
