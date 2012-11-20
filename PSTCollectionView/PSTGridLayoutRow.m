@@ -77,7 +77,8 @@
         NSUInteger usedItemCount = 0;
         NSInteger itemIndex = 0;
         CGFloat spacing = isHorizontal ? self.section.verticalInterstice : self.section.horizontalInterstice;
-        while (itemIndex < self.itemCount) {
+        // last row should justify as if it is filled to mimic previous rows
+        while (itemIndex < self.itemCount || isLastRow) {
             CGFloat nextItemSize;
             if (!self.fixedItemSize) {
                 PSTGridLayoutItem *item = self.items[MIN(itemIndex, self.itemCount-1)];
@@ -108,6 +109,8 @@
         }else if(horizontalAlignment == PSTFlowLayoutHorizontalAlignmentCentered) {
             itemOffset.x += leftOverSpace/2;
         }
+        
+        CGFloat interSpacing = leftOverSpace/(CGFloat)(usedItemCount-1);
 
         // calculate row frame as union of all items
         CGRect frame = CGRectZero;
@@ -122,13 +125,13 @@
                 itemFrame.origin.y = itemOffset.y;
                 itemOffset.y += itemFrame.size.height + self.section.verticalInterstice;
                 if (horizontalAlignment == PSTFlowLayoutHorizontalAlignmentJustify) {
-                    itemOffset.y += leftOverSpace/(CGFloat)(usedItemCount-1);
+                    itemOffset.y += interSpacing;
                 }
             }else {
                 itemFrame.origin.x = itemOffset.x;
                 itemOffset.x += itemFrame.size.width + self.section.horizontalInterstice;
                 if (horizontalAlignment == PSTFlowLayoutHorizontalAlignmentJustify) {
-                    itemOffset.x += leftOverSpace/(CGFloat)(usedItemCount-1);
+                    itemOffset.x += interSpacing;
                 }
             }
             item.itemFrame = CGRectIntegral(itemFrame); // might call nil; don't care
