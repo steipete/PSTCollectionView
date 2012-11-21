@@ -383,6 +383,13 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     return view;
 }
 
+
+- (NSArray *)allCells {
+    return [[_allVisibleViewsDict allValues] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        return [evaluatedObject isKindOfClass:[PSTCollectionViewCell class]];
+    }]];
+}
+
 - (NSArray *)visibleCells {
     return [[_allVisibleViewsDict allValues] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
         return [evaluatedObject isKindOfClass:[PSTCollectionViewCell class]] && CGRectIntersectsRect(self.bounds, [evaluatedObject frame]);
@@ -530,7 +537,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
         if (!self.allowsMultipleSelection) {
             // temporally unhighlight background on touchesBegan (keeps selected by _indexPathsForSelectedItems)
-            for (PSTCollectionViewCell* visibleCell in self.visibleCells) {
+            for (PSTCollectionViewCell* visibleCell in [self allCells]) {
                 visibleCell.highlighted = NO;
                 visibleCell.selected = NO;
 
@@ -586,7 +593,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     // TODO: improve behavior on touchesCancelled
     if (!self.allowsMultipleSelection) {
         // highlight selected-background again
-        for (PSTCollectionViewCell* visibleCell in self.visibleCells) {
+        for (PSTCollectionViewCell* visibleCell in [self allCells]) {
             NSIndexPath* indexPathForVisibleItem = [self indexPathForCell:visibleCell];
             visibleCell.selected = [_indexPathsForSelectedItems containsObject:indexPathForVisibleItem];
         }
