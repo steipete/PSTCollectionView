@@ -787,14 +787,16 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Properties
 
+// Background needs to be added to the PARENT, because UICollectionView is a subclass of UIScrollView,
+// else the background would scroll with the other content.
 - (void)setBackgroundView:(UIView *)backgroundView {
     if (backgroundView != _backgroundView) {
         [_backgroundView removeFromSuperview];
         _backgroundView = backgroundView;
-        backgroundView.frame = self.bounds;
+        backgroundView.frame = self.superview.bounds;
         backgroundView.autoresizesSubviews = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-        [self addSubview:backgroundView];
-        [self sendSubviewToBack:backgroundView];
+        [self.superview addSubview:_backgroundView];
+        [self.superview sendSubviewToBack:_backgroundView];
     }
 }
 
