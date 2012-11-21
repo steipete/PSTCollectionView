@@ -254,8 +254,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         [_collectionViewData validateLayoutInRect:self.bounds];
         [self updateVisibleCellsNow:YES];
     }
-
-    _backgroundView.frame = (CGRect){.size=self.bounds.size};
+    
+    if (_backgroundView) {
+        _backgroundView.frame = (CGRect){.origin=self.contentOffset,.size=self.bounds.size};
+    }
 
     _collectionViewFlags.fadeCellsForBoundsChange = NO;
     _collectionViewFlags.doneFirstLayout = YES;
@@ -787,16 +789,14 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Properties
 
-// Background needs to be added to the PARENT, because UICollectionView is a subclass of UIScrollView,
-// else the background would scroll with the other content.
 - (void)setBackgroundView:(UIView *)backgroundView {
     if (backgroundView != _backgroundView) {
         [_backgroundView removeFromSuperview];
         _backgroundView = backgroundView;
-        backgroundView.frame = self.superview.bounds;
+        backgroundView.frame = (CGRect){.origin=self.contentOffset,.size=self.bounds.size};
         backgroundView.autoresizesSubviews = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-        [self.superview addSubview:_backgroundView];
-        [self.superview sendSubviewToBack:_backgroundView];
+        [self addSubview:backgroundView];
+        [self sendSubviewToBack:backgroundView];
     }
 }
 
