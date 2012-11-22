@@ -76,7 +76,7 @@
 - (void)invalidate {
     _collectionViewDataFlags.itemCountsAreValid = NO;
     _collectionViewDataFlags.layoutIsPrepared = NO;
-    _validLayoutRect = CGRectZero;
+    _validLayoutRect = CGRectNull;  // don't set CGRectZero in case of _contentSize=CGSizeZero
 }
 
 - (CGRect)collectionViewContentRect {
@@ -86,6 +86,15 @@
 - (void)validateLayoutInRect:(CGRect)rect {
     [self validateItemCounts];
     [self prepareToLoadData];
+    
+    // rect.size should be within _contentSize
+    if (rect.size.width > _contentSize.width) {
+        rect.size.width = _contentSize.width;
+    }
+    if (rect.size.height > _contentSize.height) {
+        rect.size.height = _contentSize.height;
+    }
+    
     // TODO: check if we need to fetch data from layout
     if (!CGRectEqualToRect(_validLayoutRect, rect)) {
         _validLayoutRect = rect;
