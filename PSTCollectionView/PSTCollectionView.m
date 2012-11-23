@@ -1673,6 +1673,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     _update = nil;
     _updateCount--;
     _collectionViewFlags.updating = NO;
+    [self resumeReloads];
 }
 
 
