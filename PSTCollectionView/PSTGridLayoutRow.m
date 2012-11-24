@@ -76,30 +76,50 @@
         // This allows us to correctly justify-place the items in the grid.
         NSUInteger usedItemCount = 0;
         NSInteger itemIndex = 0;
-        BOOL canFitMoreItems = itemIndex < self.itemCount;
-        while (itemIndex < self.itemCount || canFitMoreItems) {
+        CGFloat spacing = isHorizontal ? self.section.verticalInterstice : self.section.horizontalInterstice;
+        // the last row should justify as if it is filled with more (invisible) items so that the whole
+        // UICollectionView feels more like a grid than a random line of blocks
+        while (itemIndex < self.itemCount || isLastRow) {
+            CGFloat nextItemSize;
+            // first we need to find the size (width/height) of the next item to fit
             if (!self.fixedItemSize) {
                 PSTGridLayoutItem *item = self.items[MIN(itemIndex, self.itemCount-1)];
-                leftOverSpace -= isHorizontal ? item.itemFrame.size.height : item.itemFrame.size.width;
-                canFitMoreItems = isHorizontal ? leftOverSpace > item.itemFrame.size.height : leftOverSpace > item.itemFrame.size.width;
+                nextItemSize = isHorizontal ? item.itemFrame.size.height : item.itemFrame.size.width;
             }else {
-                leftOverSpace -= isHorizontal ? self.section.itemSize.height : self.section.itemSize.width;
-                canFitMoreItems = isHorizontal ? leftOverSpace > self.section.itemSize.height : leftOverSpace > self.section.itemSize.width;
+                nextItemSize = isHorizontal ? self.section.itemSize.height : self.section.itemSize.width;
             }
-            // separator starts after first item
+            
+            // the first item does not add a separator spacing,
+            // every one afterwards in the same row will need this spacing constant
             if (itemIndex > 0) {
-                leftOverSpace -= isHorizontal ? self.section.verticalInterstice : self.section.horizontalInterstice;
+                nextItemSize += spacing;
             }
+            
+            // check to see if we can at least fit an item (+separator if necessary)
+            if (leftOverSpace < nextItemSize) {
+                break;
+            }
+            
+            // we need to maintain the leftover space after the maximum amount of items have
+            // occupied, so we know how to adjust equal spacing among all the items in a row
+            leftOverSpace -= nextItemSize;
+            
             itemIndex++;
             usedItemCount = itemIndex;
         }
 
+        // push everything to the right if right-aligning and divide in half for centered
+        // currently there is no public API supporting this behavior
         CGPoint itemOffset = CGPointZero;
         if (horizontalAlignment == PSTFlowLayoutHorizontalAlignmentRight) {
             itemOffset.x += leftOverSpace;
         }else if(horizontalAlignment == PSTFlowLayoutHorizontalAlignmentCentered) {
             itemOffset.x += leftOverSpace/2;
         }
+        
+        // calculate the justified spacing among all items in a row if we are using
+        // the default PSTFlowLayoutHorizontalAlignmentJustify layout
+        CGFloat interSpacing = leftOverSpace/(CGFloat)(usedItemCount-1);
 
         // calculate row frame as union of all items
         CGRect frame = CGRectZero;
@@ -110,17 +130,21 @@
                 item = self.items[itemIndex];
                 itemFrame = [item itemFrame];
             }
+            // depending on horizontal/vertical for an item size (height/width),
+            // we add the minimum separator then an equally distributed spacing
+            // (since our default mode is justify) calculated from the total leftover
+            // space divided by the number of intervals
             if (isHorizontal) {
                 itemFrame.origin.y = itemOffset.y;
                 itemOffset.y += itemFrame.size.height + self.section.verticalInterstice;
                 if (horizontalAlignment == PSTFlowLayoutHorizontalAlignmentJustify) {
-                    itemOffset.y += leftOverSpace/(CGFloat)(usedItemCount-1);
+                    itemOffset.y += interSpacing;
                 }
             }else {
                 itemFrame.origin.x = itemOffset.x;
                 itemOffset.x += itemFrame.size.width + self.section.horizontalInterstice;
                 if (horizontalAlignment == PSTFlowLayoutHorizontalAlignmentJustify) {
-                    itemOffset.x += leftOverSpace/(CGFloat)(usedItemCount-1);
+                    itemOffset.x += interSpacing;
                 }
             }
             item.itemFrame = CGRectIntegral(itemFrame); // might call nil; don't care
