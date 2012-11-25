@@ -55,7 +55,7 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
     NSMutableSet *_pendingDeselectionIndexPaths;
     PSTCollectionViewData *_collectionViewData;
     id _update;
-    CGRect _visibleBounds;
+    CGRect _visibleBoundRects;
     CGRect _preRotationBounds;
     CGPoint _rotationBoundsOffset;
     int _rotationAnimationCount;
@@ -107,7 +107,8 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
 @property (nonatomic, strong) PSTCollectionViewData *collectionViewData;
 @property (nonatomic, strong, readonly) PSTCollectionViewExt *extVars;
 @property (nonatomic, readonly) id currentUpdate;
-@property (nonatomic, readonly) NSDictionary* visibleViewsDict;
+@property (nonatomic, readonly) NSDictionary *visibleViewsDict;
+@property (nonatomic, assign) CGRect visibleBoundRects;
 @end
 
 // Used by PSTCollectionView for external variables.
@@ -1268,7 +1269,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                                          finalAttrs.frame.size.width,
                                          finalAttrs.frame.size.height);
             
-            if(CGRectIntersectsRect(_visibleBounds, startRect) || CGRectIntersectsRect(_visibleBounds, finalRect)) {
+            if(CGRectIntersectsRect(_visibleBoundRects, startRect) || CGRectIntersectsRect(_visibleBoundRects, finalRect)) {
                 PSTCollectionReusableView *view = [self createPreparedCellForItemAtIndexPath:indexPath
                                                                         withLayoutAttributes:startAttrs];
                 [self addControlledSubview:view];
@@ -1323,7 +1324,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         newAllVisibleView[newKey] = view;
     }
 
-    NSArray *allNewlyVisibleItems = [_layout layoutAttributesForElementsInRect:_visibleBounds];
+    NSArray *allNewlyVisibleItems = [_layout layoutAttributesForElementsInRect:_visibleBoundRects];
     for (PSTCollectionViewLayoutAttributes *attrs in allNewlyVisibleItems) {
         PSTCollectionViewItemKey *key = [PSTCollectionViewItemKey collectionItemKeyForLayoutAttributes:attrs];
         
@@ -1357,7 +1358,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
          }
      } completion:^(BOOL finished) {
          NSMutableSet *set = [NSMutableSet set];
-         NSArray *visibleItems = [_layout layoutAttributesForElementsInRect:_visibleBounds];
+         NSArray *visibleItems = [_layout layoutAttributesForElementsInRect:_visibleBoundRects];
          for(PSTCollectionViewLayoutAttributes *attrs in visibleItems)
              [set addObject: [PSTCollectionViewItemKey collectionItemKeyForLayoutAttributes:attrs]];
 
