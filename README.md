@@ -3,8 +3,8 @@ PSTCollectionView
 
 Open Source, 100% API compatible replacement of UICollectionView for iOS4.3+
 
-**You want to use UICollectionView, but still need to support older versions of iOS? Then you'll gonna love this project.**
-Originally I wrote it for [PSPDFKit](http://PSPDFKit.com), my iOS PDF framework that supports text selection and annotations, but this project seemed way to useful for others to to keep it for myself :)
+**You want to use UICollectionView, but still need to support older versions of iOS? Then you're gonna love this project.**
+Originally I wrote it for [PSPDFKit](http://PSPDFKit.com), my iOS PDF framework that supports text selection and annotations, but this project seemed way too useful for others to keep it for myself :)
 
 **If you want to have PSTCollectionView on iOS4.3/5.x and UICollectionView on iOS6, use PSUICollectionView (basically add PS on any UICollectionView* class to get auto-support for older iOS versions)**
 If you always want to use PSTCollectionView, use PSTCollectionView as class names. (replace the UI with PST)
