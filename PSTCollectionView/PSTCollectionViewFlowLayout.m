@@ -373,6 +373,11 @@ static char kPSTCachedItemRectsKey;
         }
         section.frame = sectionFrame;
     }
+	if (_data.horizontal) {
+		contentSize.width = MAX(contentSize.width, self.collectionView.bounds.size.width);
+	} else {
+		contentSize.height = MAX(contentSize.height, self.collectionView.bounds.size.height);
+	}
     _data.contentSize = contentSize;
 }
 
