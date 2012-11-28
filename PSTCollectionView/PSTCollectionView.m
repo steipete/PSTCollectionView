@@ -1565,6 +1565,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         @([operations[@(sortedItem.indexPathAfterUpdate.section)][@"movedIn"] intValue]+1);
     }
 
+#if !defined  NS_BLOCK_ASSERTIONS
     for(NSNumber *sectionKey in [operations keyEnumerator]) {
         NSInteger section = [sectionKey intValue];
         
@@ -1582,7 +1583,8 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                  [oldCollectionViewData numberOfItemsInSection:section],
                  insertedCount,deletedCount,movedInCount, movedOutCount);
     }
-    
+#endif
+
     [someMutableArr2 addObjectsFromArray:sortedDeletedMutableItems];
     [someMutableArr3 addObjectsFromArray:sortedInsertMutableItems];
     [someMutableArr1 addObjectsFromArray:[someMutableArr2 sortedArrayUsingSelector:@selector(inverseCompareIndexPaths:)]];
