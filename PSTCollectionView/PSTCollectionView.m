@@ -309,7 +309,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (id)dequeueReusableCellWithReuseIdentifier:(NSString *)identifier forIndexPath:(NSIndexPath *)indexPath {
-    // dequeue cell (if available)
+    // de-queue cell (if available)
     NSMutableArray *reusableCells = _cellReuseQueues[identifier];
     PSTCollectionViewCell *cell = [reusableCells lastObject];
     if (cell) {
@@ -322,11 +322,11 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             if (externalObjects) {
                 cell = [cellNib instantiateWithOwner:self options:@{UINibExternalObjects:externalObjects}][0];
             } else {
-                cell = [cellNib instantiateWithOwner:self options:0][0];
+                cell = [cellNib instantiateWithOwner:self options:nil][0];
             }
         } else {
             Class cellClass = _cellClassDict[identifier];
-            // compatiblity layer
+            // compatibility layer
             Class collectionViewCellClass = NSClassFromString(@"UICollectionViewCell");
             if (collectionViewCellClass && [cellClass isEqual:collectionViewCellClass]) {
                 cellClass = [PSTCollectionViewCell class];

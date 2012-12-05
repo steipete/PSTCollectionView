@@ -71,7 +71,7 @@
     return (_initialIndexPath.item == NSNotFound || _finalIndexPath.item == NSNotFound);
 }
 
-- (id)newIndexPath {
+- (NSIndexPath *)newIndexPath {
     return _finalIndexPath;
 }
 
