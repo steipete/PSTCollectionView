@@ -341,6 +341,11 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                 cell = [cellClass new];
             }
         }
+        PSTCollectionViewLayout *layout = [self collectionViewLayout];
+        if ([layout isKindOfClass:[PSTCollectionViewFlowLayout class]]) {
+            CGSize itemSize = ((PSTCollectionViewFlowLayout *)layout).itemSize;
+            cell.bounds = CGRectMake(0, 0, itemSize.width, itemSize.height);
+        }
         cell.collectionView = self;
         cell.reuseIdentifier = identifier;
     }

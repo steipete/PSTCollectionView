@@ -52,6 +52,8 @@
     // if this is restored from IB, we don't have plain main view.
     if ([self.view isKindOfClass:[PSTCollectionView class]]) {
         _collectionView = (PSTCollectionView *)self.view;
+        self.view = [[UIView alloc] initWithFrame:self.view.bounds];
+        self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     }
 	
 	if (_collectionView.delegate == nil) _collectionView.delegate = self;
