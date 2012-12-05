@@ -537,15 +537,13 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (CGRect)makeRect:(CGRect)targetRect toScrollPosition:(PSTCollectionViewScrollPosition)scrollPosition
 {
-    CGRect frame = CGRectOrientationFix(self.layer.frame);
-    
-    frame = [self convertRect:frame fromView:nil];
+    // CGRectOrientationFix to fix convertRect when in landscape mode
+    CGRect frame = [self convertRect:CGRectOrientationFix(self.layer.bounds) fromView:nil];
     
     CGFloat frameBottom = frame.origin.y+frame.size.height;
     CGFloat frameRight = frame.origin.x+frame.size.width;
     CGFloat frameCenterX = frame.origin.x+(frame.size.width/2);
     CGFloat frameCenterY = frame.origin.y+(frame.size.height/2);
-    
 
     CGFloat rectBottom = targetRect.origin.y+targetRect.size.height;
     CGFloat rectRight = targetRect.origin.x+targetRect.size.width;
@@ -570,12 +568,15 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         case PSTCollectionViewScrollPositionLeft:
             targetRect = CGRectMake(targetRect.origin.x, targetRect.origin.y, frame.size.width, targetRect.size.height);
             break;
+            
         case PSTCollectionViewScrollPositionRight:
             targetRect = CGRectMake(frame.origin.x-(frameRight-rectRight), targetRect.origin.y, frame.size.width, targetRect.size.height);
             break;
+            
         case PSTCollectionViewScrollPositionTop:
             targetRect = CGRectMake(targetRect.origin.x, targetRect.origin.y, targetRect.size.width, frame.size.height);
             break;
+            
         case PSTCollectionViewScrollPositionBottom:
             targetRect = CGRectMake(targetRect.origin.x, frame.origin.y-(frameBottom-rectBottom), targetRect.size.width, frame.size.height);
             break;
