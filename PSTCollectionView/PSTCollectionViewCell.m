@@ -121,6 +121,26 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    if ((self = [super initWithCoder:aDecoder])) {
+        if ([[self subviews] count] > 0) {
+            _contentView = [self subviews][0];
+        } else {
+            _contentView = [[UIView alloc] initWithFrame:self.bounds];
+            _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+            [self addSubview:_contentView];
+        }
+        
+        _backgroundView = [[UIView alloc] initWithFrame:self.bounds];
+        _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [self insertSubview:_backgroundView belowSubview:_contentView];
+        
+        _menuGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(menuGesture:)];
+    }
+    return self;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Public
 
