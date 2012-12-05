@@ -537,7 +537,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (CGRect)makeRect:(CGRect)targetRect toScrollPosition:(PSTCollectionViewScrollPosition)scrollPosition
 {
-    // CGRectOrientationFix to fix convertRect when in landscape mode
+    // CGRectOrientationFix() to ensure bounds is rotated to match the window base coordinates when in landscape
     CGRect frame = [self convertRect:CGRectOrientationFix(self.layer.bounds) fromView:nil];
     
     CGFloat frameBottom = frame.origin.y+frame.size.height;
@@ -587,7 +587,6 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 CGRect CGRectOrientationFix(CGRect rect) {
-    
     
     UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
     if (UIInterfaceOrientationIsLandscape(orientation)) {
