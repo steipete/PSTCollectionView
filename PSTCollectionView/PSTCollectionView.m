@@ -586,8 +586,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 CGRect CGRectOrientationFix(CGRect rect) {
+    
+    
     UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
-    if (UIInterfaceOrientationLandscapeLeft == orientation ||UIInterfaceOrientationLandscapeRight == orientation ) {
+    if (UIInterfaceOrientationIsLandscape(orientation)) {
         CGRect newRect;
         newRect.origin.x = rect.origin.y;
         newRect.origin.y = rect.origin.x;
