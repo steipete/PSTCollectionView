@@ -144,7 +144,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     _self->_cellNibDict = [NSMutableDictionary new];
     _self->_supplementaryViewClassDict = [NSMutableDictionary new];
 	_self->_supplementaryViewNibDict = [NSMutableDictionary new];
-
+    
     // add class that saves additional ivars
     objc_setAssociatedObject(_self, &kPSTColletionViewExt, [PSTCollectionViewExt new], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
@@ -160,31 +160,31 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (id)initWithCoder:(NSCoder *)inCoder {
     if ((self = [super initWithCoder:inCoder])) {
-
+        
         PSTCollectionViewCommonSetup(self);
         // add observer for nib deserialization.
-
+        
         id nibObserverToken = [[NSNotificationCenter defaultCenter] addObserverForName:PSTCollectionViewLayoutAwokeFromNib object:nil queue:nil usingBlock:^(NSNotification *note) {
             self.extVars.nibLayout = note.object;
         }];
         self.extVars.nibObserverToken = nibObserverToken;
-
+        
         NSDictionary *cellExternalObjects =  [inCoder decodeObjectForKey:@"UICollectionViewCellPrototypeNibExternalObjects"];
         NSDictionary *cellNibs =  [inCoder decodeObjectForKey:@"UICollectionViewCellNibDict"];
-
+        
         for (NSString *identifier in cellNibs.allKeys) {
             _cellNibDict[identifier] = cellNibs[identifier];
         }
-
+        
         self.extVars.nibCellsExternalObjects = cellExternalObjects;
-
+        
 		NSDictionary *supplementaryViewExternalObjects =  [inCoder decodeObjectForKey:@"UICollectionViewSupplementaryViewPrototypeNibExternalObjects"];
 		NSDictionary *supplementaryViewNibs =  [inCoder decodeObjectForKey:@"UICollectionViewSupplementaryViewNibDict"];
-
+        
 		for (NSString *identifier in supplementaryViewNibs.allKeys) {
 			_supplementaryViewNibDict[identifier] = supplementaryViewNibs[identifier];
 		}
-
+        
 		self.extVars.supplementaryViewsExternalObjects = supplementaryViewExternalObjects;
     }
     return self;
@@ -192,14 +192,14 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-
+    
     // check if NIB deserialization found a layout.
     id nibObserverToken = self.extVars.nibObserverToken;
     if (nibObserverToken) {
         [[NSNotificationCenter defaultCenter] removeObserver:nibObserverToken];
         self.extVars.nibObserverToken = nil;
     }
-
+    
     PSTCollectionViewLayout *nibLayout = self.extVars.nibLayout;
     if (nibLayout) {
         self.collectionViewLayout = nibLayout;
@@ -221,7 +221,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-
+    
     // Adding alpha animation to make the relayouting smooth
     if (_collectionViewFlags.fadeCellsForBoundsChange) {
         CATransition *transition = [CATransition animation];
@@ -230,27 +230,27 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         transition.type = kCATransitionFade;
         [self.layer addAnimation:transition forKey:@"rotationAnimation"];
     }
-
+    
     [_collectionViewData validateLayoutInRect:self.bounds];
-
+    
     // update cells
     if (_collectionViewFlags.fadeCellsForBoundsChange) {
         [CATransaction begin];
         [CATransaction setDisableActions:YES];
     }
-
+    
     if(!_collectionViewFlags.updatingLayout)
         [self updateVisibleCellsNow:YES];
-
+    
     if (_collectionViewFlags.fadeCellsForBoundsChange) {
         [CATransaction commit];
     }
-
+    
     // do we need to update contentSize?
     CGSize contentSize = [_collectionViewData collectionViewContentRect].size;
     if (!CGSizeEqualToSize(self.contentSize, contentSize)) {
         self.contentSize = contentSize;
-
+        
         // if contentSize is different, we need to re-evaluate layout, bounds (contentOffset) might changed
         [_collectionViewData validateLayoutInRect:self.bounds];
         [self updateVisibleCellsNow:YES];
@@ -259,7 +259,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     if (_backgroundView) {
         _backgroundView.frame = (CGRect){.origin=self.contentOffset,.size=self.bounds.size};
     }
-
+    
     _collectionViewFlags.fadeCellsForBoundsChange = NO;
     _collectionViewFlags.doneFirstLayout = YES;
 }
@@ -295,7 +295,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     NSArray *topLevelObjects = [nib instantiateWithOwner:nil options:nil];
 #pragma unused(topLevelObjects)
     NSAssert(topLevelObjects.count == 1 && [topLevelObjects[0] isKindOfClass:PSTCollectionViewCell.class], @"must contain exactly 1 top level object which is a PSTCollectionViewCell");
-
+    
     _cellNibDict[identifier] = nib;
 }
 
@@ -303,7 +303,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     NSArray *topLevelObjects = [nib instantiateWithOwner:nil options:nil];
 #pragma unused(topLevelObjects)
     NSAssert(topLevelObjects.count == 1 && [topLevelObjects[0] isKindOfClass:PSTCollectionReusableView.class], @"must contain exactly 1 top level object which is a PSTCollectionReusableView");
-
+    
 	NSString *kindAndIdentifier = [NSString stringWithFormat:@"%@/%@", kind, identifier];
     _supplementaryViewNibDict[kindAndIdentifier] = nib;
 }
@@ -413,7 +413,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         }
     }];
     [_allVisibleViewsDict removeAllObjects];
-
+    
     for(NSIndexPath *indexPath in _indexPathsForSelectedItems) {
         PSTCollectionViewCell *selectedCell = [self cellForItemAtIndexPath:indexPath];
         selectedCell.selected = NO;
@@ -421,10 +421,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     }
     [_indexPathsForSelectedItems removeAllObjects];
     [_indexPathsForHighlightedItems removeAllObjects];
-
+    
     [self setNeedsLayout];
-
-
+    
+    
     //NSAssert(sectionCount == 1, @"Sections are currently not supported.");
 }
 
@@ -496,14 +496,14 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (NSArray *)indexPathsForVisibleItems {
 	NSMutableArray *indexPaths = [NSMutableArray arrayWithCapacity:[_allVisibleViewsDict count]];
-
+    
 	[_allVisibleViewsDict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
 		PSTCollectionViewItemKey *itemKey = (PSTCollectionViewItemKey *)key;
         if (itemKey.type == PSTCollectionViewItemTypeCell) {
 			[indexPaths addObject:itemKey.indexPath];
 		}
 	}];
-
+    
 	return indexPaths;
 }
 
@@ -514,44 +514,63 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 // Interacting with the collection view.
 - (void)scrollToItemAtIndexPath:(NSIndexPath *)indexPath atScrollPosition:(PSTCollectionViewScrollPosition)scrollPosition animated:(BOOL)animated {
-
+    
     // ensure grid is layouted; else we can't scroll.
     [self layoutSubviews];
-
+    
     PSTCollectionViewLayoutAttributes *layoutAttributes = [self.collectionViewLayout layoutAttributesForItemAtIndexPath:indexPath];
+    
     if (layoutAttributes) {
-        CGRect targetRect = layoutAttributes.frame;
-
-        // hack to add proper margins to flowlayout.
-        // TODO: how to pack this into PSTCollectionViewFlowLayout?
-        if ([self.collectionViewLayout isKindOfClass:[PSTCollectionViewFlowLayout class]]) {
-            PSTCollectionViewFlowLayout *flowLayout = (PSTCollectionViewFlowLayout *)self.collectionViewLayout;
-            targetRect.size.height += flowLayout.scrollDirection == UICollectionViewScrollDirectionVertical ? flowLayout.minimumLineSpacing : flowLayout.minimumInteritemSpacing;
-            targetRect.size.width += flowLayout.scrollDirection == UICollectionViewScrollDirectionVertical ? flowLayout.minimumInteritemSpacing : flowLayout.minimumLineSpacing;
-        }
-        targetRect = [self makeRect:targetRect toScrollPosition:scrollPosition];
+        CGRect targetRect = [self makeRect:layoutAttributes.frame toScrollPosition:scrollPosition];
         
         [self scrollRectToVisible:targetRect animated:animated];
     }
 }
 
-- (CGRect)makeRect:(CGRect)targetRect toScrollPosition:(PSTCollectionViewScrollPosition)scrollPosition
-{
+- (CGRect)makeRect:(CGRect)targetRect toScrollPosition:(PSTCollectionViewScrollPosition)scrollPosition {
+    // split parameters
+    NSUInteger verticalPosition = scrollPosition & 0x07;   // 0000 0111
+    NSUInteger horizontalPosition = scrollPosition & 0x38; // 0011 1000
+    
+    if (verticalPosition != PSTCollectionViewScrollPositionNone
+        && verticalPosition != PSTCollectionViewScrollPositionTop
+        && verticalPosition != PSTCollectionViewScrollPositionCenteredVertically
+        && verticalPosition != PSTCollectionViewScrollPositionBottom)
+    {
+        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"PSTCollectionViewScrollPosition: attempt to use a scroll position with multiple vertical positioning styles" userInfo:nil];
+    }
+    
+    if(horizontalPosition != PSTCollectionViewScrollPositionNone
+       && horizontalPosition != PSTCollectionViewScrollPositionLeft
+       && horizontalPosition != PSTCollectionViewScrollPositionCenteredHorizontally
+       && horizontalPosition != PSTCollectionViewScrollPositionRight) {
+        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"PSTCollectionViewScrollPosition: attempt to use a scroll position with multiple horizontal positioning styles" userInfo:nil];
+    }
+    
     CGRect frame = self.layer.bounds;
     
     CGFloat calculateX;
     CGFloat calculateY;
     
-    switch(scrollPosition){
-            
-        case PSTCollectionViewScrollPositionCenteredHorizontally:
-            calculateX = targetRect.origin.x-((frame.size.width/2)-(targetRect.size.width/2));
-            targetRect = CGRectMake(calculateX, targetRect.origin.y, frame.size.width, targetRect.size.height);
-            break;
-            
+    switch(verticalPosition){
         case PSTCollectionViewScrollPositionCenteredVertically:
             calculateY = targetRect.origin.y-((frame.size.height/2)-(targetRect.size.height/2));
             targetRect = CGRectMake(targetRect.origin.x, calculateY, targetRect.size.width, frame.size.height);
+            break;
+        case PSTCollectionViewScrollPositionTop:
+            targetRect = CGRectMake(targetRect.origin.x, targetRect.origin.y, targetRect.size.width, frame.size.height);
+            break;
+            
+        case PSTCollectionViewScrollPositionBottom:
+            calculateY = targetRect.origin.y-(frame.size.height-targetRect.size.height);
+            targetRect = CGRectMake(targetRect.origin.x, calculateY, targetRect.size.width, frame.size.height);
+            break;
+    };
+    
+    switch(horizontalPosition){
+        case PSTCollectionViewScrollPositionCenteredHorizontally:
+            calculateX = targetRect.origin.x-((frame.size.width/2)-(targetRect.size.width/2));
+            targetRect = CGRectMake(calculateX, targetRect.origin.y, frame.size.width, targetRect.size.height);
             break;
             
         case PSTCollectionViewScrollPositionLeft:
@@ -562,18 +581,8 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             calculateX = targetRect.origin.x-(frame.size.width-targetRect.size.width);
             targetRect = CGRectMake(calculateX, targetRect.origin.y, frame.size.width, targetRect.size.height);
             break;
-            
-        case PSTCollectionViewScrollPositionTop:
-            targetRect = CGRectMake(targetRect.origin.x, targetRect.origin.y, targetRect.size.width, frame.size.height);
-            break;
-            
-        case PSTCollectionViewScrollPositionBottom:
-            calculateY = targetRect.origin.y-(frame.size.height-targetRect.size.height);
-            targetRect = CGRectMake(targetRect.origin.x, calculateY, targetRect.size.width, frame.size.height);
-            break;
-            
-        case PSTCollectionViewScrollPositionNone:;
-    }
+    };
+    
     return targetRect;
 }
 
@@ -582,31 +591,31 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
-
+    
     CGPoint touchPoint = [[touches anyObject] locationInView:self];
     NSIndexPath *indexPath = [self indexPathForItemAtPoint:touchPoint];
     if (indexPath) {
-
+        
         if (!self.allowsMultipleSelection) {
             // temporally unhighlight background on touchesBegan (keeps selected by _indexPathsForSelectedItems)
             for (PSTCollectionViewCell* visibleCell in [self allCells]) {
                 visibleCell.highlighted = NO;
                 visibleCell.selected = NO;
-
+                
                 // NOTE: doesn't work due to the _indexPathsForHighlightedItems validation
                 //[self unhighlightItemAtIndexPath:indexPathForVisibleItem animated:YES notifyDelegate:YES];
             }
         }
-
+        
         [self highlightItemAtIndexPath:indexPath animated:YES scrollPosition:PSTCollectionViewScrollPositionNone notifyDelegate:YES];
-
+        
         self.extVars.touchingIndexPath = indexPath;
     }
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesMoved:touches withEvent:event];
-
+    
     if (self.extVars.touchingIndexPath) {
         CGPoint touchPoint = [[touches anyObject] locationInView:self];
         NSIndexPath *indexPath = [self indexPathForItemAtPoint:touchPoint];
@@ -621,12 +630,12 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesEnded:touches withEvent:event];
-
+    
     CGPoint touchPoint = [[touches anyObject] locationInView:self];
     NSIndexPath *indexPath = [self indexPathForItemAtPoint:touchPoint];
     if ([indexPath isEqual:self.extVars.touchingIndexPath]) {
         [self userSelectedItemAtIndexPath:indexPath];
-
+        
         [self unhighlightAllItems];
         self.extVars.touchingIndexPath = nil;
     }
@@ -637,7 +646,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesCancelled:touches withEvent:event];
-
+    
     [self cellTouchCancelled];
 }
 
@@ -650,7 +659,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             visibleCell.selected = [_indexPathsForSelectedItems containsObject:indexPathForVisibleItem];
         }
     }
-
+    
     [self unhighlightAllItems];
     self.extVars.touchingIndexPath = nil;
 }
@@ -666,22 +675,22 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 // select item, notify delegate (internal)
 - (void)selectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(PSTCollectionViewScrollPosition)scrollPosition notifyDelegate:(BOOL)notifyDelegate {
-
+    
     if (self.allowsMultipleSelection && [_indexPathsForSelectedItems containsObject:indexPath]) {
-
+        
         BOOL shouldDeselect = YES;
         if (notifyDelegate && _collectionViewFlags.delegateShouldDeselectItemAtIndexPath) {
             shouldDeselect = [self.delegate collectionView:self shouldDeselectItemAtIndexPath:indexPath];
         }
-
+        
         if (shouldDeselect) {
             [self deselectItemAtIndexPath:indexPath animated:animated];
-
+            
             if (notifyDelegate && _collectionViewFlags.delegateDidDeselectItemAtIndexPath) {
                 [self.delegate collectionView:self didDeselectItemAtIndexPath:indexPath];
             }
         }
-
+        
     } else {
         // either single selection, or wasn't already selected in multiple selection mode
         
@@ -692,23 +701,23 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                 }
             }
         }
-
+        
         BOOL shouldSelect = YES;
         if (notifyDelegate && _collectionViewFlags.delegateShouldSelectItemAtIndexPath) {
             shouldSelect = [self.delegate collectionView:self shouldSelectItemAtIndexPath:indexPath];
         }
-
+        
         if (shouldSelect) {
             PSTCollectionViewCell *selectedCell = [self cellForItemAtIndexPath:indexPath];
             selectedCell.selected = YES;
             [_indexPathsForSelectedItems addObject:indexPath];
-
+            
             if (notifyDelegate && _collectionViewFlags.delegateDidSelectItemAtIndexPath) {
                 [self.delegate collectionView:self didSelectItemAtIndexPath:indexPath];
             }
         }
     }
-
+    
     [self unhighlightItemAtIndexPath:indexPath animated:animated notifyDelegate:YES];
 }
 
@@ -726,9 +735,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         PSTCollectionViewCell *selectedCell = [self cellForItemAtIndexPath:indexPath];
         selectedCell.selected = NO;
         [_indexPathsForSelectedItems removeObject:indexPath];
-
+        
         [self unhighlightItemAtIndexPath:indexPath animated:animated notifyDelegate:notify];
-
+        
         if (notify && _collectionViewFlags.delegateDidDeselectItemAtIndexPath) {
             [self.delegate collectionView:self didDeselectItemAtIndexPath:indexPath];
         }
@@ -740,12 +749,12 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     if (notifyDelegate && _collectionViewFlags.delegateShouldHighlightItemAtIndexPath) {
         shouldHighlight = [self.delegate collectionView:self shouldHighlightItemAtIndexPath:indexPath];
     }
-
+    
     if (shouldHighlight) {
         PSTCollectionViewCell *highlightedCell = [self cellForItemAtIndexPath:indexPath];
         highlightedCell.highlighted = YES;
         [_indexPathsForHighlightedItems addObject:indexPath];
-
+        
         if (notifyDelegate && _collectionViewFlags.delegateDidHighlightItemAtIndexPath) {
             [self.delegate collectionView:self didHighlightItemAtIndexPath:indexPath];
         }
@@ -758,7 +767,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         PSTCollectionViewCell *highlightedCell = [self cellForItemAtIndexPath:indexPath];
         highlightedCell.highlighted = NO;
         [_indexPathsForHighlightedItems removeObject:indexPath];
-
+        
         if (notifyDelegate && _collectionViewFlags.delegateDidUnhighlightItemAtIndexPath) {
             [self.delegate collectionView:self didUnhighlightItemAtIndexPath:indexPath];
         }
@@ -804,7 +813,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)deleteItemsAtIndexPaths:(NSArray *)indexPaths {
     [self updateRowsAtIndexPaths:indexPaths updateAction:PSTCollectionUpdateActionDelete];
-
+    
 }
 
 - (void)reloadItemsAtIndexPaths:(NSArray *)indexPaths {
@@ -821,18 +830,18 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         [self setupCellAnimations];
         [self endItemAnimations];
     }
-
+    
 }
 
 - (void)performBatchUpdates:(void (^)(void))updates completion:(void (^)(BOOL finished))completion {
     if(!updates) return;
     
     [self setupCellAnimations];
-
+    
     updates();
     
     if(completion) _updateCompletionHandler = completion;
-        
+    
     [self endItemAnimations];
 }
 
@@ -852,7 +861,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)setCollectionViewLayout:(PSTCollectionViewLayout *)layout animated:(BOOL)animated {
     if (layout == _layout) return;
-
+    
     // not sure it was it original code, but here this prevents crash
     // in case we switch layout before previous one was initially loaded
     if(CGRectIsEmpty(self.bounds) || !_collectionViewFlags.doneFirstLayout) {
@@ -869,7 +878,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         
         _collectionViewFlags.scheduledUpdateVisibleCells= YES;
         _collectionViewFlags.scheduledUpdateVisibleCellLayoutAttributes = NO;
-
+        
         [self setNeedsDisplay];
     }
     else {
@@ -877,7 +886,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         
         _collectionViewData = [[PSTCollectionViewData alloc] initWithCollectionView:self layout:layout];
         [_collectionViewData prepareToLoadData];
-
+        
         NSArray *previouslySelectedIndexPaths = [self indexPathsForSelectedItems];
         NSMutableSet *selectedCellKeys = [NSMutableSet setWithCapacity:[previouslySelectedIndexPaths count]];
         
@@ -888,7 +897,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         NSArray *previouslyVisibleItemsKeys = [_allVisibleViewsDict allKeys];
         NSSet *previouslyVisibleItemsKeysSet = [NSSet setWithArray:previouslyVisibleItemsKeys];
         NSMutableSet *previouslyVisibleItemsKeysSetMutable = [NSMutableSet setWithArray:previouslyVisibleItemsKeys];
-
+        
         if([selectedCellKeys intersectsSet:selectedCellKeys]) {
             [previouslyVisibleItemsKeysSetMutable intersectSet:previouslyVisibleItemsKeysSetMutable];
         }
@@ -899,7 +908,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         NSArray *newlyVisibleLayoutAttrs = [_collectionViewData layoutAttributesForElementsInRect:rect];
         
         NSMutableDictionary *layoutInterchangeData = [NSMutableDictionary dictionaryWithCapacity:
-                                                     [newlyVisibleLayoutAttrs count] + [previouslyVisibleItemsKeysSet count]];
+                                                      [newlyVisibleLayoutAttrs count] + [previouslyVisibleItemsKeysSet count]];
         
         NSMutableSet *newlyVisibleItemsKeys = [NSMutableSet set];
         for(PSTCollectionViewLayoutAttributes *attr in newlyVisibleLayoutAttrs) {
@@ -956,7 +965,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             layoutInterchangeData[key] = [NSDictionary dictionaryWithObjects:@[prevAttr,newAttr]
                                                                      forKeys:@[@"previousLayoutInfos", @"newLayoutInfos"]];
         }
-
+        
         for(PSTCollectionViewItemKey *key in [layoutInterchangeData keyEnumerator]) {
             if(key.type == PSTCollectionViewItemTypeCell) {
                 PSTCollectionViewCell* cell = _allVisibleViewsDict[key];
@@ -1003,12 +1012,12 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         
         if(animated) {
             [UIView animateWithDuration:.3 animations:^ {
-                 _collectionViewFlags.updatingLayout = YES;
-                 applyNewLayoutBlock();
-             } completion:^(BOOL finished) {
-                 freeUnusedViews();
-                 _collectionViewFlags.updatingLayout = NO;
-             }];
+                _collectionViewFlags.updatingLayout = YES;
+                applyNewLayoutBlock();
+            } completion:^(BOOL finished) {
+                freeUnusedViews();
+                _collectionViewFlags.updatingLayout = NO;
+            }];
         }
         else {
             applyNewLayoutBlock();
@@ -1026,25 +1035,25 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)setDelegate:(id<PSTCollectionViewDelegate>)delegate {
 	super.delegate = delegate;
-
+    
 	//	Managing the Selected Cells
 	_collectionViewFlags.delegateShouldSelectItemAtIndexPath       = [self.delegate respondsToSelector:@selector(collectionView:shouldSelectItemAtIndexPath:)];
 	_collectionViewFlags.delegateDidSelectItemAtIndexPath          = [self.delegate respondsToSelector:@selector(collectionView:didSelectItemAtIndexPath:)];
 	_collectionViewFlags.delegateShouldDeselectItemAtIndexPath     = [self.delegate respondsToSelector:@selector(collectionView:shouldDeselectItemAtIndexPath:)];
 	_collectionViewFlags.delegateDidDeselectItemAtIndexPath        = [self.delegate respondsToSelector:@selector(collectionView:didDeselectItemAtIndexPath:)];
-
+    
 	//	Managing Cell Highlighting
 	_collectionViewFlags.delegateShouldHighlightItemAtIndexPath    = [self.delegate respondsToSelector:@selector(collectionView:shouldHighlightItemAtIndexPath:)];
 	_collectionViewFlags.delegateDidHighlightItemAtIndexPath       = [self.delegate respondsToSelector:@selector(collectionView:didHighlightItemAtIndexPath:)];
 	_collectionViewFlags.delegateDidUnhighlightItemAtIndexPath     = [self.delegate respondsToSelector:@selector(collectionView:didUnhighlightItemAtIndexPath:)];
-
+    
 	//	Tracking the Removal of Views
 	_collectionViewFlags.delegateDidEndDisplayingCell              = [self.delegate respondsToSelector:@selector(collectionView:didEndDisplayingCell:forItemAtIndexPath:)];
 	_collectionViewFlags.delegateDidEndDisplayingSupplementaryView = [self.delegate respondsToSelector:@selector(collectionView:didEndDisplayingSupplementaryView:forElementOfKind:atIndexPath:)];
-
+    
 	//	Managing Actions for Cells
 	_collectionViewFlags.delegateSupportsMenus                     = [self.delegate respondsToSelector:@selector(collectionView:shouldShowMenuForItemAtIndexPath:)];
-
+    
 	// These aren't present in the flags which is a little strange. Not adding them because thet will mess with byte alignment which will affect cross compatibility.
 	// The flag names are guesses and are there for documentation purposes.
 	//
@@ -1056,10 +1065,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 - (void)setDataSource:(id<PSTCollectionViewDataSource>)dataSource {
     if (dataSource != _dataSource) {
 		_dataSource = dataSource;
-
+        
 		//	Getting Item and Section Metrics
 		_collectionViewFlags.dataSourceNumberOfSections = [_dataSource respondsToSelector:@selector(numberOfSectionsInCollectionView:)];
-
+        
 		//	Getting Views for Items
 		_collectionViewFlags.dataSourceViewForSupplementaryElement = [_dataSource respondsToSelector:@selector(collectionView:viewForSupplementaryElementOfKind:atIndexPath:)];
     }
@@ -1079,10 +1088,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)setAllowsMultipleSelection:(BOOL)allowsMultipleSelection {
     _collectionViewFlags.allowsMultipleSelection = allowsMultipleSelection;
-
+    
     // Deselect all objects if allows multiple selection is false
     if (!allowsMultipleSelection && _indexPathsForSelectedItems.count) {
-
+        
         // Note: Apple's implementation leaves a mostly random item selected. Presumably they
         //       have a good reason for this, but I guess it's just skipping the last or first index.
         for (NSIndexPath *selectedIndexPath in [_indexPathsForSelectedItems copy]) {
@@ -1108,18 +1117,18 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 // TODO: use now parameter.
 - (void)updateVisibleCellsNow:(BOOL)now {
     NSArray *layoutAttributesArray = [_collectionViewData layoutAttributesForElementsInRect:self.bounds];
-
+    
     // create ItemKey/Attributes dictionary
     NSMutableDictionary *itemKeysToAddDict = [NSMutableDictionary dictionary];
     for (PSTCollectionViewLayoutAttributes *layoutAttributes in layoutAttributesArray) {
         PSTCollectionViewItemKey *itemKey = [PSTCollectionViewItemKey collectionItemKeyForLayoutAttributes:layoutAttributes];
         itemKeysToAddDict[itemKey] = layoutAttributes;
     }
-
+    
     // detect what items should be removed and queued back.
     NSMutableSet *allVisibleItemKeys = [NSMutableSet setWithArray:[_allVisibleViewsDict allKeys]];
     [allVisibleItemKeys minusSet:[NSSet setWithArray:[itemKeysToAddDict allKeys]]];
-
+    
     // remove views that have not been processed and prepare them for re-use.
     for (PSTCollectionViewItemKey *itemKey in allVisibleItemKeys) {
         PSTCollectionReusableView *reusableView = _allVisibleViewsDict[itemKey];
@@ -1140,24 +1149,24 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             // TODO: decoration views etc?
         }
     }
-
+    
     // finally add new cells.
     [itemKeysToAddDict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         PSTCollectionViewItemKey *itemKey = key;
         PSTCollectionViewLayoutAttributes *layoutAttributes = obj;
-
+        
         // check if cell is in visible dict; add it if not.
         PSTCollectionReusableView *view = _allVisibleViewsDict[itemKey];
         if (!view) {
             if (itemKey.type == PSTCollectionViewItemTypeCell) {
                 view = [self createPreparedCellForItemAtIndexPath:itemKey.indexPath withLayoutAttributes:layoutAttributes];
-
+                
             } else if (itemKey.type == PSTCollectionViewItemTypeSupplementaryView) {
                 view = [self createPreparedSupplementaryViewForElementOfKind:layoutAttributes.representedElementKind
 																 atIndexPath:layoutAttributes.indexPath
 														withLayoutAttributes:layoutAttributes];
             }
-
+            
 			//Supplementary views are optional
 			if (view) {
 				_allVisibleViewsDict[itemKey] = view;
@@ -1172,16 +1181,16 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 // fetches a cell from the dataSource and sets the layoutAttributes
 - (PSTCollectionViewCell *)createPreparedCellForItemAtIndexPath:(NSIndexPath *)indexPath withLayoutAttributes:(PSTCollectionViewLayoutAttributes *)layoutAttributes {
-
+    
     PSTCollectionViewCell *cell = [self.dataSource collectionView:self cellForItemAtIndexPath:indexPath];
-
+    
     // reset selected/highlight state
     [cell setHighlighted:[_indexPathsForHighlightedItems containsObject:indexPath]];
     [cell setSelected:[_indexPathsForSelectedItems containsObject:indexPath]];
-
+    
     // voiceover support
     cell.isAccessibilityElement = YES;
-
+    
     [cell applyLayoutAttributes:layoutAttributes];
     return cell;
 }
@@ -1203,10 +1212,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 - (void)queueReusableView:(PSTCollectionReusableView *)reusableView inQueue:(NSMutableDictionary *)queue {
     NSString *cellIdentifier = reusableView.reuseIdentifier;
     NSParameterAssert([cellIdentifier length]);
-
+    
     [reusableView removeFromSuperview];
     [reusableView prepareForReuse];
-
+    
     // enqueue cell
     NSMutableArray *reuseableViews = queue[cellIdentifier];
     if (!reuseableViews) {
@@ -1244,7 +1253,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 -(NSMutableArray *)arrayForUpdateAction:(PSTCollectionUpdateAction)updateAction {
     NSMutableArray *ret = nil;
-
+    
     switch (updateAction) {
         case PSTCollectionUpdateActionInsert:
             if(!_insertItems) _insertItems = [[NSMutableArray alloc] init];
@@ -1282,7 +1291,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     
     NSMutableArray *animations = [[NSMutableArray alloc] init];
     NSMutableDictionary *newAllVisibleView = [[NSMutableDictionary alloc] init];
-
+    
     for (PSTCollectionViewUpdateItem *updateItem in items) {
         if (updateItem.isSectionOperation) continue;
         
@@ -1314,9 +1323,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                                           startAttrs.frame.size.width,
                                           startAttrs.frame.size.height);
             CGRect finalRect = CGRectMake(CGRectGetMidX(finalAttrs.frame)-finalAttrs.center.x,
-                                         CGRectGetMidY(finalAttrs.frame)-finalAttrs.center.y,
-                                         finalAttrs.frame.size.width,
-                                         finalAttrs.frame.size.height);
+                                          CGRectGetMidY(finalAttrs.frame)-finalAttrs.center.y,
+                                          finalAttrs.frame.size.width,
+                                          finalAttrs.frame.size.height);
             
             if(CGRectIntersectsRect(_visibleBoundRects, startRect) || CGRectIntersectsRect(_visibleBoundRects, finalRect)) {
                 PSTCollectionReusableView *view = [self createPreparedCellForItemAtIndexPath:indexPath
@@ -1372,7 +1381,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         [newKey setIndexPath:newIndexPath];
         newAllVisibleView[newKey] = view;
     }
-
+    
     NSArray *allNewlyVisibleItems = [_layout layoutAttributesForElementsInRect:_visibleBoundRects];
     for (PSTCollectionViewLayoutAttributes *attrs in allNewlyVisibleItems) {
         PSTCollectionViewItemKey *key = [PSTCollectionViewItemKey collectionItemKeyForLayoutAttributes:attrs];
@@ -1391,44 +1400,44 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     }
     
     _allVisibleViewsDict = newAllVisibleView;
-
+    
     for(NSDictionary *animation in animations) {
         PSTCollectionReusableView *view = animation[@"view"];
         PSTCollectionViewLayoutAttributes *attr = animation[@"previousLayoutInfos"];
         [view applyLayoutAttributes:attr];
     };
-
+    
     [UIView animateWithDuration:.3 animations:^{
-         _collectionViewFlags.updatingLayout = YES;
-         for(NSDictionary *animation in animations) {
-             PSTCollectionReusableView* view = animation[@"view"];
-             PSTCollectionViewLayoutAttributes* attrs = animation[@"newLayoutInfos"];
-             [view applyLayoutAttributes:attrs];
-         }
-     } completion:^(BOOL finished) {
-         NSMutableSet *set = [NSMutableSet set];
-         NSArray *visibleItems = [_layout layoutAttributesForElementsInRect:_visibleBoundRects];
-         for(PSTCollectionViewLayoutAttributes *attrs in visibleItems)
-             [set addObject: [PSTCollectionViewItemKey collectionItemKeyForLayoutAttributes:attrs]];
-
-         NSMutableSet *toRemove =  [NSMutableSet set];
-         for(PSTCollectionViewItemKey *key in [_allVisibleViewsDict keyEnumerator]) {
-             if(![set containsObject:key]) {
-                 [self reuseCell:_allVisibleViewsDict[key]];
-                 [toRemove addObject:key];
-             }
-         }
-         for(id key in toRemove)
-             [_allVisibleViewsDict removeObjectForKey:key];
-         
-         _collectionViewFlags.updatingLayout = NO;
-         
-         if(_updateCompletionHandler) {
-             _updateCompletionHandler(finished);
-             _updateCompletionHandler = nil;
-         }
-     }];
-
+        _collectionViewFlags.updatingLayout = YES;
+        for(NSDictionary *animation in animations) {
+            PSTCollectionReusableView* view = animation[@"view"];
+            PSTCollectionViewLayoutAttributes* attrs = animation[@"newLayoutInfos"];
+            [view applyLayoutAttributes:attrs];
+        }
+    } completion:^(BOOL finished) {
+        NSMutableSet *set = [NSMutableSet set];
+        NSArray *visibleItems = [_layout layoutAttributesForElementsInRect:_visibleBoundRects];
+        for(PSTCollectionViewLayoutAttributes *attrs in visibleItems)
+            [set addObject: [PSTCollectionViewItemKey collectionItemKeyForLayoutAttributes:attrs]];
+        
+        NSMutableSet *toRemove =  [NSMutableSet set];
+        for(PSTCollectionViewItemKey *key in [_allVisibleViewsDict keyEnumerator]) {
+            if(![set containsObject:key]) {
+                [self reuseCell:_allVisibleViewsDict[key]];
+                [toRemove addObject:key];
+            }
+        }
+        for(id key in toRemove)
+            [_allVisibleViewsDict removeObjectForKey:key];
+        
+        _collectionViewFlags.updatingLayout = NO;
+        
+        if(_updateCompletionHandler) {
+            _updateCompletionHandler(finished);
+            _updateCompletionHandler = nil;
+        }
+    }];
+    
     [_layout finalizeCollectionViewUpdates];
 }
 
@@ -1445,21 +1454,21 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     
     [_layout invalidateLayout];
     [_collectionViewData prepareToLoadData];
-
+    
     NSMutableArray *someMutableArr1 = [[NSMutableArray alloc] init];
-
+    
     NSArray *removeUpdateItems = [[self arrayForUpdateAction:PSTCollectionUpdateActionDelete]
                                   sortedArrayUsingSelector:@selector(inverseCompareIndexPaths:)];
     
     NSArray *insertUpdateItems = [[self arrayForUpdateAction:PSTCollectionUpdateActionInsert]
                                   sortedArrayUsingSelector:@selector(compareIndexPaths:)];
-
+    
     NSMutableArray *sortedMutableReloadItems = [[_reloadItems sortedArrayUsingSelector:@selector(compareIndexPaths:)] mutableCopy];
     NSMutableArray *sortedMutableMoveItems = [[_moveItems sortedArrayUsingSelector:@selector(compareIndexPaths:)] mutableCopy];
     
     _originalDeleteItems = [removeUpdateItems copy];
     _originalInsertItems = [insertUpdateItems copy];
-
+    
     NSMutableArray *someMutableArr2 = [[NSMutableArray alloc] init];
     NSMutableArray *someMutableArr3 =[[NSMutableArray alloc] init];
     NSMutableDictionary *operations = [[NSMutableDictionary alloc] init];
@@ -1521,11 +1530,11 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             @([operations[@(deleteItem.indexPathBeforeUpdate.section)][@"deleted"] intValue]+1);
         }
     }
-                      
+    
     for(NSInteger i=0; i<[sortedInsertMutableItems count]; i++) {
         PSTCollectionViewUpdateItem *insertItem = sortedInsertMutableItems[i];
         NSIndexPath *indexPath = insertItem.indexPathAfterUpdate;
-
+        
         BOOL sectionOperation = [insertItem isSectionOperation];
         if(sectionOperation) {
             NSAssert([indexPath section]<[_collectionViewData numberOfSections],
@@ -1536,8 +1545,8 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                 if([moveItem.indexPathAfterUpdate isEqual:indexPath]) {
                     if(moveItem.isSectionOperation)
                         NSAssert(NO, @"attempt to perform an insert and a move to the same section (%d)",indexPath.section);
-//                    else
-//                        NSAssert(NO, @"attempt to perform an insert and a move to the same index path (%@)",indexPath);
+                    //                    else
+                    //                        NSAssert(NO, @"attempt to perform an insert and a move to the same index path (%@)",indexPath);
                 }
             }
             
@@ -1565,12 +1574,12 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             
             if(!operations[@(indexPath.section)])
                 operations[@(indexPath.section)] = [NSMutableDictionary dictionary];
-
+            
             operations[@(indexPath.section)][@"inserted"] =
             @([operations[@(indexPath.section)][@"inserted"] intValue]+1);
         }
     }
-
+    
     for(PSTCollectionViewUpdateItem * sortedItem in sortedMutableMoveItems) {
         if(sortedItem.isSectionOperation) {
             NSAssert(sortedItem.indexPathBeforeUpdate.section<[oldCollectionViewData numberOfSections],
@@ -1609,11 +1618,11 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         
         operations[@(sortedItem.indexPathBeforeUpdate.section)][@"movedOut"] =
         @([operations[@(sortedItem.indexPathBeforeUpdate.section)][@"movedOut"] intValue]+1);
-
+        
         operations[@(sortedItem.indexPathAfterUpdate.section)][@"movedIn"] =
         @([operations[@(sortedItem.indexPathAfterUpdate.section)][@"movedIn"] intValue]+1);
     }
-
+    
 #if !defined  NS_BLOCK_ASSERTIONS
     for(NSNumber *sectionKey in [operations keyEnumerator]) {
         NSInteger section = [sectionKey intValue];
@@ -1628,12 +1637,12 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                  @"invalide update in section %d: number of items after update (%d) should be equal to the number of items before update (%d) "\
                  "plus count of inserted items (%d), minus count of deleted items (%d), plus count of items moved in (%d), minus count of items moved out (%d)",
                  section,
-                  [_collectionViewData numberOfItemsInSection:section],
+                 [_collectionViewData numberOfItemsInSection:section],
                  [oldCollectionViewData numberOfItemsInSection:section],
                  insertedCount,deletedCount,movedInCount, movedOutCount);
     }
 #endif
-
+    
     [someMutableArr2 addObjectsFromArray:sortedDeletedMutableItems];
     [someMutableArr3 addObjectsFromArray:sortedInsertMutableItems];
     [someMutableArr1 addObjectsFromArray:[someMutableArr2 sortedArrayUsingSelector:@selector(inverseCompareIndexPaths:)]];
@@ -1641,7 +1650,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     [someMutableArr1 addObjectsFromArray:[someMutableArr3 sortedArrayUsingSelector:@selector(compareIndexPaths:)]];
     
     NSMutableArray *layoutUpdateItems = [[NSMutableArray alloc] init];
-
+    
     [layoutUpdateItems addObjectsFromArray:sortedDeletedMutableItems];
     [layoutUpdateItems addObjectsFromArray:sortedMutableMoveItems];
     [layoutUpdateItems addObjectsFromArray:sortedInsertMutableItems];
@@ -1694,10 +1703,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     
     NSMutableArray *oldToNewMap = [NSMutableArray arrayWithCapacity:[oldCollectionViewData numberOfItems]];
     NSMutableArray *newToOldMap = [NSMutableArray arrayWithCapacity:[_collectionViewData numberOfItems]];
-
+    
     for(NSInteger i=0; i < [oldCollectionViewData numberOfItems]; i++)
         [oldToNewMap addObject:@(NSNotFound)];
-
+    
     for(NSInteger i=0; i < [_collectionViewData numberOfItems]; i++)
         [newToOldMap addObject:@(NSNotFound)];
     
@@ -1711,9 +1720,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                 newToOldMap[newGlobalIndex] = section[j];
         }
     }
-
+    
     _update = @{@"oldModel":oldCollectionViewData, @"newModel":_collectionViewData, @"oldToNewIndexMap":oldToNewMap, @"newToOldIndexMap":newToOldMap};
-
+    
     [self updateWithItems:someMutableArr1];
     
     _originalInsertItems = nil;
@@ -1837,33 +1846,33 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 // Create subclasses that pose as UICollectionView et al, if not available at runtime.
 __attribute__((constructor)) static void PSTCreateUICollectionViewClasses(void) {
     @autoreleasepool {
-
+        
         // class_setSuperclass is deprecated, but once iOS7 is out we hopefully can drop iOS5 and don't need this code anymore anyway.
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
         // Dynamically change superclasses of the PSUICollectionView* clases to UICollectioView*. Crazy stuff.
         if ([UICollectionView class]) class_setSuperclass([PSUICollectionView_ class], [UICollectionView class]);
         else objc_registerClassPair(objc_allocateClassPair([PSTCollectionView class], "UICollectionView", 0));
-
+        
 		if ([UICollectionViewCell class]) class_setSuperclass([PSUICollectionViewCell_ class], [UICollectionViewCell class]);
         else objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewCell class], "UICollectionViewCell", 0));
-
+        
 		if ([UICollectionReusableView class]) class_setSuperclass([PSUICollectionReusableView_ class], [UICollectionReusableView class]);
         else objc_registerClassPair(objc_allocateClassPair([PSTCollectionReusableView class], "UICollectionReusableView", 0));
-
+        
 		if ([UICollectionViewLayout class]) class_setSuperclass([PSUICollectionViewLayout_ class], [UICollectionViewLayout class]);
         else objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewLayout class], "UICollectionViewLayout", 0));
-
+        
 		if ([UICollectionViewFlowLayout class]) class_setSuperclass([PSUICollectionViewFlowLayout_ class], [UICollectionViewFlowLayout class]);
         else objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewFlowLayout class], "UICollectionViewFlowLayout", 0));
-
+        
 		if ([UICollectionViewLayoutAttributes class]) class_setSuperclass([PSUICollectionViewLayoutAttributes_ class], [UICollectionViewLayoutAttributes class]);
         else objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewLayoutAttributes class], "UICollectionViewLayoutAttributes", 0));
-
+        
 		if ([UICollectionViewController class]) class_setSuperclass([PSUICollectionViewController_ class], [UICollectionViewController class]);
         else objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewController class], "UICollectionViewController", 0));
 #pragma clang diagnostic pop
-
+        
         // add PSUI classes at runtime to make Interface Builder sane
         // (IB doesn't allow adding the PSUICollectionView_ types but doesn't complain on unknown classes)
         objc_registerClassPair(objc_allocateClassPair([PSUICollectionView_ class], "PSUICollectionView", 0));
