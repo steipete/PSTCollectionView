@@ -26,6 +26,8 @@
 		03594AE71671CA200025210A /* INDGridLayoutSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594ADC1671CA200025210A /* INDGridLayoutSection.m */; };
 		03594AEA1671CC1A0025210A /* NSIndexPath+INDCollectionViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594AE91671CC1A0025210A /* NSIndexPath+INDCollectionViewAdditions.m */; };
 		03594AEE1671D0650025210A /* NSValue+INDCollectionViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594AED1671D0650025210A /* NSValue+INDCollectionViewAdditions.m */; };
+		03594AF11671D6120025210A /* INDCollectionViewScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594AF01671D6110025210A /* INDCollectionViewScrollView.m */; };
+		03594AF41671D82E0025210A /* NSView+INDCollectionViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594AF31671D82E0025210A /* NSView+INDCollectionViewAdditions.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +72,10 @@
 		03594AEB1671CE850025210A /* INDGeometryAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = INDGeometryAdditions.h; path = ../../INDCollectionView/INDGeometryAdditions.h; sourceTree = "<group>"; };
 		03594AEC1671D0650025210A /* NSValue+INDCollectionViewAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSValue+INDCollectionViewAdditions.h"; path = "../../INDCollectionView/NSValue+INDCollectionViewAdditions.h"; sourceTree = "<group>"; };
 		03594AED1671D0650025210A /* NSValue+INDCollectionViewAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSValue+INDCollectionViewAdditions.m"; path = "../../INDCollectionView/NSValue+INDCollectionViewAdditions.m"; sourceTree = "<group>"; };
+		03594AEF1671D6110025210A /* INDCollectionViewScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INDCollectionViewScrollView.h; path = ../../INDCollectionView/INDCollectionViewScrollView.h; sourceTree = "<group>"; };
+		03594AF01671D6110025210A /* INDCollectionViewScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = INDCollectionViewScrollView.m; path = ../../INDCollectionView/INDCollectionViewScrollView.m; sourceTree = "<group>"; };
+		03594AF21671D82D0025210A /* NSView+INDCollectionViewAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSView+INDCollectionViewAdditions.h"; path = "../../INDCollectionView/NSView+INDCollectionViewAdditions.h"; sourceTree = "<group>"; };
+		03594AF31671D82E0025210A /* NSView+INDCollectionViewAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSView+INDCollectionViewAdditions.m"; path = "../../INDCollectionView/NSView+INDCollectionViewAdditions.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,7 +180,11 @@
 				03594AE91671CC1A0025210A /* NSIndexPath+INDCollectionViewAdditions.m */,
 				03594AEC1671D0650025210A /* NSValue+INDCollectionViewAdditions.h */,
 				03594AED1671D0650025210A /* NSValue+INDCollectionViewAdditions.m */,
+				03594AF21671D82D0025210A /* NSView+INDCollectionViewAdditions.h */,
+				03594AF31671D82E0025210A /* NSView+INDCollectionViewAdditions.m */,
 				03594AEB1671CE850025210A /* INDGeometryAdditions.h */,
+				03594AEF1671D6110025210A /* INDCollectionViewScrollView.h */,
+				03594AF01671D6110025210A /* INDCollectionViewScrollView.m */,
 			);
 			name = INDCollectionView;
 			sourceTree = "<group>";
@@ -258,6 +268,8 @@
 				03594AE71671CA200025210A /* INDGridLayoutSection.m in Sources */,
 				03594AEA1671CC1A0025210A /* NSIndexPath+INDCollectionViewAdditions.m in Sources */,
 				03594AEE1671D0650025210A /* NSValue+INDCollectionViewAdditions.m in Sources */,
+				03594AF11671D6120025210A /* INDCollectionViewScrollView.m in Sources */,
+				03594AF41671D82E0025210A /* NSView+INDCollectionViewAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -92,6 +92,6 @@ typedef NS_OPTIONS(NSUInteger, INDCollectionViewScrollPosition) {
 - (void)reloadItemsAtIndexPaths:(NSArray *)indexPaths;
 - (void)moveItemAtIndexPath:(NSIndexPath *)indexPath toIndexPath:(NSIndexPath *)newIndexPath;
 
-- (void)performBatchUpdates:(void (^)(void))updates completion:(void (^)(BOOL finished))completion; // allows multiple insert/delete/reload/move calls to be animated simultaneously. Nestable.
+- (void)performBatchUpdates:(void (^)(void))updates completion:(void (^)(void))completion; // allows multiple insert/delete/reload/move calls to be animated simultaneously. Nestable.
 
 @end

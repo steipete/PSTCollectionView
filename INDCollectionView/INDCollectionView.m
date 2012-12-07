@@ -12,6 +12,9 @@
 #import "INDCollectionViewFlowLayout.h"
 #import "INDCollectionViewItemKey.h"
 #import "INDCollectionViewUpdateItem.h"
+#import "INDCollectionViewScrollView.h"
+#import "NSIndexPath+INDCollectionViewAdditions.h"
+#import "NSView+INDCollectionViewAdditions.h"
 
 #import <QuartzCore/QuartzCore.h>
 #import <objc/runtime.h>
@@ -66,7 +69,7 @@ CGFloat INDSimulatorAnimationDragCoefficient(void);
     NSArray *_originalInsertItems;
     NSArray *_originalDeleteItems;
     NSEvent *_currentEvent;
-    void (^_updateCompletionHandler)(BOOL finished);
+    void (^_updateCompletionHandler)();
     NSMutableDictionary *_cellClassDict;
     NSMutableDictionary *_cellNibDict;
     NSMutableDictionary *_supplementaryViewClassDict;
@@ -108,6 +111,8 @@ CGFloat INDSimulatorAnimationDragCoefficient(void);
 @property (nonatomic, readonly) id currentUpdate;
 @property (nonatomic, readonly) NSDictionary *visibleViewsDict;
 @property (nonatomic, assign) CGRect visibleBoundRects;
+@property (nonatomic, assign) CGSize contentSize;
+@property (nonatomic, strong, readonly) INDCollectionViewScrollView *scrollView;
 @end
 
 // Used by INDCollectionView for external variables.
@@ -218,8 +223,8 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - UIView
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
+- (void)layout {
+    [super layout];
 
     // Adding alpha animation to make the relayouting smooth
     if (_collectionViewFlags.fadeCellsForBoundsChange) {
@@ -256,7 +261,7 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
     }
     
     if (_backgroundView) {
-        _backgroundView.frame = (CGRect){.origin=self.contentOffset,.size=self.bounds.size};
+        _backgroundView.frame = (NSRect){.origin=self.scrollView.contentOffset,.size=self.bounds.size};
     }
 
     _collectionViewFlags.fadeCellsForBoundsChange = NO;
@@ -291,7 +296,8 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
 }
 
 - (void)registerNib:(NSNib *)nib forCellWithReuseIdentifier:(NSString *)identifier {
-    NSArray *topLevelObjects = [nib instantiateWithOwner:nil options:nil];
+    NSArray *topLevelObjects = nil;
+    [nib instantiateWithOwner:nil topLevelObjects:&topLevelObjects];
 #pragma unused(topLevelObjects)
     NSAssert(topLevelObjects.count == 1 && [topLevelObjects[0] isKindOfClass:INDCollectionViewCell.class], @"must contain exactly 1 top level object which is a INDCollectionViewCell");
 
@@ -299,7 +305,8 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
 }
 
 - (void)registerNib:(NSNib *)nib forSupplementaryViewOfKind:(NSString *)kind withReuseIdentifier:(NSString *)identifier {
-    NSArray *topLevelObjects = [nib instantiateWithOwner:nil options:nil];
+    NSArray *topLevelObjects = nil;
+    [nib instantiateWithOwner:nil topLevelObjects:&topLevelObjects];
 #pragma unused(topLevelObjects)
     NSAssert(topLevelObjects.count == 1 && [topLevelObjects[0] isKindOfClass:INDCollectionReusableView.class], @"must contain exactly 1 top level object which is a INDCollectionReusableView");
 
@@ -317,11 +324,16 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
         if (_cellNibDict[identifier]) {
             // Cell was registered via registerNib:forCellWithReuseIdentifier:
             NSNib *cellNib = _cellNibDict[identifier];
-            NSDictionary *externalObjects = self.extVars.nibCellsExternalObjects[identifier];
+            NSMutableDictionary *externalObjects = [NSMutableDictionary dictionaryWithDictionary:self.extVars.nibCellsExternalObjects[identifier]];
             if (externalObjects) {
-                cell = [cellNib instantiateWithOwner:self options:@{NSNibExternalObjects:externalObjects}][0];
+                NSMutableArray *topLevelObjects = [NSMutableArray array];
+                externalObjects[NSNibTopLevelObjects] = topLevelObjects;
+                [cellNib instantiateNibWithExternalNameTable:externalObjects];
+                cell = topLevelObjects[0];
             } else {
-                cell = [cellNib instantiateWithOwner:self options:nil][0];
+                NSArray *topLevelObjects = nil;
+                [cellNib instantiateWithOwner:self topLevelObjects:&topLevelObjects];
+                cell = topLevelObjects[0];
             }
         } else {
             Class cellClass = _cellClassDict[identifier];
@@ -361,12 +373,17 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
         if (_supplementaryViewNibDict[kindAndIdentifier]) {
             // supplementary view was registered via registerNib:forCellWithReuseIdentifier:
             NSNib *supplementaryViewNib = _supplementaryViewNibDict[kindAndIdentifier];
-			NSDictionary *externalObjects = self.extVars.supplementaryViewsExternalObjects[kindAndIdentifier];
+			NSMutableDictionary *externalObjects = [NSMutableDictionary dictionaryWithDictionary:self.extVars.supplementaryViewsExternalObjects[kindAndIdentifier]];
 			if (externalObjects) {
-				view = [supplementaryViewNib instantiateWithOwner:self options:@{NSNibExternalObjects:externalObjects}][0];
-			} else {
-				view = [supplementaryViewNib instantiateWithOwner:self options:0][0];
-			}
+                NSMutableArray *topLevelObjects = [NSMutableArray array];
+                externalObjects[NSNibTopLevelObjects] = topLevelObjects;
+                [supplementaryViewNib instantiateNibWithExternalNameTable:externalObjects];
+                view = topLevelObjects[0];
+            } else {
+                NSArray *topLevelObjects = nil;
+                [supplementaryViewNib instantiateWithOwner:self topLevelObjects:&topLevelObjects];
+                view = topLevelObjects[0];
+            }
         } else {
 			Class viewClass = _supplementaryViewClassDict[kindAndIdentifier];
 			Class reusableViewClass = NSClassFromString(@"UICollectionReusableView");
@@ -407,7 +424,7 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
     if (_reloadingSuspendedCount != 0) return;
     [self invalidateLayout];
     [_allVisibleViewsDict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        if ([obj isKindOfClass:[UIView class]]) {
+        if ([obj isKindOfClass:[NSView class]]) {
             [obj removeFromSuperview];
         }
     }];
@@ -421,7 +438,7 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
     [_indexPathsForSelectedItems removeAllObjects];
     [_indexPathsForHighlightedItems removeAllObjects];
 
-    [self setNeedsLayout];
+    [self setNeedsLayout:YES];
 
 
     //NSAssert(sectionCount == 1, @"Sections are currently not supported.");
@@ -515,7 +532,7 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
 - (void)scrollToItemAtIndexPath:(NSIndexPath *)indexPath atScrollPosition:(INDCollectionViewScrollPosition)scrollPosition animated:(BOOL)animated {
 
     // ensure grid is layouted; else we can't scroll.
-    [self layoutSubviews];
+    [self layout];
 
     INDCollectionViewLayoutAttributes *layoutAttributes = [self.collectionViewLayout layoutAttributesForItemAtIndexPath:indexPath];
     if (layoutAttributes) {
@@ -525,8 +542,8 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
         // TODO: how to pack this into INDCollectionViewFlowLayout?
         if ([self.collectionViewLayout isKindOfClass:[INDCollectionViewFlowLayout class]]) {
             INDCollectionViewFlowLayout *flowLayout = (INDCollectionViewFlowLayout *)self.collectionViewLayout;
-            targetRect.size.height += flowLayout.scrollDirection == UICollectionViewScrollDirectionVertical ? flowLayout.minimumLineSpacing : flowLayout.minimumInteritemSpacing;
-            targetRect.size.width += flowLayout.scrollDirection == UICollectionViewScrollDirectionVertical ? flowLayout.minimumInteritemSpacing : flowLayout.minimumLineSpacing;
+            targetRect.size.height += flowLayout.scrollDirection == INDCollectionViewScrollDirectionVertical ? flowLayout.minimumLineSpacing : flowLayout.minimumInteritemSpacing;
+            targetRect.size.width += flowLayout.scrollDirection == INDCollectionViewScrollDirectionVertical ? flowLayout.minimumInteritemSpacing : flowLayout.minimumLineSpacing;
         }
         [self scrollRectToVisible:targetRect animated:animated];
     }
@@ -773,7 +790,7 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
 
 }
 
-- (void)performBatchUpdates:(void (^)(void))updates completion:(void (^)(BOOL finished))completion {
+- (void)performBatchUpdates:(void (^)(void))updates completion:(void (^)(void))completion {
     if(!updates) return;
     
     [self setupCellAnimations];
@@ -792,10 +809,9 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
     if (backgroundView != _backgroundView) {
         [_backgroundView removeFromSuperview];
         _backgroundView = backgroundView;
-        backgroundView.frame = (NSRect){.origin=self.contentOffset,.size=self.bounds.size};
+        backgroundView.frame = (NSRect){.origin=self.scrollView.contentOffset,.size=self.bounds.size};
         backgroundView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
-        [self addSubview:backgroundView];
-        [self sendSubviewToBack:backgroundView];
+        [self addSubview:backgroundView positioned:NSWindowBelow relativeTo:nil];
     }
 }
 
@@ -819,7 +835,7 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
         _collectionViewFlags.scheduledUpdateVisibleCells= YES;
         _collectionViewFlags.scheduledUpdateVisibleCellLayoutAttributes = NO;
 
-        [self setNeedsDisplay];
+        [self setNeedsDisplay:YES];
     }
     else {
         layout.collectionView = self;
@@ -842,7 +858,9 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
             [previouslyVisibleItemsKeysSetMutable intersectSet:previouslyVisibleItemsKeysSetMutable];
         }
         
-        [self bringSubviewToFront: _allVisibleViewsDict[[previouslyVisibleItemsKeysSetMutable anyObject]]];
+        NSView *previouslyVisibleView = _allVisibleViewsDict[[previouslyVisibleItemsKeysSetMutable anyObject]];
+        [previouslyVisibleView removeFromSuperview];
+        [self addSubview:previouslyVisibleView positioned:NSWindowAbove relativeTo:nil];
         
         CGRect rect = [_collectionViewData collectionViewContentRect];
         NSArray *newlyVisibleLayoutAttrs = [_collectionViewData layoutAttributesForElementsInRect:rect];
@@ -931,7 +949,7 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
         
         CGRect contentRect = [_collectionViewData collectionViewContentRect];
         [self setContentSize:contentRect.size];
-        [self setContentOffset:contentRect.origin];
+        [self.scrollView setContentOffset:contentRect.origin];
         
         void (^applyNewLayoutBlock)(void) = ^{
             NSEnumerator *keys = [layoutInterchangeData keyEnumerator];
@@ -951,10 +969,10 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
         };
         
         if(animated) {
-            [UIView animateWithDuration:.3 animations:^ {
+            [NSView animateWithDuration:.3 animations:^ {
                  _collectionViewFlags.updatingLayout = YES;
                  applyNewLayoutBlock();
-             } completion:^(BOOL finished) {
+             } completion:^ {
                  freeUnusedViews();
                  _collectionViewFlags.updatingLayout = NO;
              }];
@@ -1039,6 +1057,18 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
             [self deselectItemAtIndexPath:selectedIndexPath animated:YES notifyDelegate:YES];
         }
     }
+}
+
+- (void)setContentSize:(CGSize)contentSize
+{
+    if (!CGSizeEqualToSize(_contentSize, contentSize)) {
+        [self setFrameSize:NSSizeFromCGSize(contentSize)];
+    }
+}
+
+- (INDCollectionViewScrollView *)scrollView
+{
+    return (INDCollectionViewScrollView *)self.enclosingScrollView;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -1128,9 +1158,6 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
     [cell setHighlighted:[_indexPathsForHighlightedItems containsObject:indexPath]];
     [cell setSelected:[_indexPathsForSelectedItems containsObject:indexPath]];
 
-    // voiceover support
-    cell.isAccessibilityElement = YES;
-
     [cell applyLayoutAttributes:layoutAttributes];
     return cell;
 }
@@ -1177,7 +1204,7 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
 
 - (void)addControlledSubview:(INDCollectionReusableView *)subview {
 	// avoids placing views above the scroll indicator
-    [self insertSubview:subview atIndex:self.subviews.count - (self.dragging ? 1 : 0)];
+    [self addSubview:subview];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -1347,14 +1374,14 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
         [view applyLayoutAttributes:attr];
     };
 
-    [UIView animateWithDuration:.3 animations:^{
+    [NSView animateWithDuration:.3 animations:^{
          _collectionViewFlags.updatingLayout = YES;
          for(NSDictionary *animation in animations) {
              INDCollectionReusableView* view = animation[@"view"];
              INDCollectionViewLayoutAttributes* attrs = animation[@"newLayoutInfos"];
              [view applyLayoutAttributes:attrs];
          }
-     } completion:^(BOOL finished) {
+     } completion:^ {
          NSMutableSet *set = [NSMutableSet set];
          NSArray *visibleItems = [_layout layoutAttributesForElementsInRect:_visibleBoundRects];
          for(INDCollectionViewLayoutAttributes *attrs in visibleItems)
@@ -1373,7 +1400,7 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
          _collectionViewFlags.updatingLayout = NO;
          
          if(_updateCompletionHandler) {
-             _updateCompletionHandler(finished);
+             _updateCompletionHandler();
              _updateCompletionHandler = nil;
          }
      }];
@@ -1415,10 +1442,10 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
     
     for(INDCollectionViewUpdateItem *updateItem in sortedMutableReloadItems) {
         NSAssert(updateItem.indexPathBeforeUpdate.section< [oldCollectionViewData numberOfSections],
-                 @"attempt to reload item (%@) that doesn't exist (there are only %d sections before update)",
+                 @"attempt to reload item (%@) that doesn't exist (there are only %ld sections before update)",
                  updateItem.indexPathBeforeUpdate, [oldCollectionViewData numberOfSections]);
         NSAssert(updateItem.indexPathBeforeUpdate.item<[oldCollectionViewData numberOfItemsInSection:updateItem.indexPathBeforeUpdate.section],
-                 @"attempt to reload item (%@) that doesn't exist (there are only %d items in section %d before udpate)",
+                 @"attempt to reload item (%@) that doesn't exist (there are only %ld items in section %ld before udpate)",
                  updateItem.indexPathBeforeUpdate,
                  [oldCollectionViewData numberOfItemsInSection:updateItem.indexPathBeforeUpdate.section],
                  updateItem.indexPathBeforeUpdate.section);
@@ -1435,25 +1462,25 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
     for(INDCollectionViewUpdateItem *deleteItem in sortedDeletedMutableItems) {
         if([deleteItem isSectionOperation]) {
             NSAssert(deleteItem.indexPathBeforeUpdate.section<[oldCollectionViewData numberOfSections],
-                     @"attempt to delete section (%d) that doesn't exist (there are only %d sections before update)",
+                     @"attempt to delete section (%ld) that doesn't exist (there are only %ld sections before update)",
                      deleteItem.indexPathBeforeUpdate.section,
                      [oldCollectionViewData numberOfSections]);
             
             for(INDCollectionViewUpdateItem *moveItem in sortedMutableMoveItems) {
                 if(moveItem.indexPathBeforeUpdate.section == deleteItem.indexPathBeforeUpdate.section) {
                     if(moveItem.isSectionOperation)
-                        NSAssert(NO, @"attempt to delete and move from the same section %d", deleteItem.indexPathBeforeUpdate.section);
+                        NSAssert(NO, @"attempt to delete and move from the same section %ld", deleteItem.indexPathBeforeUpdate.section);
                     else
                         NSAssert(NO, @"attempt to delete and move from the same section (%@)", moveItem.indexPathBeforeUpdate);
                 }
             }
         } else {
             NSAssert(deleteItem.indexPathBeforeUpdate.section<[oldCollectionViewData numberOfSections],
-                     @"attempt to delete item (%@) that doesn't exist (there are only %d sections before update)",
+                     @"attempt to delete item (%@) that doesn't exist (there are only %ld sections before update)",
                      deleteItem.indexPathBeforeUpdate,
                      [oldCollectionViewData numberOfSections]);
             NSAssert(deleteItem.indexPathBeforeUpdate.item<[oldCollectionViewData numberOfItemsInSection:deleteItem.indexPathBeforeUpdate.section],
-                     @"attempt to delete item (%@) that doesn't exist (there are only %d items in section %d before update)",
+                     @"attempt to delete item (%@) that doesn't exist (there are only %ld items in section %ld before update)",
                      deleteItem.indexPathBeforeUpdate,
                      [oldCollectionViewData numberOfItemsInSection:deleteItem.indexPathBeforeUpdate.section],
                      deleteItem.indexPathBeforeUpdate.section);
@@ -1478,13 +1505,13 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
         BOOL sectionOperation = [insertItem isSectionOperation];
         if(sectionOperation) {
             NSAssert([indexPath section]<[_collectionViewData numberOfSections],
-                     @"attempt to insert %d but there are only %d sections after update",
+                     @"attempt to insert %ld but there are only %ld sections after update",
                      [indexPath section], [_collectionViewData numberOfSections]);
             
             for(INDCollectionViewUpdateItem *moveItem in sortedMutableMoveItems) {
                 if([moveItem.indexPathAfterUpdate isEqual:indexPath]) {
                     if(moveItem.isSectionOperation)
-                        NSAssert(NO, @"attempt to perform an insert and a move to the same section (%d)",indexPath.section);
+                        NSAssert(NO, @"attempt to perform an insert and a move to the same section (%ld)",indexPath.section);
 //                    else
 //                        NSAssert(NO, @"attempt to perform an insert and a move to the same index path (%@)",indexPath);
                 }
@@ -1496,7 +1523,7 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
                 
                 if(nextInsertItem.indexPathAfterUpdate.section == indexPath.section) {
                     NSAssert(nextInsertItem.indexPathAfterUpdate.item<[_collectionViewData numberOfItemsInSection:indexPath.section],
-                             @"attempt to insert item %d into section %d, but there are only %d items in section %d after the update",
+                             @"attempt to insert item %ld into section %ld, but there are only %ld items in section %ld after the update",
                              nextInsertItem.indexPathAfterUpdate.item,
                              indexPath.section,
                              [_collectionViewData numberOfItemsInSection:indexPath.section],
@@ -1507,7 +1534,7 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
             }
         } else {
             NSAssert(indexPath.item< [_collectionViewData numberOfItemsInSection:indexPath.section],
-                     @"attempt to insert item to (%@) but there are only %d items in section %d after update",
+                     @"attempt to insert item to (%@) but there are only %ld items in section %ld after update",
                      indexPath,
                      [_collectionViewData numberOfItemsInSection:indexPath.section],
                      indexPath.section);
@@ -1523,29 +1550,29 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
     for(INDCollectionViewUpdateItem * sortedItem in sortedMutableMoveItems) {
         if(sortedItem.isSectionOperation) {
             NSAssert(sortedItem.indexPathBeforeUpdate.section<[oldCollectionViewData numberOfSections],
-                     @"attempt to move section (%d) that doesn't exist (%d sections before update)",
+                     @"attempt to move section (%ld) that doesn't exist (%ld sections before update)",
                      sortedItem.indexPathBeforeUpdate.section,
                      [oldCollectionViewData numberOfSections]);
             NSAssert(sortedItem.indexPathAfterUpdate.section<[_collectionViewData numberOfSections],
-                     @"attempt to move section to %d but there are only %d sections after update",
+                     @"attempt to move section to %ld but there are only %ld sections after update",
                      sortedItem.indexPathAfterUpdate.section,
                      [_collectionViewData numberOfSections]);
         } else {
             NSAssert(sortedItem.indexPathBeforeUpdate.section<[oldCollectionViewData numberOfSections],
-                     @"attempt to move item (%@) that doesn't exist (%d sections before update)",
+                     @"attempt to move item (%@) that doesn't exist (%ld sections before update)",
                      sortedItem, [oldCollectionViewData numberOfSections]);
             NSAssert(sortedItem.indexPathBeforeUpdate.item<[oldCollectionViewData numberOfItemsInSection:sortedItem.indexPathBeforeUpdate.section],
-                     @"attempt to move item (%@) that doesn't exist (%d items in section %d before update)",
+                     @"attempt to move item (%@) that doesn't exist (%ld items in section %ld before update)",
                      sortedItem,
                      [oldCollectionViewData numberOfItemsInSection:sortedItem.indexPathBeforeUpdate.section],
                      sortedItem.indexPathBeforeUpdate.section);
             
             NSAssert(sortedItem.indexPathAfterUpdate.section<[_collectionViewData numberOfSections],
-                     @"attempt to move item to (%@) but there are only %d sections after update",
+                     @"attempt to move item to (%@) but there are only %ld sections after update",
                      sortedItem.indexPathAfterUpdate,
                      [_collectionViewData numberOfSections]);
             NSAssert(sortedItem.indexPathAfterUpdate.item<[_collectionViewData numberOfItemsInSection:sortedItem.indexPathAfterUpdate.section],
-                     @"attempt to move item to (%@) but there are only %d items in section %d after update",
+                     @"attempt to move item to (%@) but there are only %ld items in section %ld after update",
                      sortedItem,
                      [_collectionViewData numberOfItemsInSection:sortedItem.indexPathAfterUpdate.section],
                      sortedItem.indexPathAfterUpdate.section);
@@ -1574,8 +1601,8 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
         
         NSAssert([oldCollectionViewData numberOfItemsInSection:section]+insertedCount-deletedCount+movedInCount-movedOutCount ==
                  [_collectionViewData numberOfItemsInSection:section],
-                 @"invalide update in section %d: number of items after update (%d) should be equal to the number of items before update (%d) "\
-                 "plus count of inserted items (%d), minus count of deleted items (%d), plus count of items moved in (%d), minus count of items moved out (%d)",
+                 @"invalide update in section %ld: number of items after update (%ld) should be equal to the number of items before update (%ld) "\
+                 "plus count of inserted items (%ld), minus count of deleted items (%ld), plus count of items moved in (%ld), minus count of items moved out (%ld)",
                  section,
                   [_collectionViewData numberOfItemsInSection:section],
                  [oldCollectionViewData numberOfItemsInSection:section],
@@ -1717,3 +1744,4 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
         [self endItemAnimations];
     }
 }
+@end
