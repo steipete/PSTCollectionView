@@ -86,10 +86,9 @@
 
 
 @implementation INDCollectionViewCell {
-    UIView *_contentView;
-    UIView *_backgroundView;
-    UIView *_selectedBackgroundView;
-    UILongPressGestureRecognizer *_menuGesture;
+    NSView *_contentView;
+    NSView *_backgroundView;
+    NSView *_selectedBackgroundView;
     id _selectionSegueTemplate;
     id _highlightingSupport;
     struct {
@@ -108,15 +107,13 @@
 
 - (id)initWithFrame:(CGRect)frame {
     if ((self = [super initWithFrame:frame])) {
-        _backgroundView = [[UIView alloc] initWithFrame:self.bounds];
-        _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        _backgroundView = [[NSView alloc] initWithFrame:self.bounds];
+        _backgroundView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
         [self addSubview:_backgroundView];
 
-        _contentView = [[UIView alloc] initWithFrame:self.bounds];
-        _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        _contentView = [[NSView alloc] initWithFrame:self.bounds];
+        _contentView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
         [self addSubview:_contentView];
-
-        _menuGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(menuGesture:)];
     }
     return self;
 }
@@ -127,16 +124,14 @@
         if ([[self subviews] count] > 0) {
             _contentView = [self subviews][0];
         } else {
-            _contentView = [[UIView alloc] initWithFrame:self.bounds];
-            _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+            _contentView = [[NSView alloc] initWithFrame:self.bounds];
+            _contentView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
             [self addSubview:_contentView];
         }
         
-        _backgroundView = [[UIView alloc] initWithFrame:self.bounds];
-        _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [self insertSubview:_backgroundView belowSubview:_contentView];
-        
-        _menuGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(menuGesture:)];
+        _backgroundView = [[NSView alloc] initWithFrame:self.bounds];
+        _backgroundView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+        [self addSubview:_backgroundView positioned:NSWindowBelow relativeTo:_contentView];
     }
     return self;
 }
@@ -166,7 +161,7 @@
 
 - (void)updateBackgroundView {
     BOOL shouldHighlight = (self.highlighted || self.selected);
-    _selectedBackgroundView.alpha = shouldHighlight ? 1.0f : 0.0f;
+    _selectedBackgroundView.alphaValue = shouldHighlight ? 1.0f : 0.0f;
     [self setHighlighted:shouldHighlight forViews:self.contentView.subviews];
 }
 
@@ -179,32 +174,27 @@
     }
 }
 
-- (void)menuGesture:(UILongPressGestureRecognizer *)recognizer {
-    NSLog(@"Not yet implemented: %@", NSStringFromSelector(_cmd));
-}
-
-- (void)setBackgroundView:(UIView *)backgroundView {
+- (void)setBackgroundView:(NSView *)backgroundView {
     if (_backgroundView != backgroundView) {
         [_backgroundView removeFromSuperview];
         _backgroundView = backgroundView;
         _backgroundView.frame = self.bounds;
-        _backgroundView.autoresizesSubviews = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-        [self insertSubview:_backgroundView atIndex:0];
+        _backgroundView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+        [self addSubview:_backgroundView positioned:NSWindowBelow relativeTo:nil];
     }
 }
 
-- (void)setSelectedBackgroundView:(UIView *)selectedBackgroundView {
+- (void)setSelectedBackgroundView:(NSView *)selectedBackgroundView {
     if (_selectedBackgroundView != selectedBackgroundView) {
         [_selectedBackgroundView removeFromSuperview];
         _selectedBackgroundView = selectedBackgroundView;
         _selectedBackgroundView.frame = self.bounds;
-        _selectedBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        _selectedBackgroundView.alpha = self.selected ? 1.0f : 0.0f;
+        _selectedBackgroundView.autoresizingMask = NSViewHeightSizable | NSViewWidthSizable;
+        _selectedBackgroundView.alphaValue = self.selected ? 1.0f : 0.0f;
         if (_backgroundView) {
-            [self insertSubview:_selectedBackgroundView aboveSubview:_backgroundView];
-        }
-        else {
-            [self insertSubview:_selectedBackgroundView atIndex:0];
+            [self addSubview:_selectedBackgroundView positioned:NSWindowAbove relativeTo:_backgroundView];
+        } else {
+            [self addSubview:_selectedBackgroundView positioned:NSWindowBelow relativeTo:nil];
         }
     }
 }
