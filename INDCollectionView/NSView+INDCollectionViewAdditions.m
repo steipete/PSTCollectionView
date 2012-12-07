@@ -14,14 +14,15 @@
     [self animateWithDuration:duration animations:animations completion:nil];
 }
 
-+ (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations completion:(void (^)(void))block
++ (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations completion:(void (^)(void))completion
 {
-    [NSAnimationContext beginGrouping];
-    NSAnimationContext *ctx = [NSAnimationContext currentContext];
-    [ctx setDuration:duration];
-    [ctx setCompletionHandler:block];
-    [ctx setAllowsImplicitAnimation:YES];
-    if (animations) animations();
-    [NSAnimationContext endGrouping];
+    if (completion == nil) completion = ^{};
+    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+        context.duration = duration;
+        context.allowsImplicitAnimation = YES;
+        if (animations) animations();
+    } completionHandler:^{
+        completion();
+    }];
 }
 @end

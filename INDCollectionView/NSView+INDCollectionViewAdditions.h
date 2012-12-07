@@ -12,5 +12,5 @@
 
 @interface NSView (INDCollectionViewAdditions)
 + (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations;
-+ (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations completion:(void (^)(void))block;
++ (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations completion:(void (^)(void))completion;
 @end
