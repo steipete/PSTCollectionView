@@ -28,6 +28,7 @@
 		03594AEE1671D0650025210A /* NSValue+INDCollectionViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594AED1671D0650025210A /* NSValue+INDCollectionViewAdditions.m */; };
 		03594AF11671D6120025210A /* INDCollectionViewScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594AF01671D6110025210A /* INDCollectionViewScrollView.m */; };
 		03594AF41671D82E0025210A /* NSView+INDCollectionViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594AF31671D82E0025210A /* NSView+INDCollectionViewAdditions.m */; };
+		ABC215091671E54B006D2B79 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABC215081671E54B006D2B79 /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -76,6 +77,7 @@
 		03594AF01671D6110025210A /* INDCollectionViewScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = INDCollectionViewScrollView.m; path = ../../INDCollectionView/INDCollectionViewScrollView.m; sourceTree = "<group>"; };
 		03594AF21671D82D0025210A /* NSView+INDCollectionViewAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSView+INDCollectionViewAdditions.h"; path = "../../INDCollectionView/NSView+INDCollectionViewAdditions.h"; sourceTree = "<group>"; };
 		03594AF31671D82E0025210A /* NSView+INDCollectionViewAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSView+INDCollectionViewAdditions.m"; path = "../../INDCollectionView/NSView+INDCollectionViewAdditions.m"; sourceTree = "<group>"; };
+		ABC215081671E54B006D2B79 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +85,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ABC215091671E54B006D2B79 /* QuartzCore.framework in Frameworks */,
 				03594AA91671C9BF0025210A /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -111,6 +114,7 @@
 		03594AA71671C9BF0025210A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				ABC215081671E54B006D2B79 /* QuartzCore.framework */,
 				03594AA81671C9BF0025210A /* Cocoa.framework */,
 				03594AAA1671C9BF0025210A /* Other Frameworks */,
 			);
@@ -399,6 +403,7 @@
 				03594AC41671C9BF0025210A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
