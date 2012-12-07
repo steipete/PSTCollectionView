@@ -21,8 +21,6 @@
         context.duration = duration;
         context.allowsImplicitAnimation = YES;
         if (animations) animations();
-    } completionHandler:^{
-        completion();
-    }];
+    } completionHandler:completion];
 }
 @end
