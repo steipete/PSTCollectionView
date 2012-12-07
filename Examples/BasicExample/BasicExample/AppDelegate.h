@@ -7,8 +7,9 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "INDCollectionView.h"
 
-@interface AppDelegate : NSObject <NSApplicationDelegate>
+@interface AppDelegate : NSObject <NSApplicationDelegate, INDCollectionViewDataSource, INDCollectionViewDelegate>
 
 @property (assign) IBOutlet NSWindow *window;
 
