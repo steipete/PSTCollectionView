@@ -6,6 +6,7 @@
 //
 
 #import "INDCollectionViewUpdateItem.h"
+#import "NSIndexPath+INDCollectionViewAdditions.h"
 
 @interface INDCollectionViewUpdateItem() {
     NSIndexPath *_initialIndexPath;

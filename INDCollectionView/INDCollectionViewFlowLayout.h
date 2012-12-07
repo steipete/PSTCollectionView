@@ -15,13 +15,6 @@ typedef NS_ENUM(NSInteger, INDCollectionViewScrollDirection) {
     INDCollectionViewScrollDirectionHorizontal
 };
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED < 60000
-typedef NS_ENUM(NSInteger, UICollectionViewScrollDirection) {
-    UICollectionViewScrollDirectionVertical,
-    UICollectionViewScrollDirectionHorizontal
-};
-#endif
-
 @protocol INDCollectionViewDelegateFlowLayout <INDCollectionViewDelegate>
 @optional
 

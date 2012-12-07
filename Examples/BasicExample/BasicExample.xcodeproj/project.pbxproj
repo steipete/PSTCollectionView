@@ -24,6 +24,7 @@
 		03594AE51671CA200025210A /* INDGridLayoutItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594AD81671CA200025210A /* INDGridLayoutItem.m */; };
 		03594AE61671CA200025210A /* INDGridLayoutRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594ADA1671CA200025210A /* INDGridLayoutRow.m */; };
 		03594AE71671CA200025210A /* INDGridLayoutSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594ADC1671CA200025210A /* INDGridLayoutSection.m */; };
+		03594AEA1671CC1A0025210A /* NSIndexPath+INDCollectionViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594AE91671CC1A0025210A /* NSIndexPath+INDCollectionViewAdditions.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,6 +64,8 @@
 		03594ADA1671CA200025210A /* INDGridLayoutRow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = INDGridLayoutRow.m; path = ../../INDCollectionView/INDGridLayoutRow.m; sourceTree = "<group>"; };
 		03594ADB1671CA200025210A /* INDGridLayoutSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INDGridLayoutSection.h; path = ../../INDCollectionView/INDGridLayoutSection.h; sourceTree = "<group>"; };
 		03594ADC1671CA200025210A /* INDGridLayoutSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = INDGridLayoutSection.m; path = ../../INDCollectionView/INDGridLayoutSection.m; sourceTree = "<group>"; };
+		03594AE81671CC1A0025210A /* NSIndexPath+INDCollectionViewAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSIndexPath+INDCollectionViewAdditions.h"; path = "../../INDCollectionView/NSIndexPath+INDCollectionViewAdditions.h"; sourceTree = "<group>"; };
+		03594AE91671CC1A0025210A /* NSIndexPath+INDCollectionViewAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSIndexPath+INDCollectionViewAdditions.m"; path = "../../INDCollectionView/NSIndexPath+INDCollectionViewAdditions.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,6 +166,8 @@
 				03594ADA1671CA200025210A /* INDGridLayoutRow.m */,
 				03594ADB1671CA200025210A /* INDGridLayoutSection.h */,
 				03594ADC1671CA200025210A /* INDGridLayoutSection.m */,
+				03594AE81671CC1A0025210A /* NSIndexPath+INDCollectionViewAdditions.h */,
+				03594AE91671CC1A0025210A /* NSIndexPath+INDCollectionViewAdditions.m */,
 			);
 			name = INDCollectionView;
 			sourceTree = "<group>";
@@ -244,6 +249,7 @@
 				03594AE51671CA200025210A /* INDGridLayoutItem.m in Sources */,
 				03594AE61671CA200025210A /* INDGridLayoutRow.m in Sources */,
 				03594AE71671CA200025210A /* INDGridLayoutSection.m in Sources */,
+				03594AEA1671CC1A0025210A /* NSIndexPath+INDCollectionViewAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
