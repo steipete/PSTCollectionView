@@ -1,15 +1,15 @@
 //
-//  PSTCollectionViewCell.h
+//  INDCollectionViewCell.h
 //
 //  Original Source: Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //  AppKit Port: Copyright (c) 2012 Indragie Karunaratne. All rights reserved.
 //
 
-#import "PSTCollectionViewCommon.h"
+#import "INDCollectionViewCommon.h"
 
-@class PSTCollectionViewLayout, PSTCollectionView, PSTCollectionViewLayoutAttributes;
+@class INDCollectionViewLayout, INDCollectionView, INDCollectionViewLayoutAttributes;
 
-@interface PSTCollectionReusableView : UIView
+@interface INDCollectionReusableView : UIView
 
 @property (nonatomic, readonly, copy) NSString *reuseIdentifier;
 
@@ -17,21 +17,21 @@
 - (void)prepareForReuse;
 
 // Apply layout attributes on cell.
-- (void)applyLayoutAttributes:(PSTCollectionViewLayoutAttributes *)layoutAttributes;
+- (void)applyLayoutAttributes:(INDCollectionViewLayoutAttributes *)layoutAttributes;
 
-- (void)willTransitionFromLayout:(PSTCollectionViewLayout *)oldLayout toLayout:(PSTCollectionViewLayout *)newLayout;
-- (void)didTransitionFromLayout:(PSTCollectionViewLayout *)oldLayout toLayout:(PSTCollectionViewLayout *)newLayout;
+- (void)willTransitionFromLayout:(INDCollectionViewLayout *)oldLayout toLayout:(INDCollectionViewLayout *)newLayout;
+- (void)didTransitionFromLayout:(INDCollectionViewLayout *)oldLayout toLayout:(INDCollectionViewLayout *)newLayout;
 
 @end
 
-@interface PSTCollectionReusableView (Internal)
-@property (nonatomic, unsafe_unretained) PSTCollectionView *collectionView;
+@interface INDCollectionReusableView (Internal)
+@property (nonatomic, unsafe_unretained) INDCollectionView *collectionView;
 @property (nonatomic, copy) NSString *reuseIdentifier;
-@property (nonatomic, strong, readonly) PSTCollectionViewLayoutAttributes *layoutAttributes;
+@property (nonatomic, strong, readonly) INDCollectionViewLayoutAttributes *layoutAttributes;
 @end
 
 
-@interface PSTCollectionViewCell : PSTCollectionReusableView
+@interface INDCollectionViewCell : INDCollectionReusableView
 
 @property (nonatomic, readonly) UIView *contentView; // add custom subviews to the cell's contentView
 

@@ -1,17 +1,17 @@
 //
-//  PSTCollectionLayoutInfo.m
+//  INDCollectionLayoutInfo.m
 //
 //  Original Source: Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //  AppKit Port: Copyright (c) 2012 Indragie Karunaratne. All rights reserved.
 //
 
-#import "PSTGridLayoutInfo.h"
-#import "PSTGridLayoutSection.h"
-#import "PSTGridLayoutRow.h"
-#import "PSTGridLayoutItem.h"
-#import "PSTCollectionView.h"
+#import "INDGridLayoutInfo.h"
+#import "INDGridLayoutSection.h"
+#import "INDGridLayoutRow.h"
+#import "INDGridLayoutItem.h"
+#import "INDCollectionView.h"
 
-@interface PSTGridLayoutInfo() {
+@interface INDGridLayoutInfo() {
     NSMutableArray *_sections;
     CGRect _visibleBounds;
     CGSize _layoutSize;
@@ -20,7 +20,7 @@
 @property (nonatomic, strong) NSMutableArray *sections;
 @end
 
-@implementation PSTGridLayoutInfo
+@implementation INDGridLayoutInfo
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject
@@ -39,8 +39,8 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Public
 
-- (PSTGridLayoutInfo *)snapshot {
-    PSTGridLayoutInfo *layoutInfo = [[self class] new];
+- (INDGridLayoutInfo *)snapshot {
+    INDGridLayoutInfo *layoutInfo = [[self class] new];
     layoutInfo.sections = self.sections;
     layoutInfo.rowAlignmentOptions = self.rowAlignmentOptions;
     layoutInfo.usesFloatingHeaderFooter = self.usesFloatingHeaderFooter;
@@ -52,7 +52,7 @@
 }
 
 - (CGRect)frameForItemAtIndexPath:(NSIndexPath *)indexPath {
-    PSTGridLayoutSection *section = self.sections[indexPath.section];
+    INDGridLayoutSection *section = self.sections[indexPath.section];
     CGRect itemFrame;
     if (section.fixedItemSize) {
         itemFrame = (CGRect){.size=section.itemSize};
@@ -63,7 +63,7 @@
 }
 
 - (id)addSection {
-    PSTGridLayoutSection *section = [PSTGridLayoutSection new];
+    INDGridLayoutSection *section = [INDGridLayoutSection new];
     section.rowAlignmentOptions = self.rowAlignmentOptions;
     section.layoutInfo = self;
     [_sections addObject:section];

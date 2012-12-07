@@ -1,19 +1,19 @@
 //
-//  PSTCollectionViewData.h
+//  INDCollectionViewData.h
 //
 //  Original Source: Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //  AppKit Port: Copyright (c) 2012 Indragie Karunaratne. All rights reserved.
 //
 
-#import "PSTCollectionViewCommon.h"
+#import "INDCollectionViewCommon.h"
 
-@class PSTCollectionView, PSTCollectionViewLayout, PSTCollectionViewLayoutAttributes;
+@class INDCollectionView, INDCollectionViewLayout, INDCollectionViewLayoutAttributes;
 
 // https://github.com/steipete/iOS6-Runtime-Headers/blob/master/UICollectionViewData.h
-@interface PSTCollectionViewData : NSObject
+@interface INDCollectionViewData : NSObject
 
 /// Designated initializer.
-- (id)initWithCollectionView:(PSTCollectionView *)collectionView layout:(PSTCollectionViewLayout *)layout;
+- (id)initWithCollectionView:(INDCollectionView *)collectionView layout:(INDCollectionViewLayout *)layout;
 
 // Ensure data is valid. may fetches items from dataSource and layout.
 - (void)validateLayoutInRect:(CGRect)rect;
@@ -32,11 +32,11 @@
 // Fetch layout attributes
 - (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect;
 /*
-- (PSTCollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath;
-- (PSTCollectionViewLayoutAttributes *)layoutAttributesForElementsInSection:(NSInteger)section;
-- (PSTCollectionViewLayoutAttributes *)layoutAttributesForGlobalItemIndex:(NSInteger)index;
-- (PSTCollectionViewLayoutAttributes *)layoutAttributesForDecorationViewOfKind:(id)arg1 atIndexPath:(NSIndexPath *)indexPath;
-- (PSTCollectionViewLayoutAttributes *)layoutAttributesForSupplementaryElementOfKind:(id)arg1 atIndexPath:(NSIndexPath *)indexPath;
+- (INDCollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath;
+- (INDCollectionViewLayoutAttributes *)layoutAttributesForElementsInSection:(NSInteger)section;
+- (INDCollectionViewLayoutAttributes *)layoutAttributesForGlobalItemIndex:(NSInteger)index;
+- (INDCollectionViewLayoutAttributes *)layoutAttributesForDecorationViewOfKind:(id)arg1 atIndexPath:(NSIndexPath *)indexPath;
+- (INDCollectionViewLayoutAttributes *)layoutAttributesForSupplementaryElementOfKind:(id)arg1 atIndexPath:(NSIndexPath *)indexPath;
  - (id)existingSupplementaryLayoutAttributesInSection:(int)arg1;
 */
 

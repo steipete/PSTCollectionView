@@ -1,28 +1,28 @@
 //
-//  PSTCollectionViewCell.m
+//  INDCollectionViewCell.m
 //
 //  Original Source: Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //  AppKit Port: Copyright (c) 2012 Indragie Karunaratne. All rights reserved.
 //
 
-#import "PSTCollectionView.h"
-#import "PSTCollectionViewCell.h"
-#import "PSTCollectionViewLayout.h"
+#import "INDCollectionView.h"
+#import "INDCollectionViewCell.h"
+#import "INDCollectionViewLayout.h"
 
-@interface PSTCollectionReusableView() {
-    PSTCollectionViewLayoutAttributes *_layoutAttributes;
+@interface INDCollectionReusableView() {
+    INDCollectionViewLayoutAttributes *_layoutAttributes;
     NSString *_reuseIdentifier;
-    __unsafe_unretained PSTCollectionView *_collectionView;
+    __unsafe_unretained INDCollectionView *_collectionView;
     struct {
         unsigned int inUpdateAnimation : 1;
     } _reusableViewFlags;
 }
 @property (nonatomic, copy) NSString *reuseIdentifier;
-@property (nonatomic, unsafe_unretained) PSTCollectionView *collectionView;
-@property (nonatomic, strong) PSTCollectionViewLayoutAttributes *layoutAttributes;
+@property (nonatomic, unsafe_unretained) INDCollectionView *collectionView;
+@property (nonatomic, strong) INDCollectionViewLayoutAttributes *layoutAttributes;
 @end
 
-@implementation PSTCollectionReusableView
+@implementation INDCollectionReusableView
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject
@@ -50,7 +50,7 @@
     self.layoutAttributes = nil;
 }
 
-- (void)applyLayoutAttributes:(PSTCollectionViewLayoutAttributes *)layoutAttributes {
+- (void)applyLayoutAttributes:(INDCollectionViewLayoutAttributes *)layoutAttributes {
     if (layoutAttributes != _layoutAttributes) {
         _layoutAttributes = layoutAttributes;
 //        self.frame = layoutAttributes.frame;
@@ -66,11 +66,11 @@
     }
 }
 
-- (void)willTransitionFromLayout:(PSTCollectionViewLayout *)oldLayout toLayout:(PSTCollectionViewLayout *)newLayout {
+- (void)willTransitionFromLayout:(INDCollectionViewLayout *)oldLayout toLayout:(INDCollectionViewLayout *)newLayout {
     _reusableViewFlags.inUpdateAnimation = YES;
 }
 
-- (void)didTransitionFromLayout:(PSTCollectionViewLayout *)oldLayout toLayout:(PSTCollectionViewLayout *)newLayout {
+- (void)didTransitionFromLayout:(INDCollectionViewLayout *)oldLayout toLayout:(INDCollectionViewLayout *)newLayout {
     _reusableViewFlags.inUpdateAnimation = NO;
 }
 
@@ -85,7 +85,7 @@
 @end
 
 
-@implementation PSTCollectionViewCell {
+@implementation INDCollectionViewCell {
     UIView *_contentView;
     UIView *_backgroundView;
     UIView *_selectedBackgroundView;
@@ -218,7 +218,7 @@
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark - PSTCollection/UICollection interoperability
+#pragma mark - INDCollection/UICollection interoperability
 
 #ifdef kPSUIInteroperabilityEnabled
 #import <objc/runtime.h>

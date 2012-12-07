@@ -1,15 +1,15 @@
 //
-//  PSTCollectionViewData.m
+//  INDCollectionViewData.m
 //
 //  Original Source: Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //  AppKit Port: Copyright (c) 2012 Indragie Karunaratne. All rights reserved.
 //
 
-#import "PSTCollectionViewData.h"
-#import "PSTCollectionView.h"
-#import "PSTCollectionViewLayout.h"
+#import "INDCollectionViewData.h"
+#import "INDCollectionView.h"
+#import "INDCollectionViewLayout.h"
 
-@interface PSTCollectionViewData () {
+@interface INDCollectionViewData () {
     CGRect _validLayoutRect;
     
     NSInteger _numItems;
@@ -44,16 +44,16 @@
         unsigned int layoutIsPrepared:1;
     } _collectionViewDataFlags;
 }
-@property (nonatomic, unsafe_unretained) PSTCollectionView *collectionView;
-@property (nonatomic, unsafe_unretained) PSTCollectionViewLayout *layout;
+@property (nonatomic, unsafe_unretained) INDCollectionView *collectionView;
+@property (nonatomic, unsafe_unretained) INDCollectionViewLayout *layout;
 @end
 
-@implementation PSTCollectionViewData
+@implementation INDCollectionViewData
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject
 
-- (id)initWithCollectionView:(PSTCollectionView *)collectionView layout:(PSTCollectionViewLayout *)layout {
+- (id)initWithCollectionView:(INDCollectionView *)collectionView layout:(INDCollectionViewLayout *)layout {
     if((self = [super init])) {
         _globalItems = [NSArray new];
         _collectionView = collectionView;

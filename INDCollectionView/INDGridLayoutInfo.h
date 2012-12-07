@@ -1,5 +1,5 @@
 //
-//  PSTCollectionLayoutInfo.h
+//  INDCollectionLayoutInfo.h
 //
 //  Original Source: Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //  AppKit Port: Copyright (c) 2012 Indragie Karunaratne. All rights reserved.
@@ -7,13 +7,13 @@
 
 #import <Foundation/Foundation.h>
 
-@class PSTGridLayoutSection;
+@class INDGridLayoutSection;
 
 /*
- Every PSTCollectionViewLayout has a PSTGridLayoutInfo attached.
- Is used extensively in PSTCollectionViewFlowLayout.
+ Every INDCollectionViewLayout has a INDGridLayoutInfo attached.
+ Is used extensively in INDCollectionViewFlowLayout.
  */
-@interface PSTGridLayoutInfo : NSObject
+@interface INDGridLayoutInfo : NSObject
 
 @property (nonatomic, strong, readonly) NSArray *sections;
 @property (nonatomic, strong) NSDictionary *rowAlignmentOptions;
@@ -27,17 +27,17 @@
 @property (nonatomic, assign) BOOL leftToRight;
 @property (nonatomic, assign) CGSize contentSize;
 
-// Frame for specific PSTGridLayoutItem.
+// Frame for specific INDGridLayoutItem.
 - (CGRect)frameForItemAtIndexPath:(NSIndexPath *)indexPath;
 
 // Add new section. Invalidates layout.
-- (PSTGridLayoutSection *)addSection;
+- (INDGridLayoutSection *)addSection;
 
 // forces the layout to recompute on next access
 // TODO; what's the parameter for?
 - (void)invalidate:(BOOL)arg;
 
 // Make a copy of the current state.
-- (PSTGridLayoutInfo *)snapshot;
+- (INDGridLayoutInfo *)snapshot;
 
 @end

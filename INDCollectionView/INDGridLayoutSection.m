@@ -1,17 +1,17 @@
 //
-//  PSTCollectionLayoutSection.m
+//  INDCollectionLayoutSection.m
 //
 //  Original Source: Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //  AppKit Port: Copyright (c) 2012 Indragie Karunaratne. All rights reserved.
 //
 
-#import "PSTCollectionViewCommon.h"
-#import "PSTGridLayoutSection.h"
-#import "PSTGridLayoutItem.h"
-#import "PSTGridLayoutRow.h"
-#import "PSTGridLayoutInfo.h"
+#import "INDCollectionViewCommon.h"
+#import "INDGridLayoutSection.h"
+#import "INDGridLayoutItem.h"
+#import "INDGridLayoutRow.h"
+#import "INDGridLayoutInfo.h"
 
-@interface PSTGridLayoutSection() {
+@interface INDGridLayoutSection() {
     NSMutableArray *_items;
     NSMutableArray *_rows;
     BOOL _isValid;
@@ -30,7 +30,7 @@
 @property (nonatomic, assign) NSInteger indexOfImcompleteRow;
 @end
 
-@implementation PSTGridLayoutSection
+@implementation INDGridLayoutSection
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject
@@ -65,7 +65,7 @@
         NSInteger itemIndex = 0;
         NSInteger itemsByRowCount = 0;
         CGFloat dimensionLeft = 0;
-        PSTGridLayoutRow *row = nil;
+        INDGridLayoutRow *row = nil;
         // get dimension and compensate for section margin
 		CGFloat headerFooterDimension = self.layoutInfo.dimension;
         CGFloat dimension = headerFooterDimension;
@@ -85,7 +85,7 @@
         do {
             BOOL finishCycle = itemIndex >= self.itemsCount;
             // TODO: fast path could even remove row creation and just calculate on the fly
-            PSTGridLayoutItem *item = nil;
+            INDGridLayoutItem *item = nil;
             if (!finishCycle) item = self.fixedItemSize ? nil : self.items[itemIndex];
 
             CGSize itemSize = self.fixedItemSize ? self.itemSize : item.itemFrame.size;
@@ -160,22 +160,22 @@
     [self computeLayout];
 }
 
-- (PSTGridLayoutItem *)addItem {
-    PSTGridLayoutItem *item = [PSTGridLayoutItem new];
+- (INDGridLayoutItem *)addItem {
+    INDGridLayoutItem *item = [INDGridLayoutItem new];
     item.section = self;
     [_items addObject:item];
     return item;
 }
 
-- (PSTGridLayoutRow *)addRow {
-    PSTGridLayoutRow *row = [PSTGridLayoutRow new];
+- (INDGridLayoutRow *)addRow {
+    INDGridLayoutRow *row = [INDGridLayoutRow new];
     row.section = self;
     [_rows addObject:row];
     return row;
 }
 
-- (PSTGridLayoutSection *)snapshot {
-    PSTGridLayoutSection *snapshotSection = [PSTGridLayoutSection new];
+- (INDGridLayoutSection *)snapshot {
+    INDGridLayoutSection *snapshotSection = [INDGridLayoutSection new];
     snapshotSection.items = [self.items copy];
     snapshotSection.rows = [self.items copy];
     snapshotSection.verticalInterstice = self.verticalInterstice;

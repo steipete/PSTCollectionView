@@ -1,18 +1,18 @@
 //
-//  PSTGridLayoutRow.m
+//  INDGridLayoutRow.m
 //
 //  Original Source: Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //  AppKit Port: Copyright (c) 2012 Indragie Karunaratne. All rights reserved.
 //
 
-#import "PSTCollectionView.h"
-#import "PSTGridLayoutRow.h"
-#import "PSTGridLayoutSection.h"
-#import "PSTGridLayoutItem.h"
-#import "PSTGridLayoutInfo.h"
-#import "PSTCollectionViewFlowLayout.h"
+#import "INDCollectionView.h"
+#import "INDGridLayoutRow.h"
+#import "INDGridLayoutSection.h"
+#import "INDGridLayoutItem.h"
+#import "INDGridLayoutInfo.h"
+#import "INDCollectionViewFlowLayout.h"
 
-@interface PSTGridLayoutRow() {
+@interface INDGridLayoutRow() {
     NSMutableArray *_items;
     BOOL _isValid;
     int _verticalAlignement;
@@ -21,7 +21,7 @@
 @property (nonatomic, strong) NSArray *items;
 @end
 
-@implementation PSTGridLayoutRow
+@implementation INDGridLayoutRow
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject
@@ -60,7 +60,7 @@
         // properties for aligning
         BOOL isHorizontal = self.section.layoutInfo.horizontal;
         BOOL isLastRow = self.section.indexOfImcompleteRow == self.index;
-        PSTFlowLayoutHorizontalAlignment horizontalAlignment = [self.section.rowAlignmentOptions[isLastRow ? PSTFlowLayoutLastRowHorizontalAlignmentKey : PSTFlowLayoutCommonRowHorizontalAlignmentKey] integerValue];
+        INDFlowLayoutHorizontalAlignment horizontalAlignment = [self.section.rowAlignmentOptions[isLastRow ? INDFlowLayoutLastRowHorizontalAlignmentKey : INDFlowLayoutCommonRowHorizontalAlignmentKey] integerValue];
 
         // calculate space that's left over if we would align it from left to right.
         CGFloat leftOverSpace = self.section.layoutInfo.dimension;
@@ -83,7 +83,7 @@
             CGFloat nextItemSize;
             // first we need to find the size (width/height) of the next item to fit
             if (!self.fixedItemSize) {
-                PSTGridLayoutItem *item = self.items[MIN(itemIndex, self.itemCount-1)];
+                INDGridLayoutItem *item = self.items[MIN(itemIndex, self.itemCount-1)];
                 nextItemSize = isHorizontal ? item.itemFrame.size.height : item.itemFrame.size.width;
             }else {
                 nextItemSize = isHorizontal ? self.section.itemSize.height : self.section.itemSize.width;
@@ -111,21 +111,21 @@
         // push everything to the right if right-aligning and divide in half for centered
         // currently there is no public API supporting this behavior
         CGPoint itemOffset = CGPointZero;
-        if (horizontalAlignment == PSTFlowLayoutHorizontalAlignmentRight) {
+        if (horizontalAlignment == INDFlowLayoutHorizontalAlignmentRight) {
             itemOffset.x += leftOverSpace;
-        }else if(horizontalAlignment == PSTFlowLayoutHorizontalAlignmentCentered) {
+        }else if(horizontalAlignment == INDFlowLayoutHorizontalAlignmentCentered) {
             itemOffset.x += leftOverSpace/2;
         }
         
         // calculate the justified spacing among all items in a row if we are using
-        // the default PSTFlowLayoutHorizontalAlignmentJustify layout
+        // the default INDFlowLayoutHorizontalAlignmentJustify layout
         CGFloat interSpacing = leftOverSpace/(CGFloat)(usedItemCount-1);
 
         // calculate row frame as union of all items
         CGRect frame = CGRectZero;
         CGRect itemFrame = (CGRect){.size=self.section.itemSize};
         for (itemIndex = 0; itemIndex < self.itemCount; itemIndex++) {
-            PSTGridLayoutItem *item = nil;
+            INDGridLayoutItem *item = nil;
             if (!self.fixedItemSize) {
                 item = self.items[itemIndex];
                 itemFrame = [item itemFrame];
@@ -137,13 +137,13 @@
             if (isHorizontal) {
                 itemFrame.origin.y = itemOffset.y;
                 itemOffset.y += itemFrame.size.height + self.section.verticalInterstice;
-                if (horizontalAlignment == PSTFlowLayoutHorizontalAlignmentJustify) {
+                if (horizontalAlignment == INDFlowLayoutHorizontalAlignmentJustify) {
                     itemOffset.y += interSpacing;
                 }
             }else {
                 itemFrame.origin.x = itemOffset.x;
                 itemOffset.x += itemFrame.size.width + self.section.horizontalInterstice;
-                if (horizontalAlignment == PSTFlowLayoutHorizontalAlignmentJustify) {
+                if (horizontalAlignment == INDFlowLayoutHorizontalAlignmentJustify) {
                     itemOffset.x += interSpacing;
                 }
             }
@@ -158,14 +158,14 @@
     return rects;
 }
 
-- (void)addItem:(PSTGridLayoutItem *)item {
+- (void)addItem:(INDGridLayoutItem *)item {
     [_items addObject:item];
     item.rowObject = self;
     [self invalidate];
 }
 
-- (PSTGridLayoutRow *)snapshot {
-    PSTGridLayoutRow *snapshotRow = [[self class] new];
+- (INDGridLayoutRow *)snapshot {
+    INDGridLayoutRow *snapshotRow = [[self class] new];
     snapshotRow.section = self.section;
     snapshotRow.items = self.items;
     snapshotRow.rowSize = self.rowSize;
@@ -177,7 +177,7 @@
     return snapshotRow;
 }
 
-- (PSTGridLayoutRow *)copyFromSection:(PSTGridLayoutSection *)section {
+- (INDGridLayoutRow *)copyFromSection:(INDGridLayoutSection *)section {
     return nil; // ???
 }
 

@@ -1,13 +1,13 @@
 //
-//  PSTGridLayoutItem.m
+//  INDGridLayoutItem.m
 //
 //  Original Source: Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //  AppKit Port: Copyright (c) 2012 Indragie Karunaratne. All rights reserved.
 //
 
-#import "PSTGridLayoutItem.h"
+#import "INDGridLayoutItem.h"
 
-@implementation PSTGridLayoutItem
+@implementation INDGridLayoutItem
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject

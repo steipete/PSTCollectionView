@@ -1,25 +1,25 @@
 //
-//  PSTCollectionViewLayout.h
+//  INDCollectionViewLayout.h
 //
 //  Original Source: Copyright (c) 2012 Peter Steinberger. All rights reserved.
 //  AppKit Port: Copyright (c) 2012 Indragie Karunaratne. All rights reserved.
 //
 
-#import "PSTCollectionViewCommon.h"
+#import "INDCollectionViewCommon.h"
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
 
-typedef NS_ENUM(NSUInteger, PSTCollectionViewItemType) {
-    PSTCollectionViewItemTypeCell,
-    PSTCollectionViewItemTypeSupplementaryView,
-    PSTCollectionViewItemTypeDecorationView
+typedef NS_ENUM(NSUInteger, INDCollectionViewItemType) {
+    INDCollectionViewItemTypeCell,
+    INDCollectionViewItemTypeSupplementaryView,
+    INDCollectionViewItemTypeDecorationView
 };
 
-// The PSTCollectionViewLayout class is provided as an abstract class for subclassing to define custom collection layouts.
+// The INDCollectionViewLayout class is provided as an abstract class for subclassing to define custom collection layouts.
 // Defining a custom layout is an advanced operation intended for applications with complex needs.
-@class PSTCollectionViewLayoutAttributes, PSTCollectionView;
+@class INDCollectionViewLayoutAttributes, INDCollectionView;
 
-@interface PSTCollectionViewLayoutAttributes : NSObject <NSCopying>
+@interface INDCollectionViewLayoutAttributes : NSObject <NSCopying>
 
 @property (nonatomic) CGRect frame;
 @property (nonatomic) CGPoint center;
@@ -27,7 +27,7 @@ typedef NS_ENUM(NSUInteger, PSTCollectionViewItemType) {
 @property (nonatomic) CATransform3D transform3D;
 @property (nonatomic) CGFloat alpha;
 @property (nonatomic) NSInteger zIndex; // default is 0
-@property (nonatomic, getter=isHidden) BOOL hidden; // As an optimization, PSTCollectionView might not create a view for items whose hidden attribute is YES
+@property (nonatomic, getter=isHidden) BOOL hidden; // As an optimization, INDCollectionView might not create a view for items whose hidden attribute is YES
 @property (nonatomic, strong) NSIndexPath *indexPath;
 
 + (instancetype)layoutAttributesForCellWithIndexPath:(NSIndexPath *)indexPath;
@@ -41,22 +41,22 @@ typedef NS_ENUM(NSUInteger, PSTCollectionViewItemType) {
  */
 @end
 
-@interface PSTCollectionViewLayoutAttributes(Private)
+@interface INDCollectionViewLayoutAttributes(Private)
 @property (nonatomic, readonly) NSString *representedElementKind;
-@property (nonatomic, readonly) PSTCollectionViewItemType representedElementCategory;
+@property (nonatomic, readonly) INDCollectionViewItemType representedElementCategory;
 - (BOOL)isDecorationView;
 - (BOOL)isSupplementaryView;
 - (BOOL)isCell;
 @end
 
 // used internally for deserialization until I figure out the proper way.
-extern NSString *const PSTCollectionViewLayoutAwokeFromNib;
+extern NSString *const INDCollectionViewLayoutAwokeFromNib;
 
-@interface PSTCollectionViewLayout : NSObject <NSCoding>
+@interface INDCollectionViewLayout : NSObject <NSCoding>
 
 // Methods in this class are meant to be overridden and will be called by its collection view to gather layout information.
-// To get the truth on the current state of the collection view, call methods on PSTCollectionView rather than these.
-@property (nonatomic, unsafe_unretained, readonly) PSTCollectionView *collectionView;
+// To get the truth on the current state of the collection view, call methods on INDCollectionView rather than these.
+@property (nonatomic, unsafe_unretained, readonly) INDCollectionView *collectionView;
 
 // Call -invalidateLayout to indicate that the collection view needs to requery the layout information.
 // Subclasses must always call super if they override.
@@ -69,21 +69,21 @@ extern NSString *const PSTCollectionViewLayoutAwokeFromNib;
 @end
 
 
-@interface PSTCollectionViewLayout (SubclassingHooks)
+@interface INDCollectionViewLayout (SubclassingHooks)
 
 // The collection view calls -prepareLayout once at its first layout as the first message to the layout instance.
 // The collection view calls -prepareLayout again after layout is invalidated and before requerying the layout information.
 // Subclasses should always call super if they override.
 - (void)prepareLayout;
 
-// PSTCollectionView calls these four methods to determine the layout information.
+// INDCollectionView calls these four methods to determine the layout information.
 // Implement -layoutAttributesForElementsInRect: to return layout attributes for for supplementary or decoration views, or to perform layout in an as-needed-on-screen fashion.
 // Additionally, all layout subclasses should implement -layoutAttributesForItemAtIndexPath: to return layout attributes instances on demand for specific index paths.
 // If the layout supports any supplementary or decoration view types, it should also implement the respective atIndexPath: methods for those types.
 - (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect; // return an array layout attributes instances for all the views in the given rect
-- (PSTCollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath;
-- (PSTCollectionViewLayoutAttributes *)layoutAttributesForSupplementaryViewOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath;
-- (PSTCollectionViewLayoutAttributes *)layoutAttributesForDecorationViewWithReuseIdentifier:(NSString*)identifier atIndexPath:(NSIndexPath *)indexPath;
+- (INDCollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath;
+- (INDCollectionViewLayoutAttributes *)layoutAttributesForSupplementaryViewOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath;
+- (INDCollectionViewLayoutAttributes *)layoutAttributesForDecorationViewWithReuseIdentifier:(NSString*)identifier atIndexPath:(NSIndexPath *)indexPath;
 
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds; // return YES to cause the collection view to requery the layout for geometry information
 - (CGPoint)targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset withScrollingVelocity:(CGPoint)velocity; // return a point at which to rest after scrolling - for layouts that want snap-to-point scrolling behavior
@@ -92,11 +92,11 @@ extern NSString *const PSTCollectionViewLayoutAwokeFromNib;
 
 @end
 
-@interface PSTCollectionViewLayout (UpdateSupportHooks)
+@interface INDCollectionViewLayout (UpdateSupportHooks)
 
 // This method is called when there is an update with deletes/inserts to the collection view.
 // It will be called prior to calling the initial/final layout attribute methods below to give the layout an opportunity to do batch computations for the insertion and deletion layout attributes.
-// The updateItems parameter is an array of PSTCollectionViewUpdateItem instances for each element that is moving to a new index path.
+// The updateItems parameter is an array of INDCollectionViewUpdateItem instances for each element that is moving to a new index path.
 - (void)prepareForCollectionViewUpdates:(NSArray *)updateItems;
 
 // This method is called inside an animation block after all items have been laid out for a collection view update.
@@ -104,13 +104,13 @@ extern NSString *const PSTCollectionViewLayoutAwokeFromNib;
 - (void)finalizeCollectionViewUpdates;
 
 // Collection view calls these methods to determine the starting layout for animating in newly inserted views, or the ending layout for animating out deleted views
-- (PSTCollectionViewLayoutAttributes *)initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath*)itemIndexPath;
-- (PSTCollectionViewLayoutAttributes *)finalLayoutAttributesForDisappearingItemAtIndexPath:(NSIndexPath *)itemIndexPath;
-- (PSTCollectionViewLayoutAttributes *)initialLayoutAttributesForInsertedSupplementaryElementOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)elementIndexPath;
-- (PSTCollectionViewLayoutAttributes *)finalLayoutAttributesForDeletedSupplementaryElementOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)elementIndexPath;
+- (INDCollectionViewLayoutAttributes *)initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath*)itemIndexPath;
+- (INDCollectionViewLayoutAttributes *)finalLayoutAttributesForDisappearingItemAtIndexPath:(NSIndexPath *)itemIndexPath;
+- (INDCollectionViewLayoutAttributes *)initialLayoutAttributesForInsertedSupplementaryElementOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)elementIndexPath;
+- (INDCollectionViewLayoutAttributes *)finalLayoutAttributesForDeletedSupplementaryElementOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)elementIndexPath;
 
 @end
 
-@interface PSTCollectionViewLayout (Private)
+@interface INDCollectionViewLayout (Private)
 - (void)setCollectionViewBoundsSize:(CGSize)size;
 @end
