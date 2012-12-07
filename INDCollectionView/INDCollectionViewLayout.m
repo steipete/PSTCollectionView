@@ -164,36 +164,6 @@
     layoutAttributes.hidden = self.isHidden;
     return layoutAttributes;
 }
-
-///////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark - INDCollection/UICollection interoperability
-
-#import <objc/runtime.h>
-- (NSMethodSignature *)methodSignatureForSelector:(SEL)selector {
-    NSMethodSignature *signature = [super methodSignatureForSelector:selector];
-    if(!signature) {
-        NSString *selString = NSStringFromSelector(selector);
-        if ([selString hasPrefix:@"_"]) {
-            SEL cleanedSelector = NSSelectorFromString([selString substringFromIndex:1]);
-            signature = [super methodSignatureForSelector:cleanedSelector];
-        }
-    }
-    return signature;
-}
-
-- (void)forwardInvocation:(NSInvocation *)invocation {
-    NSString *selString = NSStringFromSelector([invocation selector]);
-    if ([selString hasPrefix:@"_"]) {
-        SEL cleanedSelector = NSSelectorFromString([selString substringFromIndex:1]);
-        if ([self respondsToSelector:cleanedSelector]) {
-            invocation.selector = cleanedSelector;
-            [invocation invokeWithTarget:self];
-        }
-    }else {
-        [super forwardInvocation:invocation];
-    }
-}
-
 @end
 
 
@@ -427,44 +397,4 @@ NSString *const INDCollectionViewLayoutAwokeFromNib = @"INDCollectionViewLayoutA
 }
 
 - (void)encodeWithCoder:(NSCoder *)coder {}
-
-///////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark - INDCollection/UICollection interoperability
-
-#ifdef kPSUIInteroperabilityEnabled
-#import <objc/runtime.h>
-#import <objc/message.h>
-- (NSMethodSignature *)methodSignatureForSelector:(SEL)selector {
-    NSMethodSignature *sig = [super methodSignatureForSelector:selector];
-    if(!sig) {
-        NSString *selString = NSStringFromSelector(selector);
-        if ([selString hasPrefix:@"_"]) {
-            SEL cleanedSelector = NSSelectorFromString([selString substringFromIndex:1]);
-            sig = [super methodSignatureForSelector:cleanedSelector];
-        }
-    }
-    return sig;
-}
-
-- (void)forwardInvocation:(NSInvocation *)inv {
-    NSString *selString = NSStringFromSelector([inv selector]);
-    if ([selString hasPrefix:@"_"]) {
-        SEL cleanedSelector = NSSelectorFromString([selString substringFromIndex:1]);
-        if ([self respondsToSelector:cleanedSelector]) {
-            // dynamically add method for faster resolving
-            Method newMethod = class_getInstanceMethod([self class], [inv selector]);
-            IMP underscoreIMP = imp_implementationWithBlock(PSBlockImplCast(^(id _self) {
-                return objc_msgSend(_self, cleanedSelector);
-            }));
-            class_addMethod([self class], [inv selector], underscoreIMP, method_getTypeEncoding(newMethod));
-            // invoke now
-            inv.selector = cleanedSelector;
-            [inv invokeWithTarget:self];
-        }
-    }else {
-        [super forwardInvocation:inv];
-    }
-}
-#endif
-
 @end

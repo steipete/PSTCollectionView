@@ -7,10 +7,6 @@
 
 #import <Foundation/Foundation.h>
 
-// Mostly a debug feature, makes classes from UICollection* compatible with INDCollection*
-// (e.g. adding the "real" UICollectionViewFlowLayout to INDCollectionView.
-//#define kPSUIInteroperabilityEnabled
-
 @class INDCollectionView, INDCollectionViewCell, INDCollectionReusableView;
 
 @protocol INDCollectionViewDataSource <NSObject>
