@@ -9,32 +9,32 @@
 #import "NSValue+INDCollectionViewAdditions.h"
 
 @implementation NSValue (INDCollectionViewAdditions)
-+ (NSValue *)valueWithCGRect:(CGRect)rect
++ (NSValue *)ind_valueWithCGRect:(CGRect)rect
 {
     return [self valueWithRect:NSRectFromCGRect(rect)];
 }
 
-- (CGRect)CGRectValue
+- (CGRect)ind_CGRectValue
 {
     return NSRectToCGRect([self rectValue]);
 }
 
-+ (NSValue *)valueWithCGSize:(CGSize)size
++ (NSValue *)ind_valueWithCGSize:(CGSize)size
 {
     return [self valueWithSize:NSSizeFromCGSize(size)];
 }
 
-+ (NSValue *)valueWithCGPoint:(CGPoint)point
++ (NSValue *)ind_valueWithCGPoint:(CGPoint)point
 {
     return [self valueWithPoint:NSPointFromCGPoint(point)];
 }
 
-- (CGSize)CGSizeValue
+- (CGSize)ind_CGSizeValue
 {
     return NSSizeToCGSize([self sizeValue]);
 }
 
-- (CGPoint)CGPointValue
+- (CGPoint)ind_CGPointValue
 {
     return NSPointToCGPoint([self pointValue]);
 }

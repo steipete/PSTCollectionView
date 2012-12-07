@@ -150,7 +150,7 @@
                 }
             }
             item.itemFrame = CGRectIntegral(itemFrame); // might call nil; don't care
-            [rects addObject:[NSValue valueWithCGRect:CGRectIntegral(itemFrame)]];
+            [rects addObject:[NSValue ind_valueWithCGRect:CGRectIntegral(itemFrame)]];
             frame = CGRectUnion(frame, itemFrame);
         }
         _rowSize = frame.size;

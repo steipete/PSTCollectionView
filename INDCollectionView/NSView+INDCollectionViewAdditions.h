@@ -11,6 +11,6 @@
 // UIView like animation API for NSView
 
 @interface NSView (INDCollectionViewAdditions)
-+ (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations;
-+ (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations completion:(void (^)(void))completion;
++ (void)ind_animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations;
++ (void)ind_animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations completion:(void (^)(void))completion;
 @end

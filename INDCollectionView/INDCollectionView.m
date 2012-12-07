@@ -969,7 +969,7 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
         };
         
         if(animated) {
-            [NSView animateWithDuration:.3 animations:^ {
+            [NSView ind_animateWithDuration:.3 animations:^ {
                  _collectionViewFlags.updatingLayout = YES;
                  applyNewLayoutBlock();
              } completion:^ {
@@ -1374,7 +1374,7 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
         [view applyLayoutAttributes:attr];
     };
 
-    [NSView animateWithDuration:.3 animations:^{
+    [NSView ind_animateWithDuration:.3 animations:^{
          _collectionViewFlags.updatingLayout = YES;
          for(NSDictionary *animation in animations) {
              INDCollectionReusableView* view = animation[@"view"];

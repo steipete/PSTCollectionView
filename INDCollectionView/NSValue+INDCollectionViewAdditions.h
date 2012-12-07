@@ -10,10 +10,10 @@
 
 // Additions to support boxing CG data types in NSValue
 @interface NSValue (INDCollectionViewAdditions)
-+ (NSValue *)valueWithCGRect:(CGRect)rect;
-+ (NSValue *)valueWithCGSize:(CGSize)size;
-+ (NSValue *)valueWithCGPoint:(CGPoint)point;
-- (CGRect)CGRectValue;
-- (CGSize)CGSizeValue;
-- (CGPoint)CGPointValue;
++ (NSValue *)ind_valueWithCGRect:(CGRect)rect;
++ (NSValue *)ind_valueWithCGSize:(CGSize)size;
++ (NSValue *)ind_valueWithCGPoint:(CGPoint)point;
+- (CGRect)ind_CGRectValue;
+- (CGSize)ind_CGSizeValue;
+- (CGPoint)ind_CGPointValue;
 @end

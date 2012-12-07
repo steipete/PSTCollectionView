@@ -9,12 +9,12 @@
 #import "NSView+INDCollectionViewAdditions.h"
 
 @implementation NSView (INDCollectionViewAdditions)
-+ (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations
++ (void)ind_animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations
 {
-    [self animateWithDuration:duration animations:animations completion:nil];
+    [self ind_animateWithDuration:duration animations:animations completion:nil];
 }
 
-+ (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations completion:(void (^)(void))completion
++ (void)ind_animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations completion:(void (^)(void))completion
 {
     if (completion == nil) completion = ^{};
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {

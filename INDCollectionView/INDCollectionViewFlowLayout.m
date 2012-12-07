@@ -145,7 +145,7 @@ static char kINDCachedItemRectsKey;
                         NSUInteger sectionItemIndex;
                         CGRect itemFrame;
                         if (row.fixedItemSize) {
-                            itemFrame = [itemRects[itemIndex] CGRectValue];
+                            itemFrame = [itemRects[itemIndex] ind_CGRectValue];
                             sectionItemIndex = row.index * section.itemsByRowCount + itemIndex;
                         }else {
                             INDGridLayoutItem *item = row.items[itemIndex];
@@ -181,7 +181,7 @@ static char kINDCachedItemRectsKey;
         row = section.rows[indexPath.item / section.itemsByRowCount];
         NSUInteger itemIndex = indexPath.item % section.itemsByRowCount;
         NSArray *itemRects = [row itemRects];
-        itemFrame = [itemRects[itemIndex] CGRectValue];
+        itemFrame = [itemRects[itemIndex] ind_CGRectValue];
     } else if (indexPath.item < (NSInteger)[section.items count]) {
         INDGridLayoutItem *item = section.items[indexPath.item];
         row = item.rowObject;
