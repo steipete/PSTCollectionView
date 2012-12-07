@@ -28,7 +28,10 @@
 		03594AEE1671D0650025210A /* NSValue+INDCollectionViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594AED1671D0650025210A /* NSValue+INDCollectionViewAdditions.m */; };
 		03594AF11671D6120025210A /* INDCollectionViewScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594AF01671D6110025210A /* INDCollectionViewScrollView.m */; };
 		03594AF41671D82E0025210A /* NSView+INDCollectionViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594AF31671D82E0025210A /* NSView+INDCollectionViewAdditions.m */; };
-		ABC215091671E54B006D2B79 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABC215081671E54B006D2B79 /* QuartzCore.framework */; };
+		ABC215101671EAE5006D2B79 /* INDClipView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC2150F1671EAE5006D2B79 /* INDClipView.m */; };
+		ABC215121671ED92006D2B79 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABC215111671ED92006D2B79 /* QuartzCore.framework */; };
+		ABC215151671F1D2006D2B79 /* ColorView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC215141671F1D2006D2B79 /* ColorView.m */; };
+		ABC215181671F354006D2B79 /* CollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC215171671F354006D2B79 /* CollectionViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -77,7 +80,13 @@
 		03594AF01671D6110025210A /* INDCollectionViewScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = INDCollectionViewScrollView.m; path = ../../INDCollectionView/INDCollectionViewScrollView.m; sourceTree = "<group>"; };
 		03594AF21671D82D0025210A /* NSView+INDCollectionViewAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSView+INDCollectionViewAdditions.h"; path = "../../INDCollectionView/NSView+INDCollectionViewAdditions.h"; sourceTree = "<group>"; };
 		03594AF31671D82E0025210A /* NSView+INDCollectionViewAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSView+INDCollectionViewAdditions.m"; path = "../../INDCollectionView/NSView+INDCollectionViewAdditions.m"; sourceTree = "<group>"; };
-		ABC215081671E54B006D2B79 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		ABC2150E1671EAE5006D2B79 /* INDClipView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INDClipView.h; path = ../../INDCollectionView/INDClipView.h; sourceTree = "<group>"; };
+		ABC2150F1671EAE5006D2B79 /* INDClipView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = INDClipView.m; path = ../../INDCollectionView/INDClipView.m; sourceTree = "<group>"; };
+		ABC215111671ED92006D2B79 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		ABC215131671F1D2006D2B79 /* ColorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorView.h; sourceTree = "<group>"; };
+		ABC215141671F1D2006D2B79 /* ColorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorView.m; sourceTree = "<group>"; };
+		ABC215161671F354006D2B79 /* CollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionViewCell.h; sourceTree = "<group>"; };
+		ABC215171671F354006D2B79 /* CollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,7 +94,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ABC215091671E54B006D2B79 /* QuartzCore.framework in Frameworks */,
+				ABC215121671ED92006D2B79 /* QuartzCore.framework in Frameworks */,
 				03594AA91671C9BF0025210A /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -114,7 +123,7 @@
 		03594AA71671C9BF0025210A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				ABC215081671E54B006D2B79 /* QuartzCore.framework */,
+				ABC215111671ED92006D2B79 /* QuartzCore.framework */,
 				03594AA81671C9BF0025210A /* Cocoa.framework */,
 				03594AAA1671C9BF0025210A /* Other Frameworks */,
 			);
@@ -136,6 +145,10 @@
 			children = (
 				03594ABA1671C9BF0025210A /* AppDelegate.h */,
 				03594ABB1671C9BF0025210A /* AppDelegate.m */,
+				ABC215131671F1D2006D2B79 /* ColorView.h */,
+				ABC215141671F1D2006D2B79 /* ColorView.m */,
+				ABC215161671F354006D2B79 /* CollectionViewCell.h */,
+				ABC215171671F354006D2B79 /* CollectionViewCell.m */,
 				03594ABD1671C9BF0025210A /* MainMenu.xib */,
 				03594AAF1671C9BF0025210A /* Supporting Files */,
 			);
@@ -180,6 +193,18 @@
 				03594ADA1671CA200025210A /* INDGridLayoutRow.m */,
 				03594ADB1671CA200025210A /* INDGridLayoutSection.h */,
 				03594ADC1671CA200025210A /* INDGridLayoutSection.m */,
+				03594AEF1671D6110025210A /* INDCollectionViewScrollView.h */,
+				03594AF01671D6110025210A /* INDCollectionViewScrollView.m */,
+				ABC2150E1671EAE5006D2B79 /* INDClipView.h */,
+				ABC2150F1671EAE5006D2B79 /* INDClipView.m */,
+				ABC2150A1671E9E0006D2B79 /* Additions */,
+			);
+			name = INDCollectionView;
+			sourceTree = "<group>";
+		};
+		ABC2150A1671E9E0006D2B79 /* Additions */ = {
+			isa = PBXGroup;
+			children = (
 				03594AE81671CC1A0025210A /* NSIndexPath+INDCollectionViewAdditions.h */,
 				03594AE91671CC1A0025210A /* NSIndexPath+INDCollectionViewAdditions.m */,
 				03594AEC1671D0650025210A /* NSValue+INDCollectionViewAdditions.h */,
@@ -187,10 +212,8 @@
 				03594AF21671D82D0025210A /* NSView+INDCollectionViewAdditions.h */,
 				03594AF31671D82E0025210A /* NSView+INDCollectionViewAdditions.m */,
 				03594AEB1671CE850025210A /* INDGeometryAdditions.h */,
-				03594AEF1671D6110025210A /* INDCollectionViewScrollView.h */,
-				03594AF01671D6110025210A /* INDCollectionViewScrollView.m */,
 			);
-			name = INDCollectionView;
+			name = Additions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -274,6 +297,9 @@
 				03594AEE1671D0650025210A /* NSValue+INDCollectionViewAdditions.m in Sources */,
 				03594AF11671D6120025210A /* INDCollectionViewScrollView.m in Sources */,
 				03594AF41671D82E0025210A /* NSView+INDCollectionViewAdditions.m in Sources */,
+				ABC215101671EAE5006D2B79 /* INDClipView.m in Sources */,
+				ABC215151671F1D2006D2B79 /* ColorView.m in Sources */,
+				ABC215181671F354006D2B79 /* CollectionViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
