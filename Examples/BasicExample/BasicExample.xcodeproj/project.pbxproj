@@ -1,0 +1,380 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		03594AA91671C9BF0025210A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03594AA81671C9BF0025210A /* Cocoa.framework */; };
+		03594AB31671C9BF0025210A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 03594AB11671C9BF0025210A /* InfoPlist.strings */; };
+		03594AB51671C9BF0025210A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594AB41671C9BF0025210A /* main.m */; };
+		03594AB91671C9BF0025210A /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 03594AB71671C9BF0025210A /* Credits.rtf */; };
+		03594ABC1671C9BF0025210A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594ABB1671C9BF0025210A /* AppDelegate.m */; };
+		03594ABF1671C9BF0025210A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 03594ABD1671C9BF0025210A /* MainMenu.xib */; };
+		03594ADD1671CA200025210A /* INDCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594AC71671CA200025210A /* INDCollectionView.m */; };
+		03594ADE1671CA200025210A /* INDCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594AC91671CA200025210A /* INDCollectionViewCell.m */; };
+		03594ADF1671CA200025210A /* INDCollectionViewData.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594ACC1671CA200025210A /* INDCollectionViewData.m */; };
+		03594AE01671CA200025210A /* INDCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594ACE1671CA200025210A /* INDCollectionViewFlowLayout.m */; };
+		03594AE11671CA200025210A /* INDCollectionViewItemKey.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594AD01671CA200025210A /* INDCollectionViewItemKey.m */; };
+		03594AE21671CA200025210A /* INDCollectionViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594AD21671CA200025210A /* INDCollectionViewLayout.m */; };
+		03594AE31671CA200025210A /* INDCollectionViewUpdateItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594AD41671CA200025210A /* INDCollectionViewUpdateItem.m */; };
+		03594AE41671CA200025210A /* INDGridLayoutInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594AD61671CA200025210A /* INDGridLayoutInfo.m */; };
+		03594AE51671CA200025210A /* INDGridLayoutItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594AD81671CA200025210A /* INDGridLayoutItem.m */; };
+		03594AE61671CA200025210A /* INDGridLayoutRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594ADA1671CA200025210A /* INDGridLayoutRow.m */; };
+		03594AE71671CA200025210A /* INDGridLayoutSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 03594ADC1671CA200025210A /* INDGridLayoutSection.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		03594AA41671C9BF0025210A /* BasicExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BasicExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		03594AA81671C9BF0025210A /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		03594AAB1671C9BF0025210A /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		03594AAC1671C9BF0025210A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		03594AAD1671C9BF0025210A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		03594AB01671C9BF0025210A /* BasicExample-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BasicExample-Info.plist"; sourceTree = "<group>"; };
+		03594AB21671C9BF0025210A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		03594AB41671C9BF0025210A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		03594AB61671C9BF0025210A /* BasicExample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BasicExample-Prefix.pch"; sourceTree = "<group>"; };
+		03594AB81671C9BF0025210A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		03594ABA1671C9BF0025210A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		03594ABB1671C9BF0025210A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		03594ABE1671C9BF0025210A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		03594AC61671CA200025210A /* INDCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INDCollectionView.h; path = ../../INDCollectionView/INDCollectionView.h; sourceTree = "<group>"; };
+		03594AC71671CA200025210A /* INDCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = INDCollectionView.m; path = ../../INDCollectionView/INDCollectionView.m; sourceTree = "<group>"; };
+		03594AC81671CA200025210A /* INDCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INDCollectionViewCell.h; path = ../../INDCollectionView/INDCollectionViewCell.h; sourceTree = "<group>"; };
+		03594AC91671CA200025210A /* INDCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = INDCollectionViewCell.m; path = ../../INDCollectionView/INDCollectionViewCell.m; sourceTree = "<group>"; };
+		03594ACA1671CA200025210A /* INDCollectionViewCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INDCollectionViewCommon.h; path = ../../INDCollectionView/INDCollectionViewCommon.h; sourceTree = "<group>"; };
+		03594ACB1671CA200025210A /* INDCollectionViewData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INDCollectionViewData.h; path = ../../INDCollectionView/INDCollectionViewData.h; sourceTree = "<group>"; };
+		03594ACC1671CA200025210A /* INDCollectionViewData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = INDCollectionViewData.m; path = ../../INDCollectionView/INDCollectionViewData.m; sourceTree = "<group>"; };
+		03594ACD1671CA200025210A /* INDCollectionViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INDCollectionViewFlowLayout.h; path = ../../INDCollectionView/INDCollectionViewFlowLayout.h; sourceTree = "<group>"; };
+		03594ACE1671CA200025210A /* INDCollectionViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = INDCollectionViewFlowLayout.m; path = ../../INDCollectionView/INDCollectionViewFlowLayout.m; sourceTree = "<group>"; };
+		03594ACF1671CA200025210A /* INDCollectionViewItemKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INDCollectionViewItemKey.h; path = ../../INDCollectionView/INDCollectionViewItemKey.h; sourceTree = "<group>"; };
+		03594AD01671CA200025210A /* INDCollectionViewItemKey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = INDCollectionViewItemKey.m; path = ../../INDCollectionView/INDCollectionViewItemKey.m; sourceTree = "<group>"; };
+		03594AD11671CA200025210A /* INDCollectionViewLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INDCollectionViewLayout.h; path = ../../INDCollectionView/INDCollectionViewLayout.h; sourceTree = "<group>"; };
+		03594AD21671CA200025210A /* INDCollectionViewLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = INDCollectionViewLayout.m; path = ../../INDCollectionView/INDCollectionViewLayout.m; sourceTree = "<group>"; };
+		03594AD31671CA200025210A /* INDCollectionViewUpdateItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INDCollectionViewUpdateItem.h; path = ../../INDCollectionView/INDCollectionViewUpdateItem.h; sourceTree = "<group>"; };
+		03594AD41671CA200025210A /* INDCollectionViewUpdateItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = INDCollectionViewUpdateItem.m; path = ../../INDCollectionView/INDCollectionViewUpdateItem.m; sourceTree = "<group>"; };
+		03594AD51671CA200025210A /* INDGridLayoutInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INDGridLayoutInfo.h; path = ../../INDCollectionView/INDGridLayoutInfo.h; sourceTree = "<group>"; };
+		03594AD61671CA200025210A /* INDGridLayoutInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = INDGridLayoutInfo.m; path = ../../INDCollectionView/INDGridLayoutInfo.m; sourceTree = "<group>"; };
+		03594AD71671CA200025210A /* INDGridLayoutItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INDGridLayoutItem.h; path = ../../INDCollectionView/INDGridLayoutItem.h; sourceTree = "<group>"; };
+		03594AD81671CA200025210A /* INDGridLayoutItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = INDGridLayoutItem.m; path = ../../INDCollectionView/INDGridLayoutItem.m; sourceTree = "<group>"; };
+		03594AD91671CA200025210A /* INDGridLayoutRow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INDGridLayoutRow.h; path = ../../INDCollectionView/INDGridLayoutRow.h; sourceTree = "<group>"; };
+		03594ADA1671CA200025210A /* INDGridLayoutRow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = INDGridLayoutRow.m; path = ../../INDCollectionView/INDGridLayoutRow.m; sourceTree = "<group>"; };
+		03594ADB1671CA200025210A /* INDGridLayoutSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INDGridLayoutSection.h; path = ../../INDCollectionView/INDGridLayoutSection.h; sourceTree = "<group>"; };
+		03594ADC1671CA200025210A /* INDGridLayoutSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = INDGridLayoutSection.m; path = ../../INDCollectionView/INDGridLayoutSection.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		03594AA11671C9BF0025210A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03594AA91671C9BF0025210A /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		03594A991671C9BF0025210A = {
+			isa = PBXGroup;
+			children = (
+				03594AC51671C9C30025210A /* INDCollectionView */,
+				03594AAE1671C9BF0025210A /* BasicExample */,
+				03594AA71671C9BF0025210A /* Frameworks */,
+				03594AA51671C9BF0025210A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		03594AA51671C9BF0025210A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				03594AA41671C9BF0025210A /* BasicExample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		03594AA71671C9BF0025210A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				03594AA81671C9BF0025210A /* Cocoa.framework */,
+				03594AAA1671C9BF0025210A /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		03594AAA1671C9BF0025210A /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				03594AAB1671C9BF0025210A /* AppKit.framework */,
+				03594AAC1671C9BF0025210A /* CoreData.framework */,
+				03594AAD1671C9BF0025210A /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		03594AAE1671C9BF0025210A /* BasicExample */ = {
+			isa = PBXGroup;
+			children = (
+				03594ABA1671C9BF0025210A /* AppDelegate.h */,
+				03594ABB1671C9BF0025210A /* AppDelegate.m */,
+				03594ABD1671C9BF0025210A /* MainMenu.xib */,
+				03594AAF1671C9BF0025210A /* Supporting Files */,
+			);
+			path = BasicExample;
+			sourceTree = "<group>";
+		};
+		03594AAF1671C9BF0025210A /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				03594AB01671C9BF0025210A /* BasicExample-Info.plist */,
+				03594AB11671C9BF0025210A /* InfoPlist.strings */,
+				03594AB41671C9BF0025210A /* main.m */,
+				03594AB61671C9BF0025210A /* BasicExample-Prefix.pch */,
+				03594AB71671C9BF0025210A /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		03594AC51671C9C30025210A /* INDCollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				03594AC61671CA200025210A /* INDCollectionView.h */,
+				03594AC71671CA200025210A /* INDCollectionView.m */,
+				03594AC81671CA200025210A /* INDCollectionViewCell.h */,
+				03594AC91671CA200025210A /* INDCollectionViewCell.m */,
+				03594ACA1671CA200025210A /* INDCollectionViewCommon.h */,
+				03594ACB1671CA200025210A /* INDCollectionViewData.h */,
+				03594ACC1671CA200025210A /* INDCollectionViewData.m */,
+				03594ACD1671CA200025210A /* INDCollectionViewFlowLayout.h */,
+				03594ACE1671CA200025210A /* INDCollectionViewFlowLayout.m */,
+				03594ACF1671CA200025210A /* INDCollectionViewItemKey.h */,
+				03594AD01671CA200025210A /* INDCollectionViewItemKey.m */,
+				03594AD11671CA200025210A /* INDCollectionViewLayout.h */,
+				03594AD21671CA200025210A /* INDCollectionViewLayout.m */,
+				03594AD31671CA200025210A /* INDCollectionViewUpdateItem.h */,
+				03594AD41671CA200025210A /* INDCollectionViewUpdateItem.m */,
+				03594AD51671CA200025210A /* INDGridLayoutInfo.h */,
+				03594AD61671CA200025210A /* INDGridLayoutInfo.m */,
+				03594AD71671CA200025210A /* INDGridLayoutItem.h */,
+				03594AD81671CA200025210A /* INDGridLayoutItem.m */,
+				03594AD91671CA200025210A /* INDGridLayoutRow.h */,
+				03594ADA1671CA200025210A /* INDGridLayoutRow.m */,
+				03594ADB1671CA200025210A /* INDGridLayoutSection.h */,
+				03594ADC1671CA200025210A /* INDGridLayoutSection.m */,
+			);
+			name = INDCollectionView;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		03594AA31671C9BF0025210A /* BasicExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 03594AC21671C9BF0025210A /* Build configuration list for PBXNativeTarget "BasicExample" */;
+			buildPhases = (
+				03594AA01671C9BF0025210A /* Sources */,
+				03594AA11671C9BF0025210A /* Frameworks */,
+				03594AA21671C9BF0025210A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BasicExample;
+			productName = BasicExample;
+			productReference = 03594AA41671C9BF0025210A /* BasicExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		03594A9B1671C9BF0025210A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0450;
+				ORGANIZATIONNAME = "Indragie Karunaratne";
+			};
+			buildConfigurationList = 03594A9E1671C9BF0025210A /* Build configuration list for PBXProject "BasicExample" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 03594A991671C9BF0025210A;
+			productRefGroup = 03594AA51671C9BF0025210A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				03594AA31671C9BF0025210A /* BasicExample */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		03594AA21671C9BF0025210A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03594AB31671C9BF0025210A /* InfoPlist.strings in Resources */,
+				03594AB91671C9BF0025210A /* Credits.rtf in Resources */,
+				03594ABF1671C9BF0025210A /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		03594AA01671C9BF0025210A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03594AB51671C9BF0025210A /* main.m in Sources */,
+				03594ABC1671C9BF0025210A /* AppDelegate.m in Sources */,
+				03594ADD1671CA200025210A /* INDCollectionView.m in Sources */,
+				03594ADE1671CA200025210A /* INDCollectionViewCell.m in Sources */,
+				03594ADF1671CA200025210A /* INDCollectionViewData.m in Sources */,
+				03594AE01671CA200025210A /* INDCollectionViewFlowLayout.m in Sources */,
+				03594AE11671CA200025210A /* INDCollectionViewItemKey.m in Sources */,
+				03594AE21671CA200025210A /* INDCollectionViewLayout.m in Sources */,
+				03594AE31671CA200025210A /* INDCollectionViewUpdateItem.m in Sources */,
+				03594AE41671CA200025210A /* INDGridLayoutInfo.m in Sources */,
+				03594AE51671CA200025210A /* INDGridLayoutItem.m in Sources */,
+				03594AE61671CA200025210A /* INDGridLayoutRow.m in Sources */,
+				03594AE71671CA200025210A /* INDGridLayoutSection.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		03594AB11671C9BF0025210A /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				03594AB21671C9BF0025210A /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		03594AB71671C9BF0025210A /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				03594AB81671C9BF0025210A /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		03594ABD1671C9BF0025210A /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				03594ABE1671C9BF0025210A /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		03594AC01671C9BF0025210A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		03594AC11671C9BF0025210A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		03594AC31671C9BF0025210A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "BasicExample/BasicExample-Prefix.pch";
+				INFOPLIST_FILE = "BasicExample/BasicExample-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		03594AC41671C9BF0025210A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "BasicExample/BasicExample-Prefix.pch";
+				INFOPLIST_FILE = "BasicExample/BasicExample-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		03594A9E1671C9BF0025210A /* Build configuration list for PBXProject "BasicExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				03594AC01671C9BF0025210A /* Debug */,
+				03594AC11671C9BF0025210A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		03594AC21671C9BF0025210A /* Build configuration list for PBXNativeTarget "BasicExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				03594AC31671C9BF0025210A /* Debug */,
+				03594AC41671C9BF0025210A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 03594A9B1671C9BF0025210A /* Project object */;
+}
