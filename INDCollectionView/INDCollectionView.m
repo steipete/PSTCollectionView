@@ -6,7 +6,6 @@
 //
 
 #import "INDCollectionView.h"
-#import "INDCollectionViewController.h"
 #import "INDCollectionViewData.h"
 #import "INDCollectionViewCell.h"
 #import "INDCollectionViewLayout.h"
@@ -39,14 +38,14 @@ CGFloat INDSimulatorAnimationDragCoefficient(void);
     // ivar layout needs to EQUAL to UICollectionView.
     INDCollectionViewLayout *_layout;
     __unsafe_unretained id<INDCollectionViewDataSource> _dataSource;
-    UIView *_backgroundView;
+    NSView *_backgroundView;
     NSMutableSet *_indexPathsForSelectedItems;
     NSMutableDictionary *_cellReuseQueues;
     NSMutableDictionary *_supplementaryViewReuseQueues;
     NSMutableSet *_indexPathsForHighlightedItems;
     int _reloadingSuspendedCount;
     INDCollectionReusableView *_firstResponderView;
-    UIView *_newContentView;
+    NSView *_newContentView;
     int _firstResponderViewType;
     NSString *_firstResponderViewKind;
     NSIndexPath *_firstResponderIndexPath;
@@ -66,7 +65,7 @@ CGFloat INDSimulatorAnimationDragCoefficient(void);
     NSMutableArray *_moveItems;
     NSArray *_originalInsertItems;
     NSArray *_originalDeleteItems;
-    UITouch *_currentTouch;
+    NSEvent *_currentEvent;
     void (^_updateCompletionHandler)(BOOL finished);
     NSMutableDictionary *_cellClassDict;
     NSMutableDictionary *_cellNibDict;
@@ -291,7 +290,7 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
     _supplementaryViewClassDict[kindAndIdentifier] = viewClass;
 }
 
-- (void)registerNib:(UINib *)nib forCellWithReuseIdentifier:(NSString *)identifier {
+- (void)registerNib:(NSNib *)nib forCellWithReuseIdentifier:(NSString *)identifier {
     NSArray *topLevelObjects = [nib instantiateWithOwner:nil options:nil];
 #pragma unused(topLevelObjects)
     NSAssert(topLevelObjects.count == 1 && [topLevelObjects[0] isKindOfClass:INDCollectionViewCell.class], @"must contain exactly 1 top level object which is a INDCollectionViewCell");
@@ -299,7 +298,7 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
     _cellNibDict[identifier] = nib;
 }
 
-- (void)registerNib:(UINib *)nib forSupplementaryViewOfKind:(NSString *)kind withReuseIdentifier:(NSString *)identifier {
+- (void)registerNib:(NSNib *)nib forSupplementaryViewOfKind:(NSString *)kind withReuseIdentifier:(NSString *)identifier {
     NSArray *topLevelObjects = [nib instantiateWithOwner:nil options:nil];
 #pragma unused(topLevelObjects)
     NSAssert(topLevelObjects.count == 1 && [topLevelObjects[0] isKindOfClass:INDCollectionReusableView.class], @"must contain exactly 1 top level object which is a INDCollectionReusableView");
@@ -317,10 +316,10 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
     }else {
         if (_cellNibDict[identifier]) {
             // Cell was registered via registerNib:forCellWithReuseIdentifier:
-            UINib *cellNib = _cellNibDict[identifier];
+            NSNib *cellNib = _cellNibDict[identifier];
             NSDictionary *externalObjects = self.extVars.nibCellsExternalObjects[identifier];
             if (externalObjects) {
-                cell = [cellNib instantiateWithOwner:self options:@{UINibExternalObjects:externalObjects}][0];
+                cell = [cellNib instantiateWithOwner:self options:@{NSNibExternalObjects:externalObjects}][0];
             } else {
                 cell = [cellNib instantiateWithOwner:self options:nil][0];
             }
@@ -361,10 +360,10 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
     } else {
         if (_supplementaryViewNibDict[kindAndIdentifier]) {
             // supplementary view was registered via registerNib:forCellWithReuseIdentifier:
-            UINib *supplementaryViewNib = _supplementaryViewNibDict[kindAndIdentifier];
+            NSNib *supplementaryViewNib = _supplementaryViewNibDict[kindAndIdentifier];
 			NSDictionary *externalObjects = self.extVars.supplementaryViewsExternalObjects[kindAndIdentifier];
 			if (externalObjects) {
-				view = [supplementaryViewNib instantiateWithOwner:self options:@{UINibExternalObjects:externalObjects}][0];
+				view = [supplementaryViewNib instantiateWithOwner:self options:@{NSNibExternalObjects:externalObjects}][0];
 			} else {
 				view = [supplementaryViewNib instantiateWithOwner:self options:0][0];
 			}
@@ -534,37 +533,37 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark - Touch Handling
+#pragma mark - Mouse Event Handling
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    [super touchesBegan:touches withEvent:event];
-
-    CGPoint touchPoint = [[touches anyObject] locationInView:self];
+- (void)mouseDown:(NSEvent *)theEvent
+{
+    [super mouseDown:theEvent];
+    CGPoint touchPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     NSIndexPath *indexPath = [self indexPathForItemAtPoint:touchPoint];
     if (indexPath) {
-
+        
         if (!self.allowsMultipleSelection) {
             // temporally unhighlight background on touchesBegan (keeps selected by _indexPathsForSelectedItems)
             for (INDCollectionViewCell* visibleCell in [self allCells]) {
                 visibleCell.highlighted = NO;
                 visibleCell.selected = NO;
-
+                
                 // NOTE: doesn't work due to the _indexPathsForHighlightedItems validation
                 //[self unhighlightItemAtIndexPath:indexPathForVisibleItem animated:YES notifyDelegate:YES];
             }
         }
-
+        
         [self highlightItemAtIndexPath:indexPath animated:YES scrollPosition:INDCollectionViewScrollPositionNone notifyDelegate:YES];
-
+        
         self.extVars.touchingIndexPath = indexPath;
     }
 }
 
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    [super touchesMoved:touches withEvent:event];
-
+- (void)mouseDragged:(NSEvent *)theEvent
+{
+    [super mouseDragged:theEvent];
     if (self.extVars.touchingIndexPath) {
-        CGPoint touchPoint = [[touches anyObject] locationInView:self];
+        CGPoint touchPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         NSIndexPath *indexPath = [self indexPathForItemAtPoint:touchPoint];
         if ([indexPath isEqual:self.extVars.touchingIndexPath]) {
             [self highlightItemAtIndexPath:indexPath animated:YES scrollPosition:INDCollectionViewScrollPositionNone notifyDelegate:YES];
@@ -575,26 +574,20 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
     }
 }
 
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    [super touchesEnded:touches withEvent:event];
-
-    CGPoint touchPoint = [[touches anyObject] locationInView:self];
+- (void)mouseUp:(NSEvent *)theEvent
+{
+    [super mouseUp:theEvent];
+    CGPoint touchPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     NSIndexPath *indexPath = [self indexPathForItemAtPoint:touchPoint];
     if ([indexPath isEqual:self.extVars.touchingIndexPath]) {
         [self userSelectedItemAtIndexPath:indexPath];
-
+        
         [self unhighlightAllItems];
         self.extVars.touchingIndexPath = nil;
     }
     else {
         [self cellTouchCancelled];
     }
-}
-
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
-    [super touchesCancelled:touches withEvent:event];
-
-    [self cellTouchCancelled];
 }
 
 - (void)cellTouchCancelled {
@@ -795,12 +788,12 @@ static void INDCollectionViewCommonSetup(INDCollectionView *_self) {
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Properties
 
-- (void)setBackgroundView:(UIView *)backgroundView {
+- (void)setBackgroundView:(NSView *)backgroundView {
     if (backgroundView != _backgroundView) {
         [_backgroundView removeFromSuperview];
         _backgroundView = backgroundView;
-        backgroundView.frame = (CGRect){.origin=self.contentOffset,.size=self.bounds.size};
-        backgroundView.autoresizesSubviews = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+        backgroundView.frame = (NSRect){.origin=self.contentOffset,.size=self.bounds.size};
+        backgroundView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
         [self addSubview:backgroundView];
         [self sendSubviewToBack:backgroundView];
     }

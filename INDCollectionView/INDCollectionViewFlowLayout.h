@@ -6,6 +6,7 @@
 //
 
 #import "INDCollectionViewLayout.h"
+#import "INDGeometryAdditions.h"
 
 extern NSString *const INDCollectionElementKindSectionHeader;
 extern NSString *const INDCollectionElementKindSectionFooter;
@@ -19,7 +20,7 @@ typedef NS_ENUM(NSInteger, INDCollectionViewScrollDirection) {
 @optional
 
 - (CGSize)collectionView:(INDCollectionView *)collectionView layout:(INDCollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
-- (UIEdgeInsets)collectionView:(INDCollectionView *)collectionView layout:(INDCollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section;
+- (INDEdgeInsets)collectionView:(INDCollectionView *)collectionView layout:(INDCollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section;
 - (CGFloat)collectionView:(INDCollectionView *)collectionView layout:(INDCollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section;
 - (CGFloat)collectionView:(INDCollectionView *)collectionView layout:(INDCollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section;
 - (CGSize)collectionView:(INDCollectionView *)collectionView layout:(INDCollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section;
@@ -38,7 +39,7 @@ typedef NS_ENUM(NSInteger, INDCollectionViewScrollDirection) {
 @property (nonatomic) CGSize headerReferenceSize;
 @property (nonatomic) CGSize footerReferenceSize;
 
-@property (nonatomic) UIEdgeInsets sectionInset;
+@property (nonatomic) INDEdgeInsets sectionInset;
 
 /*
  Row alignment options exits in the official UICollectionView, but hasn't been made public API.

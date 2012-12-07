@@ -30,7 +30,7 @@
 
 @end
 
-@protocol INDCollectionViewDelegate <UIScrollViewDelegate>
+@protocol INDCollectionViewDelegate <NSObject>
 @optional
 
 // Methods for notification of selection/deselection and highlight/unhighlight events.

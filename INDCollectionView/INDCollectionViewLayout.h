@@ -64,7 +64,7 @@ extern NSString *const INDCollectionViewLayoutAwokeFromNib;
 
 /// @name Registering Decoration Views
 - (void)registerClass:(Class)viewClass forDecorationViewWithReuseIdentifier:(NSString *)identifier;
-- (void)registerNib:(UINib *)nib forDecorationViewWithReuseIdentifier:(NSString *)identifier;
+- (void)registerNib:(NSNib *)nib forDecorationViewWithReuseIdentifier:(NSString *)identifier;
 
 @end
 

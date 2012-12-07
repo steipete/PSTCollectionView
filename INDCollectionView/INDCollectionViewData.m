@@ -8,6 +8,7 @@
 #import "INDCollectionViewData.h"
 #import "INDCollectionView.h"
 #import "INDCollectionViewLayout.h"
+#import "NSIndexPath+INDCollectionViewAdditions.h"
 
 @interface INDCollectionViewData () {
     CGRect _validLayoutRect;
@@ -67,7 +68,7 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p numItems:%d numSections:%d globalItems:%@>", NSStringFromClass([self class]), self, self.numberOfItems, self.numberOfSections, _globalItems];
+    return [NSString stringWithFormat:@"<%@: %p numItems:%ld numSections:%ld globalItems:%@>", NSStringFromClass([self class]), self, self.numberOfItems, self.numberOfSections, _globalItems];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -110,7 +111,7 @@
 - (NSInteger)numberOfItemsInSection:(NSInteger)section {
     [self validateItemCounts];
     if (section > _numSections || section < 0) {
-        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"Section %d out of range: 0...%d", section, _numSections] userInfo:nil];
+        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"Section %ld out of range: 0...%ld", section, _numSections] userInfo:nil];
     }
     
     NSInteger numberOfItemsInSection = 0;

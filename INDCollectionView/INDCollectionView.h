@@ -8,10 +8,8 @@
 #import "INDCollectionViewLayout.h"
 #import "INDCollectionViewFlowLayout.h"
 #import "INDCollectionViewCell.h"
-#import "INDCollectionViewController.h"
 #import "INDCollectionViewUpdateItem.h"
 
-@class INDCollectionViewController;
 
 typedef NS_OPTIONS(NSUInteger, INDCollectionViewScrollPosition) {
     INDCollectionViewScrollPositionNone                 = 0,
@@ -30,24 +28,24 @@ typedef NS_OPTIONS(NSUInteger, INDCollectionViewScrollPosition) {
 
 // Port of Peter Steinberger's PSTCollectionView to AppKit
 
-@interface INDCollectionView : UIScrollView
+@interface INDCollectionView : NSView
 
 - (id)initWithFrame:(CGRect)frame collectionViewLayout:(INDCollectionViewLayout *)layout; // the designated initializer
 
 @property (nonatomic, strong) INDCollectionViewLayout *collectionViewLayout;
 @property (nonatomic, assign) IBOutlet id <INDCollectionViewDelegate> delegate;
 @property (nonatomic, assign) IBOutlet id <INDCollectionViewDataSource> dataSource;
-@property (nonatomic, strong) UIView *backgroundView; // will be automatically resized to track the size of the collection view and placed behind all cells and supplementary views.
+@property (nonatomic, strong) NSView *backgroundView; // will be automatically resized to track the size of the collection view and placed behind all cells and supplementary views.
 
 // For each reuse identifier that the collection view will use, register either a class or a nib from which to instantiate a cell.
 // If a nib is registered, it must contain exactly 1 top level object which is a INDCollectionViewCell.
 // If a class is registered, it will be instantiated via alloc/initWithFrame:
 - (void)registerClass:(Class)cellClass forCellWithReuseIdentifier:(NSString *)identifier;
 - (void)registerClass:(Class)viewClass forSupplementaryViewOfKind:(NSString *)elementKind withReuseIdentifier:(NSString *)identifier;
-- (void)registerNib:(UINib *)nib forCellWithReuseIdentifier:(NSString *)identifier;
+- (void)registerNib:(NSNib *)nib forCellWithReuseIdentifier:(NSString *)identifier;
 
 // TODO: implement!
-- (void)registerNib:(UINib *)nib forSupplementaryViewOfKind:(NSString *)kind withReuseIdentifier:(NSString *)identifier;
+- (void)registerNib:(NSNib *)nib forSupplementaryViewOfKind:(NSString *)kind withReuseIdentifier:(NSString *)identifier;
 
 - (id)dequeueReusableCellWithReuseIdentifier:(NSString *)identifier forIndexPath:(NSIndexPath *)indexPath;
 - (id)dequeueReusableSupplementaryViewOfKind:(NSString *)elementKind withReuseIdentifier:(NSString *)identifier forIndexPath:(NSIndexPath *)indexPath;

@@ -10,6 +10,8 @@
 #import "INDCollectionViewItemKey.h"
 #import "INDCollectionViewData.h"
 #import "INDCollectionViewUpdateItem.h"
+#import "INDGeometryAdditions.h"
+#import "NSIndexPath+INDCollectionViewAdditions.h"
 
 @interface INDCollectionView()
 - (id)currentUpdate;
@@ -94,7 +96,7 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p frame:%@ indexPath:%@ elementKind:%@>", NSStringFromClass([self class]), self, NSStringFromCGRect(self.frame), self.indexPath, self.elementKind];
+    return [NSString stringWithFormat:@"<%@: %p frame:%@ indexPath:%@ elementKind:%@>", NSStringFromClass([self class]), self, INDNSStringFromCGRect(self.frame), self.indexPath, self.elementKind];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -405,7 +407,7 @@ NSString *const INDCollectionViewLayoutAwokeFromNib = @"INDCollectionViewLayoutA
 - (void)registerClass:(Class)viewClass forDecorationViewWithReuseIdentifier:(NSString *)identifier {
 }
 
-- (void)registerNib:(UINib *)nib forDecorationViewWithReuseIdentifier:(NSString *)identifier {
+- (void)registerNib:(NSNib *)nib forDecorationViewWithReuseIdentifier:(NSString *)identifier {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////

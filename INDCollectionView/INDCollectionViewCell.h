@@ -9,7 +9,7 @@
 
 @class INDCollectionViewLayout, INDCollectionView, INDCollectionViewLayoutAttributes;
 
-@interface INDCollectionReusableView : UIView
+@interface INDCollectionReusableView : NSView
 
 @property (nonatomic, readonly, copy) NSString *reuseIdentifier;
 
@@ -33,7 +33,7 @@
 
 @interface INDCollectionViewCell : INDCollectionReusableView
 
-@property (nonatomic, readonly) UIView *contentView; // add custom subviews to the cell's contentView
+@property (nonatomic, readonly) NSView *contentView; // add custom subviews to the cell's contentView
 
 // Cells become highlighted when the user touches them.
 // The selected state is toggled when the user lifts up from a highlighted cell.
@@ -44,7 +44,7 @@
 
 // The background view is a subview behind all other views.
 // If selectedBackgroundView is different than backgroundView, it will be placed above the background view and animated in on selection.
-@property (nonatomic, strong) UIView *backgroundView;
-@property (nonatomic, strong) UIView *selectedBackgroundView;
+@property (nonatomic, strong) NSView *backgroundView;
+@property (nonatomic, strong) NSView *selectedBackgroundView;
 
 @end

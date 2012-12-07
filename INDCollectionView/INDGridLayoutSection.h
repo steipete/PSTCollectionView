@@ -5,6 +5,7 @@
 //  AppKit Port: Copyright (c) 2012 Indragie Karunaratne. All rights reserved.
 //
 #import <Foundation/Foundation.h>
+#import "INDGeometryAdditions.h"
 
 @class INDGridLayoutInfo, INDGridLayoutRow, INDGridLayoutItem;
 
@@ -21,7 +22,7 @@
 
 @property (nonatomic, assign) CGFloat verticalInterstice;
 @property (nonatomic, assign) CGFloat horizontalInterstice;
-@property (nonatomic, assign) UIEdgeInsets sectionMargins;
+@property (nonatomic, assign) INDEdgeInsets sectionMargins;
 
 @property (nonatomic, assign) CGRect frame;
 @property (nonatomic, assign) CGRect headerFrame;

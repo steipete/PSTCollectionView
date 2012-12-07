@@ -11,6 +11,8 @@
 #import "INDGridLayoutItem.h"
 #import "INDGridLayoutInfo.h"
 #import "INDCollectionViewFlowLayout.h"
+#import "INDGeometryAdditions.h"
+#import "NSValue+INDCollectionViewAdditions.h"
 
 @interface INDGridLayoutRow() {
     NSMutableArray *_items;
@@ -34,7 +36,7 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p frame:%@ index:%d items:%@>", NSStringFromClass([self class]), self, NSStringFromCGRect(self.rowFrame), self.index, self.items];
+    return [NSString stringWithFormat:@"<%@: %p frame:%@ index:%ld items:%@>", NSStringFromClass([self class]), self, INDNSStringFromCGRect(self.rowFrame), self.index, self.items];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////

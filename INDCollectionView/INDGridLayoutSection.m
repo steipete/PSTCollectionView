@@ -10,6 +10,7 @@
 #import "INDGridLayoutItem.h"
 #import "INDGridLayoutRow.h"
 #import "INDGridLayoutInfo.h"
+#import "INDGeometryAdditions.h"
 
 @interface INDGridLayoutSection() {
     NSMutableArray *_items;
@@ -44,7 +45,7 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p itemCount:%d frame:%@ rows:%@>", NSStringFromClass([self class]), self, self.itemsCount, NSStringFromCGRect(self.frame), self.rows];
+    return [NSString stringWithFormat:@"<%@: %p itemCount:%ld frame:%@ rows:%@>", NSStringFromClass([self class]), self, self.itemsCount, INDNSStringFromCGRect(self.frame), self.rows];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////

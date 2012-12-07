@@ -11,15 +11,18 @@
 #import "INDGridLayoutInfo.h"
 #import "INDGridLayoutRow.h"
 #import "INDGridLayoutSection.h"
+#import "INDGeometryAdditions.h"
+#import "NSIndexPath+INDCollectionViewAdditions.h"
+#import "NSValue+INDCollectionViewAdditions.h"
 #import <objc/runtime.h>
 
-NSString *const INDCollectionElementKindSectionHeader = @"UICollectionElementKindSectionHeader";
-NSString *const INDCollectionElementKindSectionFooter = @"UICollectionElementKindSectionFooter";
+NSString *const INDCollectionElementKindSectionHeader = @"INDCollectionElementKindSectionHeader";
+NSString *const INDCollectionElementKindSectionFooter = @"INDCollectionElementKindSectionFooter";
 
 // this is not exposed in UICollectionViewFlowLayout
-NSString *const INDFlowLayoutCommonRowHorizontalAlignmentKey = @"UIFlowLayoutCommonRowHorizontalAlignmentKey";
-NSString *const INDFlowLayoutLastRowHorizontalAlignmentKey = @"UIFlowLayoutLastRowHorizontalAlignmentKey";
-NSString *const INDFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalAlignmentKey";
+NSString *const INDFlowLayoutCommonRowHorizontalAlignmentKey = @"INDFlowLayoutCommonRowHorizontalAlignmentKey";
+NSString *const INDFlowLayoutLastRowHorizontalAlignmentKey = @"INDFlowLayoutLastRowHorizontalAlignmentKey";
+NSString *const INDFlowLayoutRowVerticalAlignmentKey = @"INDFlowLayoutRowVerticalAlignmentKey";
 
 @implementation INDCollectionViewFlowLayout {
     // class needs to have same iVar layout as UICollectionViewLayout
@@ -36,12 +39,12 @@ NSString *const INDFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVertical
         unsigned int layoutDataIsValid : 1;
         unsigned int delegateInfoIsValid : 1;
     } _gridLayoutFlags;
-    float _interitemSpacing;
-    float _lineSpacing;
+    CGFloat _interitemSpacing;
+    CGFloat _lineSpacing;
     CGSize _itemSize;
     CGSize _headerReferenceSize;
     CGSize _footerReferenceSize;
-    UIEdgeInsets _sectionInset;
+    INDEdgeInsets _sectionInset;
     INDGridLayoutInfo *_data;
     CGSize _currentLayoutSize;
     NSMutableDictionary *_insertedItemsAttributesDict;
@@ -66,7 +69,7 @@ NSString *const INDFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVertical
     _itemSize = CGSizeMake(50.f, 50.f);
     _lineSpacing = 10.f;
     _interitemSpacing = 10.f;
-    _sectionInset = UIEdgeInsetsZero;
+    _sectionInset = INDEdgeInsetsZero;
     _scrollDirection = INDCollectionViewScrollDirectionVertical;
     _headerReferenceSize = CGSizeZero;
     _footerReferenceSize = CGSizeZero;
@@ -93,22 +96,6 @@ NSString *const INDFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVertical
 - (id)initWithCoder:(NSCoder *)decoder {
     if ((self = [super initWithCoder:decoder])) {
         [self commonInit];
-
-        // some properties are not set if they're default (like minimumInteritemSpacing == 10)
-        if ([decoder containsValueForKey:@"UIItemSize"])
-            self.itemSize = [decoder decodeCGSizeForKey:@"UIItemSize"];
-        if ([decoder containsValueForKey:@"UIInteritemSpacing"])
-            self.minimumInteritemSpacing = [decoder decodeFloatForKey:@"UIInteritemSpacing"];
-        if ([decoder containsValueForKey:@"UILineSpacing"])
-            self.minimumLineSpacing = [decoder decodeFloatForKey:@"UILineSpacing"];
-        if ([decoder containsValueForKey:@"UIFooterReferenceSize"])
-            self.footerReferenceSize = [decoder decodeCGSizeForKey:@"UIFooterReferenceSize"];
-        if ([decoder containsValueForKey:@"UIHeaderReferenceSize"])
-            self.headerReferenceSize = [decoder decodeCGSizeForKey:@"UIHeaderReferenceSize"];
-        if ([decoder containsValueForKey:@"UISectionInset"])
-            self.sectionInset = [decoder decodeUIEdgeInsetsForKey:@"UISectionInset"];
-        if ([decoder containsValueForKey:@"UIScrollDirection"])
-            self.scrollDirection = [decoder decodeIntegerForKey:@"UIScrollDirection"];
     }
     return self;
 }

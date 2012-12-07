@@ -10,6 +10,8 @@
 #import "INDGridLayoutRow.h"
 #import "INDGridLayoutItem.h"
 #import "INDCollectionView.h"
+#import "INDGeometryAdditions.h"
+#import "NSIndexPath+INDCollectionViewAdditions.h"
 
 @interface INDGridLayoutInfo() {
     NSMutableArray *_sections;
@@ -33,7 +35,7 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p dimension:%.1f horizontal:%d contentSize:%@ sections:%@>", NSStringFromClass([self class]), self, self.dimension, self.horizontal, NSStringFromCGSize(self.contentSize), self.sections];
+    return [NSString stringWithFormat:@"<%@: %p dimension:%.1f horizontal:%d contentSize:%@ sections:%@>", NSStringFromClass([self class]), self, self.dimension, self.horizontal, INDNSStringFromCGSize(self.contentSize), self.sections];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
