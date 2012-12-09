@@ -24,7 +24,7 @@ You could also write a Pintrest-style layout manager. Can't be that hard.
 
 ## Animations
 
-Thanks to Sergey Gavrilyuk ([@octogavrix](https://twitter.com/octogavrix)), animations are supported. It's not perfect yet (e.g. the LineExample is not perfect), but it's a great start.
+Thanks to Sergey Gavrilyuk ([@octogavrix](https://twitter.com/octogavrix)), animations are supported. It's not perfect yet (see LineExample), but it's a great start.
 
 ## ARC
 
