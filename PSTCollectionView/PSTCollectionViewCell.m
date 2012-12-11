@@ -53,10 +53,9 @@
 - (void)applyLayoutAttributes:(PSTCollectionViewLayoutAttributes *)layoutAttributes {
     if (layoutAttributes != _layoutAttributes) {
         _layoutAttributes = layoutAttributes;
-//        self.frame = layoutAttributes.frame;
 
-        self.layer.frame = layoutAttributes.frame;
-        self.layer.position = layoutAttributes.center;
+        self.frame = layoutAttributes.frame;
+        self.center = layoutAttributes.center;
 
         self.hidden = layoutAttributes.isHidden;
         self.layer.transform = layoutAttributes.transform3D;
