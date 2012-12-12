@@ -11,8 +11,8 @@
 
 typedef NS_ENUM(NSUInteger, PSTCollectionViewItemType) {
     PSTCollectionViewItemTypeCell,
-    PSTCollectionViewItemTypeDecorationView,
-    PSTCollectionViewItemTypeSupplementaryView
+    PSTCollectionViewItemTypeSupplementaryView,
+    PSTCollectionViewItemTypeDecorationView
 };
 
 // The PSTCollectionViewLayout class is provided as an abstract class for subclassing to define custom collection layouts.
@@ -49,30 +49,6 @@ typedef NS_ENUM(NSUInteger, PSTCollectionViewItemType) {
 - (BOOL)isCell;
 @end
 
-
-typedef NS_ENUM(NSInteger, PSTCollectionUpdateAction) {
-    PSTCollectionUpdateActionInsert,
-    PSTCollectionUpdateActionDelete,
-    PSTCollectionUpdateActionReload,
-    PSTCollectionUpdateActionMove,
-    PSTCollectionUpdateActionNone
-};
-
-/*
-@interface PSTCollectionViewUpdateItem : NSObject {
-@private
-    NSIndexPath* _initialIndexPath;
-    NSIndexPath* _finalIndexPath;
-    PSTCollectionUpdateAction _updateAction;
-    id _gap;
-}
-
-@property (nonatomic, readonly) NSIndexPath *indexPathBeforeUpdate; // nil for PSTCollectionUpdateActionInsert
-@property (nonatomic, readonly) NSIndexPath *indexPathAfterUpdate; // nil for PSTCollectionUpdateActionDelete
-@property (nonatomic, readonly) PSTCollectionUpdateAction updateAction;
-@end
-*/
-
 // used internally for deserialization until I figure out the proper way.
 extern NSString *const PSTCollectionViewLayoutAwokeFromNib;
 
@@ -86,9 +62,7 @@ extern NSString *const PSTCollectionViewLayoutAwokeFromNib;
 // Subclasses must always call super if they override.
 - (void)invalidateLayout;
 
-
 /// @name Registering Decoration Views
-
 - (void)registerClass:(Class)viewClass forDecorationViewWithReuseIdentifier:(NSString *)identifier;
 - (void)registerNib:(UINib *)nib forDecorationViewWithReuseIdentifier:(NSString *)identifier;
 
@@ -130,8 +104,8 @@ extern NSString *const PSTCollectionViewLayoutAwokeFromNib;
 - (void)finalizeCollectionViewUpdates;
 
 // Collection view calls these methods to determine the starting layout for animating in newly inserted views, or the ending layout for animating out deleted views
-- (PSTCollectionViewLayoutAttributes *)initialLayoutAttributesForInsertedItemAtIndexPath:(NSIndexPath *)itemIndexPath;
-- (PSTCollectionViewLayoutAttributes *)finalLayoutAttributesForDeletedItemAtIndexPath:(NSIndexPath *)itemIndexPath;
+- (PSTCollectionViewLayoutAttributes *)initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath*)itemIndexPath;
+- (PSTCollectionViewLayoutAttributes *)finalLayoutAttributesForDisappearingItemAtIndexPath:(NSIndexPath *)itemIndexPath;
 - (PSTCollectionViewLayoutAttributes *)initialLayoutAttributesForInsertedSupplementaryElementOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)elementIndexPath;
 - (PSTCollectionViewLayoutAttributes *)finalLayoutAttributesForDeletedSupplementaryElementOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)elementIndexPath;
 

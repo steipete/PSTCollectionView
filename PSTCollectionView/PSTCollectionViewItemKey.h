@@ -8,6 +8,8 @@
 #import "PSTCollectionViewCommon.h"
 #import "PSTCollectionViewLayout.h"
 
+extern NSString *const PSTCollectionElementKindCell;
+extern NSString *const PSTCollectionElementKindDecorationView;
 @class PSTCollectionViewLayoutAttributes;
 
 NSString *PSTCollectionViewItemTypeToString(PSTCollectionViewItemType type); // debug helper

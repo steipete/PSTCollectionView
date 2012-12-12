@@ -16,6 +16,7 @@
 		77DEF7B0157ED8390057C06D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77DEF7AF157ED8390057C06D /* Foundation.framework */; };
 		77DEF7B2157ED8390057C06D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77DEF7B1157ED8390057C06D /* CoreGraphics.framework */; };
 		77DEF7D1157EDCFF0057C06D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77DEF7D0157EDCFF0057C06D /* QuartzCore.framework */; };
+		78E7A7451654DF94000C70BE /* PSTCollectionViewUpdateItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 78E7A7441654DF94000C70BE /* PSTCollectionViewUpdateItem.m */; };
 		78E8AAC8160A335E00988317 /* PSTCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 78E8AAB2160A335E00988317 /* PSTCollectionView.m */; };
 		78E8AAC9160A335E00988317 /* PSTCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 78E8AAB4160A335E00988317 /* PSTCollectionViewCell.m */; };
 		78E8AACA160A335E00988317 /* PSTCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78E8AAB7160A335E00988317 /* PSTCollectionViewController.m */; };
@@ -45,6 +46,8 @@
 		77DEF7AF157ED8390057C06D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		77DEF7B1157ED8390057C06D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		77DEF7D0157EDCFF0057C06D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		78E7A7431654DF94000C70BE /* PSTCollectionViewUpdateItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTCollectionViewUpdateItem.h; sourceTree = "<group>"; };
+		78E7A7441654DF94000C70BE /* PSTCollectionViewUpdateItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTCollectionViewUpdateItem.m; sourceTree = "<group>"; };
 		78E8AAB1160A335E00988317 /* PSTCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTCollectionView.h; sourceTree = "<group>"; };
 		78E8AAB2160A335E00988317 /* PSTCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTCollectionView.m; sourceTree = "<group>"; };
 		78E8AAB3160A335E00988317 /* PSTCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTCollectionViewCell.h; sourceTree = "<group>"; };
@@ -157,6 +160,8 @@
 				78E8AABD160A335E00988317 /* PSTCollectionViewItemKey.m */,
 				78E8AABE160A335E00988317 /* PSTCollectionViewLayout.h */,
 				78E8AABF160A335E00988317 /* PSTCollectionViewLayout.m */,
+				78E7A7431654DF94000C70BE /* PSTCollectionViewUpdateItem.h */,
+				78E7A7441654DF94000C70BE /* PSTCollectionViewUpdateItem.m */,
 				78E8AAC0160A335E00988317 /* PSTGridLayoutInfo.h */,
 				78E8AAC1160A335E00988317 /* PSTGridLayoutInfo.m */,
 				78E8AAC2160A335E00988317 /* PSTGridLayoutItem.h */,
@@ -247,6 +252,7 @@
 				78E8AAD0160A335E00988317 /* PSTGridLayoutItem.m in Sources */,
 				78E8AAD1160A335E00988317 /* PSTGridLayoutRow.m in Sources */,
 				78E8AAD2160A335E00988317 /* PSTGridLayoutSection.m in Sources */,
+				78E7A7451654DF94000C70BE /* PSTCollectionViewUpdateItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

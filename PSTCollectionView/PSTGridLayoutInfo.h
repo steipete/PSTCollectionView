@@ -10,8 +10,8 @@
 @class PSTGridLayoutSection;
 
 /*
-    Every PSTCollectionViewLayout has a PSTGridLayoutInfo attached. 
-    Is used extensively in PSTCollectionViewFlowLayout.
+ Every PSTCollectionViewLayout has a PSTGridLayoutInfo attached.
+ Is used extensively in PSTCollectionViewFlowLayout.
  */
 @interface PSTGridLayoutInfo : NSObject
 

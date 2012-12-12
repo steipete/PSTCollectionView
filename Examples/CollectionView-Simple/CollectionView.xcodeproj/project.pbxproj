@@ -86,6 +86,7 @@
 		53C4ED4C159E740D0019285D /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53C4ED4B159E740D0019285D /* ViewController.m */; };
 		53C4ED54159E75F40019285D /* Cell.m in Sources */ = {isa = PBXBuildFile; fileRef = 53C4ED53159E75F40019285D /* Cell.m */; };
 		53E25AA115A399EC0004F894 /* CustomCellBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = 53E25AA015A399EC0004F894 /* CustomCellBackground.m */; };
+		78E7A7681654EF15000C70BE /* PSTCollectionViewUpdateItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 78E7A7671654EF15000C70BE /* PSTCollectionViewUpdateItem.m */; };
 		78E9A7F01613EAF80066752B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78E9A7EF1613EAF80066752B /* QuartzCore.framework */; };
 		78E9A80D1613EC640066752B /* PSTCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 78E9A7F71613EC640066752B /* PSTCollectionView.m */; };
 		78E9A80E1613EC640066752B /* PSTCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 78E9A7F91613EC640066752B /* PSTCollectionViewCell.m */; };
@@ -188,6 +189,8 @@
 		53C4ED53159E75F40019285D /* Cell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Cell.m; sourceTree = "<group>"; };
 		53E25A9F15A399EC0004F894 /* CustomCellBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomCellBackground.h; sourceTree = "<group>"; };
 		53E25AA015A399EC0004F894 /* CustomCellBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomCellBackground.m; sourceTree = "<group>"; };
+		78E7A7661654EF15000C70BE /* PSTCollectionViewUpdateItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTCollectionViewUpdateItem.h; sourceTree = "<group>"; };
+		78E7A7671654EF15000C70BE /* PSTCollectionViewUpdateItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTCollectionViewUpdateItem.m; sourceTree = "<group>"; };
 		78E9A7EF1613EAF80066752B /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		78E9A7F61613EC640066752B /* PSTCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTCollectionView.h; sourceTree = "<group>"; };
 		78E9A7F71613EC640066752B /* PSTCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTCollectionView.m; sourceTree = "<group>"; };
@@ -398,6 +401,8 @@
 				78E9A8021613EC640066752B /* PSTCollectionViewItemKey.m */,
 				78E9A8031613EC640066752B /* PSTCollectionViewLayout.h */,
 				78E9A8041613EC640066752B /* PSTCollectionViewLayout.m */,
+				78E7A7661654EF15000C70BE /* PSTCollectionViewUpdateItem.h */,
+				78E7A7671654EF15000C70BE /* PSTCollectionViewUpdateItem.m */,
 				78E9A8051613EC640066752B /* PSTGridLayoutInfo.h */,
 				78E9A8061613EC640066752B /* PSTGridLayoutInfo.m */,
 				78E9A8071613EC640066752B /* PSTGridLayoutItem.h */,
@@ -558,6 +563,7 @@
 				78E9A8151613EC640066752B /* PSTGridLayoutItem.m in Sources */,
 				78E9A8161613EC640066752B /* PSTGridLayoutRow.m in Sources */,
 				78E9A8171613EC640066752B /* PSTGridLayoutSection.m in Sources */,
+				78E7A7681654EF15000C70BE /* PSTCollectionViewUpdateItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

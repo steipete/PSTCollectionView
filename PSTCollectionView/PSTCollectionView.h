@@ -9,22 +9,9 @@
 #import "PSTCollectionViewFlowLayout.h"
 #import "PSTCollectionViewCell.h"
 #import "PSTCollectionViewController.h"
+#import "PSTCollectionViewUpdateItem.h"
 
 @class PSTCollectionViewController;
-
-// Allows code to just use UICollectionView as if it would be avaiable on iOS SDK 5.
-// http://developer.apple.com/legacy/mac/library/#documentation/DeveloperTools/gcc-3.3/gcc/compatibility_005falias.html
-#if __IPHONE_OS_VERSION_MAX_ALLOWED < 60000
-@compatibility_alias UICollectionViewController PSTCollectionViewController;
-@compatibility_alias UICollectionView PSTCollectionView;
-@compatibility_alias UICollectionReusableView PSTCollectionReusableView;
-@compatibility_alias UICollectionViewCell PSTCollectionViewCell;
-@compatibility_alias UICollectionViewLayout PSTCollectionViewLayout;
-@compatibility_alias UICollectionViewFlowLayout PSTCollectionViewFlowLayout;
-@compatibility_alias UICollectionViewLayoutAttributes PSTCollectionViewLayoutAttributes;
-@protocol UICollectionViewDataSource <PSTCollectionViewDataSource> @end
-@protocol UICollectionViewDelegate <PSTCollectionViewDelegate> @end
-#endif
 
 typedef NS_OPTIONS(NSUInteger, PSTCollectionViewScrollPosition) {
     PSTCollectionViewScrollPositionNone                 = 0,
@@ -140,6 +127,7 @@ typedef NS_OPTIONS(NSUInteger, UICollectionViewScrollPosition) {
 #define PSUICollectionViewDataSource PSTCollectionViewDataSource
 #define PSUICollectionViewLayout PSUICollectionViewLayout_
 #define PSUICollectionViewFlowLayout PSUICollectionViewFlowLayout_
+#define PSUICollectionViewDelegateFlowLayout PSTCollectionViewDelegateFlowLayout
 #define PSUICollectionViewLayoutAttributes PSUICollectionViewLayoutAttributes_
 #define PSUICollectionViewController PSUICollectionViewController_
 
@@ -148,6 +136,7 @@ typedef NS_OPTIONS(NSUInteger, UICollectionViewScrollPosition) {
 @interface PSUICollectionReusableView_ : PSTCollectionReusableView @end
 @interface PSUICollectionViewLayout_ : PSTCollectionViewLayout @end
 @interface PSUICollectionViewFlowLayout_ : PSTCollectionViewFlowLayout @end
+@protocol PSUICollectionViewDelegateFlowLayout_ <PSTCollectionViewDelegateFlowLayout> @end
 @interface PSUICollectionViewLayoutAttributes_ : PSTCollectionViewLayoutAttributes @end
 @interface PSUICollectionViewController_ : PSTCollectionViewController <PSUICollectionViewDelegate, PSUICollectionViewDataSource> @end
 
@@ -159,6 +148,7 @@ typedef NS_OPTIONS(NSUInteger, UICollectionViewScrollPosition) {
 #define PSUICollectionViewDataSource UICollectionViewDataSource
 #define PSUICollectionViewLayout UICollectionViewLayout
 #define PSUICollectionViewFlowLayout UICollectionViewFlowLayout
+#define PSUICollectionViewDelegateFlowLayout UICollectionViewDelegateFlowLayout
 #define PSUICollectionViewLayoutAttributes UICollectionViewLayoutAttributes
 #define PSUICollectionViewController UICollectionViewController
 #endif

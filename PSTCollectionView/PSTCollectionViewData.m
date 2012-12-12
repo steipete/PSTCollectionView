@@ -44,8 +44,8 @@
         unsigned int layoutIsPrepared:1;
     } _collectionViewDataFlags;
 }
-@property (nonatomic, strong) PSTCollectionView *collectionView;
-@property (nonatomic, strong) PSTCollectionViewLayout *layout;
+@property (nonatomic, unsafe_unretained) PSTCollectionView *collectionView;
+@property (nonatomic, unsafe_unretained) PSTCollectionViewLayout *layout;
 @end
 
 @implementation PSTCollectionViewData
@@ -76,7 +76,7 @@
 - (void)invalidate {
     _collectionViewDataFlags.itemCountsAreValid = NO;
     _collectionViewDataFlags.layoutIsPrepared = NO;
-    _validLayoutRect = CGRectZero;
+    _validLayoutRect = CGRectNull;  // don't set CGRectZero in case of _contentSize=CGSizeZero
 }
 
 - (CGRect)collectionViewContentRect {
@@ -86,6 +86,7 @@
 - (void)validateLayoutInRect:(CGRect)rect {
     [self validateItemCounts];
     [self prepareToLoadData];
+    
     // TODO: check if we need to fetch data from layout
     if (!CGRectEqualToRect(_validLayoutRect, rect)) {
         _validLayoutRect = rect;
@@ -184,6 +185,11 @@
         _sectionItemCounts[i] = cellCount;
         _numItems += cellCount;
     }
+    NSMutableArray* globalIndexPaths = [[NSMutableArray alloc] initWithCapacity:_numItems];
+    for(NSInteger section = 0;section<_numSections;section++)
+        for(NSInteger item=0;item<_sectionItemCounts[section];item++)
+            [globalIndexPaths addObject:[NSIndexPath indexPathForItem:item inSection:section]];
+    _globalItems = [NSArray arrayWithArray:globalIndexPaths];
     _collectionViewDataFlags.itemCountsAreValid = YES;
 }
 

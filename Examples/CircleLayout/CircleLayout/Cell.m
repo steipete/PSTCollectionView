@@ -94,18 +94,37 @@
 
 #import "Cell.h"
 #import <QuartzCore/QuartzCore.h>
+
+@interface PSUICollectionViewCell_()
+- (void)_setLayoutAttributes:(UICollectionViewLayoutAttributes*)attrs;
+@end
+
 @implementation Cell
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
-    if (self) {
+    if (self)
+    {
         self.contentView.layer.cornerRadius = 35.0;
         self.contentView.layer.borderWidth = 1.0f;
         self.contentView.layer.borderColor = [UIColor whiteColor].CGColor;
         self.contentView.backgroundColor = [UIColor underPageBackgroundColor];
+        
+        self.label = [[UILabel alloc] initWithFrame:self.bounds];
+        self.label.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+        self.label.backgroundColor = [UIColor clearColor];
+        self.label.textAlignment = UITextAlignmentCenter;
+        [self addSubview:self.label];
     }
     return self;
 }
 
+- (void)_setLayoutAttributes:(UICollectionViewLayoutAttributes*)attrs
+{
+    [super _setLayoutAttributes:attrs];
+}
 @end
+
+
+
