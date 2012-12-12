@@ -87,10 +87,6 @@
     [self validateItemCounts];
     [self prepareToLoadData];
     
-    // rect.size should be within _contentSize
-    rect.size.width = fminf(rect.size.width, _contentSize.width);
-    rect.size.height = fminf(rect.size.height, _contentSize.height);
-    
     // TODO: check if we need to fetch data from layout
     if (!CGRectEqualToRect(_validLayoutRect, rect)) {
         _validLayoutRect = rect;
