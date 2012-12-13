@@ -1766,7 +1766,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)updateSections:(NSIndexSet *)sections updateAction:(PSTCollectionUpdateAction)updateAction {
     BOOL updating = _collectionViewFlags.updating;
-    if(updating) {
+    if(!updating) {
         [self setupCellAnimations];
     }
     
