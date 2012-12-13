@@ -1256,7 +1256,8 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (void)resumeReloads {
-    _reloadingSuspendedCount--;
+    if (0 < _reloadingSuspendedCount)
+        _reloadingSuspendedCount--;
 }
 
 -(NSMutableArray *)arrayForUpdateAction:(PSTCollectionUpdateAction)updateAction {
