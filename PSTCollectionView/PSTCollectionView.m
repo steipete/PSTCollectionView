@@ -1384,8 +1384,12 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         
         PSTCollectionViewLayoutAttributes* finalAttrs =
         [_layout layoutAttributesForItemAtIndexPath:newIndexPath];
-        
-        [animations addObject:@{@"view":view, @"previousLayoutInfos": startAttrs, @"newLayoutInfos": finalAttrs}];
+
+        NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:@{@"view":view}];
+        if (startAttrs) [dic setObject:startAttrs forKey:@"previousLayoutInfos"];
+        if (finalAttrs) [dic setObject:finalAttrs forKey:@"newLayoutInfos"];
+
+        [animations addObject:dic];
         PSTCollectionViewItemKey* newKey = [key copy];
         [newKey setIndexPath:newIndexPath];
         newAllVisibleView[newKey] = view;
