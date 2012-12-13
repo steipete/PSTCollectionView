@@ -30,6 +30,10 @@ Thanks to Sergey Gavrilyuk ([@octogavrix](https://twitter.com/octogavrix)), anim
 
 PSTCollectionView works with Xcode 4.5.2+ and ARC.
 
+## Dependencies
+
+PSTCollectionView needs the QuartzCore.framework.
+
 ## Interoperability
 
 Another goal (at least super useful for debugging) is interoperability between UI/PS classes:
