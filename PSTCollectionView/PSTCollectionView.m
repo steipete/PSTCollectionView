@@ -1768,13 +1768,12 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     }
     
     NSMutableArray *updateActions = [self arrayForUpdateAction:updateAction];
-    NSInteger section = [sections firstIndex];
     
     [sections enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
         PSTCollectionViewUpdateItem *updateItem =
         [[PSTCollectionViewUpdateItem alloc] initWithAction:updateAction
                                                forIndexPath:[NSIndexPath indexPathForItem:NSNotFound
-                                                                                inSection:section]];
+                                                                                inSection:idx]];
         [updateActions addObject:updateItem];
     }];
     
