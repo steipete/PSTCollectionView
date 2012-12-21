@@ -935,8 +935,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                                                                  atIndexPath:newKey.indexPath];
             }
             
-            layoutInterchangeData[newKey] = [NSDictionary dictionaryWithObjects:@[prevAttr,newAttr]
-                                                                        forKeys:@[@"previousLayoutInfos", @"newLayoutInfos"]];
+            if (prevAttr != nil && newAttr != nil) {
+                layoutInterchangeData[newKey] = [NSDictionary dictionaryWithObjects:@[prevAttr,newAttr]
+                                                                            forKeys:@[@"previousLayoutInfos", @"newLayoutInfos"]];
+            }
         }
         
         for(PSTCollectionViewItemKey *key in previouslyVisibleItemsKeysSet) {
@@ -1101,6 +1103,14 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     }
 }
 
+
+- (CGRect) visibleBoundRects{
+    // in original UICollectionView implementation they
+    // check for _visibleBounds and can union self.bounds
+    // with this value. Don't know the meaning of _visibleBounds however.
+    
+    return self.bounds;
+}
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Private
 
@@ -1248,7 +1258,8 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (void)resumeReloads {
-    _reloadingSuspendedCount--;
+    if (0 < _reloadingSuspendedCount)
+        _reloadingSuspendedCount--;
 }
 
 -(NSMutableArray *)arrayForUpdateAction:(PSTCollectionUpdateAction)updateAction {
@@ -1327,7 +1338,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                                           finalAttrs.frame.size.width,
                                           finalAttrs.frame.size.height);
             
-            if(CGRectIntersectsRect(_visibleBoundRects, startRect) || CGRectIntersectsRect(_visibleBoundRects, finalRect)) {
+            if(CGRectIntersectsRect(self.visibleBoundRects, startRect) || CGRectIntersectsRect(self.visibleBoundRects, finalRect)) {
                 PSTCollectionReusableView *view = [self createPreparedCellForItemAtIndexPath:indexPath
                                                                         withLayoutAttributes:startAttrs];
                 [self addControlledSubview:view];
@@ -1387,7 +1398,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         }
     }
     
-    NSArray *allNewlyVisibleItems = [_layout layoutAttributesForElementsInRect:_visibleBoundRects];
+    NSArray *allNewlyVisibleItems = [_layout layoutAttributesForElementsInRect:self.visibleBoundRects];
     for (PSTCollectionViewLayoutAttributes *attrs in allNewlyVisibleItems) {
         PSTCollectionViewItemKey *key = [PSTCollectionViewItemKey collectionItemKeyForLayoutAttributes:attrs];
         
@@ -1421,7 +1432,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         }
     } completion:^(BOOL finished) {
         NSMutableSet *set = [NSMutableSet set];
-        NSArray *visibleItems = [_layout layoutAttributesForElementsInRect:_visibleBoundRects];
+        NSArray *visibleItems = [_layout layoutAttributesForElementsInRect:self.visibleBoundRects];
         for(PSTCollectionViewLayoutAttributes *attrs in visibleItems)
             [set addObject: [PSTCollectionViewItemKey collectionItemKeyForLayoutAttributes:attrs]];
         
@@ -1763,7 +1774,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)updateSections:(NSIndexSet *)sections updateAction:(PSTCollectionUpdateAction)updateAction {
     BOOL updating = _collectionViewFlags.updating;
-    if(updating) {
+    if(!updating) {
         [self setupCellAnimations];
     }
     
