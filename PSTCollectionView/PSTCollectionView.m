@@ -1499,8 +1499,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         NSAssert(updateItem.indexPathBeforeUpdate.section< [oldCollectionViewData numberOfSections],
                  @"attempt to reload item (%@) that doesn't exist (there are only %d sections before update)",
                  updateItem.indexPathBeforeUpdate, [oldCollectionViewData numberOfSections]);
+
         NSAssert(updateItem.indexPathBeforeUpdate.item<[oldCollectionViewData numberOfItemsInSection:updateItem.indexPathBeforeUpdate.section],
-                 @"attempt to reload item (%@) that doesn't exist (there are only %d items in section %d before udpate)",
+                 @"attempt to reload item (%@) that doesn't exist (there are only %d items in section %d before update)",
                  updateItem.indexPathBeforeUpdate,
                  [oldCollectionViewData numberOfItemsInSection:updateItem.indexPathBeforeUpdate.section],
                  updateItem.indexPathBeforeUpdate.section);
