@@ -1252,8 +1252,31 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (void)addControlledSubview:(PSTCollectionReusableView *)subview {
-	// avoids placing views above the scroll indicator
+    // avoids placing views above the scroll indicator
     [self insertSubview:subview atIndex:self.subviews.count - (self.dragging ? 1 : 0)];
+
+    NSMutableArray *floatingViews = [[NSMutableArray alloc] init];
+    for (UIView *uiView in [self subviews]) {
+        if ([uiView isKindOfClass:[PSTCollectionReusableView class]] && [[(PSTCollectionReusableView*)uiView layoutAttributes] zIndex] > 0) {
+            [floatingViews addObject:uiView];
+        }
+    }
+
+    [floatingViews sortedArrayUsingComparator:^NSComparisonResult(PSTCollectionReusableView *obj1, PSTCollectionReusableView *obj2) {
+        CGFloat z1 = [[obj1 layoutAttributes] zIndex];
+        CGFloat z2 = [[obj2 layoutAttributes] zIndex];
+        if (z1 > z2) {
+            return (NSComparisonResult)NSOrderedDescending;
+        } else if (z1 < z2) {
+            return (NSComparisonResult)NSOrderedAscending;
+        } else {
+            return (NSComparisonResult)NSOrderedSame;
+        }
+    }];
+
+    for (PSTCollectionReusableView *uiView in floatingViews) {
+        [self bringSubviewToFront:uiView];
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
