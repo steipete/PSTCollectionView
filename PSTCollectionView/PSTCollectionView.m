@@ -1368,12 +1368,18 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                                           finalAttrs.frame.size.height);
             
             if(CGRectIntersectsRect(self.visibleBoundRects, startRect) || CGRectIntersectsRect(self.visibleBoundRects, finalRect)) {
+
+                if(!startAttrs){
+                    startAttrs = [finalAttrs copy];
+                    startAttrs.alpha = 0;
+                }
+
                 PSTCollectionReusableView *view = [self createPreparedCellForItemAtIndexPath:indexPath
                                                                         withLayoutAttributes:startAttrs];
                 [self addControlledSubview:view];
                 
                 newAllVisibleView[key] = view;
-                [animations addObject:@{@"view": view, @"previousLayoutInfos": startAttrs?startAttrs:finalAttrs, @"newLayoutInfos": finalAttrs}];
+                [animations addObject:@{@"view": view, @"previousLayoutInfos": startAttrs, @"newLayoutInfos": finalAttrs}];
             }
         }
         else if(updateItem.updateAction == PSTCollectionUpdateActionMove) {
