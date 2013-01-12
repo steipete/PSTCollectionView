@@ -149,6 +149,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     objc_setAssociatedObject(_self, &kPSTColletionViewExt, [PSTCollectionViewExt new], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (id)initWithFrame:(CGRect)frame {
+    return [self initWithFrame:frame collectionViewLayout:nil];
+}
+
 - (id)initWithFrame:(CGRect)frame collectionViewLayout:(PSTCollectionViewLayout *)layout {
     if ((self = [super initWithFrame:frame])) {
         PSTCollectionViewCommonSetup(self);
