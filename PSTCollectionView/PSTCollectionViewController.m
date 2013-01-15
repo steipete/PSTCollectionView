@@ -27,7 +27,7 @@
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super initWithCoder:coder];
     if (self) {
-		self.layout = [PSUICollectionViewFlowLayout new];
+		self.layout = [PSTCollectionViewFlowLayout new];
         self.clearsSelectionOnViewWillAppear = YES;
         _collectionViewControllerFlags.appearsFirstTime = YES;
     }
