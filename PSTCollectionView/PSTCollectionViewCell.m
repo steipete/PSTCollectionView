@@ -150,28 +150,22 @@
 }
 
 - (void)setSelected:(BOOL)selected {
-    if (_collectionCellFlags.selected != selected) {
-        _collectionCellFlags.selected = selected;
-        [self updateBackgroundView];
-    }
+    _collectionCellFlags.selected = selected;
 }
 
 - (void)setHighlighted:(BOOL)highlighted {
     if (_collectionCellFlags.highlighted != highlighted) {
         _collectionCellFlags.highlighted = highlighted;
-        [self updateBackgroundView];
+        _selectedBackgroundView.alpha = highlighted ? 1.0f : 0.0f;
+        [self setHighlighted:highlighted forViews:self.contentView.subviews];
     }
-}
-
-- (void)updateBackgroundView {
-    BOOL shouldHighlight = (self.highlighted || self.selected);
-    _selectedBackgroundView.alpha = shouldHighlight ? 1.0f : 0.0f;
-    [self setHighlighted:shouldHighlight forViews:self.contentView.subviews];
 }
 
 - (void)setHighlighted:(BOOL)highlighted forViews:(id)subviews {
     for (id view in subviews) {
-        if ([view respondsToSelector:@selector(setHighlighted:)]) {
+        // Ignore the events if view wants to
+        if (!((UIView *)view).isUserInteractionEnabled &&
+            [view respondsToSelector:@selector(setHighlighted:)]) {
             [view setHighlighted:highlighted];
         }
         [self setHighlighted:highlighted forViews:[view subviews]];
