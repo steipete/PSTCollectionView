@@ -39,6 +39,7 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
     // ivar layout needs to EQUAL to UICollectionView.
     PSTCollectionViewLayout *_layout;
     __unsafe_unretained id<PSTCollectionViewDataSource> _dataSource;
+    __unsafe_unretained id<PSTCollectionViewDelegate> _collectionViewDelegate;
     UIView *_backgroundView;
     NSMutableSet *_indexPathsForSelectedItems;
     NSMutableDictionary *_cellReuseQueues;
@@ -157,6 +158,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (id)initWithFrame:(CGRect)frame collectionViewLayout:(PSTCollectionViewLayout *)layout {
     if ((self = [super initWithFrame:frame])) {
+
+        //set self as the UIScrollView's delegate
+        [super setDelegate:self];
+
         PSTCollectionViewCommonSetup(self);
         self.collectionViewLayout = layout;
         _collectionViewData = [[PSTCollectionViewData alloc] initWithCollectionView:self layout:layout];
@@ -166,6 +171,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (id)initWithCoder:(NSCoder *)inCoder {
     if ((self = [super initWithCoder:inCoder])) {
+        
+        //set self as the UIScrollView's delegate
+        [super setDelegate:self];
         
         PSTCollectionViewCommonSetup(self);
         // add observer for nib deserialization.
@@ -278,6 +286,15 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         }
         [super setFrame:frame];
     }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
+{
+    //let collectionViewLayout decide where to stop
+    *targetContentOffset = [[self collectionViewLayout] targetContentOffsetForProposedContentOffset:*targetContentOffset withScrollingVelocity:velocity];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -1049,8 +1066,14 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     [self setCollectionViewLayout:layout animated:NO];
 }
 
+
+- (id<PSTCollectionViewDelegate>)delegate
+{
+    return _collectionViewDelegate;
+}
+
 - (void)setDelegate:(id<PSTCollectionViewDelegate>)delegate {
-	super.delegate = delegate;
+	_collectionViewDelegate = delegate;
     
 	//	Managing the Selected Cells
 	_collectionViewFlags.delegateShouldSelectItemAtIndexPath       = [self.delegate respondsToSelector:@selector(collectionView:shouldSelectItemAtIndexPath:)];
