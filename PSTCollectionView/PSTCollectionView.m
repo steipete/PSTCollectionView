@@ -291,11 +291,104 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - UIScrollViewDelegate
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if ([_collectionViewDelegate respondsToSelector:@selector(scrollViewDidScroll:)]) {
+        [_collectionViewDelegate scrollViewDidScroll:scrollView];
+    }
+}
+- (void)scrollViewDidZoom:(UIScrollView *)scrollView
+{
+    if ([_collectionViewDelegate respondsToSelector:@selector(scrollViewDidZoom:)]) {
+        [_collectionViewDelegate scrollViewDidZoom:scrollView];
+    }
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    if ([_collectionViewDelegate respondsToSelector:@selector(scrollViewWillBeginDragging:)]) {
+        [_collectionViewDelegate scrollViewWillBeginDragging:scrollView];
+    }
+}
+
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
 {
     //let collectionViewLayout decide where to stop
     *targetContentOffset = [[self collectionViewLayout] targetContentOffsetForProposedContentOffset:*targetContentOffset withScrollingVelocity:velocity];
+    
+    if ([_collectionViewDelegate respondsToSelector:@selector(scrollViewWillEndDragging:withVelocity:targetContentOffset:)]) {
+        //if collectionViewDelegate implements this method, it may modify targetContentOffset as well
+        [_collectionViewDelegate scrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
+    }
 }
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if ([_collectionViewDelegate respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]) {
+        [_collectionViewDelegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
+    }
+}
+
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
+{
+    if ([_collectionViewDelegate respondsToSelector:@selector(scrollViewWillBeginDecelerating:)]) {
+        [_collectionViewDelegate scrollViewWillBeginDecelerating:scrollView];
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    if ([_collectionViewDelegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]) {
+        [_collectionViewDelegate scrollViewDidEndDecelerating:scrollView];
+    }
+}
+
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
+{
+    if ([_collectionViewDelegate respondsToSelector:@selector(scrollViewDidEndScrollingAnimation:)]) {
+        [_collectionViewDelegate scrollViewDidEndScrollingAnimation:scrollView];
+    }
+}
+
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
+{
+    if ([_collectionViewDelegate respondsToSelector:@selector(viewForZoomingInScrollView:)]) {
+        return [_collectionViewDelegate viewForZoomingInScrollView:scrollView];
+    }
+    
+    return nil;
+}
+
+- (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view
+{
+    if ([_collectionViewDelegate respondsToSelector:@selector(scrollViewWillBeginZooming:withView:)]) {
+        [_collectionViewDelegate scrollViewWillBeginZooming:scrollView withView:view];
+    }
+}
+
+- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(float)scale
+{
+    if ([_collectionViewDelegate respondsToSelector:@selector(scrollViewDidEndZooming:withView:atScale:)]) {
+        [_collectionViewDelegate scrollViewDidEndZooming:scrollView withView:view atScale:scale];
+    }
+}
+
+- (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView
+{
+    if ([_collectionViewDelegate respondsToSelector:@selector(scrollViewShouldScrollToTop:)]) {
+        return [_collectionViewDelegate scrollViewShouldScrollToTop:scrollView];
+    }
+    
+    return YES;
+}
+
+- (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView
+{
+    if ([_collectionViewDelegate respondsToSelector:@selector(scrollViewDidScrollToTop:)]) {
+        [_collectionViewDelegate scrollViewDidScrollToTop:scrollView];
+    }
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Public
