@@ -365,19 +365,14 @@ static char kPSTCachedItemRectsKey;
         if (_data.horizontal) {
             sectionFrame.origin.x += contentSize.width;
             contentSize.width += section.frame.size.width + section.frame.origin.x;
-            contentSize.height = fmaxf(contentSize.height, sectionFrame.size.height + section.frame.origin.y);
+            contentSize.height = fmaxf(contentSize.height, sectionFrame.size.height + section.frame.origin.y + section.sectionMargins.top + section.sectionMargins.bottom);
         }else {
             sectionFrame.origin.y += contentSize.height;
             contentSize.height += sectionFrame.size.height + section.frame.origin.y;
-            contentSize.width = fmaxf(contentSize.width, sectionFrame.size.width + section.frame.origin.x);
+            contentSize.width = fmaxf(contentSize.width, sectionFrame.size.width + section.frame.origin.x + section.sectionMargins.left + section.sectionMargins.right);
         }
         section.frame = sectionFrame;
     }
-	if (_data.horizontal) {
-		contentSize.width = MAX(contentSize.width, self.collectionView.bounds.size.width);
-	} else {
-		contentSize.height = MAX(contentSize.height, self.collectionView.bounds.size.height);
-	}
     _data.contentSize = contentSize;
 }
 
