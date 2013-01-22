@@ -50,7 +50,7 @@ typedef NS_OPTIONS(NSUInteger, UICollectionViewScrollPosition) {
  Only supports a subset of the features of UICollectionView.
  e.g. animations won't be handled.
  */
-@interface PSTCollectionView : UIScrollView
+@interface PSTCollectionView : UIScrollView<UIScrollViewDelegate>
 
 - (id)initWithFrame:(CGRect)frame collectionViewLayout:(PSTCollectionViewLayout *)layout; // the designated initializer
 

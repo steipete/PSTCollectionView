@@ -39,6 +39,7 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
     // ivar layout needs to EQUAL to UICollectionView.
     PSTCollectionViewLayout *_layout;
     __unsafe_unretained id<PSTCollectionViewDataSource> _dataSource;
+    __unsafe_unretained id<PSTCollectionViewDelegate> _collectionViewDelegate;
     UIView *_backgroundView;
     NSMutableSet *_indexPathsForSelectedItems;
     NSMutableDictionary *_cellReuseQueues;
@@ -157,6 +158,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (id)initWithFrame:(CGRect)frame collectionViewLayout:(PSTCollectionViewLayout *)layout {
     if ((self = [super initWithFrame:frame])) {
+
+        //set self as the UIScrollView's delegate
+        [super setDelegate:self];
+
         PSTCollectionViewCommonSetup(self);
         self.collectionViewLayout = layout;
         _collectionViewData = [[PSTCollectionViewData alloc] initWithCollectionView:self layout:layout];
@@ -166,6 +171,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (id)initWithCoder:(NSCoder *)inCoder {
     if ((self = [super initWithCoder:inCoder])) {
+        
+        //set self as the UIScrollView's delegate
+        [super setDelegate:self];
         
         PSTCollectionViewCommonSetup(self);
         // add observer for nib deserialization.
@@ -279,6 +287,108 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         [super setFrame:frame];
     }
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if ([_collectionViewDelegate respondsToSelector:@selector(scrollViewDidScroll:)]) {
+        [_collectionViewDelegate scrollViewDidScroll:scrollView];
+    }
+}
+- (void)scrollViewDidZoom:(UIScrollView *)scrollView
+{
+    if ([_collectionViewDelegate respondsToSelector:@selector(scrollViewDidZoom:)]) {
+        [_collectionViewDelegate scrollViewDidZoom:scrollView];
+    }
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    if ([_collectionViewDelegate respondsToSelector:@selector(scrollViewWillBeginDragging:)]) {
+        [_collectionViewDelegate scrollViewWillBeginDragging:scrollView];
+    }
+}
+
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
+{
+    //let collectionViewLayout decide where to stop
+    *targetContentOffset = [[self collectionViewLayout] targetContentOffsetForProposedContentOffset:*targetContentOffset withScrollingVelocity:velocity];
+    
+    if ([_collectionViewDelegate respondsToSelector:@selector(scrollViewWillEndDragging:withVelocity:targetContentOffset:)]) {
+        //if collectionViewDelegate implements this method, it may modify targetContentOffset as well
+        [_collectionViewDelegate scrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
+    }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if ([_collectionViewDelegate respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]) {
+        [_collectionViewDelegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
+    }
+}
+
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
+{
+    if ([_collectionViewDelegate respondsToSelector:@selector(scrollViewWillBeginDecelerating:)]) {
+        [_collectionViewDelegate scrollViewWillBeginDecelerating:scrollView];
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    if ([_collectionViewDelegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]) {
+        [_collectionViewDelegate scrollViewDidEndDecelerating:scrollView];
+    }
+}
+
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
+{
+    if ([_collectionViewDelegate respondsToSelector:@selector(scrollViewDidEndScrollingAnimation:)]) {
+        [_collectionViewDelegate scrollViewDidEndScrollingAnimation:scrollView];
+    }
+}
+
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
+{
+    if ([_collectionViewDelegate respondsToSelector:@selector(viewForZoomingInScrollView:)]) {
+        return [_collectionViewDelegate viewForZoomingInScrollView:scrollView];
+    }
+    
+    return nil;
+}
+
+- (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view
+{
+    if ([_collectionViewDelegate respondsToSelector:@selector(scrollViewWillBeginZooming:withView:)]) {
+        [_collectionViewDelegate scrollViewWillBeginZooming:scrollView withView:view];
+    }
+}
+
+- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(float)scale
+{
+    if ([_collectionViewDelegate respondsToSelector:@selector(scrollViewDidEndZooming:withView:atScale:)]) {
+        [_collectionViewDelegate scrollViewDidEndZooming:scrollView withView:view atScale:scale];
+    }
+}
+
+- (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView
+{
+    if ([_collectionViewDelegate respondsToSelector:@selector(scrollViewShouldScrollToTop:)]) {
+        return [_collectionViewDelegate scrollViewShouldScrollToTop:scrollView];
+    }
+    
+    return YES;
+}
+
+- (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView
+{
+    if ([_collectionViewDelegate respondsToSelector:@selector(scrollViewDidScrollToTop:)]) {
+        [_collectionViewDelegate scrollViewDidScrollToTop:scrollView];
+    }
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Public
@@ -1049,8 +1159,14 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     [self setCollectionViewLayout:layout animated:NO];
 }
 
+
+- (id<PSTCollectionViewDelegate>)delegate
+{
+    return _collectionViewDelegate;
+}
+
 - (void)setDelegate:(id<PSTCollectionViewDelegate>)delegate {
-	super.delegate = delegate;
+	_collectionViewDelegate = delegate;
     
 	//	Managing the Selected Cells
 	_collectionViewFlags.delegateShouldSelectItemAtIndexPath       = [self.delegate respondsToSelector:@selector(collectionView:shouldSelectItemAtIndexPath:)];
