@@ -1315,6 +1315,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     
     PSTCollectionViewCell *cell = [self.dataSource collectionView:self cellForItemAtIndexPath:indexPath];
     
+    // Apply attributes
+    [cell applyLayoutAttributes: layoutAttributes];
+
     // reset selected/highlight state
     [cell setHighlighted:[_indexPathsForHighlightedItems containsObject:indexPath]];
     [cell setSelected:[_indexPathsForSelectedItems containsObject:indexPath]];
