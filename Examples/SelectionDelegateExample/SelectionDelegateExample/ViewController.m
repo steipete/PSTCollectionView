@@ -98,6 +98,18 @@ NSString *CollectionViewCellIdentifier = @"SelectionDelegateExample";
     return YES;
 }
 
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"Check delegate: should cell %@ be selected?", [self formatIndexPath:indexPath]);
+    return YES;
+}
+
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"Check delegate: should cell %@ be deselected?", [self formatIndexPath:indexPath]);
+    return YES;
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	return YES;
 }

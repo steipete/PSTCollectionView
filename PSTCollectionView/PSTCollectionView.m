@@ -667,14 +667,6 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     CGPoint touchPoint = [[touches anyObject] locationInView:self];
     NSIndexPath *indexPath = [self indexPathForItemAtPoint:touchPoint];
     if ([indexPath isEqual:self.extVars.touchingIndexPath]) {
-        if (!self.allowsMultipleSelection) {
-            // now unselect the previously selected cell for single selection
-            NSIndexPath *tempDeselectIndexPath = _indexPathsForSelectedItems.anyObject;
-            if (tempDeselectIndexPath && ![tempDeselectIndexPath isEqual:indexPath]) {
-                [self deselectItemAtIndexPath:tempDeselectIndexPath animated:YES notifyDelegate:YES];
-            }
-        }
-
         [self userSelectedItemAtIndexPath:indexPath];
     }
     else if (self.extVars.touchingCell) {
@@ -725,6 +717,14 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             shouldSelect = [self.delegate collectionView:self shouldSelectItemAtIndexPath:indexPath];
         }
         
+        if (!self.allowsMultipleSelection) {
+            // now unselect the previously selected cell for single selection
+            NSIndexPath *tempDeselectIndexPath = _indexPathsForSelectedItems.anyObject;
+            if (tempDeselectIndexPath && ![tempDeselectIndexPath isEqual:indexPath]) {
+                [self deselectItemAtIndexPath:tempDeselectIndexPath animated:YES notifyDelegate:YES];
+            }
+        }
+        
         if (shouldSelect) {
             PSTCollectionViewCell *selectedCell = [self cellForItemAtIndexPath:indexPath];
             if (selectedCell) {
@@ -748,8 +748,14 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     [self deselectItemAtIndexPath:indexPath animated:animated notifyDelegate:NO];
 }
 
-- (void)deselectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated notifyDelegate:(BOOL)notify {
-    if ([_indexPathsForSelectedItems containsObject:indexPath]) {
+- (void)deselectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated notifyDelegate:(BOOL)notifyDelegate {
+    BOOL shouldDeselect = YES;
+    // deselect only relevant during multi mode
+    if (self.allowsMultipleSelection && notifyDelegate && _collectionViewFlags.delegateShouldDeselectItemAtIndexPath) {
+        shouldDeselect = [self.delegate collectionView:self shouldDeselectItemAtIndexPath:indexPath];
+    }
+    
+    if (shouldDeselect && [_indexPathsForSelectedItems containsObject:indexPath]) {
         PSTCollectionViewCell *selectedCell = [self cellForItemAtIndexPath:indexPath];
         if (selectedCell) {
             if (selectedCell.selected) {
@@ -757,7 +763,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             }
             [_indexPathsForSelectedItems removeObject:indexPath];
                 
-            if (notify && _collectionViewFlags.delegateDidDeselectItemAtIndexPath) {
+            if (notifyDelegate && _collectionViewFlags.delegateDidDeselectItemAtIndexPath) {
                 [self.delegate collectionView:self didDeselectItemAtIndexPath:indexPath];
             }
         }
