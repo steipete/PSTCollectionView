@@ -119,8 +119,7 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
 @property (nonatomic, strong) NSDictionary *nibCellsExternalObjects;
 @property (nonatomic, strong) NSDictionary *supplementaryViewsExternalObjects;
 @property (nonatomic, strong) NSIndexPath *touchingIndexPath;
-@property (nonatomic, strong) NSIndexPath *unhighlightedIndexPath;
-@property (nonatomic) BOOL touchingSelected;
+@property (nonatomic) BOOL touchingCell;
 @end
 
 @implementation PSTCollectionViewExt @end
@@ -606,38 +605,54 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
     
+    // hack: iOS6 UICollectionView will not cancel a touch event when scrolling,
+    // however, the same iOS6 property is actually set to YES, so there must be some other underlying magic,
+    // possibly a modified panGestureRecognizer that always sends touches to cells
+    if ([self respondsToSelector:@selector(panGestureRecognizer)]) {
+        self.panGestureRecognizer.cancelsTouchesInView = NO;
+    } else {
+        for (UIGestureRecognizer *gesture in self.gestureRecognizers) {
+            if ([gesture isKindOfClass:[UIPanGestureRecognizer class]]) {
+                gesture.cancelsTouchesInView = NO;
+            }
+        }
+    }
+    
+    // reset touching state vars
+    self.extVars.touchingIndexPath = nil;
+    self.extVars.touchingCell = NO;
+    
     CGPoint touchPoint = [[touches anyObject] locationInView:self];
     NSIndexPath *indexPath = [self indexPathForItemAtPoint:touchPoint];
     if (indexPath) {
-        self.extVars.touchingSelected = [_indexPathsForSelectedItems containsObject:indexPath];
+        if (![self highlightItemAtIndexPath:indexPath animated:YES scrollPosition:PSTCollectionViewScrollPositionNone notifyDelegate:YES])
+            return;
         
-        if (!self.allowsMultipleSelection && !self.extVars.touchingSelected) {
+        self.extVars.touchingIndexPath = indexPath;
+        self.extVars.touchingCell = YES;
+        
+        if (!self.allowsMultipleSelection) {
             // temporally unhighlight background on touchesBegan (keeps selected by _indexPathsForSelectedItems)
-            // single-select only, so we just pick the first object in highlighted indexPaths and
-            // save in case of a canceled touch; do not change if selecting self
-            self.extVars.unhighlightedIndexPath = _indexPathsForHighlightedItems.anyObject;
-            if (self.extVars.unhighlightedIndexPath) {
-                [self unhighlightItemAtIndexPath:self.extVars.unhighlightedIndexPath animated:YES notifyDelegate:YES];
+            // single-select only mode only though
+            NSIndexPath *tempDeselectIndexPath = _indexPathsForSelectedItems.anyObject;
+            if (tempDeselectIndexPath && ![tempDeselectIndexPath isEqual:indexPath]) {
+                // iOS6 UICollectionView deselects cell without notification
+                PSTCollectionViewCell *selectedCell = [self cellForItemAtIndexPath:tempDeselectIndexPath];
+                selectedCell.selected = NO;
             }
         }
-            
-        [self highlightItemAtIndexPath:indexPath animated:YES scrollPosition:PSTCollectionViewScrollPositionNone notifyDelegate:YES];
-            
-        self.extVars.touchingIndexPath = indexPath;
     }
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesMoved:touches withEvent:event];
     
-    if (self.extVars.touchingIndexPath && !self.extVars.touchingSelected) {
+    if (self.extVars.touchingIndexPath) {
         CGPoint touchPoint = [[touches anyObject] locationInView:self];
         NSIndexPath *indexPath = [self indexPathForItemAtPoint:touchPoint];
-        if ([indexPath isEqual:self.extVars.touchingIndexPath]) {
-            [self highlightItemAtIndexPath:indexPath animated:YES scrollPosition:PSTCollectionViewScrollPositionNone notifyDelegate:YES];
-        }
-        else {
+        if (![indexPath isEqual:self.extVars.touchingIndexPath]) {
             [self unhighlightItemAtIndexPath:self.extVars.touchingIndexPath animated:YES notifyDelegate:YES];
+            self.extVars.touchingIndexPath = nil;
         }
     }
 }
@@ -645,15 +660,24 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesEnded:touches withEvent:event];
     
+    // first unhighlight the touch operation
+    if (self.extVars.touchingIndexPath)
+        [self unhighlightItemAtIndexPath:self.extVars.touchingIndexPath animated:YES notifyDelegate:YES];
+    
     CGPoint touchPoint = [[touches anyObject] locationInView:self];
     NSIndexPath *indexPath = [self indexPathForItemAtPoint:touchPoint];
     if ([indexPath isEqual:self.extVars.touchingIndexPath]) {
+        if (!self.allowsMultipleSelection) {
+            // now unselect the previously selected cell for single selection
+            NSIndexPath *tempDeselectIndexPath = _indexPathsForSelectedItems.anyObject;
+            if (tempDeselectIndexPath && ![tempDeselectIndexPath isEqual:indexPath]) {
+                [self deselectItemAtIndexPath:tempDeselectIndexPath animated:YES notifyDelegate:YES];
+            }
+        }
+
         [self userSelectedItemAtIndexPath:indexPath];
-        
-        self.extVars.unhighlightedIndexPath = nil;
-        self.extVars.touchingIndexPath = nil;
     }
-    else {
+    else if (self.extVars.touchingCell) {
         [self cellTouchCancelled];
     }
 }
@@ -665,19 +689,12 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (void)cellTouchCancelled {
-    // TODO: improve behavior on touchesCancelled
-    if (self.extVars.touchingIndexPath && !self.extVars.touchingSelected) {
-        // remove highlighting if item ends up unselected
-        [self unhighlightItemAtIndexPath:self.extVars.touchingIndexPath animated:YES notifyDelegate:YES];
-    
-        // highlight at the original indexPath again
-        if (!self.allowsMultipleSelection && self.extVars.unhighlightedIndexPath) {
-            [self highlightItemAtIndexPath:self.extVars.unhighlightedIndexPath animated:YES scrollPosition:PSTCollectionViewScrollPositionNone notifyDelegate:YES];
-        }
+    // turn on ALL the *should be selected* cells (iOS6 UICollectionView does no state keeping or other fancy optimizations)
+    // there should be no notifications as this is a silent "turn everything back on"
+    for (NSIndexPath *tempDeselectedIndexPath in [_indexPathsForSelectedItems copy]) {
+        PSTCollectionViewCell *selectedCell = [self cellForItemAtIndexPath:tempDeselectedIndexPath];
+        selectedCell.selected = YES;
     }
-            
-    self.extVars.unhighlightedIndexPath = nil;
-    self.extVars.touchingIndexPath = nil;
 }
 
 - (void)userSelectedItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -691,33 +708,18 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 // select item, notify delegate (internal)
 - (void)selectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(PSTCollectionViewScrollPosition)scrollPosition notifyDelegate:(BOOL)notifyDelegate {
-    
     if (self.allowsMultipleSelection && [_indexPathsForSelectedItems containsObject:indexPath]) {
-        
         BOOL shouldDeselect = YES;
         if (notifyDelegate && _collectionViewFlags.delegateShouldDeselectItemAtIndexPath) {
             shouldDeselect = [self.delegate collectionView:self shouldDeselectItemAtIndexPath:indexPath];
         }
         
         if (shouldDeselect) {
-            [self deselectItemAtIndexPath:indexPath animated:animated];
-            
-            if (notifyDelegate && _collectionViewFlags.delegateDidDeselectItemAtIndexPath) {
-                [self.delegate collectionView:self didDeselectItemAtIndexPath:indexPath];
-            }
+            [self deselectItemAtIndexPath:indexPath animated:animated notifyDelegate:notifyDelegate];
         }
-        
-    } else {
+    }
+    else {
         // either single selection, or wasn't already selected in multiple selection mode
-        
-        if (!self.allowsMultipleSelection) {
-            for (NSIndexPath *selectedIndexPath in [_indexPathsForSelectedItems copy]) {
-                if(![indexPath isEqual:selectedIndexPath]) {
-                    [self deselectItemAtIndexPath:selectedIndexPath animated:animated notifyDelegate:notifyDelegate];
-                }
-            }
-        }
-        
         BOOL shouldSelect = YES;
         if (notifyDelegate && _collectionViewFlags.delegateShouldSelectItemAtIndexPath) {
             shouldSelect = [self.delegate collectionView:self shouldSelectItemAtIndexPath:indexPath];
@@ -725,11 +727,13 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         
         if (shouldSelect) {
             PSTCollectionViewCell *selectedCell = [self cellForItemAtIndexPath:indexPath];
-            selectedCell.selected = YES;
-            [_indexPathsForSelectedItems addObject:indexPath];
-            
-            if (notifyDelegate && _collectionViewFlags.delegateDidSelectItemAtIndexPath) {
-                [self.delegate collectionView:self didSelectItemAtIndexPath:indexPath];
+            if (selectedCell) {
+                selectedCell.selected = YES;
+                [_indexPathsForSelectedItems addObject:indexPath];
+                
+                if (notifyDelegate && _collectionViewFlags.delegateDidSelectItemAtIndexPath) {
+                    [self.delegate collectionView:self didSelectItemAtIndexPath:indexPath];
+                }
             }
         }
     }
@@ -747,13 +751,15 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 - (void)deselectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated notifyDelegate:(BOOL)notify {
     if ([_indexPathsForSelectedItems containsObject:indexPath]) {
         PSTCollectionViewCell *selectedCell = [self cellForItemAtIndexPath:indexPath];
-        selectedCell.selected = NO;
-        [_indexPathsForSelectedItems removeObject:indexPath];
-        
-        [self unhighlightItemAtIndexPath:indexPath animated:animated notifyDelegate:notify];
-        
-        if (notify && _collectionViewFlags.delegateDidDeselectItemAtIndexPath) {
-            [self.delegate collectionView:self didDeselectItemAtIndexPath:indexPath];
+        if (selectedCell) {
+            if (selectedCell.selected) {
+                selectedCell.selected = NO;
+            }
+            [_indexPathsForSelectedItems removeObject:indexPath];
+                
+            if (notify && _collectionViewFlags.delegateDidDeselectItemAtIndexPath) {
+                [self.delegate collectionView:self didDeselectItemAtIndexPath:indexPath];
+            }
         }
     }
 }
@@ -785,12 +791,6 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         if (notifyDelegate && _collectionViewFlags.delegateDidUnhighlightItemAtIndexPath) {
             [self.delegate collectionView:self didUnhighlightItemAtIndexPath:indexPath];
         }
-    }
-}
-
-- (void)unhighlightAllItems {
-    for (NSIndexPath *indexPath in [_indexPathsForHighlightedItems copy]) {
-        [self unhighlightItemAtIndexPath:indexPath animated:NO notifyDelegate:YES];
     }
 }
 
