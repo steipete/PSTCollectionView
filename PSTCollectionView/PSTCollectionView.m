@@ -1243,6 +1243,12 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 - (void)updateVisibleCellsNow:(BOOL)now {
     NSArray *layoutAttributesArray = [_collectionViewData layoutAttributesForElementsInRect:self.bounds];
     
+    if (layoutAttributesArray == nil || [layoutAttributesArray count] == 0) {
+        // If our layout source isn't providing any layout information, we should just
+        // stop, otherwise we'll blow away all the currently existing cells.
+        return;
+    }
+
     // create ItemKey/Attributes dictionary
     NSMutableDictionary *itemKeysToAddDict = [NSMutableDictionary dictionary];
     for (PSTCollectionViewLayoutAttributes *layoutAttributes in layoutAttributesArray) {
