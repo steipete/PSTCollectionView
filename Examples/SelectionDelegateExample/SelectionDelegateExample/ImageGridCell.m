@@ -41,4 +41,14 @@ static CGFloat SubTitleLabelHeight = 24;
     _label.frame = CGRectMake(ContentInsets.left, CGRectGetMaxY(_image.frame), imageWidth, SubTitleLabelHeight);
 }
 
+- (void)setHighlighted:(BOOL)highlighted {
+    NSLog(@"Cell %@ highlight: %@", _label.text, highlighted ? @"ON" : @"OFF");
+    if (highlighted) {
+        _label.backgroundColor = [UIColor yellowColor];
+    }
+    else {
+        _label.backgroundColor = [UIColor underPageBackgroundColor];
+    }
+}
+
 @end
