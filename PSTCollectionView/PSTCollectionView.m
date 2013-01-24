@@ -120,7 +120,6 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
 @property (nonatomic, strong) NSDictionary *nibCellsExternalObjects;
 @property (nonatomic, strong) NSDictionary *supplementaryViewsExternalObjects;
 @property (nonatomic, strong) NSIndexPath *touchingIndexPath;
-@property (nonatomic) BOOL touchingCell;
 @end
 
 @implementation PSTCollectionViewExt @end
@@ -318,6 +317,11 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]) {
         [self.extVars.collectionViewDelegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
+    }
+    
+    // if we are in the middle of a cell touch event, perform the "touchEnded" simulation
+    if (self.extVars.touchingIndexPath) {
+        [self cellTouchCancelled];
     }
 }
 
@@ -699,23 +703,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
-    
-    // hack: iOS6 UICollectionView will not cancel a touch event when scrolling,
-    // however, the same iOS6 property is actually set to YES, so there must be some other underlying magic,
-    // possibly a modified panGestureRecognizer that always sends touches to cells
-    if ([self respondsToSelector:@selector(panGestureRecognizer)]) {
-        self.panGestureRecognizer.cancelsTouchesInView = NO;
-    } else {
-        for (UIGestureRecognizer *gesture in self.gestureRecognizers) {
-            if ([gesture isKindOfClass:[UIPanGestureRecognizer class]]) {
-                gesture.cancelsTouchesInView = NO;
-            }
-        }
-    }
-    
+
     // reset touching state vars
     self.extVars.touchingIndexPath = nil;
-    self.extVars.touchingCell = NO;
     
     CGPoint touchPoint = [[touches anyObject] locationInView:self];
     NSIndexPath *indexPath = [self indexPathForItemAtPoint:touchPoint];
@@ -724,13 +714,12 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             return;
         
         self.extVars.touchingIndexPath = indexPath;
-        self.extVars.touchingCell = YES;
         
         if (!self.allowsMultipleSelection) {
             // temporally unhighlight background on touchesBegan (keeps selected by _indexPathsForSelectedItems)
             // single-select only mode only though
             NSIndexPath *tempDeselectIndexPath = _indexPathsForSelectedItems.anyObject;
-            if (tempDeselectIndexPath && ![tempDeselectIndexPath isEqual:indexPath]) {
+            if (tempDeselectIndexPath && ![tempDeselectIndexPath isEqual:self.extVars.touchingIndexPath]) {
                 // iOS6 UICollectionView deselects cell without notification
                 PSTCollectionViewCell *selectedCell = [self cellForItemAtIndexPath:tempDeselectIndexPath];
                 selectedCell.selected = NO;
@@ -742,37 +731,41 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesMoved:touches withEvent:event];
     
-    if (self.extVars.touchingIndexPath) {
-        CGPoint touchPoint = [[touches anyObject] locationInView:self];
-        NSIndexPath *indexPath = [self indexPathForItemAtPoint:touchPoint];
-        if (![indexPath isEqual:self.extVars.touchingIndexPath]) {
-            [self unhighlightItemAtIndexPath:self.extVars.touchingIndexPath animated:YES notifyDelegate:YES];
-            self.extVars.touchingIndexPath = nil;
-        }
-    }
+    // touch moving does nothing, only cancelled and ended matter
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesEnded:touches withEvent:event];
     
-    // first unhighlight the touch operation
-    if (self.extVars.touchingIndexPath)
+    if (self.extVars.touchingIndexPath) {
+        // first unhighlight the touch operation
         [self unhighlightItemAtIndexPath:self.extVars.touchingIndexPath animated:YES notifyDelegate:YES];
     
-    CGPoint touchPoint = [[touches anyObject] locationInView:self];
-    NSIndexPath *indexPath = [self indexPathForItemAtPoint:touchPoint];
-    if ([indexPath isEqual:self.extVars.touchingIndexPath]) {
-        [self userSelectedItemAtIndexPath:indexPath];
-    }
-    else if (self.extVars.touchingCell) {
-        [self cellTouchCancelled];
+        CGPoint touchPoint = [[touches anyObject] locationInView:self];
+        NSIndexPath *indexPath = [self indexPathForItemAtPoint:touchPoint];
+        if ([indexPath isEqual:self.extVars.touchingIndexPath]) {
+            [self userSelectedItemAtIndexPath:indexPath];
+        }
+        else if (!self.allowsMultipleSelection) {
+            NSIndexPath *tempDeselectIndexPath = _indexPathsForSelectedItems.anyObject;
+            if (tempDeselectIndexPath && ![tempDeselectIndexPath isEqual:self.extVars.touchingIndexPath]) {
+                [self cellTouchCancelled];
+            }
+        }
+        
+        // end of a full touch event
+        self.extVars.touchingIndexPath = nil;
     }
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesCancelled:touches withEvent:event];
     
-    [self cellTouchCancelled];
+    // do not mark touchingIndexPath as nil because whoever cancelled this touch will need to signal a touch up event later
+    if (self.extVars.touchingIndexPath) {
+        // first unhighlight the touch operation
+        [self unhighlightItemAtIndexPath:self.extVars.touchingIndexPath animated:YES notifyDelegate:YES];
+    }
 }
 
 - (void)cellTouchCancelled {
