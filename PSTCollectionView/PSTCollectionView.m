@@ -35,7 +35,7 @@
 CGFloat PSTSimulatorAnimationDragCoefficient(void);
 @class PSTCollectionViewExt;
 
-@interface PSTCollectionView() {
+@interface PSTCollectionView() <UIScrollViewDelegate> {
     // ivar layout needs to EQUAL to UICollectionView.
     PSTCollectionViewLayout *_layout;
     __unsafe_unretained id<PSTCollectionViewDataSource> _dataSource;
@@ -114,6 +114,7 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
 // Used by PSTCollectionView for external variables.
 // (We need to keep the total class size equal to the UICollectionView variant)
 @interface PSTCollectionViewExt : NSObject
+@property (nonatomic, unsafe_unretained) id<PSTCollectionViewDelegate> collectionViewDelegate;
 @property (nonatomic, strong) id nibObserverToken;
 @property (nonatomic, strong) PSTCollectionViewLayout *nibLayout;
 @property (nonatomic, strong) NSDictionary *nibCellsExternalObjects;
@@ -156,6 +157,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (id)initWithFrame:(CGRect)frame collectionViewLayout:(PSTCollectionViewLayout *)layout {
     if ((self = [super initWithFrame:frame])) {
+        // Set self as the UIScrollView's delegate
+        [super setDelegate:self];
+
         PSTCollectionViewCommonSetup(self);
         self.collectionViewLayout = layout;
         _collectionViewData = [[PSTCollectionViewData alloc] initWithCollectionView:self layout:layout];
@@ -165,10 +169,12 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (id)initWithCoder:(NSCoder *)inCoder {
     if ((self = [super initWithCoder:inCoder])) {
+        // Set self as the UIScrollView's delegate
+        [super setDelegate:self];
         
         PSTCollectionViewCommonSetup(self);
-        // add observer for nib deserialization.
-        
+
+        // add observer for nib deserialization.        
         id nibObserverToken = [[NSNotificationCenter defaultCenter] addObserverForName:PSTCollectionViewLayoutAwokeFromNib object:nil queue:nil usingBlock:^(NSNotification *note) {
             self.extVars.nibLayout = note.object;
         }];
@@ -278,6 +284,95 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         [super setFrame:frame];
     }
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewDidScroll:)]) {
+        [self.extVars.collectionViewDelegate scrollViewDidScroll:scrollView];
+    }
+}
+- (void)scrollViewDidZoom:(UIScrollView *)scrollView {
+    if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewDidZoom:)]) {
+        [self.extVars.collectionViewDelegate scrollViewDidZoom:scrollView];
+    }
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewWillBeginDragging:)]) {
+        [self.extVars.collectionViewDelegate scrollViewWillBeginDragging:scrollView];
+    }
+}
+
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
+    // Let collectionViewLayout decide where to stop.
+    *targetContentOffset = [[self collectionViewLayout] targetContentOffsetForProposedContentOffset:*targetContentOffset withScrollingVelocity:velocity];
+    
+    if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewWillEndDragging:withVelocity:targetContentOffset:)]) {
+        //if collectionViewDelegate implements this method, it may modify targetContentOffset as well
+        [self.extVars.collectionViewDelegate scrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
+    }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]) {
+        [self.extVars.collectionViewDelegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
+    }
+}
+
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
+    if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewWillBeginDecelerating:)]) {
+        [self.extVars.collectionViewDelegate scrollViewWillBeginDecelerating:scrollView];
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]) {
+        [self.extVars.collectionViewDelegate scrollViewDidEndDecelerating:scrollView];
+    }
+}
+
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+    if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewDidEndScrollingAnimation:)]) {
+        [self.extVars.collectionViewDelegate scrollViewDidEndScrollingAnimation:scrollView];
+    }
+}
+
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
+    if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(viewForZoomingInScrollView:)]) {
+        return [self.extVars.collectionViewDelegate viewForZoomingInScrollView:scrollView];
+    }
+    
+    return nil;
+}
+
+- (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view {
+    if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewWillBeginZooming:withView:)]) {
+        [self.extVars.collectionViewDelegate scrollViewWillBeginZooming:scrollView withView:view];
+    }
+}
+
+- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(float)scale {
+    if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewDidEndZooming:withView:atScale:)]) {
+        [self.extVars.collectionViewDelegate scrollViewDidEndZooming:scrollView withView:view atScale:scale];
+    }
+}
+
+- (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView {
+    if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewShouldScrollToTop:)]) {
+        return [self.extVars.collectionViewDelegate scrollViewShouldScrollToTop:scrollView];
+    }
+    
+    return YES;
+}
+
+- (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView {
+    if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewDidScrollToTop:)]) {
+        [self.extVars.collectionViewDelegate scrollViewDidScrollToTop:scrollView];
+    }
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Public
@@ -1055,8 +1150,14 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     [self setCollectionViewLayout:layout animated:NO];
 }
 
+
+- (id<PSTCollectionViewDelegate>)delegate
+{
+    return self.extVars.collectionViewDelegate;
+}
+
 - (void)setDelegate:(id<PSTCollectionViewDelegate>)delegate {
-	super.delegate = delegate;
+	self.extVars.collectionViewDelegate = delegate;
     
 	//	Managing the Selected Cells
 	_collectionViewFlags.delegateShouldSelectItemAtIndexPath       = [self.delegate respondsToSelector:@selector(collectionView:shouldSelectItemAtIndexPath:)];
@@ -1148,6 +1249,12 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 - (void)updateVisibleCellsNow:(BOOL)now {
     NSArray *layoutAttributesArray = [_collectionViewData layoutAttributesForElementsInRect:self.bounds];
     
+    if (layoutAttributesArray == nil || [layoutAttributesArray count] == 0) {
+        // If our layout source isn't providing any layout information, we should just
+        // stop, otherwise we'll blow away all the currently existing cells.
+        return;
+    }
+
     // create ItemKey/Attributes dictionary
     NSMutableDictionary *itemKeysToAddDict = [NSMutableDictionary dictionary];
     for (PSTCollectionViewLayoutAttributes *layoutAttributes in layoutAttributesArray) {
@@ -1214,6 +1321,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     
     PSTCollectionViewCell *cell = [self.dataSource collectionView:self cellForItemAtIndexPath:indexPath];
     
+    // Apply attributes
+    [cell applyLayoutAttributes: layoutAttributes];
+
     // reset selected/highlight state
     [cell setHighlighted:[_indexPathsForHighlightedItems containsObject:indexPath]];
     [cell setSelected:[_indexPathsForSelectedItems containsObject:indexPath]];
