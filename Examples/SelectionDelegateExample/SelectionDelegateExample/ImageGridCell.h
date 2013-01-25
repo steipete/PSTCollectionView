@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 orta therox. All rights reserved.
 //
 
+#include "UILabel+Highlight.h"
+
 @interface ImageGridCell : PSUICollectionViewCell
 
 @property (strong, nonatomic) IBOutlet UIImageView *image;
