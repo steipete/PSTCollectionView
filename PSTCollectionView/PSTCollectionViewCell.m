@@ -149,16 +149,16 @@
     self.highlighted = NO;
 }
 
+// Selection highlights underlying contents
 - (void)setSelected:(BOOL)selected {
     _collectionCellFlags.selected = selected;
+    _selectedBackgroundView.alpha = selected ? 1.0f : 0.0f;
+    [self setHighlighted:selected forViews:self.contentView.subviews];
 }
 
+// Cell highlighting only highlights the cell itself
 - (void)setHighlighted:(BOOL)highlighted {
-    if (_collectionCellFlags.highlighted != highlighted) {
-        _collectionCellFlags.highlighted = highlighted;
-        _selectedBackgroundView.alpha = highlighted ? 1.0f : 0.0f;
-        [self setHighlighted:highlighted forViews:self.contentView.subviews];
-    }
+    _collectionCellFlags.highlighted = highlighted;
 }
 
 - (void)setHighlighted:(BOOL)highlighted forViews:(id)subviews {

@@ -47,9 +47,13 @@ NSString *CollectionViewCellIdentifier = @"SelectionDelegateExample";
 #pragma mark -
 #pragma mark Collection View Data Source
 
+- (NSString *)formatIndexPath:(NSIndexPath *)indexPath {
+    return [NSString stringWithFormat:@"{%ld,%ld}", (long)indexPath.row, (long)indexPath.section];
+}
+
 - (PSUICollectionViewCell *)collectionView:(PSUICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     ImageGridCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CollectionViewCellIdentifier forIndexPath:indexPath];
-    cell.label.text = [NSString stringWithFormat:@"{%ld,%ld}", (long)indexPath.row, (long)indexPath.section];
+    cell.label.text = [self formatIndexPath:indexPath];
 
     // load the image for this cell
     NSString *imageToLoad = [NSString stringWithFormat:@"%d.JPG", indexPath.row];
@@ -68,31 +72,42 @@ NSString *CollectionViewCellIdentifier = @"SelectionDelegateExample";
 #pragma mark -
 #pragma mark Collection View Delegate
 
-- (void)collectionView:(PSUICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"%@ - %@", NSStringFromSelector(_cmd), indexPath);
+- (void)collectionView:(PSTCollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"Delegate cell %@ : HIGHLIGHTED", [self formatIndexPath:indexPath]);
 }
 
-- (void)collectionView:(PSUICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"%@ - %@", NSStringFromSelector(_cmd), indexPath);
+- (void)collectionView:(PSTCollectionView *)collectionView didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"Delegate cell %@ : UNHIGHLIGHTED", [self formatIndexPath:indexPath]);
 }
 
-#pragma mark -
-#pragma mark Collection View Menu Support
+- (void)collectionView:(PSTCollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"Delegate cell %@ : SELECTED", [self formatIndexPath:indexPath]);
+}
 
-// These aren't yet supported in PSTCollectionView
+- (void)collectionView:(PSTCollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"Delegate cell %@ : DESELECTED", [self formatIndexPath:indexPath]);
+}
 
-- (BOOL)collectionView:(PSUICollectionView *)collectionView shouldShowMenuForItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"%@ - %@", NSStringFromSelector(_cmd), indexPath);
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"Check delegate: should cell %@ highlight?", [self formatIndexPath:indexPath]);
     return YES;
 }
 
-- (BOOL)collectionView:(PSUICollectionView *)collectionView canPerformAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
-    NSLog(@"%@ - %@", NSStringFromSelector(_cmd), NSStringFromSelector(action));
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"Check delegate: should cell %@ be selected?", [self formatIndexPath:indexPath]);
     return YES;
 }
 
-- (void)collectionView:(PSUICollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
-    NSLog(@"%@ - %@", NSStringFromSelector(_cmd), NSStringFromSelector(action));    
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"Check delegate: should cell %@ be deselected?", [self formatIndexPath:indexPath]);
+    return YES;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
