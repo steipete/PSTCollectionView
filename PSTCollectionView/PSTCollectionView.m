@@ -1528,7 +1528,11 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     for (PSTCollectionViewItemKey *key in [_allVisibleViewsDict keyEnumerator]) {
         PSTCollectionReusableView *view = _allVisibleViewsDict[key];
         NSInteger oldGlobalIndex = [_update[@"oldModel"] globalIndexForItemAtIndexPath:key.indexPath];
-        NSInteger newGlobalIndex = [_update[@"oldToNewIndexMap"][oldGlobalIndex] intValue];
+		NSArray *oldToNewIndexMap = _update[@"oldToNewIndexMap"];
+        NSInteger newGlobalIndex = NSNotFound;
+		if (oldGlobalIndex >= 0 && oldGlobalIndex < [oldToNewIndexMap count]) {
+			newGlobalIndex = [oldToNewIndexMap[oldGlobalIndex] intValue];
+		}
         NSIndexPath *newIndexPath = newGlobalIndex == NSNotFound ? nil : [_update[@"newModel"] indexPathForItemAtGlobalIndex:newGlobalIndex];
         if (newIndexPath) {
             PSTCollectionViewLayoutAttributes* startAttrs =
