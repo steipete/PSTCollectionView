@@ -165,8 +165,10 @@
     for (id view in subviews) {
         // Ignore the events if view wants to
         if (!((UIView *)view).isUserInteractionEnabled &&
-            [view respondsToSelector:@selector(setHighlighted:)]) {
+            [view respondsToSelector:@selector(setHighlighted:)] &&
+            ![view isKindOfClass:[UIButton class]]) {
             [view setHighlighted:highlighted];
+            
         }
         [self setHighlighted:highlighted forViews:[view subviews]];
     }
