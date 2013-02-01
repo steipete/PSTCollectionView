@@ -183,7 +183,7 @@
         [_backgroundView removeFromSuperview];
         _backgroundView = backgroundView;
         _backgroundView.frame = self.bounds;
-        _backgroundView.autoresizesSubviews = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+        _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         [self insertSubview:_backgroundView atIndex:0];
     }
 }
