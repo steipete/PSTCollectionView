@@ -961,7 +961,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         [_backgroundView removeFromSuperview];
         _backgroundView = backgroundView;
         backgroundView.frame = (CGRect){.origin=self.contentOffset,.size=self.bounds.size};
-        backgroundView.autoresizesSubviews = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+        backgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         [self addSubview:backgroundView];
         [self sendSubviewToBack:backgroundView];
     }
