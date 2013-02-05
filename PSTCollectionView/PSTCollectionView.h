@@ -28,23 +28,6 @@ typedef NS_OPTIONS(NSUInteger, PSTCollectionViewScrollPosition) {
     PSTCollectionViewScrollPositionRight                = 1 << 5
 };
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED < 60000
-typedef NS_OPTIONS(NSUInteger, UICollectionViewScrollPosition) {
-    UICollectionViewScrollPositionNone                 = 0,
-
-    // The vertical positions are mutually exclusive to each other, but are bitwise or-able with the horizontal scroll positions.
-    // Combining positions from the same grouping (horizontal or vertical) will result in an NSInvalidArgumentException.
-    UICollectionViewScrollPositionTop                  = 1 << 0,
-    UICollectionViewScrollPositionCenteredVertically   = 1 << 1,
-    UICollectionViewScrollPositionBottom               = 1 << 2,
-
-    // Likewise, the horizontal positions are mutually exclusive to each other.
-    UICollectionViewScrollPositionLeft                 = 1 << 3,
-    UICollectionViewScrollPositionCenteredHorizontally = 1 << 4,
-    UICollectionViewScrollPositionRight                = 1 << 5
-};
-#endif
-
 /**
  Replacement for UICollectionView for iOS4/5.
  Only supports a subset of the features of UICollectionView.
