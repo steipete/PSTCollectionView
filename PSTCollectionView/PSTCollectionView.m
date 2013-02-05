@@ -815,17 +815,16 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         
         if (shouldSelect) {
             PSTCollectionViewCell *selectedCell = [self cellForItemAtIndexPath:indexPath];
-            if (selectedCell) {
-                selectedCell.selected = YES;
-                [_indexPathsForSelectedItems addObject:indexPath];
+            selectedCell.selected = YES;
 
-                if (scrollPosition != PSTCollectionViewScrollPositionNone) {
-                    [self scrollToItemAtIndexPath:indexPath atScrollPosition:scrollPosition animated:animated];
-                }
+            [_indexPathsForSelectedItems addObject:indexPath];
 
-                if (notifyDelegate && _collectionViewFlags.delegateDidSelectItemAtIndexPath) {
-                    [self.delegate collectionView:self didSelectItemAtIndexPath:indexPath];
-                }
+            if (scrollPosition != PSTCollectionViewScrollPositionNone) {
+                [self scrollToItemAtIndexPath:indexPath atScrollPosition:scrollPosition animated:animated];
+            }
+
+            if (notifyDelegate && _collectionViewFlags.delegateDidSelectItemAtIndexPath) {
+                [self.delegate collectionView:self didSelectItemAtIndexPath:indexPath];
             }
         }
     }
