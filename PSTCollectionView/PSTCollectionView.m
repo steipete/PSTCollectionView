@@ -818,7 +818,11 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             if (selectedCell) {
                 selectedCell.selected = YES;
                 [_indexPathsForSelectedItems addObject:indexPath];
-                
+
+                if (scrollPosition != PSTCollectionViewScrollPositionNone) {
+                    [self scrollToItemAtIndexPath:indexPath atScrollPosition:scrollPosition animated:animated];
+                }
+
                 if (notifyDelegate && _collectionViewFlags.delegateDidSelectItemAtIndexPath) {
                     [self.delegate collectionView:self didSelectItemAtIndexPath:indexPath];
                 }
@@ -868,7 +872,11 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         PSTCollectionViewCell *highlightedCell = [self cellForItemAtIndexPath:indexPath];
         highlightedCell.highlighted = YES;
         [_indexPathsForHighlightedItems addObject:indexPath];
-        
+
+        if (scrollPosition != PSTCollectionViewScrollPositionNone) {
+            [self scrollToItemAtIndexPath:indexPath atScrollPosition:scrollPosition animated:animated];
+        }
+
         if (notifyDelegate && _collectionViewFlags.delegateDidHighlightItemAtIndexPath) {
             [self.delegate collectionView:self didHighlightItemAtIndexPath:indexPath];
         }
