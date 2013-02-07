@@ -852,11 +852,11 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             if (selectedCell.selected) {
                 selectedCell.selected = NO;
             }
-            [_indexPathsForSelectedItems removeObject:indexPath];
-                
-            if (notifyDelegate && _collectionViewFlags.delegateDidDeselectItemAtIndexPath) {
-                [self.delegate collectionView:self didDeselectItemAtIndexPath:indexPath];
-            }
+        }
+        [_indexPathsForSelectedItems removeObject:indexPath];
+            
+        if (notifyDelegate && _collectionViewFlags.delegateDidDeselectItemAtIndexPath) {
+            [self.delegate collectionView:self didDeselectItemAtIndexPath:indexPath];
         }
     }
 }
