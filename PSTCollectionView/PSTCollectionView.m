@@ -1384,7 +1384,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         }
     }
 
-    [floatingViews sortedArrayUsingComparator:^NSComparisonResult(PSTCollectionReusableView *obj1, PSTCollectionReusableView *obj2) {
+    [floatingViews sortUsingComparator:^NSComparisonResult(PSTCollectionReusableView *obj1, PSTCollectionReusableView *obj2) {
         CGFloat z1 = [[obj1 layoutAttributes] zIndex];
         CGFloat z2 = [[obj2 layoutAttributes] zIndex];
         if (z1 > z2) {
