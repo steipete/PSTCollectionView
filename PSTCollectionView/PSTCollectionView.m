@@ -1549,8 +1549,8 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             [_layout layoutAttributesForItemAtIndexPath:newIndexPath];
 
             NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:@{@"view":view}];
-            if (startAttrs) [dic setObject:startAttrs forKey:@"previousLayoutInfos"];
-            if (finalAttrs) [dic setObject:finalAttrs forKey:@"newLayoutInfos"];
+            if (startAttrs) dic[@"previousLayoutInfos"] = startAttrs;
+            if (finalAttrs) dic[@"newLayoutInfos"] = finalAttrs;
 
             [animations addObject:dic];
             PSTCollectionViewItemKey* newKey = [key copy];
