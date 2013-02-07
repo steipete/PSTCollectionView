@@ -62,14 +62,25 @@
     // only create the collection view if it is not already created (by IB)
     if (!_collectionView) {
         self.collectionView = [[PSTCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:self.layout];
-        self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [self.view addSubview:self.collectionView];
         self.collectionView.delegate = self;
         self.collectionView.dataSource = self;
     }
-    // on low memory event, just re-attach the view.
-    else if (self.view != self.collectionView) {
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+
+    // This seems like a hack, but is needed for real compatibility
+    // There can be implementations of loadView that don't call super and don't set the view, yet it works in UICollectionViewController.
+    if (![self isViewLoaded]) {
+        self.view = [[UIView alloc] initWithFrame:CGRectZero];
+    }
+
+    // Attaach the view
+    if (self.view != self.collectionView) {
         [self.view addSubview:self.collectionView];
+        self.collectionView.frame = self.view.bounds;
+        self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     }
 }
 
