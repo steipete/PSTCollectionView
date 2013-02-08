@@ -607,14 +607,13 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (NSArray *)indexPathsForVisibleItems {
-	NSMutableArray *indexPaths = [NSMutableArray arrayWithCapacity:[_allVisibleViewsDict count]];
+    NSArray *visibleCells = self.visibleCells;
+	NSMutableArray *indexPaths = [NSMutableArray arrayWithCapacity:visibleCells.count];
     
-	[_allVisibleViewsDict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-		PSTCollectionViewItemKey *itemKey = (PSTCollectionViewItemKey *)key;
-        if (itemKey.type == PSTCollectionViewItemTypeCell) {
-			[indexPaths addObject:itemKey.indexPath];
-		}
-	}];
+    [visibleCells enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+		PSTCollectionViewCell *cell = (PSTCollectionViewCell *)obj;
+        [indexPaths addObject:cell.layoutAttributes.indexPath];
+    }];
     
 	return indexPaths;
 }
@@ -1478,14 +1477,8 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             PSTCollectionViewLayoutAttributes *startAttrs = [_layout initialLayoutAttributesForAppearingItemAtIndexPath:indexPath];
             PSTCollectionViewLayoutAttributes *finalAttrs = [_layout layoutAttributesForItemAtIndexPath:indexPath];
             
-            CGRect startRect = CGRectMake(CGRectGetMidX(startAttrs.frame)-startAttrs.center.x,
-                                          CGRectGetMidY(startAttrs.frame)-startAttrs.center.y,
-                                          startAttrs.frame.size.width,
-                                          startAttrs.frame.size.height);
-            CGRect finalRect = CGRectMake(CGRectGetMidX(finalAttrs.frame)-finalAttrs.center.x,
-                                          CGRectGetMidY(finalAttrs.frame)-finalAttrs.center.y,
-                                          finalAttrs.frame.size.width,
-                                          finalAttrs.frame.size.height);
+            CGRect startRect = startAttrs.frame;
+            CGRect finalRect = finalAttrs.frame;
             
             if(CGRectIntersectsRect(self.visibleBoundRects, startRect) || CGRectIntersectsRect(self.visibleBoundRects, finalRect)) {
 
