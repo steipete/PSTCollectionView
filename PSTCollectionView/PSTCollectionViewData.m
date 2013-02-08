@@ -90,7 +90,10 @@
     // TODO: check if we need to fetch data from layout
     if (!CGRectEqualToRect(_validLayoutRect, rect)) {
         _validLayoutRect = rect;
-        _cellLayoutAttributes = [self.layout layoutAttributesForElementsInRect:rect];
+        // we only want cell layoutAttributes
+        _cellLayoutAttributes = [[self.layout layoutAttributesForElementsInRect:rect] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(PSTCollectionViewLayoutAttributes *evaluatedObject, NSDictionary *bindings) {
+            return ([evaluatedObject isKindOfClass:[PSTCollectionViewLayoutAttributes class]] && [evaluatedObject isCell]);
+        }]];
     }
 }
 
