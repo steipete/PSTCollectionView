@@ -949,11 +949,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (void)performBatchUpdates:(void (^)(void))updates completion:(void (^)(BOOL finished))completion {
-    if(!updates) return;
-    
     [self setupCellAnimations];
     
-    updates();
+    if(updates) updates();
     
     if(completion) _updateCompletionHandler = completion;
     
