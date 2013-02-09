@@ -76,7 +76,7 @@
         self.view = [[UIView alloc] initWithFrame:CGRectZero];
     }
 
-    // Attaach the view
+    // Attach the view
     if (self.view != self.collectionView) {
         [self.view addSubview:self.collectionView];
         self.collectionView.frame = self.view.bounds;

@@ -80,7 +80,7 @@ NSString *const PSTFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVertical
         _rowAlignmentsOptionsDictionary = @{
         PSTFlowLayoutCommonRowHorizontalAlignmentKey : @(PSTFlowLayoutHorizontalAlignmentJustify),
         PSTFlowLayoutLastRowHorizontalAlignmentKey : @(PSTFlowLayoutHorizontalAlignmentJustify),
-        // TODO: those values are some enum. find out what what is.
+        // TODO: those values are some enum. find out what that is.
         PSTFlowLayoutRowVerticalAlignmentKey : @(1),
         };
 
@@ -151,7 +151,7 @@ static char kPSTCachedItemRectsKey;
                 normalizedRowFrame.origin.x += section.frame.origin.x;
                 normalizedRowFrame.origin.y += section.frame.origin.y;
                 if (CGRectIntersectsRect(normalizedRowFrame, rect)) {
-                    // TODO be more fine-graind for items
+                    // TODO be more fine-grained for items
 
                     for (NSInteger itemIndex = 0; itemIndex < row.itemCount; itemIndex++) {
                         PSTCollectionViewLayoutAttributes *layoutAttributes;

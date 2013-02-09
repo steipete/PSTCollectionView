@@ -626,7 +626,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 // Interacting with the collection view.
 - (void)scrollToItemAtIndexPath:(NSIndexPath *)indexPath atScrollPosition:(PSTCollectionViewScrollPosition)scrollPosition animated:(BOOL)animated {
     
-    // ensure grid is layouted; else we can't scroll.
+    // ensure grid is laid out; else we can't scroll.
     [self layoutSubviews];
     
     PSTCollectionViewLayoutAttributes *layoutAttributes = [self.collectionViewLayout layoutAttributesForItemAtIndexPath:indexPath];
@@ -1174,7 +1174,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 	//	Managing Actions for Cells
 	_collectionViewFlags.delegateSupportsMenus                     = [self.delegate respondsToSelector:@selector(collectionView:shouldShowMenuForItemAtIndexPath:)];
     
-	// These aren't present in the flags which is a little strange. Not adding them because thet will mess with byte alignment which will affect cross compatibility.
+	// These aren't present in the flags which is a little strange. Not adding them because that will mess with byte alignment which will affect cross compatibility.
 	// The flag names are guesses and are there for documentation purposes.
 	//
 	// _collectionViewFlags.delegateCanPerformActionForItemAtIndexPath	= [self.delegate respondsToSelector:@selector(collectionView:canPerformAction:forItemAtIndexPath:withSender:)];
@@ -2015,7 +2015,7 @@ __attribute__((constructor)) static void PSTCreateUICollectionViewClasses(void) 
         // class_setSuperclass is deprecated, but once iOS7 is out we hopefully can drop iOS5 and don't need this code anymore anyway.
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        // Dynamically change superclasses of the PSUICollectionView* clases to UICollectioView*. Crazy stuff.
+        // Dynamically change superclasses of the PSUICollectionView* classes to UICollectionView*. Crazy stuff.
         if ([UICollectionView class]) class_setSuperclass([PSUICollectionView_ class], [UICollectionView class]);
         else objc_registerClassPair(objc_allocateClassPair([PSTCollectionView class], "UICollectionView", 0));
         
