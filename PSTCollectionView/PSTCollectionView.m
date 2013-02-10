@@ -1163,8 +1163,8 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                 _collectionViewFlags.updatingLayout = NO;
                 
                 // layout subviews for updating content offset or size while updating layout
-                if (CGPointEqualToPoint(self.contentOffset, targetOffset)
-                    || CGSizeEqualToSize(self.contentSize, contentRect.size)) {
+                if (!CGPointEqualToPoint(self.contentOffset, targetOffset)
+                    || !CGSizeEqualToSize(self.contentSize, contentRect.size)) {
                     [self layoutSubviews];
                 }
             }];
