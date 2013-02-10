@@ -11,6 +11,8 @@
 @implementation ViewController
 
 - (void)viewDidLoad {
+	[super viewDidLoad];
+	
     UIPinchGestureRecognizer* pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchGesture:)];
     [self.collectionView addGestureRecognizer:pinchRecognizer];
     [self.collectionView registerClass:[Cell class] forCellWithReuseIdentifier:@"MY_CELL"];
