@@ -1023,7 +1023,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         
         if (!centerItemIndexPath) {
             NSArray *visibleItems = [self indexPathsForVisibleItems];
-            centerItemIndexPath = [visibleItems objectAtIndex:visibleItems.count / 2];
+            if (visibleItems.count > 0) {
+                centerItemIndexPath = [visibleItems objectAtIndex:visibleItems.count / 2];
+            }
         }
         
         if (centerItemIndexPath) {
@@ -1161,8 +1163,8 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                 _collectionViewFlags.updatingLayout = NO;
                 
                 // layout subviews for updating content offset or size while updating layout
-                if (CGPointEqualToPoint(self.contentOffset, targetOffset)
-                    || CGSizeEqualToSize(self.contentSize, contentRect.size)) {
+                if (!CGPointEqualToPoint(self.contentOffset, targetOffset)
+                    || !CGSizeEqualToSize(self.contentSize, contentRect.size)) {
                     [self layoutSubviews];
                 }
             }];
