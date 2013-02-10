@@ -1023,7 +1023,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         
         if (!centerItemIndexPath) {
             NSArray *visibleItems = [self indexPathsForVisibleItems];
-            centerItemIndexPath = [visibleItems objectAtIndex:visibleItems.count / 2];
+            if (visibleItems.count > 0) {
+                centerItemIndexPath = [visibleItems objectAtIndex:visibleItems.count / 2];
+            }
         }
         
         if (centerItemIndexPath) {
