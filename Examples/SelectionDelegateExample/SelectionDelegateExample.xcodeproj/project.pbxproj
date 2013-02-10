@@ -63,6 +63,7 @@
 		60FF9C571648B8D800E20CD4 /* 9.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 60FF9C371648B8D800E20CD4 /* 9.JPG */; };
 		60FF9C7D1648BE6100E20CD4 /* ImageGridCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF9C7C1648BE6100E20CD4 /* ImageGridCell.m */; };
 		78E7A75F1654EECE000C70BE /* PSTCollectionViewUpdateItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 78E7A75E1654EECE000C70BE /* PSTCollectionViewUpdateItem.m */; };
+		981FA1F116C79C1D00F6149A /* NSIndexPath+PSTCollectionViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 981FA1F016C79C1D00F6149A /* NSIndexPath+PSTCollectionViewAdditions.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -141,6 +142,8 @@
 		60FF9C7C1648BE6100E20CD4 /* ImageGridCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageGridCell.m; sourceTree = "<group>"; };
 		78E7A75D1654EECE000C70BE /* PSTCollectionViewUpdateItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTCollectionViewUpdateItem.h; sourceTree = "<group>"; };
 		78E7A75E1654EECE000C70BE /* PSTCollectionViewUpdateItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTCollectionViewUpdateItem.m; sourceTree = "<group>"; };
+		981FA1EF16C79C1D00F6149A /* NSIndexPath+PSTCollectionViewAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSIndexPath+PSTCollectionViewAdditions.h"; sourceTree = "<group>"; };
+		981FA1F016C79C1D00F6149A /* NSIndexPath+PSTCollectionViewAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSIndexPath+PSTCollectionViewAdditions.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -219,6 +222,8 @@
 		60FF9BF11648B87000E20CD4 /* PSTCollectionView */ = {
 			isa = PBXGroup;
 			children = (
+				981FA1EF16C79C1D00F6149A /* NSIndexPath+PSTCollectionViewAdditions.h */,
+				981FA1F016C79C1D00F6149A /* NSIndexPath+PSTCollectionViewAdditions.m */,
 				60FF9BF21648B87000E20CD4 /* PSTCollectionView.h */,
 				60FF9BF31648B87000E20CD4 /* PSTCollectionView.m */,
 				60FF9BF41648B87000E20CD4 /* PSTCollectionViewCell.h */,
@@ -410,6 +415,7 @@
 				60FF9C131648B87000E20CD4 /* PSTGridLayoutSection.m in Sources */,
 				60FF9C7D1648BE6100E20CD4 /* ImageGridCell.m in Sources */,
 				78E7A75F1654EECE000C70BE /* PSTCollectionViewUpdateItem.m in Sources */,
+				981FA1F116C79C1D00F6149A /* NSIndexPath+PSTCollectionViewAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

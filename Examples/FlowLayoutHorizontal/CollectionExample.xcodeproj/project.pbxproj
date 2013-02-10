@@ -31,6 +31,7 @@
 		4C3A073716316EB30064777C /* PSTGridLayoutSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C3A072C16316EB30064777C /* PSTGridLayoutSection.m */; };
 		4C3A073E16316F4C0064777C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C3A073D16316F4C0064777C /* QuartzCore.framework */; };
 		78E7A7651654EF00000C70BE /* PSTCollectionViewUpdateItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 78E7A7641654EF00000C70BE /* PSTCollectionViewUpdateItem.m */; };
+		981FA1E516C79B6E00F6149A /* NSIndexPath+PSTCollectionViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 981FA1E416C79B6E00F6149A /* NSIndexPath+PSTCollectionViewAdditions.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -76,6 +77,8 @@
 		4C3A073D16316F4C0064777C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		78E7A7631654EF00000C70BE /* PSTCollectionViewUpdateItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTCollectionViewUpdateItem.h; sourceTree = "<group>"; };
 		78E7A7641654EF00000C70BE /* PSTCollectionViewUpdateItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTCollectionViewUpdateItem.m; sourceTree = "<group>"; };
+		981FA1E316C79B6E00F6149A /* NSIndexPath+PSTCollectionViewAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSIndexPath+PSTCollectionViewAdditions.h"; sourceTree = "<group>"; };
+		981FA1E416C79B6E00F6149A /* NSIndexPath+PSTCollectionViewAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSIndexPath+PSTCollectionViewAdditions.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,6 +155,8 @@
 		4C3A071516316EB30064777C /* PSTCollectionView */ = {
 			isa = PBXGroup;
 			children = (
+				981FA1E316C79B6E00F6149A /* NSIndexPath+PSTCollectionViewAdditions.h */,
+				981FA1E416C79B6E00F6149A /* NSIndexPath+PSTCollectionViewAdditions.m */,
 				4C3A071616316EB30064777C /* PSTCollectionView.h */,
 				4C3A071716316EB30064777C /* PSTCollectionView.m */,
 				4C3A071816316EB30064777C /* PSTCollectionViewCell.h */,
@@ -263,6 +268,7 @@
 				4C3A073616316EB30064777C /* PSTGridLayoutRow.m in Sources */,
 				4C3A073716316EB30064777C /* PSTGridLayoutSection.m in Sources */,
 				78E7A7651654EF00000C70BE /* PSTCollectionViewUpdateItem.m in Sources */,
+				981FA1E516C79B6E00F6149A /* NSIndexPath+PSTCollectionViewAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

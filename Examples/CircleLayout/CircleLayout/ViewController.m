@@ -103,6 +103,8 @@ static NSInteger count;
 
 -(void)viewDidLoad
 {
+	[super viewDidLoad];
+	
     self.sections = [[NSMutableArray alloc] initWithArray:
                     @[[NSMutableArray array]]];
     
