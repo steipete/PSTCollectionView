@@ -1015,9 +1015,28 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         }
         
         [self bringSubviewToFront: _allVisibleViewsDict[[previouslyVisibleItemsKeysSetMutable anyObject]]];
+
+        CGPoint targetOffset = self.contentOffset;
+        CGPoint centerPoint = CGPointMake(self.bounds.origin.x + self.bounds.size.width / 2.0,
+                                          self.bounds.origin.y + self.bounds.size.height / 2.0);
+        NSIndexPath *centerItemIndexPath = [self indexPathForItemAtPoint:centerPoint];
         
-        CGRect rect = [_collectionViewData collectionViewContentRect];
-        NSArray *newlyVisibleLayoutAttrs = [_collectionViewData layoutAttributesForElementsInRect:rect];
+        if (!centerItemIndexPath) {
+            NSArray *visibleItems = [self indexPathsForVisibleItems];
+            centerItemIndexPath = [visibleItems objectAtIndex:visibleItems.count / 2];
+        }
+        
+        if (centerItemIndexPath) {
+            PSTCollectionViewLayoutAttributes *layoutAttributes = [layout layoutAttributesForItemAtIndexPath:centerItemIndexPath];
+            if (layoutAttributes) {
+                PSTCollectionViewScrollPosition scrollPosition = PSTCollectionViewScrollPositionCenteredVertically | PSTCollectionViewScrollPositionCenteredHorizontally;
+                CGRect targetRect = [self makeRect:layoutAttributes.frame toScrollPosition:scrollPosition];
+                targetOffset = CGPointMake(fmax(0.0, targetRect.origin.x), fmax(0.0, targetRect.origin.y));
+            }
+        }
+        
+        CGRect newlyBounds = CGRectMake(targetOffset.x, targetOffset.y, self.bounds.size.width, self.bounds.size.height);
+        NSArray *newlyVisibleLayoutAttrs = [_collectionViewData layoutAttributesForElementsInRect:newlyBounds];
         
         NSMutableDictionary *layoutInterchangeData = [NSMutableDictionary dictionaryWithCapacity:
                                                       [newlyVisibleLayoutAttrs count] + [previouslyVisibleItemsKeysSet count]];
@@ -1104,8 +1123,6 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         };
         
         CGRect contentRect = [_collectionViewData collectionViewContentRect];
-        [self setContentSize:contentRect.size];
-        [self setContentOffset:contentRect.origin];
         
         void (^applyNewLayoutBlock)(void) = ^{
             NSEnumerator *keys = [layoutInterchangeData keyEnumerator];
@@ -1115,25 +1132,44 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         };
         
         void (^freeUnusedViews)(void) = ^ {
+            NSMutableSet *toRemove =  [NSMutableSet set];
             for(PSTCollectionViewItemKey *key in [_allVisibleViewsDict keyEnumerator]) {
                 if(![newlyVisibleItemsKeys containsObject:key]) {
-                    if(key.type == PSTCollectionViewItemTypeCell) [self reuseCell:_allVisibleViewsDict[key]];
-                    else if(key.type == PSTCollectionViewItemTypeSupplementaryView)
+                    if(key.type == PSTCollectionViewItemTypeCell) {
+                        [self reuseCell:_allVisibleViewsDict[key]];
+                        [toRemove addObject:key];
+                    }
+                    else if(key.type == PSTCollectionViewItemTypeSupplementaryView) {
                         [self reuseSupplementaryView:_allVisibleViewsDict[key]];
+                        [toRemove addObject:key];
+                    }
                 }
             }
+            
+            for(id key in toRemove)
+                [_allVisibleViewsDict removeObjectForKey:key];
         };
         
         if(animated) {
             [UIView animateWithDuration:.3 animations:^ {
                 _collectionViewFlags.updatingLayout = YES;
+                self.contentOffset = targetOffset;
+                self.contentSize = contentRect.size;
                 applyNewLayoutBlock();
             } completion:^(BOOL finished) {
                 freeUnusedViews();
                 _collectionViewFlags.updatingLayout = NO;
+                
+                // layout subviews for updating content offset or size while updating layout
+                if (CGPointEqualToPoint(self.contentOffset, targetOffset)
+                    || CGSizeEqualToSize(self.contentSize, contentRect.size)) {
+                    [self layoutSubviews];
+                }
             }];
         }
         else {
+            self.contentOffset = targetOffset;
+            self.contentSize = contentRect.size;
             applyNewLayoutBlock();
             freeUnusedViews();
         }
