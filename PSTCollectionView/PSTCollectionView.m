@@ -1301,10 +1301,13 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 														withLayoutAttributes:layoutAttributes];
             }
             
-			//Supplementary views are optional
+			// Supplementary views are optional
 			if (view) {
 				_allVisibleViewsDict[itemKey] = view;
 				[self addControlledSubview:view];
+
+                // Always apply attributes. Fixes #203.
+                [view applyLayoutAttributes:layoutAttributes];
 			}
         }else {
             // just update cell
