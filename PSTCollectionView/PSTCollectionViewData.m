@@ -35,7 +35,6 @@
  */
 
     // @steipete
-    NSArray *_cellLayoutAttributes;
 
     CGSize _contentSize;
     struct {
@@ -46,6 +45,8 @@
 }
 @property (nonatomic, unsafe_unretained) PSTCollectionView *collectionView;
 @property (nonatomic, unsafe_unretained) PSTCollectionViewLayout *layout;
+@property (nonatomic, strong) NSArray *cachedLayoutAttributes;
+
 @end
 
 @implementation PSTCollectionViewData
@@ -90,9 +91,11 @@
     // TODO: check if we need to fetch data from layout
     if (!CGRectEqualToRect(_validLayoutRect, rect)) {
         _validLayoutRect = rect;
-        // we only want cell layoutAttributes
-        _cellLayoutAttributes = [[self.layout layoutAttributesForElementsInRect:rect] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(PSTCollectionViewLayoutAttributes *evaluatedObject, NSDictionary *bindings) {
-            return ([evaluatedObject isKindOfClass:[PSTCollectionViewLayoutAttributes class]] && [evaluatedObject isCell]);
+        // we only want cell layoutAttributes & supplementaryView layoutAttributes
+        self.cachedLayoutAttributes = [[self.layout layoutAttributesForElementsInRect:rect] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(PSTCollectionViewLayoutAttributes *evaluatedObject, NSDictionary *bindings) {
+            return ([evaluatedObject isKindOfClass:[PSTCollectionViewLayoutAttributes class]] &&
+                    ([evaluatedObject isCell]||
+                     [evaluatedObject isSupplementaryView]));
         }]];
     }
 }
@@ -149,7 +152,7 @@
 
 - (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect {
     [self validateLayoutInRect:rect];
-    return _cellLayoutAttributes;
+    return self.cachedLayoutAttributes;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
