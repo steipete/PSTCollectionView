@@ -1601,7 +1601,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     for (PSTCollectionViewLayoutAttributes *attrs in allNewlyVisibleItems) {
         PSTCollectionViewItemKey *key = [PSTCollectionViewItemKey collectionItemKeyForLayoutAttributes:attrs];
         
-        if (![[newAllVisibleView allKeys] containsObject:key]) {
+        if (key.type == PSTCollectionViewItemTypeCell && ![[newAllVisibleView allKeys] containsObject:key]) {
             PSTCollectionViewLayoutAttributes* startAttrs =
             [_layout initialLayoutAttributesForAppearingItemAtIndexPath:attrs.indexPath];
             
