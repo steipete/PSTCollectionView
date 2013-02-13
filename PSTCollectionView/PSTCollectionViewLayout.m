@@ -246,6 +246,7 @@ NSString *const PSTCollectionViewLayoutAwokeFromNib = @"PSTCollectionViewLayoutA
 
 - (void)invalidateLayout {
     [[_collectionView collectionViewData] invalidate];
+    [_collectionView setNeedsLayout];
 }
 
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds {

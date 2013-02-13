@@ -242,10 +242,18 @@ static char kPSTCachedItemRectsKey;
     return _data.contentSize;
 }
 
+- (void)setSectionInset:(UIEdgeInsets)sectionInset {
+    if (!UIEdgeInsetsEqualToEdgeInsets(sectionInset, _sectionInset)) {
+        _sectionInset = sectionInset;
+        [self invalidateLayout];
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Invalidating the Layout
 
 - (void)invalidateLayout {
+    [super invalidateLayout];
     objc_setAssociatedObject(self, &kPSTCachedItemRectsKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
