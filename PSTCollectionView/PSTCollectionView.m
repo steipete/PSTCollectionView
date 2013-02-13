@@ -535,11 +535,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     [_indexPathsForHighlightedItems removeAllObjects];
     
     [self setNeedsLayout];
-    
-    
-    //NSAssert(sectionCount == 1, @"Sections are currently not supported.");
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Query Grid
