@@ -58,6 +58,7 @@ NSString *const PSTFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVertical
 @synthesize rowAlignmentOptions = _rowAlignmentsOptionsDictionary;
 @synthesize minimumLineSpacing = _lineSpacing;
 @synthesize minimumInteritemSpacing = _interitemSpacing;
+@synthesize shouldScroll = _shouldScroll;
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject
@@ -374,9 +375,9 @@ static char kPSTCachedItemRectsKey;
         section.frame = sectionFrame;
     }
 	if (_data.horizontal) {
-		contentSize.width = MAX(contentSize.width, self.collectionView.bounds.size.width);
+		contentSize.width = MAX(contentSize.width, self.collectionView.bounds.size.width) + ((_shouldScroll) ? 1.0f : 0.0);
 	} else {
-		contentSize.height = MAX(contentSize.height, self.collectionView.bounds.size.height);
+		contentSize.height = MAX(contentSize.height, self.collectionView.bounds.size.height) + ((_shouldScroll) ? 1.0f : 0.0);
 	}
     _data.contentSize = contentSize;
 }
