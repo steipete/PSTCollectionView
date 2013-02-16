@@ -1630,20 +1630,33 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             [view applyLayoutAttributes:attrs];
         }
     } completion:^(BOOL finished) {
-        NSMutableSet *set = [NSMutableSet set];
-        NSArray *visibleItems = [_layout layoutAttributesForElementsInRect:self.visibleBoundRects];
-        for(PSTCollectionViewLayoutAttributes *attrs in visibleItems)
-            [set addObject: [PSTCollectionViewItemKey collectionItemKeyForLayoutAttributes:attrs]];
-        
-        NSMutableSet *toRemove =  [NSMutableSet set];
-        for(PSTCollectionViewItemKey *key in [_allVisibleViewsDict keyEnumerator]) {
-            if(![set containsObject:key]) {
-                [self reuseCell:_allVisibleViewsDict[key]];
-                [toRemove addObject:key];
+    // deleted views are not removed from the collectionView. By this point
+    // _allVisibleViewsDict has already had the view removed, and 
+    // layoutAttributesForElementsInRect: only returns what is expected, not
+    // what is actually a subView of the collectionView.
+    // This is probably not the best fix, but does cleanup the now hidden views
+    // in the case of a delete, in the case of an update, there is odd behavior
+    // with deleted and inserted views that end up with no view at all.
+//         NSMutableSet *set = [NSMutableSet set];
+//         NSArray *visibleItems = [_layout layoutAttributesForElementsInRect:self.visibleBoundRects];
+//         for(PSTCollectionViewLayoutAttributes *attrs in visibleItems)
+//             [set addObject: [PSTCollectionViewItemKey collectionItemKeyForLayoutAttributes:attrs]];
+//         
+//         NSMutableSet *toRemove =  [NSMutableSet set];
+//         for(PSTCollectionViewItemKey *key in [_allVisibleViewsDict keyEnumerator]) {
+//             if(![set containsObject:key]) {
+//                 [self reuseCell:_allVisibleViewsDict[key]];
+//                 [toRemove addObject:key];
+//             }
+//         }
+//         for(id key in toRemove)
+//             [_allVisibleViewsDict removeObjectForKey:key];
+        NSArray *visibleViews = [newAllVisibleView allValues];
+        [self.subviews enumerateObjectsUsingBlock:^(PSTCollectionViewCell *obj, NSUInteger idx, BOOL *stop) {
+            if ([obj isKindOfClass: [PSTCollectionViewCell class]] && [visibleViews containsObject: obj] == NO) {
+                [self reuseCell: obj];
             }
-        }
-        for(id key in toRemove)
-            [_allVisibleViewsDict removeObjectForKey:key];
+        }];
         
         _collectionViewFlags.updatingLayout = NO;
         
