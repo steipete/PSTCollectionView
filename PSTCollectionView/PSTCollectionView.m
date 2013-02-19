@@ -1410,6 +1410,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 - (void)addControlledSubview:(PSTCollectionReusableView *)subview {
     // avoids placing views above the scroll indicator
     [self insertSubview:subview atIndex:self.subviews.count - (self.dragging ? 1 : 0)];
+    UIView *scrollIndicatorView = nil;
+    if (self.dragging) {
+        scrollIndicatorView = [self.subviews lastObject];
+    }
 
     NSMutableArray *floatingViews = [[NSMutableArray alloc] init];
     for (UIView *uiView in [self subviews]) {
@@ -1432,6 +1436,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
     for (PSTCollectionReusableView *uiView in floatingViews) {
         [self bringSubviewToFront:uiView];
+    }
+
+    if (floatingViews.count && scrollIndicatorView) {
+        [self bringSubviewToFront:scrollIndicatorView];
     }
 }
 
