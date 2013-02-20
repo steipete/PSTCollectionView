@@ -71,6 +71,8 @@ extern NSString *const PSTCollectionViewLayoutAwokeFromNib;
 
 @interface PSTCollectionViewLayout (SubclassingHooks)
 
++ (Class)layoutAttributesClass; // override this method to provide a custom class to be used when instantiating instances of PSTCollectionViewLayoutAttributes
+
 // The collection view calls -prepareLayout once at its first layout as the first message to the layout instance.
 // The collection view calls -prepareLayout again after layout is invalidated and before requerying the layout information.
 // Subclasses should always call super if they override.
