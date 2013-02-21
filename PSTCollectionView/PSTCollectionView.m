@@ -464,8 +464,6 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 	NSString *kindAndIdentifier = [NSString stringWithFormat:@"%@/%@", elementKind, identifier];
     NSMutableArray *reusableViews = _supplementaryViewReuseQueues[kindAndIdentifier];
     PSTCollectionReusableView *view = [reusableViews lastObject];
-    PSTCollectionViewLayoutAttributes *attributes = [self.collectionViewLayout layoutAttributesForSupplementaryViewOfKind:elementKind
-                                                                                                              atIndexPath:indexPath];
     
     if (view) {
         [reusableViews removeObjectAtIndex:reusableViews.count - 1];
@@ -488,8 +486,12 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 			if (viewClass == nil) {
 				@throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"Class not registered for kind/identifier %@", kindAndIdentifier] userInfo:nil];
 			}
-			if (attributes) {
-					view = [[viewClass alloc] initWithFrame:attributes.frame];
+			if (self.collectionViewLayout) {
+				PSTCollectionViewLayoutAttributes *attributes = [self.collectionViewLayout layoutAttributesForSupplementaryViewOfKind:elementKind
+																														  atIndexPath:indexPath];
+                if (attributes) {
+                    view = [[viewClass alloc] initWithFrame:attributes.frame];
+                }
 			} else {
 				view = [viewClass new];
 			}
@@ -497,8 +499,6 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         view.collectionView = self;
         view.reuseIdentifier = identifier;
     }
-
-    [view applyLayoutAttributes:attributes];
     
     return view;
 }
@@ -1375,6 +1375,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 		PSTCollectionReusableView *view = [self.dataSource collectionView:self
 										viewForSupplementaryElementOfKind:kind
 															  atIndexPath:indexPath];
+        [view applyLayoutAttributes:layoutAttributes];
 		return view;
 	}
 	return nil;
