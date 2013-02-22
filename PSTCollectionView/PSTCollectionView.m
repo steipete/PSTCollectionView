@@ -1319,9 +1319,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     }
     
     // finally add new cells.
-    [itemKeysToAddDict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        PSTCollectionViewItemKey *itemKey = key;
-        PSTCollectionViewLayoutAttributes *layoutAttributes = obj;
+    for (PSTCollectionViewLayoutAttributes *layoutAttributes in layoutAttributesArray) {
+        PSTCollectionViewItemKey *itemKey = [PSTCollectionViewItemKey collectionItemKeyForLayoutAttributes:layoutAttributes];
+        itemKeysToAddDict[itemKey] = layoutAttributes;
         
         // check if cell is in visible dict; add it if not.
         PSTCollectionReusableView *view = _allVisibleViewsDict[itemKey];
@@ -1339,7 +1339,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 			if (view) {
 				_allVisibleViewsDict[itemKey] = view;
 				[self addControlledSubview:view];
-
+                
                 // Always apply attributes. Fixes #203.
                 [view applyLayoutAttributes:layoutAttributes];
 			}
@@ -1347,7 +1347,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             // just update cell
             [view applyLayoutAttributes:layoutAttributes];
         }
-    }];
+    }
 }
 
 // fetches a cell from the dataSource and sets the layoutAttributes
