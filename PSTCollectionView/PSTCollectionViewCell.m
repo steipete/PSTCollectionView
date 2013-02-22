@@ -159,6 +159,8 @@
 // Cell highlighting only highlights the cell itself
 - (void)setHighlighted:(BOOL)highlighted {
     _collectionCellFlags.highlighted = highlighted;
+	_selectedBackgroundView.alpha = highlighted ? 1.0f : 0.0f;
+	[self setHighlighted:highlighted forViews:self.contentView.subviews];
 }
 
 - (void)setHighlighted:(BOOL)highlighted forViews:(id)subviews {
