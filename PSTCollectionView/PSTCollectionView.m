@@ -1406,7 +1406,8 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)addControlledSubview:(PSTCollectionReusableView *)subview {
     // avoids placing views above the scroll indicator
-    [self insertSubview:subview atIndex:self.subviews.count - (self.dragging ? 1 : 0)];
+	NSInteger insertionIndex = (NSInteger)(self.subviews.count - (self.dragging ? 1 : 0));
+    [self insertSubview:subview atIndex:(insertionIndex < 0 ? 0 : insertionIndex)];
     UIView *scrollIndicatorView = nil;
     if (self.dragging) {
         scrollIndicatorView = [self.subviews lastObject];
