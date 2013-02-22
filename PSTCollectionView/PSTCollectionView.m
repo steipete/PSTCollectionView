@@ -1285,40 +1285,11 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         // stop, otherwise we'll blow away all the currently existing cells.
         return;
     }
-
-    // create ItemKey/Attributes dictionary
+        
+	// create ItemKey/Attributes dictionary
     NSMutableDictionary *itemKeysToAddDict = [NSMutableDictionary dictionary];
-    for (PSTCollectionViewLayoutAttributes *layoutAttributes in layoutAttributesArray) {
-        PSTCollectionViewItemKey *itemKey = [PSTCollectionViewItemKey collectionItemKeyForLayoutAttributes:layoutAttributes];
-        itemKeysToAddDict[itemKey] = layoutAttributes;
-    }
-    
-    // detect what items should be removed and queued back.
-    NSMutableSet *allVisibleItemKeys = [NSMutableSet setWithArray:[_allVisibleViewsDict allKeys]];
-    [allVisibleItemKeys minusSet:[NSSet setWithArray:[itemKeysToAddDict allKeys]]];
-    
-    // remove views that have not been processed and prepare them for re-use.
-    for (PSTCollectionViewItemKey *itemKey in allVisibleItemKeys) {
-        PSTCollectionReusableView *reusableView = _allVisibleViewsDict[itemKey];
-        if (reusableView) {
-            [reusableView removeFromSuperview];
-            [_allVisibleViewsDict removeObjectForKey:itemKey];
-            if (itemKey.type == PSTCollectionViewItemTypeCell) {
-                if (_collectionViewFlags.delegateDidEndDisplayingCell) {
-                    [self.delegate collectionView:self didEndDisplayingCell:(PSTCollectionViewCell *)reusableView forItemAtIndexPath:itemKey.indexPath];
-                }
-                [self reuseCell:(PSTCollectionViewCell *)reusableView];
-            }else if(itemKey.type == PSTCollectionViewItemTypeSupplementaryView) {
-                if (_collectionViewFlags.delegateDidEndDisplayingSupplementaryView) {
-                    [self.delegate collectionView:self didEndDisplayingSupplementaryView:reusableView forElementOfKind:itemKey.identifier atIndexPath:itemKey.indexPath];
-                }
-                [self reuseSupplementaryView:reusableView];
-            }
-            // TODO: decoration views etc?
-        }
-    }
-    
-    // finally add new cells.
+
+	// Add new cells.
     for (PSTCollectionViewLayoutAttributes *layoutAttributes in layoutAttributesArray) {
         PSTCollectionViewItemKey *itemKey = [PSTCollectionViewItemKey collectionItemKeyForLayoutAttributes:layoutAttributes];
         itemKeysToAddDict[itemKey] = layoutAttributes;
@@ -1348,7 +1319,33 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             [view applyLayoutAttributes:layoutAttributes];
         }
     }
-}
+
+	// Detect what items should be removed and queued back.
+    NSMutableSet *allVisibleItemKeys = [NSMutableSet setWithArray:[_allVisibleViewsDict allKeys]];
+    [allVisibleItemKeys minusSet:[NSSet setWithArray:[itemKeysToAddDict allKeys]]];
+
+	
+    // Finally remove views that have not been processed and prepare them for re-use.
+    for (PSTCollectionViewItemKey *itemKey in allVisibleItemKeys) {
+        PSTCollectionReusableView *reusableView = _allVisibleViewsDict[itemKey];
+        if (reusableView) {
+            [reusableView removeFromSuperview];
+            [_allVisibleViewsDict removeObjectForKey:itemKey];
+            if (itemKey.type == PSTCollectionViewItemTypeCell) {
+                if (_collectionViewFlags.delegateDidEndDisplayingCell) {
+                    [self.delegate collectionView:self didEndDisplayingCell:(PSTCollectionViewCell *)reusableView forItemAtIndexPath:itemKey.indexPath];
+                }
+                [self reuseCell:(PSTCollectionViewCell *)reusableView];
+            }else if(itemKey.type == PSTCollectionViewItemTypeSupplementaryView) {
+                if (_collectionViewFlags.delegateDidEndDisplayingSupplementaryView) {
+                    [self.delegate collectionView:self didEndDisplayingSupplementaryView:reusableView forElementOfKind:itemKey.identifier atIndexPath:itemKey.indexPath];
+                }
+                [self reuseSupplementaryView:reusableView];
+            }
+            // TODO: decoration views etc?
+        }
+    }
+ }
 
 // fetches a cell from the dataSource and sets the layoutAttributes
 - (PSTCollectionViewCell *)createPreparedCellForItemAtIndexPath:(NSIndexPath *)indexPath withLayoutAttributes:(PSTCollectionViewLayoutAttributes *)layoutAttributes {
