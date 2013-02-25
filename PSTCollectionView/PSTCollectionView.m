@@ -1635,6 +1635,23 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         
         [CATransaction begin];
         [CATransaction setAnimationDuration:.3];
+        
+        // You might wonder why we use CATransaction to handle animatino aompletion
+        // here instead of using completion: block patamether of outer animateWithDuration:
+        // The problem is that animateWithDuration: calls this completion block
+        // in deffered manner when user continues touch and dragging colelction view.
+        // (Such that completion block will called ONLY whe user releases his finger,
+        // however animatinos are finished long time ago)
+        // I assume that was done for performance purposes but that's completely
+        // breaks our animations logic here.
+        // To get completion block called immediately after animation actually finishes,
+        // I switched to use CATransaction here.
+        // The only thing I'm not sure about - _completed_ flag. I don't know where to get it
+        // in terms of CATransaction's API, so I use animateWithDuration's completion block
+        // to call _updateCompletionHandler with that flag.
+        // Ideally, _updateCompletionHandler should be called along with other logics in
+        // CATransaction's completionHandler but I simply don't know where to get that flag.
+        
         [CATransaction setCompletionBlock:^
          {
              // deleted views are not removed from the collectionView. By this point
