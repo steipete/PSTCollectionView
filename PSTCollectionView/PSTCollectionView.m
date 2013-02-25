@@ -1285,19 +1285,47 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         // stop, otherwise we'll blow away all the currently existing cells.
         return;
     }
-
-    // create ItemKey/Attributes dictionary
+        
+	// create ItemKey/Attributes dictionary
     NSMutableDictionary *itemKeysToAddDict = [NSMutableDictionary dictionary];
+
+	// Add new cells.
     for (PSTCollectionViewLayoutAttributes *layoutAttributes in layoutAttributesArray) {
         PSTCollectionViewItemKey *itemKey = [PSTCollectionViewItemKey collectionItemKeyForLayoutAttributes:layoutAttributes];
         itemKeysToAddDict[itemKey] = layoutAttributes;
+        
+        // check if cell is in visible dict; add it if not.
+        PSTCollectionReusableView *view = _allVisibleViewsDict[itemKey];
+        if (!view) {
+            if (itemKey.type == PSTCollectionViewItemTypeCell) {
+                view = [self createPreparedCellForItemAtIndexPath:itemKey.indexPath withLayoutAttributes:layoutAttributes];
+                
+            } else if (itemKey.type == PSTCollectionViewItemTypeSupplementaryView) {
+                view = [self createPreparedSupplementaryViewForElementOfKind:layoutAttributes.representedElementKind
+																 atIndexPath:layoutAttributes.indexPath
+														withLayoutAttributes:layoutAttributes];
+            }
+            
+			// Supplementary views are optional
+			if (view) {
+				_allVisibleViewsDict[itemKey] = view;
+				[self addControlledSubview:view];
+                
+                // Always apply attributes. Fixes #203.
+                [view applyLayoutAttributes:layoutAttributes];
+			}
+        }else {
+            // just update cell
+            [view applyLayoutAttributes:layoutAttributes];
+        }
     }
-    
-    // detect what items should be removed and queued back.
+
+	// Detect what items should be removed and queued back.
     NSMutableSet *allVisibleItemKeys = [NSMutableSet setWithArray:[_allVisibleViewsDict allKeys]];
     [allVisibleItemKeys minusSet:[NSSet setWithArray:[itemKeysToAddDict allKeys]]];
-    
-    // remove views that have not been processed and prepare them for re-use.
+
+	
+    // Finally remove views that have not been processed and prepare them for re-use.
     for (PSTCollectionViewItemKey *itemKey in allVisibleItemKeys) {
         PSTCollectionReusableView *reusableView = _allVisibleViewsDict[itemKey];
         if (reusableView) {
@@ -1317,38 +1345,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             // TODO: decoration views etc?
         }
     }
-    
-    // finally add new cells.
-    [itemKeysToAddDict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        PSTCollectionViewItemKey *itemKey = key;
-        PSTCollectionViewLayoutAttributes *layoutAttributes = obj;
-        
-        // check if cell is in visible dict; add it if not.
-        PSTCollectionReusableView *view = _allVisibleViewsDict[itemKey];
-        if (!view) {
-            if (itemKey.type == PSTCollectionViewItemTypeCell) {
-                view = [self createPreparedCellForItemAtIndexPath:itemKey.indexPath withLayoutAttributes:layoutAttributes];
-                
-            } else if (itemKey.type == PSTCollectionViewItemTypeSupplementaryView) {
-                view = [self createPreparedSupplementaryViewForElementOfKind:layoutAttributes.representedElementKind
-																 atIndexPath:layoutAttributes.indexPath
-														withLayoutAttributes:layoutAttributes];
-            }
-            
-			// Supplementary views are optional
-			if (view) {
-				_allVisibleViewsDict[itemKey] = view;
-				[self addControlledSubview:view];
-
-                // Always apply attributes. Fixes #203.
-                [view applyLayoutAttributes:layoutAttributes];
-			}
-        }else {
-            // just update cell
-            [view applyLayoutAttributes:layoutAttributes];
-        }
-    }];
-}
+ }
 
 // fetches a cell from the dataSource and sets the layoutAttributes
 - (PSTCollectionViewCell *)createPreparedCellForItemAtIndexPath:(NSIndexPath *)indexPath withLayoutAttributes:(PSTCollectionViewLayoutAttributes *)layoutAttributes {
@@ -1409,7 +1406,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)addControlledSubview:(PSTCollectionReusableView *)subview {
     // avoids placing views above the scroll indicator
-    [self insertSubview:subview atIndex:self.subviews.count - (self.dragging ? 1 : 0)];
+	// If the collection view is not displaying scrollIndicators then self.subviews.count can be 0.
+	// We take the max to ensure we insert at a non negative index because a negative index will silently fail to insert the view
+	NSInteger insertionIndex = MAX((NSInteger)(self.subviews.count - (self.dragging ? 1 : 0)), 0);
+    [self insertSubview:subview atIndex:insertionIndex];
     UIView *scrollIndicatorView = nil;
     if (self.dragging) {
         scrollIndicatorView = [self.subviews lastObject];
@@ -1632,42 +1632,51 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     
     [UIView animateWithDuration:.3 animations:^{
         _collectionViewFlags.updatingLayout = YES;
+        
+        [CATransaction begin];
+        [CATransaction setAnimationDuration:.3];
+        [CATransaction setCompletionBlock:^
+         {
+             // deleted views are not removed from the collectionView. By this point
+             // _allVisibleViewsDict has already had the view removed, and
+             // layoutAttributesForElementsInRect: only returns what is expected, not
+             // what is actually a subView of the collectionView.
+             // This is probably not the best fix, but does cleanup the now hidden views
+             // in the case of a delete, in the case of an update, there is odd behavior
+             // with deleted and inserted views that end up with no view at all.
+             //         NSMutableSet *set = [NSMutableSet set];
+             //         NSArray *visibleItems = [_layout layoutAttributesForElementsInRect:self.visibleBoundRects];
+             //         for(PSTCollectionViewLayoutAttributes *attrs in visibleItems)
+             //             [set addObject: [PSTCollectionViewItemKey collectionItemKeyForLayoutAttributes:attrs]];
+             //
+             //         NSMutableSet *toRemove =  [NSMutableSet set];
+             //         for(PSTCollectionViewItemKey *key in [_allVisibleViewsDict keyEnumerator]) {
+             //             if(![set containsObject:key]) {
+             //                 [self reuseCell:_allVisibleViewsDict[key]];
+             //                 [toRemove addObject:key];
+             //             }
+             //         }
+             //         for(id key in toRemove)
+             //             [_allVisibleViewsDict removeObjectForKey:key];
+             NSArray *visibleViews = [newAllVisibleView allValues];
+             [self.subviews enumerateObjectsUsingBlock:^(PSTCollectionViewCell *obj, NSUInteger idx, BOOL *stop) {
+                 if ([obj isKindOfClass: [PSTCollectionViewCell class]] && [visibleViews containsObject: obj] == NO) {
+                     [self reuseCell: obj];
+                 }
+             }];
+             
+             _collectionViewFlags.updatingLayout = NO;
+             
+             
+         }];
+        
+        
         for(NSDictionary *animation in animations) {
             PSTCollectionReusableView* view = animation[@"view"];
             PSTCollectionViewLayoutAttributes* attrs = animation[@"newLayoutInfos"];
             [view applyLayoutAttributes:attrs];
         }
     } completion:^(BOOL finished) {
-    // deleted views are not removed from the collectionView. By this point
-    // _allVisibleViewsDict has already had the view removed, and 
-    // layoutAttributesForElementsInRect: only returns what is expected, not
-    // what is actually a subView of the collectionView.
-    // This is probably not the best fix, but does cleanup the now hidden views
-    // in the case of a delete, in the case of an update, there is odd behavior
-    // with deleted and inserted views that end up with no view at all.
-//         NSMutableSet *set = [NSMutableSet set];
-//         NSArray *visibleItems = [_layout layoutAttributesForElementsInRect:self.visibleBoundRects];
-//         for(PSTCollectionViewLayoutAttributes *attrs in visibleItems)
-//             [set addObject: [PSTCollectionViewItemKey collectionItemKeyForLayoutAttributes:attrs]];
-//         
-//         NSMutableSet *toRemove =  [NSMutableSet set];
-//         for(PSTCollectionViewItemKey *key in [_allVisibleViewsDict keyEnumerator]) {
-//             if(![set containsObject:key]) {
-//                 [self reuseCell:_allVisibleViewsDict[key]];
-//                 [toRemove addObject:key];
-//             }
-//         }
-//         for(id key in toRemove)
-//             [_allVisibleViewsDict removeObjectForKey:key];
-        NSArray *visibleViews = [newAllVisibleView allValues];
-        [self.subviews enumerateObjectsUsingBlock:^(PSTCollectionViewCell *obj, NSUInteger idx, BOOL *stop) {
-            if ([obj isKindOfClass: [PSTCollectionViewCell class]] && [visibleViews containsObject: obj] == NO) {
-                [self reuseCell: obj];
-            }
-        }];
-        
-        _collectionViewFlags.updatingLayout = NO;
-        
         if(_updateCompletionHandler) {
             _updateCompletionHandler(finished);
             _updateCompletionHandler = nil;

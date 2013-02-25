@@ -260,6 +260,10 @@ NSString *const PSTCollectionViewLayoutAwokeFromNib = @"PSTCollectionViewLayoutA
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Providing Layout Attributes
 
++ (Class)layoutAttributesClass {
+  return [PSTCollectionViewLayoutAttributes class];
+}
+
 - (void)prepareLayout {
 }
 
