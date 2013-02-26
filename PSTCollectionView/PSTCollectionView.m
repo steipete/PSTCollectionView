@@ -120,6 +120,7 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
 @property (nonatomic, strong) NSDictionary *nibCellsExternalObjects;
 @property (nonatomic, strong) NSDictionary *supplementaryViewsExternalObjects;
 @property (nonatomic, strong) NSIndexPath *touchingIndexPath;
+@property (nonatomic, strong) NSIndexPath *currentIndexPath;
 @end
 
 @implementation PSTCollectionViewExt @end
@@ -701,6 +702,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
     // reset touching state vars
     self.extVars.touchingIndexPath = nil;
+    self.extVars.currentIndexPath = nil;
     
     CGPoint touchPoint = [[touches anyObject] locationInView:self];
     NSIndexPath *indexPath = [self indexPathForItemAtPoint:touchPoint];
@@ -709,6 +711,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             return;
         
         self.extVars.touchingIndexPath = indexPath;
+        self.extVars.currentIndexPath = indexPath;
         
         if (!self.allowsMultipleSelection) {
             // temporally unhighlight background on touchesBegan (keeps selected by _indexPathsForSelectedItems)
@@ -726,7 +729,23 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesMoved:touches withEvent:event];
     
-    // touch moving does nothing, only cancelled and ended matter
+    // allows moving between highlight and unhighlight state only if setHighlighted is not overwritten
+    if (self.extVars.touchingIndexPath) {
+        CGPoint touchPoint = [[touches anyObject] locationInView:self];
+        NSIndexPath *indexPath = [self indexPathForItemAtPoint:touchPoint];
+        
+        // moving out of bounds
+        if ([self.extVars.currentIndexPath isEqual:self.extVars.touchingIndexPath] &&
+            ![indexPath isEqual:self.extVars.touchingIndexPath] &&
+            [self unhighlightItemAtIndexPath:self.extVars.touchingIndexPath animated:YES notifyDelegate:YES shouldCheckHighlight:YES]) {
+            self.extVars.currentIndexPath = indexPath;
+        // moving back into the original touching cell
+        } else if (![self.extVars.currentIndexPath isEqual:self.extVars.touchingIndexPath] &&
+                   [indexPath isEqual:self.extVars.touchingIndexPath]) {
+            [self highlightItemAtIndexPath:self.extVars.touchingIndexPath animated:YES scrollPosition:PSTCollectionViewScrollPositionNone notifyDelegate:YES];
+            self.extVars.currentIndexPath = self.extVars.touchingIndexPath;
+        }
+    }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -747,9 +766,6 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                 [self cellTouchCancelled];
             }
         }
-        
-        // end of a full touch event
-        self.extVars.touchingIndexPath = nil;
     }
 }
 
@@ -878,16 +894,35 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     return shouldHighlight;
 }
 
-- (void)unhighlightItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated notifyDelegate:(BOOL)notifyDelegate {
+- (BOOL)unhighlightItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated notifyDelegate:(BOOL)notifyDelegate
+{
+    return [self unhighlightItemAtIndexPath:indexPath animated:animated notifyDelegate:notifyDelegate shouldCheckHighlight:NO];
+}
+
+- (BOOL)unhighlightItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated notifyDelegate:(BOOL)notifyDelegate shouldCheckHighlight:(BOOL)check {
     if ([_indexPathsForHighlightedItems containsObject:indexPath]) {
         PSTCollectionViewCell *highlightedCell = [self cellForItemAtIndexPath:indexPath];
-        highlightedCell.highlighted = NO;
+        // iOS6 does not notify any delegate if the cell was never highlighted (setHighlighted overwritten) during touchMoved
+        if (check && !highlightedCell.highlighted) {
+            return NO;
+        }
+    
+        // if multiple selection or not unhighlighting a selected item we don't perform any op
+        if (highlightedCell.highlighted && [_indexPathsForSelectedItems containsObject:indexPath]) {
+            highlightedCell.highlighted = YES;
+        } else {
+            highlightedCell.highlighted = NO;
+        }
+            
         [_indexPathsForHighlightedItems removeObject:indexPath];
         
         if (notifyDelegate && _collectionViewFlags.delegateDidUnhighlightItemAtIndexPath) {
             [self.delegate collectionView:self didUnhighlightItemAtIndexPath:indexPath];
         }
+        
+        return YES;
     }
+    return NO;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
