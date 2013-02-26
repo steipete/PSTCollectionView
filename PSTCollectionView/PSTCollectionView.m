@@ -1635,21 +1635,21 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         
         [CATransaction begin];
         [CATransaction setAnimationDuration:.3];
-        
-        // You might wonder why we use CATransaction to handle animatino aompletion
-        // here instead of using completion: block patamether of outer animateWithDuration:
+
+        // You might wonder why we use CATransaction to handle animation completion
+        // here instead of using the completion: parameter of UIView's animateWithDuration:.
         // The problem is that animateWithDuration: calls this completion block
-        // in deffered manner when user continues touch and dragging colelction view.
-        // (Such that completion block will called ONLY whe user releases his finger,
-        // however animatinos are finished long time ago)
-        // I assume that was done for performance purposes but that's completely
-        // breaks our animations logic here.
-        // To get completion block called immediately after animation actually finishes,
-        // I switched to use CATransaction here.
+        // when other animations are finished. This means that the block is called
+        // after the user releases his finger and the scroll view has finished scrolling.
+        // This can be a large delay, which causes the layout of the cells to be greatly
+        // delayed, and thus, be unrendered. I assume that was done for performance
+        // purposes but it completely breaks our layout logic here.
+        // To get the completion block called immediately after the animation actually
+        // finishes, I switched to use CATransaction.
         // The only thing I'm not sure about - _completed_ flag. I don't know where to get it
         // in terms of CATransaction's API, so I use animateWithDuration's completion block
         // to call _updateCompletionHandler with that flag.
-        // Ideally, _updateCompletionHandler should be called along with other logics in
+        // Ideally, _updateCompletionHandler should be called along with the other logic in
         // CATransaction's completionHandler but I simply don't know where to get that flag.
         
         [CATransaction setCompletionBlock:^
