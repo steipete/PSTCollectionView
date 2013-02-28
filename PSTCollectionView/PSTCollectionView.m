@@ -1221,12 +1221,13 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 
-- (id<PSTCollectionViewDelegate>)delegate
-{
+- (id<PSTCollectionViewDelegate>)delegate {
     return self.extVars.collectionViewDelegate;
 }
 
 - (void)setDelegate:(id<PSTCollectionViewDelegate>)delegate {
+    // We capture the delegate to get access to certain UIScrollView events.
+    // That's not needed when we are our own delegate (as long as parent behaves and properly calls super)
     if (self.extVars.collectionViewDelegate != (id)self) {
         self.extVars.collectionViewDelegate = delegate;
     }
@@ -1251,8 +1252,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     
 	// These aren't present in the flags which is a little strange. Not adding them because that will mess with byte alignment which will affect cross compatibility.
 	// The flag names are guesses and are there for documentation purposes.
-	//
-	// _collectionViewFlags.delegateCanPerformActionForItemAtIndexPath	= [self.delegate respondsToSelector:@selector(collectionView:canPerformAction:forItemAtIndexPath:withSender:)];
+    // _collectionViewFlags.delegateCanPerformActionForItemAtIndexPath	= [self.delegate respondsToSelector:@selector(collectionView:canPerformAction:forItemAtIndexPath:withSender:)];
 	// _collectionViewFlags.delegatePerformActionForItemAtIndexPath		= [self.delegate respondsToSelector:@selector(collectionView:performAction:forItemAtIndexPath:withSender:)];
 }
 
