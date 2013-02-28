@@ -8,12 +8,11 @@
 #import "ViewController.h"
 #import "Cell.h"
 
+#define kPSTEnableFastAnimationTest
+
 @interface ViewController ()
-
 @property (atomic, readwrite, assign) NSInteger cellCount;
-
 @end
-
 
 @implementation ViewController
 
@@ -21,14 +20,15 @@
 	[super viewDidLoad];
 
     self.cellCount = 10;
-	
     [self.collectionView registerClass:[Cell class] forCellWithReuseIdentifier:@"MY_CELL"];
 
+#ifdef kPSTEnableFastAnimationTest
     double delayInSeconds = 1.0;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         [self addMoreCells];
     });
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -64,11 +64,9 @@
 //------------------------------------------------------------------------------
 #pragma mark - UIScrollViewDelegate Methods
 
-- (void)addMoreCells
-{
-    if (!self.isViewLoaded || !self.view.window) {
-        return;
-    }
+#ifdef kPSTEnableFastAnimationTest
+- (void)addMoreCells {
+    if (!self.isViewLoaded || !self.view.window) return;
 
     // Add a cell
     self.cellCount += 1;
@@ -84,5 +82,6 @@
         [self addMoreCells];
     });
 }
+#endif
 
 @end
