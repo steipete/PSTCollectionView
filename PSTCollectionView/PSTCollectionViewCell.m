@@ -152,13 +152,19 @@
 // Selection highlights underlying contents
 - (void)setSelected:(BOOL)selected {
     _collectionCellFlags.selected = selected;
-    _selectedBackgroundView.alpha = selected ? 1.0f : 0.0f;
-    [self setHighlighted:selected forViews:self.contentView.subviews];
+    [self updateBackgroundView:selected];
 }
 
 // Cell highlighting only highlights the cell itself
 - (void)setHighlighted:(BOOL)highlighted {
     _collectionCellFlags.highlighted = highlighted;
+    [self updateBackgroundView:highlighted];
+}
+
+- (void)updateBackgroundView:(BOOL)highlight
+{
+    _selectedBackgroundView.alpha = highlight ? 1.0f : 0.0f;
+    [self setHighlighted:highlight forViews:self.contentView.subviews];
 }
 
 - (void)setHighlighted:(BOOL)highlighted forViews:(id)subviews {
