@@ -53,7 +53,7 @@
     if ([self.view isKindOfClass:[PSTCollectionView class]]) {
         _collectionView = (PSTCollectionView *)self.view;
         self.view = [[UIView alloc] initWithFrame:self.view.bounds];
-        self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     }
 	
 	if (_collectionView.delegate == nil) _collectionView.delegate = self;
@@ -80,7 +80,7 @@
     if (self.view != self.collectionView) {
         [self.view addSubview:self.collectionView];
         self.collectionView.frame = self.view.bounds;
-        self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     }
 }
 
