@@ -289,24 +289,18 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewDidScroll:)]) {
-        if (self.extVars.collectionViewDelegate != (id)self) {
-            [self.extVars.collectionViewDelegate scrollViewDidScroll:scrollView];
-        }
+        [self.extVars.collectionViewDelegate scrollViewDidScroll:scrollView];
     }
 }
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
     if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewDidZoom:)]) {
-        if (self.extVars.collectionViewDelegate != (id)self) {
-            [self.extVars.collectionViewDelegate scrollViewDidZoom:scrollView];
-        }
+        [self.extVars.collectionViewDelegate scrollViewDidZoom:scrollView];
     }
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewWillBeginDragging:)]) {
-        if (self.extVars.collectionViewDelegate != (id)self) {
-            [self.extVars.collectionViewDelegate scrollViewWillBeginDragging:scrollView];
-        }
+        [self.extVars.collectionViewDelegate scrollViewWillBeginDragging:scrollView];
     }
 }
 
@@ -316,18 +310,13 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     
     if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewWillEndDragging:withVelocity:targetContentOffset:)]) {
         //if collectionViewDelegate implements this method, it may modify targetContentOffset as well
-        
-        if (self.extVars.collectionViewDelegate != (id)self) {
-            [self.extVars.collectionViewDelegate scrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
-        }
+        [self.extVars.collectionViewDelegate scrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
     }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]) {
-        if (self.extVars.collectionViewDelegate != (id)self) {
-            [self.extVars.collectionViewDelegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
-        }
+        [self.extVars.collectionViewDelegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
     }
     
     // if we are in the middle of a cell touch event, perform the "touchEnded" simulation
@@ -338,33 +327,25 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
     if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewWillBeginDecelerating:)]) {
-        if (self.extVars.collectionViewDelegate != (id)self) {
-            [self.extVars.collectionViewDelegate scrollViewWillBeginDecelerating:scrollView];
-        }
+        [self.extVars.collectionViewDelegate scrollViewWillBeginDecelerating:scrollView];
     }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]) {
-        if (self.extVars.collectionViewDelegate != (id)self) {
-            [self.extVars.collectionViewDelegate scrollViewDidEndDecelerating:scrollView];
-        }
+        [self.extVars.collectionViewDelegate scrollViewDidEndDecelerating:scrollView];
     }
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
     if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewDidEndScrollingAnimation:)]) {
-        if (self.extVars.collectionViewDelegate != (id)self) {
-            [self.extVars.collectionViewDelegate scrollViewDidEndScrollingAnimation:scrollView];
-        }
+        [self.extVars.collectionViewDelegate scrollViewDidEndScrollingAnimation:scrollView];
     }
 }
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
     if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(viewForZoomingInScrollView:)]) {
-        if (self.extVars.collectionViewDelegate != (id)self) {
-            return [self.extVars.collectionViewDelegate viewForZoomingInScrollView:scrollView];
-        }
+        return [self.extVars.collectionViewDelegate viewForZoomingInScrollView:scrollView];
     }
     
     return nil;
@@ -372,25 +353,19 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view {
     if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewWillBeginZooming:withView:)]) {
-        if (self.extVars.collectionViewDelegate != (id)self) {
-            [self.extVars.collectionViewDelegate scrollViewWillBeginZooming:scrollView withView:view];
-        }
+        [self.extVars.collectionViewDelegate scrollViewWillBeginZooming:scrollView withView:view];
     }
 }
 
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(float)scale {
     if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewDidEndZooming:withView:atScale:)]) {
-        if (self.extVars.collectionViewDelegate != (id)self) {
-            [self.extVars.collectionViewDelegate scrollViewDidEndZooming:scrollView withView:view atScale:scale];
-        }
+        [self.extVars.collectionViewDelegate scrollViewDidEndZooming:scrollView withView:view atScale:scale];
     }
 }
 
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView {
     if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewShouldScrollToTop:)]) {
-        if (self.extVars.collectionViewDelegate != (id)self) {
-            return [self.extVars.collectionViewDelegate scrollViewShouldScrollToTop:scrollView];
-        }
+        return [self.extVars.collectionViewDelegate scrollViewShouldScrollToTop:scrollView];
     }
     
     return YES;
@@ -398,9 +373,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView {
     if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewDidScrollToTop:)]) {
-        if (self.extVars.collectionViewDelegate != (id)self) {
-            [self.extVars.collectionViewDelegate scrollViewDidScrollToTop:scrollView];
-        }
+        [self.extVars.collectionViewDelegate scrollViewDidScrollToTop:scrollView];
     }
 }
 
