@@ -1227,7 +1227,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (void)setDelegate:(id<PSTCollectionViewDelegate>)delegate {
-	self.extVars.collectionViewDelegate = delegate;
+    if (self.extVars.collectionViewDelegate != (id)self) {
+        self.extVars.collectionViewDelegate = delegate;
+    }
     
 	//	Managing the Selected Cells
 	_collectionViewFlags.delegateShouldSelectItemAtIndexPath       = [self.delegate respondsToSelector:@selector(collectionView:shouldSelectItemAtIndexPath:)];
