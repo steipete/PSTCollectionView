@@ -1155,6 +1155,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         void (^applyNewLayoutBlock)(void) = ^{
             NSEnumerator *keys = [layoutInterchangeData keyEnumerator];
             for(PSTCollectionViewItemKey *key in keys) {
+                // TODO: This is most likely not 100% the same time as in UICollectionView. Needs to be investigated.
                 PSTCollectionViewCell *cell = (PSTCollectionViewCell *)_allVisibleViewsDict[key];
                 [cell willTransitionFromLayout:_layout toLayout:layout];
                 [cell applyLayoutAttributes:layoutInterchangeData[key][@"newLayoutInfos"]];
