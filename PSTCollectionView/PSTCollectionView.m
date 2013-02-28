@@ -1125,7 +1125,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         void (^applyNewLayoutBlock)(void) = ^{
             NSEnumerator *keys = [layoutInterchangeData keyEnumerator];
             for(PSTCollectionViewItemKey *key in keys) {
-                [(PSTCollectionViewCell *)_allVisibleViewsDict[key] applyLayoutAttributes:layoutInterchangeData[key][@"newLayoutInfos"]];
+                PSTCollectionViewCell *cell = (PSTCollectionViewCell *)_allVisibleViewsDict[key];
+                [cell willTransitionFromLayout:_layout toLayout:layout];
+                [cell applyLayoutAttributes:layoutInterchangeData[key][@"newLayoutInfos"]];
+                [cell didTransitionFromLayout:_layout toLayout:layout];
             }
         };
         
