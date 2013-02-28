@@ -766,6 +766,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                 [self cellTouchCancelled];
             }
         }
+        
+        // for pedantic reasons only - always set to nil on touchesBegan
+        self.extVars.touchingIndexPath = nil;
+        self.extVars.currentIndexPath = nil;
     }
 }
 
