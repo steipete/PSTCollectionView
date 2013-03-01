@@ -1653,6 +1653,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         }
     }
 
+    NSDictionary *previouslyVisibleViewsDict = _allVisibleViewsDict;
     _allVisibleViewsDict = newAllVisibleView;
 
     for(NSDictionary *animation in animations) {
@@ -1684,29 +1685,28 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         // CATransaction's completionHandler but I simply don't know where to get that flag.
 
         [CATransaction setCompletionBlock:^{
-             NSMutableSet *set = [NSMutableSet set];
-             NSArray *visibleItems = [_layout layoutAttributesForElementsInRect:self.visibleBoundRects];
-             for(PSTCollectionViewLayoutAttributes *attrs in visibleItems)
-                [set addObject: [PSTCollectionViewItemKey collectionItemKeyForLayoutAttributes:attrs]];
+            // Iterate through all the views previously visible and search for those which are no more visible.
+            [previouslyVisibleViewsDict enumerateKeysAndObjectsUsingBlock:
+                ^(PSTCollectionViewItemKey *key, PSTCollectionReusableView* view, BOOL *stop) {
+                 if (![_allVisibleViewsDict objectForKey:key]) {
+                     // View for this key isn't visible any more, so it should be reused.
+                     if(key.type == PSTCollectionViewItemTypeCell) {
+                         [self reuseCell:(PSTCollectionViewCell *)view];
+                     } else if (key.type == PSTCollectionViewItemTypeSupplementaryView) {
+                         [self reuseSupplementaryView:view];
+                     }
+                 }
+             }];
 
-             NSMutableSet *toRemove =  [NSMutableSet set];
-             for(PSTCollectionViewItemKey *key in [_allVisibleViewsDict keyEnumerator]) {
-                if (![set containsObject:key]) {
-                    [self reuseCell:_allVisibleViewsDict[key]];
-                    [toRemove addObject:key];
-                }
-             }
-             for(id key in toRemove)
-                [_allVisibleViewsDict removeObjectForKey:key];
-
-             _collectionViewFlags.updatingLayout = NO;
-         }];
+            _collectionViewFlags.updatingLayout = NO;
+        }];
 
         for (NSDictionary *animation in animations) {
             PSTCollectionReusableView* view = animation[@"view"];
             PSTCollectionViewLayoutAttributes* attrs = animation[@"newLayoutInfos"];
             [view applyLayoutAttributes:attrs];
         }
+        [CATransaction commit];
     } completion:^(BOOL finished) {
         if(_updateCompletionHandler) {
             _updateCompletionHandler(finished);
