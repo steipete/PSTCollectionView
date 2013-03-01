@@ -1050,7 +1050,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         if (!centerItemIndexPath) {
             NSArray *visibleItems = [self indexPathsForVisibleItems];
             if (visibleItems.count > 0) {
-                centerItemIndexPath = [visibleItems objectAtIndex:visibleItems.count / 2];
+                centerItemIndexPath = visibleItems[visibleItems.count / 2];
             }
         }
 
@@ -1627,8 +1627,8 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             }
 
             NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:@{@"view":view}];
-            if (startAttrs) [dic setObject:startAttrs forKey:@"previousLayoutInfos"];
-            if (finalAttrs) [dic setObject:finalAttrs forKey:@"newLayoutInfos"];
+            if (startAttrs) dic[@"previousLayoutInfos"] = startAttrs;
+            if (finalAttrs) dic[@"newLayoutInfos"] = finalAttrs;
 
             [animations addObject:dic];
             PSTCollectionViewItemKey* newKey = [key copy];
