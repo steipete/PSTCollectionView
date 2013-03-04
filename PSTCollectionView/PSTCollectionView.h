@@ -28,6 +28,12 @@ typedef NS_OPTIONS(NSUInteger, PSTCollectionViewScrollPosition) {
     PSTCollectionViewScrollPositionRight                = 1 << 5
 };
 
+typedef NS_ENUM(NSUInteger, PSTCollectionElementCategory) {
+    PSTCollectionElementCategoryCell,
+    PSTCollectionElementCategorySupplementaryView,
+    PSTCollectionElementCategoryDecorationView
+};
+
 /**
  Replacement for UICollectionView for iOS4/5.
  Only supports a subset of the features of UICollectionView.
