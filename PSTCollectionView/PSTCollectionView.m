@@ -1222,7 +1222,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 - (void)setDelegate:(id<PSTCollectionViewDelegate>)delegate {
     // We capture the delegate to get access to certain UIScrollView events.
     // That's not needed when we are our own delegate (as long as parent behaves and properly calls super)
-    if (self.extVars.collectionViewDelegate != (id)self) {
+    if (delegate != (id)self) {
         self.extVars.collectionViewDelegate = delegate;
     }
 
