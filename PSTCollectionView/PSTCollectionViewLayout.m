@@ -60,10 +60,10 @@
     return attributes;
 }
 
-+ (instancetype)layoutAttributesForDecorationViewWithReuseIdentifier:(NSString *)reuseIdentifier withIndexPath:(NSIndexPath *)indexPath {
++ (instancetype)layoutAttributesForDecorationViewOfKind:(NSString *)kind withIndexPath:(NSIndexPath *)indexPath {
     PSTCollectionViewLayoutAttributes *attributes = [self new];
     attributes.elementKind = PSTCollectionElementKindDecorationView;
-    attributes.reuseIdentifier = reuseIdentifier;
+    attributes.reuseIdentifier = kind;
     attributes.indexPath = indexPath;
     return attributes;
 }
@@ -207,6 +207,9 @@
     NSMutableDictionary *_decorationViewExternalObjectsTables;
 }
 @property (nonatomic, unsafe_unretained) PSTCollectionView *collectionView;
+@property (nonatomic,copy,readonly) NSDictionary *decorationViewClassDict;
+@property (nonatomic,copy,readonly) NSDictionary *decorationViewNibDict;
+@property (nonatomic,copy,readonly) NSDictionary *decorationViewExternalObjectsTables;
 @end
 
 NSString *const PSTCollectionViewLayoutAwokeFromNib = @"PSTCollectionViewLayoutAwokeFromNib";
@@ -407,10 +410,12 @@ NSString *const PSTCollectionViewLayoutAwokeFromNib = @"PSTCollectionViewLayoutA
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Registering Decoration Views
 
-- (void)registerClass:(Class)viewClass forDecorationViewWithReuseIdentifier:(NSString *)identifier {
+- (void)registerClass:(Class)viewClass forDecorationViewOfKind:(NSString *)kind {
+    [_decorationViewClassDict setObject:viewClass forKey:kind];
 }
 
-- (void)registerNib:(UINib *)nib forDecorationViewWithReuseIdentifier:(NSString *)identifier {
+- (void)registerNib:(UINib *)nib forDecorationViewOfKind:(NSString *)kind {
+    [_decorationViewNibDict setObject:nib forKey:kind];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
