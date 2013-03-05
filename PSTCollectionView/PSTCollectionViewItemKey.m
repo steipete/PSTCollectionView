@@ -36,8 +36,8 @@ NSString *const PSTCollectionElementKindDecorationView = @"PSTCollectionElementK
 + (id)collectionItemKeyForDecorationViewOfKind:(NSString *)elementKind andIndexPath:(NSIndexPath *)indexPath {
     PSTCollectionViewItemKey *key = [[self class] new];
     key.indexPath = indexPath;
-    key.identifier = elementKind;
     key.type = PSTCollectionViewItemTypeDecorationView;
+    key.identifier = elementKind;
     return key;
 }
 

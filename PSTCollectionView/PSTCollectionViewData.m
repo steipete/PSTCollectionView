@@ -95,7 +95,8 @@
         self.cachedLayoutAttributes = [[self.layout layoutAttributesForElementsInRect:rect] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(PSTCollectionViewLayoutAttributes *evaluatedObject, NSDictionary *bindings) {
             return ([evaluatedObject isKindOfClass:[PSTCollectionViewLayoutAttributes class]] &&
                     ([evaluatedObject isCell]||
-                     [evaluatedObject isSupplementaryView]));
+                     [evaluatedObject isSupplementaryView]||
+                     [evaluatedObject isDecorationView]));
         }]];
     }
 }
