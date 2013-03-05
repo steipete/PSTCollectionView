@@ -1767,6 +1767,8 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                          [self reuseCell:(PSTCollectionViewCell *)view];
                      } else if (key.type == PSTCollectionViewItemTypeSupplementaryView) {
                          [self reuseSupplementaryView:view];
+                     } else if (key.type == PSTCollectionViewItemTypeDecorationView) {
+                         [self reuseDecorationView:view];
                      }
                  }
              }];
