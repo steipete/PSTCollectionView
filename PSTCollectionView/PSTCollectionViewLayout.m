@@ -212,10 +212,7 @@
 @property (nonatomic,copy,readonly) NSDictionary *decorationViewExternalObjectsTables;
 @end
 
-NSString *const PSTCollectionViewLayoutAwokeFromNib = @"PSTCollectionViewLayoutAwokeFromNib";
-
 @implementation PSTCollectionViewLayout
-
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject
 
@@ -228,8 +225,6 @@ NSString *const PSTCollectionViewLayoutAwokeFromNib = @"PSTCollectionViewLayoutA
         _finalAnimationLayoutAttributesDict = [NSMutableDictionary new];
         _insertedSectionsSet = [NSMutableIndexSet new];
         _deletedSectionsSet = [NSMutableIndexSet new];
-
-        [[NSNotificationCenter defaultCenter] postNotificationName:PSTCollectionViewLayoutAwokeFromNib object:self];
     }
     return self;
 }
