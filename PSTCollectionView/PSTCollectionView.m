@@ -116,7 +116,6 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
 // (We need to keep the total class size equal to the UICollectionView variant)
 @interface PSTCollectionViewExt : NSObject
 @property (nonatomic, unsafe_unretained) id<PSTCollectionViewDelegate> collectionViewDelegate;
-@property (nonatomic, strong) id nibObserverToken;
 @property (nonatomic, strong) PSTCollectionViewLayout *nibLayout;
 @property (nonatomic, strong) NSDictionary *nibCellsExternalObjects;
 @property (nonatomic, strong) NSDictionary *supplementaryViewsExternalObjects;
@@ -176,11 +175,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
         PSTCollectionViewCommonSetup(self);
 
-        // add observer for nib deserialization.
-        id nibObserverToken = [[NSNotificationCenter defaultCenter] addObserverForName:PSTCollectionViewLayoutAwokeFromNib object:nil queue:nil usingBlock:^(NSNotification *note) {
-            self.extVars.nibLayout = note.object;
-        }];
-        self.extVars.nibObserverToken = nibObserverToken;
+        self.extVars.nibLayout = [inCoder decodeObjectForKey:@"UICollectionLayout"];
 
         NSDictionary *cellExternalObjects =  [inCoder decodeObjectForKey:@"UICollectionViewCellPrototypeNibExternalObjects"];
         NSDictionary *cellNibs =  [inCoder decodeObjectForKey:@"UICollectionViewCellNibDict"];
@@ -206,13 +201,6 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 - (void)awakeFromNib {
     [super awakeFromNib];
 
-    // check if NIB deserialization found a layout.
-    id nibObserverToken = self.extVars.nibObserverToken;
-    if (nibObserverToken) {
-        [[NSNotificationCenter defaultCenter] removeObserver:nibObserverToken];
-        self.extVars.nibObserverToken = nil;
-    }
-
     PSTCollectionViewLayout *nibLayout = self.extVars.nibLayout;
     if (nibLayout) {
         self.collectionViewLayout = nibLayout;
@@ -222,11 +210,6 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (NSString *)description {
     return [NSString stringWithFormat:@"%@ collection view layout: %@", [super description], self.collectionViewLayout];
-}
-
-- (void)dealloc {
-    id nibObserverToken = self.extVars.nibObserverToken;
-    if (nibObserverToken) [[NSNotificationCenter defaultCenter] removeObserver:nibObserverToken];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -1284,7 +1267,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)setDelegate:(id<PSTCollectionViewDelegate>)delegate {
 	self.extVars.collectionViewDelegate = delegate;
-    
+
 	//	Managing the Selected Cells
 	_collectionViewFlags.delegateShouldSelectItemAtIndexPath       = [self.delegate respondsToSelector:@selector(collectionView:shouldSelectItemAtIndexPath:)];
 	_collectionViewFlags.delegateDidSelectItemAtIndexPath          = [self.delegate respondsToSelector:@selector(collectionView:didSelectItemAtIndexPath:)];
