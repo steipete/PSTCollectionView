@@ -685,7 +685,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     CGFloat calculateX;
     CGFloat calculateY;
 
-    switch(verticalPosition){
+    switch(verticalPosition) {
         case PSTCollectionViewScrollPositionCenteredVertically:
             calculateY = targetRect.origin.y-((frame.size.height/2)-(targetRect.size.height/2));
             targetRect = CGRectMake(targetRect.origin.x, calculateY, targetRect.size.width, frame.size.height);
@@ -698,9 +698,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             calculateY = targetRect.origin.y-(frame.size.height-targetRect.size.height);
             targetRect = CGRectMake(targetRect.origin.x, calculateY, targetRect.size.width, frame.size.height);
             break;
-    };
+    }
 
-    switch(horizontalPosition){
+    switch(horizontalPosition) {
         case PSTCollectionViewScrollPositionCenteredHorizontally:
             calculateX = targetRect.origin.x-((frame.size.width/2)-(targetRect.size.width/2));
             targetRect = CGRectMake(calculateX, targetRect.origin.y, frame.size.width, targetRect.size.height);
@@ -714,7 +714,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             calculateX = targetRect.origin.x-(frame.size.width-targetRect.size.width);
             targetRect = CGRectMake(calculateX, targetRect.origin.y, frame.size.width, targetRect.size.height);
             break;
-    };
+    }
 
     return targetRect;
 }
