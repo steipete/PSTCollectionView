@@ -54,7 +54,7 @@
     if (layoutAttributes != _layoutAttributes) {
         _layoutAttributes = layoutAttributes;
 
-        self.frame = layoutAttributes.frame;
+        self.frame = CGRectApplyAffineTransform(layoutAttributes.frame, CATransform3DGetAffineTransform(layoutAttributes.transform3D));
         self.center = layoutAttributes.center;
 
         self.hidden = layoutAttributes.isHidden;
