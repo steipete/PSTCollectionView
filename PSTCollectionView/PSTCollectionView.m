@@ -1654,38 +1654,47 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     for (PSTCollectionViewItemKey *key in [_allVisibleViewsDict keyEnumerator]) {
         PSTCollectionReusableView *view = _allVisibleViewsDict[key];
 
-        NSInteger oldGlobalIndex = [_update[@"oldModel"] globalIndexForItemAtIndexPath:key.indexPath];
-		NSArray *oldToNewIndexMap = _update[@"oldToNewIndexMap"];
-        NSInteger newGlobalIndex = NSNotFound;
-		if (oldGlobalIndex >= 0 && oldGlobalIndex < [oldToNewIndexMap count]) {
-			newGlobalIndex = [oldToNewIndexMap[oldGlobalIndex] intValue];
-		}
-        NSIndexPath *newIndexPath = newGlobalIndex == NSNotFound ? nil : [_update[@"newModel"] indexPathForItemAtGlobalIndex:newGlobalIndex];
-        if (newIndexPath) {
-
-
+        if (key.type == PSTCollectionViewItemTypeCell) {
+            NSInteger oldGlobalIndex = [_update[@"oldModel"] globalIndexForItemAtIndexPath:key.indexPath];
+            NSArray *oldToNewIndexMap = _update[@"oldToNewIndexMap"];
+            NSInteger newGlobalIndex = NSNotFound;
+            if (oldGlobalIndex >= 0 && oldGlobalIndex < [oldToNewIndexMap count]) {
+                newGlobalIndex = [oldToNewIndexMap[oldGlobalIndex] intValue];
+            }
+            NSIndexPath *newIndexPath = newGlobalIndex == NSNotFound ? nil : [_update[@"newModel"] indexPathForItemAtGlobalIndex:newGlobalIndex];
+            if (newIndexPath) {
+                
+                
+                PSTCollectionViewLayoutAttributes* startAttrs = nil;
+                PSTCollectionViewLayoutAttributes* finalAttrs = nil;
+                
+                startAttrs  = [_layout initialLayoutAttributesForAppearingItemAtIndexPath:newIndexPath];
+                finalAttrs = [_layout layoutAttributesForItemAtIndexPath:newIndexPath];
+                
+                NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:@{@"view":view}];
+                if (startAttrs) dic[@"previousLayoutInfos"] = startAttrs;
+                if (finalAttrs) dic[@"newLayoutInfos"] = finalAttrs;
+                
+                [animations addObject:dic];
+                PSTCollectionViewItemKey* newKey = [key copy];
+                [newKey setIndexPath:newIndexPath];
+                newAllVisibleView[newKey] = view;
+            }
+        } else if (key.type == PSTCollectionViewItemTypeSupplementaryView) {
             PSTCollectionViewLayoutAttributes* startAttrs = nil;
             PSTCollectionViewLayoutAttributes* finalAttrs = nil;
 
-            if (view.layoutAttributes && view.layoutAttributes.isSupplementaryView){
-                startAttrs  = [_layout layoutAttributesForSupplementaryViewOfKind:view.layoutAttributes.representedElementKind atIndexPath:newIndexPath];
-                finalAttrs = [_layout layoutAttributesForSupplementaryViewOfKind:view.layoutAttributes.representedElementKind atIndexPath:newIndexPath];
-
-            }
-            else{
-                startAttrs  = [_layout initialLayoutAttributesForAppearingItemAtIndexPath:newIndexPath];
-                finalAttrs = [_layout layoutAttributesForItemAtIndexPath:newIndexPath];
-
-            }
+            startAttrs = view.layoutAttributes;
+            finalAttrs = [_layout layoutAttributesForSupplementaryViewOfKind:view.layoutAttributes.representedElementKind atIndexPath:key.indexPath];
 
             NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:@{@"view":view}];
             if (startAttrs) dic[@"previousLayoutInfos"] = startAttrs;
             if (finalAttrs) dic[@"newLayoutInfos"] = finalAttrs;
-
+            
             [animations addObject:dic];
             PSTCollectionViewItemKey* newKey = [key copy];
-            [newKey setIndexPath:newIndexPath];
             newAllVisibleView[newKey] = view;
+
         }
     }
     NSArray *allNewlyVisibleItems = [_layout layoutAttributesForElementsInRect:self.visibleBoundRects];
