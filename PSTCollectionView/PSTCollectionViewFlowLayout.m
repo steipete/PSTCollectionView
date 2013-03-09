@@ -215,22 +215,33 @@ static char kPSTCachedItemRectsKey;
 - (PSTCollectionViewLayoutAttributes *)layoutAttributesForSupplementaryViewOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
     NSUInteger sectionIndex = indexPath.section;
 
+    PSTCollectionViewLayoutAttributes *layoutAttributes = nil;
+    
     if (sectionIndex < _data.sections.count) {
         PSTGridLayoutSection *section = _data.sections[sectionIndex];
-        CGRect normalizedHeaderFrame = section.headerFrame;
-
-        if (!CGRectIsEmpty(normalizedHeaderFrame)) {
-            normalizedHeaderFrame.origin.x += section.frame.origin.x;
-            normalizedHeaderFrame.origin.y += section.frame.origin.y;
-
-            PSTCollectionViewLayoutAttributes *layoutAttributes = [[[self class] layoutAttributesClass] layoutAttributesForSupplementaryViewOfKind:PSTCollectionElementKindSectionHeader withIndexPath:[NSIndexPath indexPathForItem:0 inSection:sectionIndex]];
-            layoutAttributes.frame = normalizedHeaderFrame;
-
-            return layoutAttributes;
+        
+        CGRect normilazedFrame = CGRectZero;
+        
+        if ([kind isEqualToString:PSTCollectionElementKindSectionHeader]) {
+            normilazedFrame = section.headerFrame;
         }
+        else if ([kind isEqualToString:PSTCollectionElementKindSectionFooter]) {
+            normilazedFrame = section.footerFrame;
+        }
+        
+        if (!CGRectIsEmpty(normilazedFrame)) {
+            normilazedFrame.origin.x += section.frame.origin.x;
+            normilazedFrame.origin.y += section.frame.origin.y;
+            
+            layoutAttributes = [[[self class] layoutAttributesClass] layoutAttributesForSupplementaryViewOfKind:kind withIndexPath:[NSIndexPath indexPathForItem:0 inSection:sectionIndex]];
+            layoutAttributes.frame = normilazedFrame;
+            
+        }
+        
+        
     }
 
-    return nil;
+    return layoutAttributes;
 }
 
 - (PSTCollectionViewLayoutAttributes *)layoutAttributesForDecorationViewWithReuseIdentifier:(NSString*)identifier atIndexPath:(NSIndexPath *)indexPath {
