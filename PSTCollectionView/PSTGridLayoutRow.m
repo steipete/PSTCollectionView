@@ -149,8 +149,8 @@
                     itemOffset.x += interSpacing;
                 }
             }
-            item.itemFrame = CGRectIntegral(itemFrame); // might call nil; don't care
-            [rects addObject:[NSValue valueWithCGRect:CGRectIntegral(itemFrame)]];
+            item.itemFrame = itemFrame; // might call nil; don't care
+            [rects addObject:[NSValue valueWithCGRect:itemFrame]];
             frame = CGRectUnion(frame, itemFrame);
         }
         _rowSize = frame.size;
