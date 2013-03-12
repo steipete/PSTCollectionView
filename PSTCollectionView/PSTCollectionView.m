@@ -1552,7 +1552,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             ret = _deleteItems;
             break;
         case PSTCollectionUpdateActionMove:
-            if (_moveItems)      _moveItems = [[NSMutableArray alloc] init];
+            if (!_moveItems)      _moveItems = [[NSMutableArray alloc] init];
             ret = _moveItems;
             break;
         case PSTCollectionUpdateActionReload:
