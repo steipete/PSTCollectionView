@@ -132,37 +132,33 @@ NSString *kCellID = @"cellID";                          // UICollectionViewCell 
     
     [self.collectionView performBatchUpdates:^{
         
-        [self.collectionView performBatchUpdates:^{
+        NSArray *indexPaths = [self.collectionView indexPathsForSelectedItems];
+        
+        NSArray *sortedArray = [indexPaths sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
             
-            NSArray *indexPaths = [self.collectionView indexPathsForSelectedItems];
-            
-            NSArray *sortedArray = [indexPaths sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-                
-                return [obj2 compare:obj1];
-                
-            }];
-            
-            [sortedArray enumerateObjectsUsingBlock:^(NSIndexPath *indexPath, NSUInteger idx, BOOL *stop) {
-                
-                [_sections[indexPath.section] removeObjectAtIndex:indexPath.item];
-                
-            }];
-            
-            [self.collectionView deleteItemsAtIndexPaths:indexPaths];
-            
-            
-            
-        } completion:^(BOOL finished) {
-            
-            [[self.collectionView indexPathsForSelectedItems] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                
-                [self.collectionView deselectItemAtIndexPath:obj animated:NO];
-                
-            }];
+            return [obj2 compare:obj1];
             
         }];
         
-    } completion:nil];
+        [sortedArray enumerateObjectsUsingBlock:^(NSIndexPath *indexPath, NSUInteger idx, BOOL *stop) {
+            
+            [_sections[indexPath.section] removeObjectAtIndex:indexPath.item];
+            
+        }];
+        
+        [self.collectionView deleteItemsAtIndexPaths:indexPaths];
+        
+        
+        
+    } completion:^(BOOL finished) {
+        
+        [[self.collectionView indexPathsForSelectedItems] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            
+            [self.collectionView deselectItemAtIndexPath:obj animated:NO];
+            
+        }];
+        
+    }];
     
 }
 
