@@ -1724,8 +1724,6 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         }
     }
 
-    NSDictionary *previouslyVisibleViewsDict = _allVisibleViewsDict;
-    
     _allVisibleViewsDict = newAllVisibleView;
 
     for(NSDictionary *animation in animations) {
