@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2843" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="Pxb-db-V9M">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="12C60" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="Pxb-db-V9M">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1929"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -64,7 +64,13 @@
                             <outlet property="delegate" destination="dmE-Kn-TpH" id="pKl-zO-lPR"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" title="Collection View" id="Qqd-gG-ZaX"/>
+                    <navigationItem key="navigationItem" title="Collection View" id="Qqd-gG-ZaX">
+                        <barButtonItem key="rightBarButtonItem" systemItem="trash" id="8uS-PN-C12">
+                            <connections>
+                                <action selector="delete:" destination="dmE-Kn-TpH" id="QWs-eh-jsA"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="blackOpaque" prompted="NO"/>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2FN-eK-xyQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -127,6 +133,9 @@
         </class>
         <class className="ViewController" superclassName="PSUICollectionViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="delete:"/>
+            </relationships>
         </class>
     </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
