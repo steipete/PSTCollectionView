@@ -299,9 +299,9 @@
     for (PSTCollectionReusableView *view in [[_collectionView visibleViewsDict] objectEnumerator]) {
         PSTCollectionViewLayoutAttributes *attr = [view.layoutAttributes copy];
         if (attr.isCell) {
-            
+
             NSInteger index = [update[@"oldModel"] globalIndexForItemAtIndexPath:[attr indexPath]];
-            
+
             if(index != NSNotFound) {
                 index = [update[@"oldToNewIndexMap"][index] intValue];
                 if(index != NSNotFound) {
@@ -319,7 +319,7 @@
     for (PSTCollectionViewLayoutAttributes* attr in [collectionViewData layoutAttributesForElementsInRect:bounds]) {
         if (attr.isCell) {
             NSInteger index = [collectionViewData globalIndexForItemAtIndexPath:attr.indexPath];
-            
+
             index = [update[@"newToOldIndexMap"][index] intValue];
             if(index != NSNotFound) {
                 PSTCollectionViewLayoutAttributes* finalAttrs = [attr copy];
@@ -392,7 +392,7 @@
 
 - (PSTCollectionViewLayoutAttributes *)initialLayoutAttributesForInsertedSupplementaryElementOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)elementIndexPath {
     PSTCollectionViewLayoutAttributes* attrs = _initialAnimationLayoutAttributesDict[[PSTCollectionViewItemKey collectionItemKeyForCellWithIndexPath:elementIndexPath]];
-    
+
     if([_insertedSectionsSet containsIndex:[elementIndexPath section]]) {
         attrs = [attrs copy];
         [attrs setAlpha:0];
@@ -416,11 +416,11 @@
 #pragma mark - Registering Decoration Views
 
 - (void)registerClass:(Class)viewClass forDecorationViewOfKind:(NSString *)kind {
-    [_decorationViewClassDict setObject:viewClass forKey:kind];
+    _decorationViewClassDict[kind] = viewClass;
 }
 
 - (void)registerNib:(UINib *)nib forDecorationViewOfKind:(NSString *)kind {
-    [_decorationViewNibDict setObject:nib forKey:kind];
+    _decorationViewNibDict[kind] = nib;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////

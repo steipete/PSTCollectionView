@@ -1664,18 +1664,18 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             }
             NSIndexPath *newIndexPath = newGlobalIndex == NSNotFound ? nil : [_update[@"newModel"] indexPathForItemAtGlobalIndex:newGlobalIndex];
             if (newIndexPath) {
-                
-                
+
+
                 PSTCollectionViewLayoutAttributes* startAttrs = nil;
                 PSTCollectionViewLayoutAttributes* finalAttrs = nil;
-                
+
                 startAttrs  = [_layout initialLayoutAttributesForAppearingItemAtIndexPath:newIndexPath];
                 finalAttrs = [_layout layoutAttributesForItemAtIndexPath:newIndexPath];
-                
+
                 NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:@{@"view":view}];
                 if (startAttrs) dic[@"previousLayoutInfos"] = startAttrs;
                 if (finalAttrs) dic[@"newLayoutInfos"] = finalAttrs;
-                
+
                 [animations addObject:dic];
                 PSTCollectionViewItemKey* newKey = [key copy];
                 [newKey setIndexPath:newIndexPath];
@@ -1691,7 +1691,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:@{@"view":view}];
             if (startAttrs) dic[@"previousLayoutInfos"] = startAttrs;
             if (finalAttrs) dic[@"newLayoutInfos"] = finalAttrs;
-            
+
             [animations addObject:dic];
             PSTCollectionViewItemKey* newKey = [key copy];
             newAllVisibleView[newKey] = view;
@@ -1750,7 +1750,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             // Iterate through all the views previously visible and search for those which are no more visible.
             [previouslyVisibleViewsDict enumerateKeysAndObjectsUsingBlock:
                 ^(PSTCollectionViewItemKey *key, PSTCollectionReusableView* view, BOOL *stop) {
-                 if (![_allVisibleViewsDict objectForKey:key]) {
+                 if (!_allVisibleViewsDict[key]) {
                      // View for this key isn't visible any more, so it should be reused.
                      if(key.type == PSTCollectionViewItemTypeCell) {
                          [self reuseCell:(PSTCollectionViewCell *)view];
