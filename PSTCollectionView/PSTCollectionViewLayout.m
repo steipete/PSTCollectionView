@@ -304,9 +304,9 @@
 
             if(index != NSNotFound) {
                 index = [update[@"oldToNewIndexMap"][index] intValue];
-                if(index != NSNotFound) {
-                    [attr setIndexPath:[update[@"newModel"] indexPathForItemAtGlobalIndex:index]];
-                }
+                
+                [attr setIndexPath:[attr indexPath]];
+                
             }
         }
         _initialAnimationLayoutAttributesDict[[PSTCollectionViewItemKey collectionItemKeyForLayoutAttributes:attr]] = attr;
