@@ -1599,7 +1599,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                 }
                 [animations addObject:@{@"view": view, @"previousLayoutInfos": startAttrs, @"newLayoutInfos": finalAttrs}];
                 
-                //[_allVisibleViewsDict removeObjectForKey:key];
+                [_allVisibleViewsDict removeObjectForKey:key];
                 
                 [viewsToRemove[@(key.type)] addObject:view];
                 
