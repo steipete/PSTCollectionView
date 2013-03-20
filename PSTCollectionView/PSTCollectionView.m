@@ -647,22 +647,19 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 // Interacting with the collection view.
 - (void)scrollToItemAtIndexPath:(NSIndexPath *)indexPath atScrollPosition:(PSTCollectionViewScrollPosition)scrollPosition animated:(BOOL)animated {
-
-    // ensure grid is laid out; else we can't scroll.
+    // Ensure grid is laid out; else we can't scroll.
     [self layoutSubviews];
 
     PSTCollectionViewLayoutAttributes *layoutAttributes = [self.collectionViewLayout layoutAttributesForItemAtIndexPath:indexPath];
-
     if (layoutAttributes) {
         CGRect targetRect = [self makeRect:layoutAttributes.frame toScrollPosition:scrollPosition];
-
         [self scrollRectToVisible:targetRect animated:animated];
     }
 }
 
 - (CGRect)makeRect:(CGRect)targetRect toScrollPosition:(PSTCollectionViewScrollPosition)scrollPosition {
     // split parameters
-    NSUInteger verticalPosition = scrollPosition & 0x07;   // 0000 0111
+    NSUInteger verticalPosition = scrollPosition   & 0x07; // 0000 0111
     NSUInteger horizontalPosition = scrollPosition & 0x38; // 0011 1000
 
     if (verticalPosition != PSTCollectionViewScrollPositionNone
@@ -681,13 +678,12 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     }
 
     CGRect frame = self.layer.bounds;
-
     CGFloat calculateX;
     CGFloat calculateY;
 
     switch(verticalPosition) {
         case PSTCollectionViewScrollPositionCenteredVertically:
-            calculateY = targetRect.origin.y-((frame.size.height/2)-(targetRect.size.height/2));
+            calculateY = fmaxf(targetRect.origin.y-((frame.size.height/2)-(targetRect.size.height/2)), -self.contentInset.top);
             targetRect = CGRectMake(targetRect.origin.x, calculateY, targetRect.size.width, frame.size.height);
             break;
         case PSTCollectionViewScrollPositionTop:
@@ -695,7 +691,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             break;
 
         case PSTCollectionViewScrollPositionBottom:
-            calculateY = targetRect.origin.y-(frame.size.height-targetRect.size.height);
+            calculateY = fmaxf(targetRect.origin.y-(frame.size.height-targetRect.size.height), -self.contentInset.top);
             targetRect = CGRectMake(targetRect.origin.x, calculateY, targetRect.size.width, frame.size.height);
             break;
     }
