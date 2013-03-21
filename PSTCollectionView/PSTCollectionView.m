@@ -1576,6 +1576,11 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     NSMutableArray *animations = [[NSMutableArray alloc] init];
     NSMutableDictionary *newAllVisibleView = [[NSMutableDictionary alloc] init];
 
+    NSMutableDictionary *viewsToRemove = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                          [NSMutableArray array], @(PSTCollectionViewItemTypeCell),
+                                          [NSMutableArray array], @(PSTCollectionViewItemTypeDecorationView),
+                                          [NSMutableArray array], @(PSTCollectionViewItemTypeSupplementaryView),nil];
+    
     for (PSTCollectionViewUpdateItem *updateItem in items) {
         if (updateItem.isSectionOperation) continue;
 
@@ -1593,8 +1598,13 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                     finalAttrs.alpha = 0;
                 }
                 [animations addObject:@{@"view": view, @"previousLayoutInfos": startAttrs, @"newLayoutInfos": finalAttrs}];
+                
                 [_allVisibleViewsDict removeObjectForKey:key];
+                
+                [viewsToRemove[@(key.type)] addObject:view];
+                
             }
+            
         }
         else if(updateItem.updateAction == PSTCollectionUpdateActionInsert) {
             NSIndexPath *indexPath = updateItem.indexPathAfterUpdate;
@@ -1659,13 +1669,15 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                 newGlobalIndex = [oldToNewIndexMap[oldGlobalIndex] intValue];
             }
             NSIndexPath *newIndexPath = newGlobalIndex == NSNotFound ? nil : [_update[@"newModel"] indexPathForItemAtGlobalIndex:newGlobalIndex];
+            NSIndexPath *oldIndexPath = oldGlobalIndex == NSNotFound ? nil : [_update[@"oldModel"] indexPathForItemAtGlobalIndex:oldGlobalIndex];
+            
             if (newIndexPath) {
 
 
                 PSTCollectionViewLayoutAttributes* startAttrs = nil;
                 PSTCollectionViewLayoutAttributes* finalAttrs = nil;
-
-                startAttrs  = [_layout initialLayoutAttributesForAppearingItemAtIndexPath:newIndexPath];
+                
+                startAttrs  = [_layout initialLayoutAttributesForAppearingItemAtIndexPath:oldIndexPath];
                 finalAttrs = [_layout layoutAttributesForItemAtIndexPath:newIndexPath];
 
                 NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:@{@"view":view}];
@@ -1676,6 +1688,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                 PSTCollectionViewItemKey* newKey = [key copy];
                 [newKey setIndexPath:newIndexPath];
                 newAllVisibleView[newKey] = view;
+                
             }
         } else if (key.type == PSTCollectionViewItemTypeSupplementaryView) {
             PSTCollectionViewLayoutAttributes* startAttrs = nil;
@@ -1711,7 +1724,6 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         }
     }
 
-    NSDictionary *previouslyVisibleViewsDict = _allVisibleViewsDict;
     _allVisibleViewsDict = newAllVisibleView;
 
     for(NSDictionary *animation in animations) {
@@ -1719,13 +1731,15 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         PSTCollectionViewLayoutAttributes *attr = animation[@"previousLayoutInfos"];
         [view applyLayoutAttributes:attr];
     };
-
+    
+    
+    
     [UIView animateWithDuration:.3 animations:^{
         _collectionViewFlags.updatingLayout = YES;
 
         [CATransaction begin];
         [CATransaction setAnimationDuration:.3];
-
+        
         // You might wonder why we use CATransaction to handle animation completion
         // here instead of using the completion: parameter of UIView's animateWithDuration:.
         // The problem is that animateWithDuration: calls this completion block
@@ -1741,26 +1755,31 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         // to call _updateCompletionHandler with that flag.
         // Ideally, _updateCompletionHandler should be called along with the other logic in
         // CATransaction's completionHandler but I simply don't know where to get that flag.
-
+        
         [CATransaction setCompletionBlock:^{
-            // Iterate through all the views previously visible and search for those which are no more visible.
-            [previouslyVisibleViewsDict enumerateKeysAndObjectsUsingBlock:
-                ^(PSTCollectionViewItemKey *key, PSTCollectionReusableView* view, BOOL *stop) {
-                 if (!_allVisibleViewsDict[key]) {
-                     // View for this key isn't visible any more, so it should be reused.
-                     if(key.type == PSTCollectionViewItemTypeCell) {
-                         [self reuseCell:(PSTCollectionViewCell *)view];
-                     } else if (key.type == PSTCollectionViewItemTypeSupplementaryView) {
-                         [self reuseSupplementaryView:view];
-                     } else if (key.type == PSTCollectionViewItemTypeDecorationView) {
-                         [self reuseDecorationView:view];
-                     }
-                 }
-             }];
+            // Iterate through all the views that we are going to remove.
 
+            [viewsToRemove enumerateKeysAndObjectsUsingBlock:^(NSNumber *keyObj, NSArray *array, BOOL *stop) {
+                
+                PSTCollectionViewItemType type = [keyObj unsignedIntegerValue];
+                
+                [array enumerateObjectsUsingBlock:^(id view, NSUInteger idx, BOOL *stop) {
+                    
+                    if(type == PSTCollectionViewItemTypeCell) {
+                        [self reuseCell:(PSTCollectionViewCell *)view];
+                    } else if (type == PSTCollectionViewItemTypeSupplementaryView) {
+                        [self reuseSupplementaryView:view];
+                    } else if (type == PSTCollectionViewItemTypeDecorationView) {
+                        [self reuseDecorationView:view];
+                    }
+                    
+                }];
+                
+            }];
+            
             _collectionViewFlags.updatingLayout = NO;
         }];
-
+        
         for (NSDictionary *animation in animations) {
             PSTCollectionReusableView* view = animation[@"view"];
             PSTCollectionViewLayoutAttributes* attrs = animation[@"newLayoutInfos"];
@@ -1768,6 +1787,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         }
         [CATransaction commit];
     } completion:^(BOOL finished) {
+        
         if(_updateCompletionHandler) {
             _updateCompletionHandler(finished);
             _updateCompletionHandler = nil;
