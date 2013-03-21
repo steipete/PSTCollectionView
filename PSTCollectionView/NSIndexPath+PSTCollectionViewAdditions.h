@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
 
 @interface NSIndexPath (PSTCollectionViewAdditions)
 
@@ -15,3 +16,5 @@
 - (NSInteger)item;
 
 @end
+
+#endif
