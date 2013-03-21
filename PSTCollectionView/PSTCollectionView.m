@@ -1755,16 +1755,11 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         // to call _updateCompletionHandler with that flag.
         // Ideally, _updateCompletionHandler should be called along with the other logic in
         // CATransaction's completionHandler but I simply don't know where to get that flag.
-        
         [CATransaction setCompletionBlock:^{
             // Iterate through all the views that we are going to remove.
-
-            [viewsToRemove enumerateKeysAndObjectsUsingBlock:^(NSNumber *keyObj, NSArray *array, BOOL *stop) {
-                
+            [viewsToRemove enumerateKeysAndObjectsUsingBlock:^(NSNumber *keyObj, NSArray *views, BOOL *stop) {
                 PSTCollectionViewItemType type = [keyObj unsignedIntegerValue];
-                
-                [array enumerateObjectsUsingBlock:^(id view, NSUInteger idx, BOOL *stop) {
-                    
+                for (PSTCollectionReusableView *view in views) {
                     if(type == PSTCollectionViewItemTypeCell) {
                         [self reuseCell:(PSTCollectionViewCell *)view];
                     } else if (type == PSTCollectionViewItemTypeSupplementaryView) {
@@ -1772,11 +1767,8 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                     } else if (type == PSTCollectionViewItemTypeDecorationView) {
                         [self reuseDecorationView:view];
                     }
-                    
-                }];
-                
+                }
             }];
-            
             _collectionViewFlags.updatingLayout = NO;
         }];
         
