@@ -218,6 +218,18 @@
     return _collectionCellFlags.highlighted;
 }
 
+- (void)performSelectionSegue
+{
+    SEL selector = @selector(perform:);
+    if ([self->_selectionSegueTemplate respondsToSelector:selector])
+    {
+        #pragma clang diagnostic push
+        #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        [self->_selectionSegueTemplate performSelector:selector withObject:self];
+        #pragma clang diagnostic pop
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - PSTCollection/UICollection interoperability
 

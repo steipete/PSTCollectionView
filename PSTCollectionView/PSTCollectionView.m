@@ -26,6 +26,10 @@
 - (void)prepareToLoadData;
 @end
 
+@interface PSTCollectionViewCell (Internal)
+- (void)performSelectionSegue;
+@end
+
 @interface PSTCollectionViewUpdateItem()
 - (NSIndexPath *)indexPath;
 - (BOOL)isSectionOperation;
@@ -852,6 +856,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         if (shouldSelect) {
             PSTCollectionViewCell *selectedCell = [self cellForItemAtIndexPath:indexPath];
             selectedCell.selected = YES;
+            [selectedCell performSelectionSegue];
 
             [_indexPathsForSelectedItems addObject:indexPath];
 
