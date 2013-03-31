@@ -856,9 +856,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         if (shouldSelect) {
             PSTCollectionViewCell *selectedCell = [self cellForItemAtIndexPath:indexPath];
             selectedCell.selected = YES;
-            [selectedCell performSelectionSegue];
 
             [_indexPathsForSelectedItems addObject:indexPath];
+
+            [selectedCell performSelectionSegue];
 
             if (scrollPosition != PSTCollectionViewScrollPositionNone) {
                 [self scrollToItemAtIndexPath:indexPath atScrollPosition:scrollPosition animated:animated];
