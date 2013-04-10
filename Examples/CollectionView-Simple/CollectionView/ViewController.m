@@ -53,11 +53,45 @@
 NSString *kDetailedViewControllerID = @"DetailView";    // view controller storyboard id
 NSString *kCellID = @"cellID";                          // UICollectionViewCell storyboard id
 
+@interface ViewController(){
+    
+    NSMutableArray *_sections;
+    
+}
+@end
+
 @implementation ViewController
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    
+    return [_sections count];
+    
+}
 
 - (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section;
 {
-    return 32;
+    return [_sections[section] count];
+}
+
+- (void)loadView{
+    [super loadView];
+    
+    _sections = [NSMutableArray array];
+    
+    for (NSUInteger i = 0; i < 3; i++) {
+        
+        NSMutableArray *tempArray = [NSMutableArray arrayWithArray:@[[NSNull null],[NSNull null],[NSNull null]]];
+        
+        [_sections addObject:tempArray];
+    }
+    
+}
+
+- (void)viewDidLoad{
+    [super viewDidLoad];
+    
+    self.collectionView.allowsMultipleSelection = YES;
+    
 }
 
 - (PSUICollectionViewCell *)collectionView:(PSUICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath;
@@ -92,6 +126,40 @@ NSString *kCellID = @"cellID";                          // UICollectionViewCell 
         DetailViewController *detailViewController = [segue destinationViewController];
         detailViewController.image = image;
     }
+}
+
+- (IBAction)delete:(id)sender{
+    
+    [self.collectionView performBatchUpdates:^{
+        
+        NSArray *indexPaths = [self.collectionView indexPathsForSelectedItems];
+        
+        NSArray *sortedArray = [indexPaths sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            
+            return [obj2 compare:obj1];
+            
+        }];
+        
+        [sortedArray enumerateObjectsUsingBlock:^(NSIndexPath *indexPath, NSUInteger idx, BOOL *stop) {
+            
+            [_sections[indexPath.section] removeObjectAtIndex:indexPath.item];
+            
+        }];
+        
+        [self.collectionView deleteItemsAtIndexPaths:indexPaths];
+        
+        
+        
+    } completion:^(BOOL finished) {
+        
+        [[self.collectionView indexPathsForSelectedItems] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            
+            [self.collectionView deselectItemAtIndexPath:obj animated:NO];
+            
+        }];
+        
+    }];
+    
 }
 
 @end

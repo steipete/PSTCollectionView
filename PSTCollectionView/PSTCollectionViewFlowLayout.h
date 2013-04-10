@@ -1,8 +1,8 @@
 //
-//  UICollectionViewFlowLayout.h
+//  PSTCollectionViewFlowLayout.h
 //  PSPDFKit
 //
-//  Copyright (c) 2012 Peter Steinberger. All rights reserved.
+//  Copyright (c) 2012-2013 Peter Steinberger. All rights reserved.
 //
 
 #import "PSTCollectionViewLayout.h"
@@ -15,13 +15,6 @@ typedef NS_ENUM(NSInteger, PSTCollectionViewScrollDirection) {
     PSTCollectionViewScrollDirectionHorizontal
 };
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED < 60000
-typedef NS_ENUM(NSInteger, UICollectionViewScrollDirection) {
-    UICollectionViewScrollDirectionVertical,
-    UICollectionViewScrollDirectionHorizontal
-};
-#endif
-
 @protocol PSTCollectionViewDelegateFlowLayout <PSTCollectionViewDelegate>
 @optional
 
@@ -31,6 +24,7 @@ typedef NS_ENUM(NSInteger, UICollectionViewScrollDirection) {
 - (CGFloat)collectionView:(PSTCollectionView *)collectionView layout:(PSTCollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section;
 - (CGSize)collectionView:(PSTCollectionView *)collectionView layout:(PSTCollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section;
 - (CGSize)collectionView:(PSTCollectionView *)collectionView layout:(PSTCollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section;
+- (PSTCollectionViewLayoutAttributes *)layoutAttributesForSupplementaryViewOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath;
 
 @end
 
@@ -111,7 +105,6 @@ typedef NS_ENUM(NSInteger, PSTFlowLayoutHorizontalAlignment) {
 - (PSTCollectionViewLayoutAttributes *)_layoutAttributesForItemsInRect:(CGRect)arg1;
 - (CGSize)collectionViewContentSize;
 - (void)finalizeCollectionViewUpdates;
-- (PSTCollectionViewLayoutAttributes *)layoutAttributesForSupplementaryViewOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath;
 - (void)_invalidateButKeepDelegateInfo;
 - (void)_invalidateButKeepAllInfo;
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)arg1;

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		33C7743916D60E01005CB224 /* UILabel+Highlight.m in Sources */ = {isa = PBXBuildFile; fileRef = 33C7743816D60E01005CB224 /* UILabel+Highlight.m */; };
 		60FF9BCF1648B86200E20CD4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60FF9BCE1648B86200E20CD4 /* UIKit.framework */; };
 		60FF9BD11648B86200E20CD4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60FF9BD01648B86200E20CD4 /* Foundation.framework */; };
 		60FF9BD31648B86200E20CD4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60FF9BD21648B86200E20CD4 /* CoreGraphics.framework */; };
@@ -63,9 +64,12 @@
 		60FF9C571648B8D800E20CD4 /* 9.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 60FF9C371648B8D800E20CD4 /* 9.JPG */; };
 		60FF9C7D1648BE6100E20CD4 /* ImageGridCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF9C7C1648BE6100E20CD4 /* ImageGridCell.m */; };
 		78E7A75F1654EECE000C70BE /* PSTCollectionViewUpdateItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 78E7A75E1654EECE000C70BE /* PSTCollectionViewUpdateItem.m */; };
+		981FA1F116C79C1D00F6149A /* NSIndexPath+PSTCollectionViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 981FA1F016C79C1D00F6149A /* NSIndexPath+PSTCollectionViewAdditions.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		33C7743716D60E01005CB224 /* UILabel+Highlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+Highlight.h"; sourceTree = "<group>"; };
+		33C7743816D60E01005CB224 /* UILabel+Highlight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+Highlight.m"; sourceTree = "<group>"; };
 		60FF9BCA1648B86200E20CD4 /* SelectionDelegateExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SelectionDelegateExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		60FF9BCE1648B86200E20CD4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		60FF9BD01648B86200E20CD4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -141,6 +145,8 @@
 		60FF9C7C1648BE6100E20CD4 /* ImageGridCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageGridCell.m; sourceTree = "<group>"; };
 		78E7A75D1654EECE000C70BE /* PSTCollectionViewUpdateItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTCollectionViewUpdateItem.h; sourceTree = "<group>"; };
 		78E7A75E1654EECE000C70BE /* PSTCollectionViewUpdateItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTCollectionViewUpdateItem.m; sourceTree = "<group>"; };
+		981FA1EF16C79C1D00F6149A /* NSIndexPath+PSTCollectionViewAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSIndexPath+PSTCollectionViewAdditions.h"; sourceTree = "<group>"; };
+		981FA1F016C79C1D00F6149A /* NSIndexPath+PSTCollectionViewAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSIndexPath+PSTCollectionViewAdditions.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -194,6 +200,8 @@
 				60FF9C7B1648BE6100E20CD4 /* ImageGridCell.h */,
 				60FF9C7C1648BE6100E20CD4 /* ImageGridCell.m */,
 				60FF9BE61648B86200E20CD4 /* ViewController.h */,
+				33C7743716D60E01005CB224 /* UILabel+Highlight.h */,
+				33C7743816D60E01005CB224 /* UILabel+Highlight.m */,
 				60FF9BE71648B86200E20CD4 /* ViewController.m */,
 				60FF9BF11648B87000E20CD4 /* PSTCollectionView */,
 				60FF9C161648B8D000E20CD4 /* Images */,
@@ -219,6 +227,8 @@
 		60FF9BF11648B87000E20CD4 /* PSTCollectionView */ = {
 			isa = PBXGroup;
 			children = (
+				981FA1EF16C79C1D00F6149A /* NSIndexPath+PSTCollectionViewAdditions.h */,
+				981FA1F016C79C1D00F6149A /* NSIndexPath+PSTCollectionViewAdditions.m */,
 				60FF9BF21648B87000E20CD4 /* PSTCollectionView.h */,
 				60FF9BF31648B87000E20CD4 /* PSTCollectionView.m */,
 				60FF9BF41648B87000E20CD4 /* PSTCollectionViewCell.h */,
@@ -410,6 +420,8 @@
 				60FF9C131648B87000E20CD4 /* PSTGridLayoutSection.m in Sources */,
 				60FF9C7D1648BE6100E20CD4 /* ImageGridCell.m in Sources */,
 				78E7A75F1654EECE000C70BE /* PSTCollectionViewUpdateItem.m in Sources */,
+				981FA1F116C79C1D00F6149A /* NSIndexPath+PSTCollectionViewAdditions.m in Sources */,
+				33C7743916D60E01005CB224 /* UILabel+Highlight.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

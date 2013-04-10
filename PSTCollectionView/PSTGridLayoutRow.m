@@ -2,7 +2,7 @@
 //  PSTGridLayoutRow.m
 //  PSPDFKit
 //
-//  Copyright (c) 2012 Peter Steinberger. All rights reserved.
+//  Copyright (c) 2012-2013 Peter Steinberger. All rights reserved.
 //
 
 #import "PSTCollectionView.h"
@@ -149,8 +149,8 @@
                     itemOffset.x += interSpacing;
                 }
             }
-            item.itemFrame = CGRectIntegral(itemFrame); // might call nil; don't care
-            [rects addObject:[NSValue valueWithCGRect:CGRectIntegral(itemFrame)]];
+            item.itemFrame = itemFrame; // might call nil; don't care
+            [rects addObject:[NSValue valueWithCGRect:itemFrame]];
             frame = CGRectUnion(frame, itemFrame);
         }
         _rowSize = frame.size;

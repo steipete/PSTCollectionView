@@ -1,8 +1,8 @@
 //
-//  PSTCollectionLayoutSection.m
+//  PSTGridLayoutSection.m
 //  PSPDFKit
 //
-//  Copyright (c) 2012 Peter Steinberger. All rights reserved.
+//  Copyright (c) 2012-2013 Peter Steinberger. All rights reserved.
 //
 
 #import "PSTCollectionViewCommon.h"
@@ -114,7 +114,7 @@
                         sectionSize.width = fmaxf(row.rowSize.width, sectionSize.width);
                     }
                 }
-                // add new rows until the section is fully layouted
+                // add new rows until the section is fully laid out
                 if (!finishCycle) {
                     // create new row
                     row.complete = YES; // finish up current row
