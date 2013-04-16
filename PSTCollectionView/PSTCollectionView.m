@@ -1983,7 +1983,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
         NSAssert([oldCollectionViewData numberOfItemsInSection:section]+insertedCount-deletedCount+movedInCount-movedOutCount ==
                  [_collectionViewData numberOfItemsInSection:section],
-                 @"invalide update in section %d: number of items after update (%d) should be equal to the number of items before update (%d) "\
+                 @"invalid update in section %d: number of items after update (%d) should be equal to the number of items before update (%d) "\
                  "plus count of inserted items (%d), minus count of deleted items (%d), plus count of items moved in (%d), minus count of items moved out (%d)",
                  section,
                  [_collectionViewData numberOfItemsInSection:section],
