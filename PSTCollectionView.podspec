@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'PSTCollectionView'
-  s.version = '0.0.1'
+  s.version = '1.0.0'
   s.summary = 'Open Source, 100% API compatible replacement of UICollectionView for iOS4+.'
   s.homepage = 'https://github.com/steipete/PSTCollectionView'
   s.license = {
