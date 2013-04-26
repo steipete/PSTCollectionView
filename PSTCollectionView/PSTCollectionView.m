@@ -1090,8 +1090,8 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         [self bringSubviewToFront: _allVisibleViewsDict[[previouslyVisibleItemsKeysSetMutable anyObject]]];
 
         CGPoint targetOffset = self.contentOffset;
-        CGPoint centerPoint = CGPointMake(self.bounds.origin.x + self.bounds.size.width / 2.0,
-                                          self.bounds.origin.y + self.bounds.size.height / 2.0);
+        CGPoint centerPoint = CGPointMake(self.bounds.origin.x + self.bounds.size.width / 2.f,
+                                          self.bounds.origin.y + self.bounds.size.height / 2.f);
         NSIndexPath *centerItemIndexPath = [self indexPathForItemAtPoint:centerPoint];
 
         if (!centerItemIndexPath) {
@@ -1106,7 +1106,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             if (layoutAttributes) {
                 PSTCollectionViewScrollPosition scrollPosition = PSTCollectionViewScrollPositionCenteredVertically | PSTCollectionViewScrollPositionCenteredHorizontally;
                 CGRect targetRect = [self makeRect:layoutAttributes.frame toScrollPosition:scrollPosition];
-                targetOffset = CGPointMake(fmax(0.0, targetRect.origin.x), fmax(0.0, targetRect.origin.y));
+                targetOffset = CGPointMake(fmaxf(0.f, targetRect.origin.x), fmaxf(0.f, targetRect.origin.y));
             }
         }
 
