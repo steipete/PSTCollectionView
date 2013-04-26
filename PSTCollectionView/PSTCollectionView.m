@@ -1708,10 +1708,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         PSTCollectionReusableView *view = _allVisibleViewsDict[key];
 
         if (key.type == PSTCollectionViewItemTypeCell) {
-            NSInteger oldGlobalIndex = [_update[@"oldModel"] globalIndexForItemAtIndexPath:key.indexPath];
+            NSUInteger oldGlobalIndex = [_update[@"oldModel"] globalIndexForItemAtIndexPath:key.indexPath];
             NSArray *oldToNewIndexMap = _update[@"oldToNewIndexMap"];
-            NSInteger newGlobalIndex = NSNotFound;
-            if (oldGlobalIndex >= 0 && oldGlobalIndex < [oldToNewIndexMap count]) {
+            NSUInteger newGlobalIndex = NSNotFound;
+            if (NSNotFound != oldGlobalIndex && oldGlobalIndex < [oldToNewIndexMap count]) {
                 newGlobalIndex = [oldToNewIndexMap[oldGlobalIndex] intValue];
             }
             NSIndexPath *newIndexPath = newGlobalIndex == NSNotFound ? nil : [_update[@"newModel"] indexPathForItemAtGlobalIndex:newGlobalIndex];
@@ -1926,7 +1926,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         }
     }
 
-    for(NSInteger i=0; i<[sortedInsertMutableItems count]; i++) {
+    for(NSUInteger i=0; i<[sortedInsertMutableItems count]; i++) {
         PSTCollectionViewUpdateItem *insertItem = sortedInsertMutableItems[i];
         NSIndexPath *indexPath = insertItem.indexPathAfterUpdate;
 
@@ -1945,7 +1945,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                 }
             }
 
-            NSInteger j=i+1;
+            NSUInteger j=i+1;
             while(j<[sortedInsertMutableItems count]) {
                 PSTCollectionViewUpdateItem *nextInsertItem = sortedInsertMutableItems[j];
 
@@ -2106,9 +2106,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     for(NSInteger i=0; i < [_collectionViewData numberOfItems]; i++)
         [newToOldMap addObject:@(NSNotFound)];
 
-    for(NSInteger i=0; i < [newModel count]; i++) {
+    for(NSUInteger i=0; i < [newModel count]; i++) {
         NSMutableArray* section = newModel[i];
-        for(NSInteger j=0; j<[section count];j++) {
+        for(NSUInteger j=0; j<[section count];j++) {
             NSInteger newGlobalIndex = [_collectionViewData globalIndexForItemAtIndexPath:[NSIndexPath indexPathForItem:j inSection:i]];
             if([section[j] intValue] != NSNotFound)
                 oldToNewMap[[section[j] intValue]] = @(newGlobalIndex);
