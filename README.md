@@ -16,7 +16,7 @@ PSTCollectionView is also internally designed very closesly to UICollectionView 
 
 ## How can I help?
 
-The best way is if you're already using UICollectionView somewhere. Add PSTCollectionView and try it on iOS4/5. Check if everything works, fix bugs until the result is 1:1 the one of iOS6. You can also just pick an issue fron the Issue Tracker and start working there.
+The best way is if you're already using UICollectionView somewhere. Add PSTCollectionView and try it on iOS4/5. Check if everything works, fix bugs until the result matches 1:1 with iOS6. You can also just pick an issue fron the Issue Tracker and start working there.
 
 Or start playing around with one of the WWDC examples and try to make them work with PSTCollectionView. Most of them already do, but just not as perfect.
 
