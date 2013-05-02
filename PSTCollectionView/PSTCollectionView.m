@@ -727,7 +727,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
     CGPoint touchPoint = [[touches anyObject] locationInView:self];
     NSIndexPath *indexPath = [self indexPathForItemAtPoint:touchPoint];
-    if (indexPath) {
+    if (indexPath && self.allowsSelection) {
         if (![self highlightItemAtIndexPath:indexPath animated:YES scrollPosition:PSTCollectionViewScrollPositionNone notifyDelegate:YES])
             return;
 
@@ -817,7 +817,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     if (self.allowsMultipleSelection && [_indexPathsForSelectedItems containsObject:indexPath]) {
         [self deselectItemAtIndexPath:indexPath animated:YES notifyDelegate:YES];
     }
-    else {
+    else if(self.allowsSelection) {
         [self selectItemAtIndexPath:indexPath animated:YES scrollPosition:PSTCollectionViewScrollPositionNone notifyDelegate:YES];
     }
 }
