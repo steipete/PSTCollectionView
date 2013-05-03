@@ -1868,7 +1868,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                      deleteItem.indexPathBeforeUpdate.section);
 
             for(PSTCollectionViewUpdateItem *moveItem in sortedMutableMoveItems) {
-                NSAssert([deleteItem.indexPathBeforeUpdate isEqual:moveItem.indexPathBeforeUpdate],
+                NSAssert(![deleteItem.indexPathBeforeUpdate isEqual:moveItem.indexPathBeforeUpdate],
                          @"attempt to delete and move the same item (%@)", deleteItem.indexPathBeforeUpdate);
             }
 
@@ -1983,7 +1983,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
         NSAssert([oldCollectionViewData numberOfItemsInSection:section]+insertedCount-deletedCount+movedInCount-movedOutCount ==
                  [_collectionViewData numberOfItemsInSection:section],
-                 @"invalide update in section %d: number of items after update (%d) should be equal to the number of items before update (%d) "\
+                 @"invalid update in section %d: number of items after update (%d) should be equal to the number of items before update (%d) "\
                  "plus count of inserted items (%d), minus count of deleted items (%d), plus count of items moved in (%d), minus count of items moved out (%d)",
                  section,
                  [_collectionViewData numberOfItemsInSection:section],
@@ -2040,8 +2040,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                     [newModel insertObject:section atIndex:updateItem.indexPathAfterUpdate.section];
                 }
                 else {
-                    id object = newModel[updateItem.indexPathBeforeUpdate.section][updateItem.indexPathBeforeUpdate.item];
-                    [newModel[updateItem.indexPathBeforeUpdate.section] removeObjectAtIndex:updateItem.indexPathBeforeUpdate.item];
+                    NSUInteger originalIndex = [newModel[updateItem.indexPathBeforeUpdate.section] indexOfObject:@(updateItem.indexPathBeforeUpdate.item)];
+                    id object = newModel[updateItem.indexPathBeforeUpdate.section][originalIndex];
+                    [newModel[updateItem.indexPathBeforeUpdate.section] removeObjectAtIndex:originalIndex];
                     [newModel[updateItem.indexPathAfterUpdate.section] insertObject:object
                                                                             atIndex:updateItem.indexPathAfterUpdate.item];
                 }
