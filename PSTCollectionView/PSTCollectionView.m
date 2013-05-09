@@ -961,8 +961,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (void)reloadSections:(NSIndexSet *)sections {
-    [self updateSections:sections updateAction:PSTCollectionUpdateActionDelete];
-    [self updateSections:sections updateAction:PSTCollectionUpdateActionInsert];
+    [self updateSections:sections updateAction:PSTCollectionUpdateActionReload];
 }
 
 - (void)moveSection:(NSInteger)section toSection:(NSInteger)newSection {
