@@ -1,7 +1,7 @@
 
 /*
-     File: ViewController.m
- Abstract: Simple collection view controller subclass to lay out views in a grid and support pinch gestures.
+     File: ViewController.h
+ Abstract: 
  
   Version: 1.0
  
@@ -92,57 +92,10 @@
  
  */
 
-#import "ViewController.h"
-#import "Cell.h"
-#import "PinchLayout.h"
+#import <UIKit/UIKit.h>
 
-@implementation ViewController
+@interface ViewController : PSUICollectionViewController
 
--(void)viewDidLoad
-{
-    [super viewDidLoad];
-	
-    UIPinchGestureRecognizer* pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchGesture:)];
-    [self.collectionView addGestureRecognizer:pinchRecognizer];
-    [self.collectionView registerClass:[Cell class] forCellWithReuseIdentifier:@"MY_CELL"];
-}
-
-- (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section;
-{
-    return 63;
-}
-
-- (PSUICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath;
-{
-    Cell *cell = [cv dequeueReusableCellWithReuseIdentifier:@"MY_CELL" forIndexPath:indexPath];
-    return (PSUICollectionViewCell *)cell;
-}
-
-- (void)handlePinchGesture:(UIPinchGestureRecognizer *)sender
-{
-    PinchLayout* pinchLayout = (PinchLayout*)self.collectionView.collectionViewLayout;
-    
-    if (sender.state == UIGestureRecognizerStateBegan)
-    {
-        CGPoint initialPinchPoint = [sender locationInView:self.collectionView];
-        NSIndexPath* pinchedCellPath = [self.collectionView indexPathForItemAtPoint:initialPinchPoint];
-        pinchLayout.pinchedCellPath = pinchedCellPath;
-        
-    }
-    
-    else if (sender.state == UIGestureRecognizerStateChanged)
-    {
-        pinchLayout.pinchedCellScale = sender.scale;
-        pinchLayout.pinchedCellCenter = [sender locationInView:self.collectionView];
-    }
-    
-    else
-    {
-        [self.collectionView performBatchUpdates:^{
-            pinchLayout.pinchedCellPath = nil;
-            pinchLayout.pinchedCellScale = 1.0;
-        } completion:nil];
-    }
-}
+@property (nonatomic, strong) NSMutableArray* sections;
 
 @end

@@ -2,7 +2,7 @@
 //  PSTCollectionViewCommon.h
 //  PSPDFKit
 //
-//  Copyright (c) 2012 Peter Steinberger. All rights reserved.
+//  Copyright (c) 2012-2013 Peter Steinberger. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -63,10 +63,3 @@
 - (void)collectionView:(PSTCollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender;
 
 @end
-
-// imp_implementationWithBlock changed it's type in iOS6.
-#if __IPHONE_OS_VERSION_MAX_ALLOWED < 60000
-#define PSBlockImplCast (__bridge void *)
-#else
-#define PSBlockImplCast
-#endif

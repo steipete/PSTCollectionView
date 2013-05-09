@@ -2,11 +2,14 @@
 //  PSTCollectionViewUpdateItem.m
 //  PSPDFKit
 //
-//  Copyright (c) 2012 Peter Steinberger. All rights reserved.
+//  Copyright (c) 2012-2013 Peter Steinberger. All rights reserved.
 //  Contributed by Sergey Gavrilyuk.
 //
 
 #import "PSTCollectionViewUpdateItem.h"
+
+#import "NSIndexPath+PSTCollectionViewAdditions.h"
+
 
 @interface PSTCollectionViewUpdateItem() {
     NSIndexPath *_initialIndexPath;

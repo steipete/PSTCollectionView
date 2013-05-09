@@ -1,7 +1,7 @@
 
 /*
-     File: ViewController.m
- Abstract: Simple collection view controller subclass to lay out views in a grid and support pinch gestures.
+     File: Cell.m
+ Abstract: 
  
   Version: 1.0
  
@@ -92,57 +92,39 @@
  
  */
 
-#import "ViewController.h"
 #import "Cell.h"
-#import "PinchLayout.h"
+#import <QuartzCore/QuartzCore.h>
 
-@implementation ViewController
+/*@interface PSUICollectionViewCell_()
+- (void)_setLayoutAttributes:(UICollectionViewLayoutAttributes*)attrs;
+@end*/
 
--(void)viewDidLoad
+@implementation Cell
+
+- (id)initWithFrame:(CGRect)frame
 {
-    [super viewDidLoad];
-	
-    UIPinchGestureRecognizer* pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchGesture:)];
-    [self.collectionView addGestureRecognizer:pinchRecognizer];
-    [self.collectionView registerClass:[Cell class] forCellWithReuseIdentifier:@"MY_CELL"];
-}
-
-- (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section;
-{
-    return 63;
-}
-
-- (PSUICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath;
-{
-    Cell *cell = [cv dequeueReusableCellWithReuseIdentifier:@"MY_CELL" forIndexPath:indexPath];
-    return (PSUICollectionViewCell *)cell;
-}
-
-- (void)handlePinchGesture:(UIPinchGestureRecognizer *)sender
-{
-    PinchLayout* pinchLayout = (PinchLayout*)self.collectionView.collectionViewLayout;
-    
-    if (sender.state == UIGestureRecognizerStateBegan)
+    self = [super initWithFrame:frame];
+    if (self)
     {
-        CGPoint initialPinchPoint = [sender locationInView:self.collectionView];
-        NSIndexPath* pinchedCellPath = [self.collectionView indexPathForItemAtPoint:initialPinchPoint];
-        pinchLayout.pinchedCellPath = pinchedCellPath;
+        self.contentView.layer.cornerRadius = 35.0;
+        self.contentView.layer.borderWidth = 1.0f;
+        self.contentView.layer.borderColor = [UIColor whiteColor].CGColor;
+        self.contentView.backgroundColor = [UIColor underPageBackgroundColor];
         
+        self.label = [[UILabel alloc] initWithFrame:self.bounds];
+        self.label.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+        self.label.backgroundColor = [UIColor clearColor];
+        self.label.textAlignment = UITextAlignmentCenter;
+        [self addSubview:self.label];
     }
-    
-    else if (sender.state == UIGestureRecognizerStateChanged)
-    {
-        pinchLayout.pinchedCellScale = sender.scale;
-        pinchLayout.pinchedCellCenter = [sender locationInView:self.collectionView];
-    }
-    
-    else
-    {
-        [self.collectionView performBatchUpdates:^{
-            pinchLayout.pinchedCellPath = nil;
-            pinchLayout.pinchedCellScale = 1.0;
-        } completion:nil];
-    }
+    return self;
 }
 
+/*- (void)_setLayoutAttributes:(UICollectionViewLayoutAttributes*)attrs
+{
+    [super _setLayoutAttributes:attrs];
+}*/
 @end
+
+
+

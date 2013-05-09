@@ -33,6 +33,7 @@
 		8B6FD5CC163F189D0064CF3D /* CollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B6FD5CB163F189D0064CF3D /* CollectionViewCell.m */; };
 		8B6FD5CF163F1A650064CF3D /* HeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B6FD5CE163F1A650064CF3D /* HeaderView.m */; };
 		8B6FD5D2163F1A700064CF3D /* FooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B6FD5D1163F1A700064CF3D /* FooterView.m */; };
+		981FA1E816C79B8D00F6149A /* NSIndexPath+PSTCollectionViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 981FA1E716C79B8D00F6149A /* NSIndexPath+PSTCollectionViewAdditions.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -83,6 +84,8 @@
 		8B6FD5CE163F1A650064CF3D /* HeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeaderView.m; sourceTree = "<group>"; };
 		8B6FD5D0163F1A700064CF3D /* FooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FooterView.h; sourceTree = "<group>"; };
 		8B6FD5D1163F1A700064CF3D /* FooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FooterView.m; sourceTree = "<group>"; };
+		981FA1E616C79B8D00F6149A /* NSIndexPath+PSTCollectionViewAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSIndexPath+PSTCollectionViewAdditions.h"; sourceTree = "<group>"; };
+		981FA1E716C79B8D00F6149A /* NSIndexPath+PSTCollectionViewAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSIndexPath+PSTCollectionViewAdditions.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,7 +106,6 @@
 		8B6FD573163EFF590064CF3D = {
 			isa = PBXGroup;
 			children = (
-				8B6FD5C8163F17770064CF3D /* QuartzCore.framework */,
 				8B6FD588163EFF590064CF3D /* FlowLayoutNoNIB */,
 				8B6FD59F163EFF970064CF3D /* PSTCollectionView */,
 				8B6FD581163EFF590064CF3D /* Frameworks */,
@@ -122,6 +124,7 @@
 		8B6FD581163EFF590064CF3D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8B6FD5C8163F17770064CF3D /* QuartzCore.framework */,
 				8B6FD582163EFF590064CF3D /* UIKit.framework */,
 				8B6FD584163EFF590064CF3D /* Foundation.framework */,
 				8B6FD586163EFF590064CF3D /* CoreGraphics.framework */,
@@ -164,6 +167,8 @@
 		8B6FD59F163EFF970064CF3D /* PSTCollectionView */ = {
 			isa = PBXGroup;
 			children = (
+				981FA1E616C79B8D00F6149A /* NSIndexPath+PSTCollectionViewAdditions.h */,
+				981FA1E716C79B8D00F6149A /* NSIndexPath+PSTCollectionViewAdditions.m */,
 				8B6FD5A0163EFF970064CF3D /* PSTCollectionView.h */,
 				8B6FD5A1163EFF970064CF3D /* PSTCollectionView.m */,
 				8B6FD5A2163EFF970064CF3D /* PSTCollectionViewCell.h */,
@@ -276,6 +281,7 @@
 				8B6FD5CF163F1A650064CF3D /* HeaderView.m in Sources */,
 				8B6FD5D2163F1A700064CF3D /* FooterView.m in Sources */,
 				78E7A7621654EEE7000C70BE /* PSTCollectionViewUpdateItem.m in Sources */,
+				981FA1E816C79B8D00F6149A /* NSIndexPath+PSTCollectionViewAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -350,7 +356,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FlowLayoutNoNIB/FlowLayoutNoNIB-Prefix.pch";
 				INFOPLIST_FILE = "FlowLayoutNoNIB/FlowLayoutNoNIB-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -362,7 +368,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FlowLayoutNoNIB/FlowLayoutNoNIB-Prefix.pch";
 				INFOPLIST_FILE = "FlowLayoutNoNIB/FlowLayoutNoNIB-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
