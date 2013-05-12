@@ -113,7 +113,8 @@
 - (NSInteger)numberOfItemsInSection:(NSInteger)section {
     [self validateItemCounts];
     if (section > _numSections || section < 0) {
-        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"Section %d out of range: 0...%d", section, _numSections] userInfo:nil];
+        //@throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"Section %d out of range: 0...%d", section, _numSections] userInfo:nil];
+        return 0;
     }
     
     NSInteger numberOfItemsInSection = 0;
