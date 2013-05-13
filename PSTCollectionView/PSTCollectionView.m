@@ -26,6 +26,10 @@
 - (void)prepareToLoadData;
 @end
 
+@interface PSTCollectionViewCell (Internal)
+- (void)performSelectionSegue;
+@end
+
 @interface PSTCollectionViewUpdateItem()
 - (NSIndexPath *)indexPath;
 - (BOOL)isSectionOperation;
@@ -854,6 +858,8 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             selectedCell.selected = YES;
 
             [_indexPathsForSelectedItems addObject:indexPath];
+
+            [selectedCell performSelectionSegue];
 
             if (scrollPosition != PSTCollectionViewScrollPositionNone) {
                 [self scrollToItemAtIndexPath:indexPath atScrollPosition:scrollPosition animated:animated];

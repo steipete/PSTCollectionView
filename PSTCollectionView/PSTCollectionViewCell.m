@@ -218,6 +218,22 @@
     return _collectionCellFlags.highlighted;
 }
 
+- (void)performSelectionSegue
+{
+    /*
+        Currently there's no "official" way to trigger a storyboard segue
+        using UIStoryboardSegueTemplate, so we're doing it in a semi-legal way
+     */
+    SEL selector = @selector(perform:);
+    if ([self->_selectionSegueTemplate respondsToSelector:selector])
+    {
+        #pragma clang diagnostic push
+        #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        [self->_selectionSegueTemplate performSelector:selector withObject:self];
+        #pragma clang diagnostic pop
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - PSTCollection/UICollection interoperability
 
