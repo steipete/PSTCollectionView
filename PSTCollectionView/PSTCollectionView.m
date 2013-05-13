@@ -278,20 +278,23 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewDidScroll:)]) {
-        [self.extVars.collectionViewDelegate scrollViewDidScroll:scrollView];
+    id<PSTCollectionViewDelegate> delegate = self.extVars.collectionViewDelegate;
+    if ((id)delegate != self && [delegate respondsToSelector:@selector(scrollViewDidScroll:)]) {
+        [delegate scrollViewDidScroll:scrollView];
     }
 }
 
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
-    if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewDidZoom:)]) {
-        [self.extVars.collectionViewDelegate scrollViewDidZoom:scrollView];
+    id<PSTCollectionViewDelegate> delegate = self.extVars.collectionViewDelegate;
+    if ((id)delegate != self && [delegate respondsToSelector:@selector(scrollViewDidZoom:)]) {
+        [delegate scrollViewDidZoom:scrollView];
     }
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewWillBeginDragging:)]) {
-        [self.extVars.collectionViewDelegate scrollViewWillBeginDragging:scrollView];
+    id<PSTCollectionViewDelegate> delegate = self.extVars.collectionViewDelegate;
+    if ((id)delegate != self && [delegate respondsToSelector:@selector(scrollViewWillBeginDragging:)]) {
+        [delegate scrollViewWillBeginDragging:scrollView];
     }
 }
 
@@ -299,15 +302,17 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     // Let collectionViewLayout decide where to stop.
     *targetContentOffset = [[self collectionViewLayout] targetContentOffsetForProposedContentOffset:*targetContentOffset withScrollingVelocity:velocity];
 
-    if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewWillEndDragging:withVelocity:targetContentOffset:)]) {
+    id<PSTCollectionViewDelegate> delegate = self.extVars.collectionViewDelegate;
+    if ((id)delegate != self && [delegate respondsToSelector:@selector(scrollViewWillEndDragging:withVelocity:targetContentOffset:)]) {
         //if collectionViewDelegate implements this method, it may modify targetContentOffset as well
-        [self.extVars.collectionViewDelegate scrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
+        [delegate scrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
     }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]) {
-        [self.extVars.collectionViewDelegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
+    id<PSTCollectionViewDelegate> delegate = self.extVars.collectionViewDelegate;
+    if ((id)delegate != self && [delegate respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]) {
+        [delegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
     }
 
     // if we are in the middle of a cell touch event, perform the "touchEnded" simulation
@@ -317,52 +322,60 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
-    if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewWillBeginDecelerating:)]) {
-        [self.extVars.collectionViewDelegate scrollViewWillBeginDecelerating:scrollView];
+    id<PSTCollectionViewDelegate> delegate = self.extVars.collectionViewDelegate;
+    if ((id)delegate != self && [delegate respondsToSelector:@selector(scrollViewWillBeginDecelerating:)]) {
+        [delegate scrollViewWillBeginDecelerating:scrollView];
     }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]) {
-        [self.extVars.collectionViewDelegate scrollViewDidEndDecelerating:scrollView];
+    id<PSTCollectionViewDelegate> delegate = self.extVars.collectionViewDelegate;
+    if ((id)delegate != self && [delegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]) {
+        [delegate scrollViewDidEndDecelerating:scrollView];
     }
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
-    if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewDidEndScrollingAnimation:)]) {
-        [self.extVars.collectionViewDelegate scrollViewDidEndScrollingAnimation:scrollView];
+    id<PSTCollectionViewDelegate> delegate = self.extVars.collectionViewDelegate;
+    if ((id)delegate != self && [delegate respondsToSelector:@selector(scrollViewDidEndScrollingAnimation:)]) {
+        [delegate scrollViewDidEndScrollingAnimation:scrollView];
     }
 }
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
-    if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(viewForZoomingInScrollView:)]) {
-        return [self.extVars.collectionViewDelegate viewForZoomingInScrollView:scrollView];
+    id<PSTCollectionViewDelegate> delegate = self.extVars.collectionViewDelegate;
+    if ((id)delegate != self && [delegate respondsToSelector:@selector(viewForZoomingInScrollView:)]) {
+        return [delegate viewForZoomingInScrollView:scrollView];
     }
     return nil;
 }
 
 - (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view {
-    if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewWillBeginZooming:withView:)]) {
-        [self.extVars.collectionViewDelegate scrollViewWillBeginZooming:scrollView withView:view];
+    id<PSTCollectionViewDelegate> delegate = self.extVars.collectionViewDelegate;
+    if ((id)delegate != self && [delegate respondsToSelector:@selector(scrollViewWillBeginZooming:withView:)]) {
+        [delegate scrollViewWillBeginZooming:scrollView withView:view];
     }
 }
 
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(float)scale {
-    if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewDidEndZooming:withView:atScale:)]) {
-        [self.extVars.collectionViewDelegate scrollViewDidEndZooming:scrollView withView:view atScale:scale];
+    id<PSTCollectionViewDelegate> delegate = self.extVars.collectionViewDelegate;
+    if ((id)delegate != self && [delegate respondsToSelector:@selector(scrollViewDidEndZooming:withView:atScale:)]) {
+        [delegate scrollViewDidEndZooming:scrollView withView:view atScale:scale];
     }
 }
 
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView {
-    if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewShouldScrollToTop:)]) {
-        return [self.extVars.collectionViewDelegate scrollViewShouldScrollToTop:scrollView];
+    id<PSTCollectionViewDelegate> delegate = self.extVars.collectionViewDelegate;
+    if ((id)delegate != self && [delegate respondsToSelector:@selector(scrollViewShouldScrollToTop:)]) {
+        return [delegate scrollViewShouldScrollToTop:scrollView];
     }
     return YES;
 }
 
 - (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView {
-    if ([self.extVars.collectionViewDelegate respondsToSelector:@selector(scrollViewDidScrollToTop:)]) {
-        [self.extVars.collectionViewDelegate scrollViewDidScrollToTop:scrollView];
+    id<PSTCollectionViewDelegate> delegate = self.extVars.collectionViewDelegate;
+    if ((id)delegate != self && [delegate respondsToSelector:@selector(scrollViewDidScrollToTop:)]) {
+        [delegate scrollViewDidScrollToTop:scrollView];
     }
 }
 
