@@ -1582,7 +1582,33 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                                           [NSMutableArray array], @(PSTCollectionViewItemTypeSupplementaryView),nil];
     
     for (PSTCollectionViewUpdateItem *updateItem in items) {
-        if (updateItem.isSectionOperation) continue;
+        if (updateItem.isSectionOperation && updateItem.updateAction != PSTCollectionUpdateActionDelete) continue;
+        if (updateItem.isSectionOperation && updateItem.updateAction == PSTCollectionUpdateActionDelete) {
+            NSInteger numberOfBeforeSection = [self numberOfItemsInSection:updateItem.indexPathBeforeUpdate.section];
+            for (NSInteger i = 0; i < numberOfBeforeSection; i++) {
+                NSIndexPath *indexPath = [NSIndexPath indexPathForItem:i inSection:updateItem.indexPathBeforeUpdate.section];
+                
+                PSTCollectionViewLayoutAttributes *finalAttrs = [_layout finalLayoutAttributesForDisappearingItemAtIndexPath:indexPath];
+                PSTCollectionViewItemKey *key = [PSTCollectionViewItemKey collectionItemKeyForCellWithIndexPath:indexPath];
+                PSTCollectionReusableView *view = _allVisibleViewsDict[key];
+                if (view) {
+                    PSTCollectionViewLayoutAttributes *startAttrs = view.layoutAttributes;
+                    
+                    if (!finalAttrs) {
+                        finalAttrs = [startAttrs copy];
+                        finalAttrs.alpha = 0;
+                    }
+                    [animations addObject:@{@"view": view, @"previousLayoutInfos": startAttrs, @"newLayoutInfos": finalAttrs}];
+                    
+                    [_allVisibleViewsDict removeObjectForKey:key];
+                    
+                    [viewsToRemove[@(key.type)] addObject:view];
+                    
+                }
+            }
+            continue;
+        }
+
 
         if (updateItem.updateAction == PSTCollectionUpdateActionDelete) {
             NSIndexPath *indexPath = updateItem.indexPathBeforeUpdate;
