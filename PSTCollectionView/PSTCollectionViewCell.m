@@ -54,14 +54,12 @@
     if (layoutAttributes != _layoutAttributes) {
         _layoutAttributes = layoutAttributes;
 
-        self.frame = CGRectApplyAffineTransform(layoutAttributes.frame, CATransform3DGetAffineTransform(layoutAttributes.transform3D));
+        self.bounds = (CGRect){ .origin = self.bounds.origin, .size = layoutAttributes.size };
         self.center = layoutAttributes.center;
-
-        self.hidden = layoutAttributes.isHidden;
+        self.hidden = layoutAttributes.hidden;
         self.layer.transform = layoutAttributes.transform3D;
         self.layer.zPosition = layoutAttributes.zIndex;
         self.layer.opacity = layoutAttributes.alpha;
-        // TODO more attributes
     }
 }
 
