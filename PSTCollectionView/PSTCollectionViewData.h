@@ -26,7 +26,7 @@
 */
 
 // No fucking idea (yet)
-- (NSInteger)globalIndexForItemAtIndexPath:(NSIndexPath *)indexPath;
+- (NSUInteger)globalIndexForItemAtIndexPath:(NSIndexPath *)indexPath;
 - (NSIndexPath *)indexPathForItemAtGlobalIndex:(NSInteger)index;
 
 // Fetch layout attributes
