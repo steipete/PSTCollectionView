@@ -136,7 +136,7 @@
     return _globalItems[index];
 }
 
-- (NSInteger)globalIndexForItemAtIndexPath:(NSIndexPath *)indexPath {
+- (NSUInteger)globalIndexForItemAtIndexPath:(NSIndexPath *)indexPath {
     return [_globalItems indexOfObject:indexPath];
 }
 
