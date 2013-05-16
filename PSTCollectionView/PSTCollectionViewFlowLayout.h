@@ -53,12 +53,6 @@ typedef NS_ENUM(NSInteger, PSTCollectionViewScrollDirection) {
  */
 @property (nonatomic, strong) NSDictionary *rowAlignmentOptions;
 
-/*
- Boolean which enables content of PSTCollectionView to be scrollable regardless if it 
- is smaller than frame.
- */
-@property (nonatomic) BOOL shouldScroll;
-
 @end
 
 // @steipete addition, private API in UICollectionViewFlowLayout
