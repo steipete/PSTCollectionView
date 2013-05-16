@@ -1090,8 +1090,8 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         [self bringSubviewToFront: _allVisibleViewsDict[[previouslyVisibleItemsKeysSetMutable anyObject]]];
 
         CGPoint targetOffset = self.contentOffset;
-        CGPoint centerPoint = CGPointMake(self.bounds.origin.x + self.bounds.size.width / 2.0,
-                                          self.bounds.origin.y + self.bounds.size.height / 2.0);
+        CGPoint centerPoint = CGPointMake(self.bounds.origin.x + self.bounds.size.width / 2.f,
+                                          self.bounds.origin.y + self.bounds.size.height / 2.f);
         NSIndexPath *centerItemIndexPath = [self indexPathForItemAtPoint:centerPoint];
 
         if (!centerItemIndexPath) {
@@ -1106,7 +1106,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             if (layoutAttributes) {
                 PSTCollectionViewScrollPosition scrollPosition = PSTCollectionViewScrollPositionCenteredVertically | PSTCollectionViewScrollPositionCenteredHorizontally;
                 CGRect targetRect = [self makeRect:layoutAttributes.frame toScrollPosition:scrollPosition];
-                targetOffset = CGPointMake(fmax(0.0, targetRect.origin.x), fmax(0.0, targetRect.origin.y));
+                targetOffset = CGPointMake(fmaxf(0.f, targetRect.origin.x), fmaxf(0.f, targetRect.origin.y));
             }
         }
 
@@ -1708,10 +1708,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         PSTCollectionReusableView *view = _allVisibleViewsDict[key];
 
         if (key.type == PSTCollectionViewItemTypeCell) {
-            NSInteger oldGlobalIndex = [_update[@"oldModel"] globalIndexForItemAtIndexPath:key.indexPath];
+            NSUInteger oldGlobalIndex = [_update[@"oldModel"] globalIndexForItemAtIndexPath:key.indexPath];
             NSArray *oldToNewIndexMap = _update[@"oldToNewIndexMap"];
-            NSInteger newGlobalIndex = NSNotFound;
-            if (oldGlobalIndex >= 0 && oldGlobalIndex < [oldToNewIndexMap count]) {
+            NSUInteger newGlobalIndex = NSNotFound;
+            if (NSNotFound != oldGlobalIndex && oldGlobalIndex < [oldToNewIndexMap count]) {
                 newGlobalIndex = [oldToNewIndexMap[oldGlobalIndex] intValue];
             }
             NSIndexPath *newIndexPath = newGlobalIndex == NSNotFound ? nil : [_update[@"newModel"] indexPathForItemAtGlobalIndex:newGlobalIndex];
@@ -1926,7 +1926,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         }
     }
 
-    for(NSInteger i=0; i<[sortedInsertMutableItems count]; i++) {
+    for(NSUInteger i=0; i<[sortedInsertMutableItems count]; i++) {
         PSTCollectionViewUpdateItem *insertItem = sortedInsertMutableItems[i];
         NSIndexPath *indexPath = insertItem.indexPathAfterUpdate;
 
@@ -1945,7 +1945,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                 }
             }
 
-            NSInteger j=i+1;
+            NSUInteger j=i+1;
             while(j<[sortedInsertMutableItems count]) {
                 PSTCollectionViewUpdateItem *nextInsertItem = sortedInsertMutableItems[j];
 
@@ -2106,9 +2106,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     for(NSInteger i=0; i < [_collectionViewData numberOfItems]; i++)
         [newToOldMap addObject:@(NSNotFound)];
 
-    for(NSInteger i=0; i < [newModel count]; i++) {
+    for(NSUInteger i=0; i < [newModel count]; i++) {
         NSMutableArray* section = newModel[i];
-        for(NSInteger j=0; j<[section count];j++) {
+        for(NSUInteger j=0; j<[section count];j++) {
             NSInteger newGlobalIndex = [_collectionViewData globalIndexForItemAtIndexPath:[NSIndexPath indexPathForItem:j inSection:i]];
             if([section[j] intValue] != NSNotFound)
                 oldToNewMap[[section[j] intValue]] = @(newGlobalIndex);
@@ -2249,13 +2249,36 @@ __attribute__((constructor)) static void PSTCreateUICollectionViewClasses(void) 
 
         // add PSUI classes at runtime to make Interface Builder sane
         // (IB doesn't allow adding the PSUICollectionView_ types but doesn't complain on unknown classes)
-        objc_registerClassPair(objc_allocateClassPair([PSUICollectionView_ class], "PSUICollectionView", 0));
-        objc_registerClassPair(objc_allocateClassPair([PSUICollectionViewCell_ class], "PSUICollectionViewCell", 0));
-        objc_registerClassPair(objc_allocateClassPair([PSUICollectionReusableView_ class], "PSUICollectionReusableView", 0));
-        objc_registerClassPair(objc_allocateClassPair([PSUICollectionViewLayout_ class], "PSUICollectionViewLayout", 0));
-        objc_registerClassPair(objc_allocateClassPair([PSUICollectionViewFlowLayout_ class], "PSUICollectionViewFlowLayout", 0));
-        objc_registerClassPair(objc_allocateClassPair([PSUICollectionViewLayoutAttributes_ class], "PSUICollectionViewLayoutAttributes", 0));
-        objc_registerClassPair(objc_allocateClassPair([PSUICollectionViewController_ class], "PSUICollectionViewController", 0));
+		Class theClass = objc_allocateClassPair([PSUICollectionView_ class], "PSUICollectionView", 0);
+		if (theClass) {
+			objc_registerClassPair(theClass);
+		} else {
+			// Do nothing. The class name is already in use. This may happen if this code is running for the second time (first for an app bundle, then again for a unit test bundle).
+		}
+		theClass = objc_allocateClassPair([PSUICollectionViewCell_ class], "PSUICollectionViewCell", 0);
+		if (theClass) {
+			objc_registerClassPair(theClass);
+		}
+        theClass = objc_allocateClassPair([PSUICollectionReusableView_ class], "PSUICollectionReusableView", 0);
+		if (theClass) {
+			objc_registerClassPair(theClass);
+		}
+        theClass = objc_allocateClassPair([PSUICollectionViewLayout_ class], "PSUICollectionViewLayout", 0);
+		if (theClass) {
+			objc_registerClassPair(theClass);
+		}
+        theClass = objc_allocateClassPair([PSUICollectionViewFlowLayout_ class], "PSUICollectionViewFlowLayout", 0);
+		if (theClass) {
+			objc_registerClassPair(theClass);
+		}
+		theClass = objc_allocateClassPair([PSUICollectionViewLayoutAttributes_ class], "PSUICollectionViewLayoutAttributes", 0);
+        if (theClass) {
+			objc_registerClassPair(theClass);
+		}
+		theClass = objc_allocateClassPair([PSUICollectionViewController_ class], "PSUICollectionViewController", 0);
+		if (theClass) {
+			objc_registerClassPair(theClass);
+		}
     }
 }
 
