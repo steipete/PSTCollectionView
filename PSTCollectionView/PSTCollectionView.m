@@ -2214,9 +2214,7 @@ __attribute__((constructor)) static void PSTCreateUICollectionViewClasses(void) 
 
         // add PSUI classes at runtime to make Interface Builder sane
         // (IB doesn't allow adding the PSUICollectionView_ types but doesn't complain on unknown classes)
-        /***
-         * Commenting these out, because it causes an EXC_BAD_EXCESS when run in a 
-         * Unit Test environment.
+#if !defined (PSTUNITTEST)
         objc_registerClassPair(objc_allocateClassPair([PSUICollectionView_ class], "PSUICollectionView", 0));
         objc_registerClassPair(objc_allocateClassPair([PSUICollectionViewCell_ class], "PSUICollectionViewCell", 0));
         objc_registerClassPair(objc_allocateClassPair([PSUICollectionReusableView_ class], "PSUICollectionReusableView", 0));
@@ -2224,7 +2222,7 @@ __attribute__((constructor)) static void PSTCreateUICollectionViewClasses(void) 
         objc_registerClassPair(objc_allocateClassPair([PSUICollectionViewFlowLayout_ class], "PSUICollectionViewFlowLayout", 0));
         objc_registerClassPair(objc_allocateClassPair([PSUICollectionViewLayoutAttributes_ class], "PSUICollectionViewLayoutAttributes", 0));
         objc_registerClassPair(objc_allocateClassPair([PSUICollectionViewController_ class], "PSUICollectionViewController", 0));
-         */
+#endif  //UNITTEST
     }
 }
 

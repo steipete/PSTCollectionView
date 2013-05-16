@@ -141,3 +141,6 @@ typedef NS_ENUM(NSUInteger, PSTCollectionElementCategory) {
 #define PSUICollectionViewLayoutAttributes UICollectionViewLayoutAttributes
 #define PSUICollectionViewController UICollectionViewController
 #endif
+
+// If you have troubles with unit testing and PSTCollectionView, just define this preprocessor macro to disable some needed runtime manipulations
+//#define PSTUNITTEST
