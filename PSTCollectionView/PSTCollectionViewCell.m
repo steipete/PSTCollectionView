@@ -54,14 +54,12 @@
     if (layoutAttributes != _layoutAttributes) {
         _layoutAttributes = layoutAttributes;
 
-        self.frame = CGRectApplyAffineTransform(layoutAttributes.frame, CATransform3DGetAffineTransform(layoutAttributes.transform3D));
+        self.bounds = (CGRect){ .origin = self.bounds.origin, .size = layoutAttributes.size };
         self.center = layoutAttributes.center;
-
-        self.hidden = layoutAttributes.isHidden;
+        self.hidden = layoutAttributes.hidden;
         self.layer.transform = layoutAttributes.transform3D;
         self.layer.zPosition = layoutAttributes.zIndex;
         self.layer.opacity = layoutAttributes.alpha;
-        // TODO more attributes
     }
 }
 
@@ -216,6 +214,20 @@
 
 - (BOOL)isHighlighted {
     return _collectionCellFlags.highlighted;
+}
+
+- (void)performSelectionSegue {
+    /*
+        Currently there's no "official" way to trigger a storyboard segue
+        using UIStoryboardSegueTemplate, so we're doing it in a semi-legal way.
+     */
+    SEL selector = NSSelectorFromString([NSString stringWithFormat:@"per%@", @"form:"]);
+    if ([self->_selectionSegueTemplate respondsToSelector:selector]) {
+        #pragma clang diagnostic push
+        #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        [self->_selectionSegueTemplate performSelector:selector withObject:self];
+        #pragma clang diagnostic pop
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
