@@ -2233,6 +2233,7 @@ __attribute__((constructor)) static void PSTCreateUICollectionViewClasses(void) 
         static bool initialized = false;
         
         if (!initialized) {
+            initialized = true;
             // class_setSuperclass is deprecated, but once iOS7 is out we hopefully can drop iOS5 and don't need this code anymore anyway.
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
