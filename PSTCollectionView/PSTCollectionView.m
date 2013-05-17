@@ -457,7 +457,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     }
 
     [cell applyLayoutAttributes:attributes];
-
+    
     return cell;
 }
 
@@ -975,12 +975,18 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (void)deleteSections:(NSIndexSet *)sections {
+    NSMutableArray* paths = [NSMutableArray new];
+    [sections enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+        for (int i = 0;i<[self numberOfItemsInSection:idx];++i) {
+            [paths addObject:[NSIndexPath indexPathForItem:i inSection:idx]];
+        }
+    }];
+    [self deleteItemsAtIndexPaths:paths];
     [self updateSections:sections updateAction:PSTCollectionUpdateActionDelete];
 }
 
 - (void)reloadSections:(NSIndexSet *)sections {
-    [self updateSections:sections updateAction:PSTCollectionUpdateActionDelete];
-    [self updateSections:sections updateAction:PSTCollectionUpdateActionInsert];
+    [self updateSections:sections updateAction:PSTCollectionUpdateActionReload];
 }
 
 - (void)moveSection:(NSInteger)section toSection:(NSInteger)newSection {
@@ -1140,13 +1146,13 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                 newAttr = [layout layoutAttributesForSupplementaryViewOfKind:attr.representedElementKind
                                                                  atIndexPath:newKey.indexPath];
             }
-
+            
             if (prevAttr != nil && newAttr != nil) {
                 layoutInterchangeData[newKey] = [NSDictionary dictionaryWithObjects:@[prevAttr,newAttr]
                                                                             forKeys:@[@"previousLayoutInfos", @"newLayoutInfos"]];
             }
         }
-
+        
         for(PSTCollectionViewItemKey *key in previouslyVisibleItemsKeysSet) {
             PSTCollectionViewLayoutAttributes *prevAttr = nil;
             PSTCollectionViewLayoutAttributes *newAttr = nil;
@@ -1871,12 +1877,13 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         NSAssert(updateItem.indexPathBeforeUpdate.section< [oldCollectionViewData numberOfSections],
                  @"attempt to reload item (%@) that doesn't exist (there are only %d sections before update)",
                  updateItem.indexPathBeforeUpdate, [oldCollectionViewData numberOfSections]);
-
-        NSAssert(updateItem.indexPathBeforeUpdate.item<[oldCollectionViewData numberOfItemsInSection:updateItem.indexPathBeforeUpdate.section],
-                 @"attempt to reload item (%@) that doesn't exist (there are only %d items in section %d before update)",
-                 updateItem.indexPathBeforeUpdate,
-                 [oldCollectionViewData numberOfItemsInSection:updateItem.indexPathBeforeUpdate.section],
-                 updateItem.indexPathBeforeUpdate.section);
+        if (updateItem.indexPathBeforeUpdate.item != NSNotFound) {
+            NSAssert(updateItem.indexPathBeforeUpdate.item<[oldCollectionViewData numberOfItemsInSection:updateItem.indexPathBeforeUpdate.section],
+                     @"attempt to reload item (%@) that doesn't exist (there are only %d items in section %d before update)",
+                     updateItem.indexPathBeforeUpdate,
+                     [oldCollectionViewData numberOfItemsInSection:updateItem.indexPathBeforeUpdate.section],
+                     updateItem.indexPathBeforeUpdate.section);
+        }
 
         [someMutableArr2 addObject:[[PSTCollectionViewUpdateItem alloc] initWithAction:PSTCollectionUpdateActionDelete
                                                                           forIndexPath:updateItem.indexPathBeforeUpdate]];
@@ -2063,7 +2070,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         switch (updateItem.updateAction) {
             case PSTCollectionUpdateActionDelete: {
                 if(updateItem.isSectionOperation) {
-                    [newModel removeObjectAtIndex:updateItem.indexPathBeforeUpdate.section];
+                    // section updates are ignored anyway in animation code. If not commented, mixing
+                    // rows and section deletion causes crash in else below
+                    //  [newModel removeObjectAtIndex:updateItem.indexPathBeforeUpdate.section];
                 } else {
                     [(NSMutableArray*)newModel[updateItem.indexPathBeforeUpdate.section]
                      removeObjectAtIndex:updateItem.indexPathBeforeUpdate.item];
@@ -2150,16 +2159,17 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)updateSections:(NSIndexSet *)sections updateAction:(PSTCollectionUpdateAction)updateAction {
     BOOL updating = _collectionViewFlags.updating;
-    if (!updating) [self setupCellAnimations];
-
+    if(!updating) {
+        [self setupCellAnimations];
+    }
+    
     NSMutableArray *updateActions = [self arrayForUpdateAction:updateAction];
-    NSInteger section = [sections firstIndex];
 
     [sections enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
         PSTCollectionViewUpdateItem *updateItem =
         [[PSTCollectionViewUpdateItem alloc] initWithAction:updateAction
                                                forIndexPath:[NSIndexPath indexPathForItem:NSNotFound
-                                                                                inSection:section]];
+                                                                                inSection:idx]];
         [updateActions addObject:updateItem];
     }];
 
@@ -2220,65 +2230,69 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 // Create subclasses that pose as UICollectionView et al, if not available at runtime.
 __attribute__((constructor)) static void PSTCreateUICollectionViewClasses(void) {
     @autoreleasepool {
-
-        // class_setSuperclass is deprecated, but once iOS7 is out we hopefully can drop iOS5 and don't need this code anymore anyway.
+        static bool initialized = false;
+        
+        if (!initialized) {
+            initialized = true;
+            // class_setSuperclass is deprecated, but once iOS7 is out we hopefully can drop iOS5 and don't need this code anymore anyway.
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        // Dynamically change superclasses of the PSUICollectionView* classes to UICollectionView*. Crazy stuff.
-        if ([UICollectionView class]) class_setSuperclass([PSUICollectionView_ class], [UICollectionView class]);
-        else objc_registerClassPair(objc_allocateClassPair([PSTCollectionView class], "UICollectionView", 0));
-
-		if ([UICollectionViewCell class]) class_setSuperclass([PSUICollectionViewCell_ class], [UICollectionViewCell class]);
-        else objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewCell class], "UICollectionViewCell", 0));
-
-		if ([UICollectionReusableView class]) class_setSuperclass([PSUICollectionReusableView_ class], [UICollectionReusableView class]);
-        else objc_registerClassPair(objc_allocateClassPair([PSTCollectionReusableView class], "UICollectionReusableView", 0));
-
-		if ([UICollectionViewLayout class]) class_setSuperclass([PSUICollectionViewLayout_ class], [UICollectionViewLayout class]);
-        else objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewLayout class], "UICollectionViewLayout", 0));
-
-		if ([UICollectionViewFlowLayout class]) class_setSuperclass([PSUICollectionViewFlowLayout_ class], [UICollectionViewFlowLayout class]);
-        else objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewFlowLayout class], "UICollectionViewFlowLayout", 0));
-
-		if ([UICollectionViewLayoutAttributes class]) class_setSuperclass([PSUICollectionViewLayoutAttributes_ class], [UICollectionViewLayoutAttributes class]);
-        else objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewLayoutAttributes class], "UICollectionViewLayoutAttributes", 0));
-
-		if ([UICollectionViewController class]) class_setSuperclass([PSUICollectionViewController_ class], [UICollectionViewController class]);
-        else objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewController class], "UICollectionViewController", 0));
+            // Dynamically change superclasses of the PSUICollectionView* classes to UICollectionView*. Crazy stuff.
+            if ([UICollectionView class]) class_setSuperclass([PSUICollectionView_ class], [UICollectionView class]);
+            else objc_registerClassPair(objc_allocateClassPair([PSTCollectionView class], "UICollectionView", 0));
+            
+            if ([UICollectionViewCell class]) class_setSuperclass([PSUICollectionViewCell_ class], [UICollectionViewCell class]);
+            else objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewCell class], "UICollectionViewCell", 0));
+            
+            if ([UICollectionReusableView class]) class_setSuperclass([PSUICollectionReusableView_ class], [UICollectionReusableView class]);
+            else objc_registerClassPair(objc_allocateClassPair([PSTCollectionReusableView class], "UICollectionReusableView", 0));
+            
+            if ([UICollectionViewLayout class]) class_setSuperclass([PSUICollectionViewLayout_ class], [UICollectionViewLayout class]);
+            else objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewLayout class], "UICollectionViewLayout", 0));
+            
+            if ([UICollectionViewFlowLayout class]) class_setSuperclass([PSUICollectionViewFlowLayout_ class], [UICollectionViewFlowLayout class]);
+            else objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewFlowLayout class], "UICollectionViewFlowLayout", 0));
+            
+            if ([UICollectionViewLayoutAttributes class]) class_setSuperclass([PSUICollectionViewLayoutAttributes_ class], [UICollectionViewLayoutAttributes class]);
+            else objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewLayoutAttributes class], "UICollectionViewLayoutAttributes", 0));
+            
+            if ([UICollectionViewController class]) class_setSuperclass([PSUICollectionViewController_ class], [UICollectionViewController class]);
+            else objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewController class], "UICollectionViewController", 0));
 #pragma clang diagnostic pop
-
-        // add PSUI classes at runtime to make Interface Builder sane
-        // (IB doesn't allow adding the PSUICollectionView_ types but doesn't complain on unknown classes)
-		Class theClass = objc_allocateClassPair([PSUICollectionView_ class], "PSUICollectionView", 0);
-		if (theClass) {
-			objc_registerClassPair(theClass);
-		} else {
-			// Do nothing. The class name is already in use. This may happen if this code is running for the second time (first for an app bundle, then again for a unit test bundle).
-		}
-		theClass = objc_allocateClassPair([PSUICollectionViewCell_ class], "PSUICollectionViewCell", 0);
-		if (theClass) {
-			objc_registerClassPair(theClass);
-		}
-        theClass = objc_allocateClassPair([PSUICollectionReusableView_ class], "PSUICollectionReusableView", 0);
-		if (theClass) {
-			objc_registerClassPair(theClass);
-		}
-        theClass = objc_allocateClassPair([PSUICollectionViewLayout_ class], "PSUICollectionViewLayout", 0);
-		if (theClass) {
-			objc_registerClassPair(theClass);
-		}
-        theClass = objc_allocateClassPair([PSUICollectionViewFlowLayout_ class], "PSUICollectionViewFlowLayout", 0);
-		if (theClass) {
-			objc_registerClassPair(theClass);
-		}
-		theClass = objc_allocateClassPair([PSUICollectionViewLayoutAttributes_ class], "PSUICollectionViewLayoutAttributes", 0);
-        if (theClass) {
-			objc_registerClassPair(theClass);
-		}
-		theClass = objc_allocateClassPair([PSUICollectionViewController_ class], "PSUICollectionViewController", 0);
-		if (theClass) {
-			objc_registerClassPair(theClass);
-		}
+            
+            // add PSUI classes at runtime to make Interface Builder sane
+            // (IB doesn't allow adding the PSUICollectionView_ types but doesn't complain on unknown classes)
+            Class theClass = objc_allocateClassPair([PSUICollectionView_ class], "PSUICollectionView", 0);
+            if (theClass) {
+                objc_registerClassPair(theClass);
+            } else {
+                // Do nothing. The class name is already in use. This may happen if this code is running for the second time (first for an app bundle, then again for a unit test bundle).
+            }
+            theClass = objc_allocateClassPair([PSUICollectionViewCell_ class], "PSUICollectionViewCell", 0);
+            if (theClass) {
+                objc_registerClassPair(theClass);
+            }
+            theClass = objc_allocateClassPair([PSUICollectionReusableView_ class], "PSUICollectionReusableView", 0);
+            if (theClass) {
+                objc_registerClassPair(theClass);
+            }
+            theClass = objc_allocateClassPair([PSUICollectionViewLayout_ class], "PSUICollectionViewLayout", 0);
+            if (theClass) {
+                objc_registerClassPair(theClass);
+            }
+            theClass = objc_allocateClassPair([PSUICollectionViewFlowLayout_ class], "PSUICollectionViewFlowLayout", 0);
+            if (theClass) {
+                objc_registerClassPair(theClass);
+            }
+            theClass = objc_allocateClassPair([PSUICollectionViewLayoutAttributes_ class], "PSUICollectionViewLayoutAttributes", 0);
+            if (theClass) {
+                objc_registerClassPair(theClass);
+            }
+            theClass = objc_allocateClassPair([PSUICollectionViewController_ class], "PSUICollectionViewController", 0);
+            if (theClass) {
+                objc_registerClassPair(theClass);
+            }
+        }
     }
 }
 

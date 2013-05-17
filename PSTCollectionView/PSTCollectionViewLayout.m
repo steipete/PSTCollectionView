@@ -298,6 +298,7 @@
 
     for (PSTCollectionReusableView *view in [[_collectionView visibleViewsDict] objectEnumerator]) {
         PSTCollectionViewLayoutAttributes *attr = [view.layoutAttributes copy];
+        if (attr) {
         if (attr.isCell) {
 
             NSInteger index = [update[@"oldModel"] globalIndexForItemAtIndexPath:[attr indexPath]];
@@ -310,6 +311,7 @@
             }
         }
         _initialAnimationLayoutAttributesDict[[PSTCollectionViewItemKey collectionItemKeyForLayoutAttributes:attr]] = attr;
+        }
     }
 
     PSTCollectionViewData* collectionViewData = [_collectionView collectionViewData];
