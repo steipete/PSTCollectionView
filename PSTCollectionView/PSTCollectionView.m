@@ -2258,39 +2258,40 @@ __attribute__((constructor)) static void PSTCreateUICollectionViewClasses(void) 
             if ([UICollectionViewController class]) class_setSuperclass([PSUICollectionViewController_ class], [UICollectionViewController class]);
             else objc_registerClassPair(objc_allocateClassPair([PSTCollectionViewController class], "UICollectionViewController", 0));
 #pragma clang diagnostic pop
-
-        // add PSUI classes at runtime to make Interface Builder sane
-        // (IB doesn't allow adding the PSUICollectionView_ types but doesn't complain on unknown classes)
-		Class theClass = objc_allocateClassPair([PSUICollectionView_ class], "PSUICollectionView", 0);
-		if (theClass) {
-			objc_registerClassPair(theClass);
-		} else {
-			// Do nothing. The class name is already in use. This may happen if this code is running for the second time (first for an app bundle, then again for a unit test bundle).
-		}
-		theClass = objc_allocateClassPair([PSUICollectionViewCell_ class], "PSUICollectionViewCell", 0);
-		if (theClass) {
-			objc_registerClassPair(theClass);
-		}
-        theClass = objc_allocateClassPair([PSUICollectionReusableView_ class], "PSUICollectionReusableView", 0);
-		if (theClass) {
-			objc_registerClassPair(theClass);
-		}
-        theClass = objc_allocateClassPair([PSUICollectionViewLayout_ class], "PSUICollectionViewLayout", 0);
-		if (theClass) {
-			objc_registerClassPair(theClass);
-		}
-        theClass = objc_allocateClassPair([PSUICollectionViewFlowLayout_ class], "PSUICollectionViewFlowLayout", 0);
-		if (theClass) {
-			objc_registerClassPair(theClass);
-		}
-		theClass = objc_allocateClassPair([PSUICollectionViewLayoutAttributes_ class], "PSUICollectionViewLayoutAttributes", 0);
-        if (theClass) {
-			objc_registerClassPair(theClass);
-		}
-		theClass = objc_allocateClassPair([PSUICollectionViewController_ class], "PSUICollectionViewController", 0);
-		if (theClass) {
-			objc_registerClassPair(theClass);
-		}
+            
+            // add PSUI classes at runtime to make Interface Builder sane
+            // (IB doesn't allow adding the PSUICollectionView_ types but doesn't complain on unknown classes)
+            Class theClass = objc_allocateClassPair([PSUICollectionView_ class], "PSUICollectionView", 0);
+            if (theClass) {
+                objc_registerClassPair(theClass);
+            } else {
+                // Do nothing. The class name is already in use. This may happen if this code is running for the second time (first for an app bundle, then again for a unit test bundle).
+            }
+            theClass = objc_allocateClassPair([PSUICollectionViewCell_ class], "PSUICollectionViewCell", 0);
+            if (theClass) {
+                objc_registerClassPair(theClass);
+            }
+            theClass = objc_allocateClassPair([PSUICollectionReusableView_ class], "PSUICollectionReusableView", 0);
+            if (theClass) {
+                objc_registerClassPair(theClass);
+            }
+            theClass = objc_allocateClassPair([PSUICollectionViewLayout_ class], "PSUICollectionViewLayout", 0);
+            if (theClass) {
+                objc_registerClassPair(theClass);
+            }
+            theClass = objc_allocateClassPair([PSUICollectionViewFlowLayout_ class], "PSUICollectionViewFlowLayout", 0);
+            if (theClass) {
+                objc_registerClassPair(theClass);
+            }
+            theClass = objc_allocateClassPair([PSUICollectionViewLayoutAttributes_ class], "PSUICollectionViewLayoutAttributes", 0);
+            if (theClass) {
+                objc_registerClassPair(theClass);
+            }
+            theClass = objc_allocateClassPair([PSUICollectionViewController_ class], "PSUICollectionViewController", 0);
+            if (theClass) {
+                objc_registerClassPair(theClass);
+            }
+        }
     }
 }
 
