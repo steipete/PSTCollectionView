@@ -294,22 +294,22 @@
 #pragma mark - Responding to Collection View Updates
 
 - (void)prepareForCollectionViewUpdates:(NSArray *)updateItems {
-    NSDictionary* update = [_collectionView currentUpdate];
+    NSDictionary *update = [_collectionView currentUpdate];
 
     for (PSTCollectionReusableView *view in [[_collectionView visibleViewsDict] objectEnumerator]) {
         PSTCollectionViewLayoutAttributes *attr = [view.layoutAttributes copy];
-        if (attr.isCell) {
+        if (attr) {
+            if (attr.isCell) {
+                NSInteger index = [update[@"oldModel"] globalIndexForItemAtIndexPath:[attr indexPath]];
 
-            NSInteger index = [update[@"oldModel"] globalIndexForItemAtIndexPath:[attr indexPath]];
+                if(index != NSNotFound) {
+                    index = [update[@"oldToNewIndexMap"][index] intValue];
 
-            if(index != NSNotFound) {
-                index = [update[@"oldToNewIndexMap"][index] intValue];
-                
-                [attr setIndexPath:[attr indexPath]];
-                
+                    [attr setIndexPath:[attr indexPath]];
+                }
             }
+            _initialAnimationLayoutAttributesDict[[PSTCollectionViewItemKey collectionItemKeyForLayoutAttributes:attr]] = attr;
         }
-        _initialAnimationLayoutAttributesDict[[PSTCollectionViewItemKey collectionItemKeyForLayoutAttributes:attr]] = attr;
     }
 
     PSTCollectionViewData* collectionViewData = [_collectionView collectionViewData];
@@ -391,7 +391,7 @@
 }
 
 - (PSTCollectionViewLayoutAttributes *)initialLayoutAttributesForInsertedSupplementaryElementOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)elementIndexPath {
-    PSTCollectionViewLayoutAttributes* attrs = _initialAnimationLayoutAttributesDict[[PSTCollectionViewItemKey collectionItemKeyForCellWithIndexPath:elementIndexPath]];
+    PSTCollectionViewLayoutAttributes *attrs = _initialAnimationLayoutAttributesDict[[PSTCollectionViewItemKey collectionItemKeyForCellWithIndexPath:elementIndexPath]];
 
     if([_insertedSectionsSet containsIndex:[elementIndexPath section]]) {
         attrs = [attrs copy];
@@ -466,9 +466,9 @@
         if ([self respondsToSelector:cleanedSelector]) {
             // dynamically add method for faster resolving
             Method newMethod = class_getInstanceMethod([self class], [inv selector]);
-            IMP underscoreIMP = imp_implementationWithBlock(PSBlockImplCast(^(id _self) {
+            IMP underscoreIMP = imp_implementationWithBlock(^(id _self) {
                 return objc_msgSend(_self, cleanedSelector);
-            }));
+            });
             class_addMethod([self class], [inv selector], underscoreIMP, method_getTypeEncoding(newMethod));
             // invoke now
             inv.selector = cleanedSelector;
