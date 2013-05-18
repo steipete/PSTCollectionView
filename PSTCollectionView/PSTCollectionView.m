@@ -35,6 +35,9 @@
 - (BOOL)isSectionOperation;
 @end
 
+@interface PSTCollectionViewLayoutAttributes()
+@property (nonatomic, copy) NSString *elementKind;
+@end
 
 CGFloat PSTSimulatorAnimationDragCoefficient(void);
 @class PSTCollectionViewExt;
@@ -1474,35 +1477,35 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 // @steipete optimization
-- (void)queueReusableView:(PSTCollectionReusableView *)reusableView inQueue:(NSMutableDictionary *)queue {
-    NSString *cellIdentifier = reusableView.reuseIdentifier;
-    NSParameterAssert([cellIdentifier length]);
+- (void)queueReusableView:(PSTCollectionReusableView *)reusableView inQueue:(NSMutableDictionary *)queue withIdentifier:(NSString *)identifier {
+    NSParameterAssert(identifier.length > 0);
 
     [reusableView removeFromSuperview];
     [reusableView prepareForReuse];
 
     // enqueue cell
-    NSMutableArray *reuseableViews = queue[cellIdentifier];
+    NSMutableArray *reuseableViews = queue[identifier];
     if (!reuseableViews) {
         reuseableViews = [NSMutableArray array];
-        queue[cellIdentifier] = reuseableViews;
+        queue[identifier] = reuseableViews;
     }
     [reuseableViews addObject:reusableView];
 }
 
 // enqueue cell for reuse
 - (void)reuseCell:(PSTCollectionViewCell *)cell {
-    [self queueReusableView:cell inQueue:_cellReuseQueues];
+    [self queueReusableView:cell inQueue:_cellReuseQueues withIdentifier:cell.reuseIdentifier];
 }
 
 // enqueue supplementary view for reuse
 - (void)reuseSupplementaryView:(PSTCollectionReusableView *)supplementaryView {
-    [self queueReusableView:supplementaryView inQueue:_supplementaryViewReuseQueues];
+    NSString *kindAndIdentifier = [NSString stringWithFormat:@"%@/%@", supplementaryView.layoutAttributes.elementKind, supplementaryView.reuseIdentifier];
+    [self queueReusableView:supplementaryView inQueue:_supplementaryViewReuseQueues withIdentifier:kindAndIdentifier];
 }
 
 // enqueue decoration view for reuse
 - (void)reuseDecorationView:(PSTCollectionReusableView *)decorationView {
-    [self queueReusableView:decorationView inQueue:_decorationViewReuseQueues];
+    [self queueReusableView:decorationView inQueue:_decorationViewReuseQueues withIdentifier:decorationView.reuseIdentifier];
 }
 
 - (void)addControlledSubview:(PSTCollectionReusableView *)subview {
