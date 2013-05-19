@@ -14,9 +14,9 @@
     struct {
         unsigned int clearsSelectionOnViewWillAppear : 1;
         unsigned int appearsFirstTime : 1; // PST exension!
-    } _collectionViewControllerFlags;
+    }_collectionViewControllerFlags;
 }
-@property (nonatomic, strong) PSTCollectionViewLayout* layout;
+@property (nonatomic, strong) PSTCollectionViewLayout *layout;
 @end
 
 @implementation PSTCollectionViewController
@@ -27,7 +27,7 @@
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super initWithCoder:coder];
     if (self) {
-		self.layout = [PSTCollectionViewFlowLayout new];
+        self.layout = [PSTCollectionViewFlowLayout new];
         self.clearsSelectionOnViewWillAppear = YES;
         _collectionViewControllerFlags.appearsFirstTime = YES;
     }
@@ -35,7 +35,7 @@
 }
 
 - (id)initWithCollectionViewLayout:(PSTCollectionViewLayout *)layout {
-    if((self = [super init])) {
+    if ((self = [super init])) {
         self.layout = layout;
         self.clearsSelectionOnViewWillAppear = YES;
         _collectionViewControllerFlags.appearsFirstTime = YES;
@@ -55,8 +55,8 @@
         self.view = [[UIView alloc] initWithFrame:self.view.bounds];
         self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     }
-	
-	if (_collectionView.delegate == nil) _collectionView.delegate = self;
+
+    if (_collectionView.delegate == nil) _collectionView.delegate = self;
     if (_collectionView.dataSource == nil) _collectionView.dataSource = self;
 
     // only create the collection view if it is not already created (by IB)
@@ -91,9 +91,9 @@
         [_collectionView reloadData];
         _collectionViewControllerFlags.appearsFirstTime = NO;
     }
-    
+
     if (_collectionViewControllerFlags.clearsSelectionOnViewWillAppear) {
-        for (NSIndexPath* aIndexPath in [[_collectionView indexPathsForSelectedItems] copy]) {
+        for (NSIndexPath *aIndexPath in [[_collectionView indexPathsForSelectedItems] copy]) {
             [_collectionView deselectItemAtIndexPath:aIndexPath animated:animated];
         }
     }

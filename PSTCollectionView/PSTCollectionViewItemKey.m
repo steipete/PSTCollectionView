@@ -6,7 +6,6 @@
 //
 
 #import "PSTCollectionViewItemKey.h"
-#import "PSTCollectionViewLayout.h"
 
 NSString *const PSTCollectionElementKindCell = @"UICollectionElementKindCell";
 NSString *const PSTCollectionElementKindDecorationView = @"PSTCollectionElementKindDecorationView";
@@ -63,7 +62,7 @@ NSString *PSTCollectionViewItemTypeToString(PSTCollectionViewItemType type) {
 
 - (NSString *)description {
     return [NSString stringWithFormat:@"<%@: %p Type = %@ Identifier=%@ IndexPath = %@>", NSStringFromClass([self class]),
-            self, PSTCollectionViewItemTypeToString(self.type), _identifier, self.indexPath];
+                                      self, PSTCollectionViewItemTypeToString(self.type), _identifier, self.indexPath];
 }
 
 - (NSUInteger)hash {
@@ -76,8 +75,8 @@ NSString *PSTCollectionViewItemTypeToString(PSTCollectionViewItemType type) {
         // identifier might be nil?
         if (_type == otherKeyItem.type && [_indexPath isEqual:otherKeyItem.indexPath] && ([_identifier isEqualToString:otherKeyItem.identifier] || _identifier == otherKeyItem.identifier)) {
             return YES;
-            }
         }
+    }
     return NO;
 }
 

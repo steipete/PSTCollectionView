@@ -7,11 +7,9 @@
 
 #import "PSTGridLayoutInfo.h"
 #import "PSTGridLayoutSection.h"
-#import "PSTGridLayoutRow.h"
 #import "PSTGridLayoutItem.h"
-#import "PSTCollectionView.h"
 
-@interface PSTGridLayoutInfo() {
+@interface PSTGridLayoutInfo () {
     NSMutableArray *_sections;
     CGRect _visibleBounds;
     CGSize _layoutSize;
@@ -26,7 +24,7 @@
 #pragma mark - NSObject
 
 - (id)init {
-    if((self = [super init])) {
+    if ((self = [super init])) {
         _sections = [NSMutableArray new];
     }
     return self;

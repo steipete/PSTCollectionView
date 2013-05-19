@@ -55,6 +55,7 @@
 - (void)computeLayout;
 
 - (PSTGridLayoutItem *)addItem;
+
 - (PSTGridLayoutRow *)addRow;
 
 // Copy snapshot of current object

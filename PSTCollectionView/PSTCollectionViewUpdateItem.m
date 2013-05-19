@@ -8,10 +8,8 @@
 
 #import "PSTCollectionViewUpdateItem.h"
 
-#import "NSIndexPath+PSTCollectionViewAdditions.h"
 
-
-@interface PSTCollectionViewUpdateItem() {
+@interface PSTCollectionViewUpdateItem () {
     NSIndexPath *_initialIndexPath;
     NSIndexPath *_finalIndexPath;
     PSTCollectionUpdateAction _updateAction;
@@ -26,7 +24,7 @@
 @synthesize indexPathAfterUpdate = _finalIndexPath;
 
 - (id)initWithInitialIndexPath:(NSIndexPath *)initialIndexPath finalIndexPath:(NSIndexPath *)finalIndexPath updateAction:(PSTCollectionUpdateAction)updateAction {
-    if((self = [super init])) {
+    if ((self = [super init])) {
         _initialIndexPath = initialIndexPath;
         _finalIndexPath = finalIndexPath;
         _updateAction = updateAction;
@@ -34,12 +32,12 @@
     return self;
 }
 
-- (id)initWithAction:(PSTCollectionUpdateAction)updateAction forIndexPath:(NSIndexPath*)indexPath {
-    if(updateAction == PSTCollectionUpdateActionInsert)
+- (id)initWithAction:(PSTCollectionUpdateAction)updateAction forIndexPath:(NSIndexPath *)indexPath {
+    if (updateAction == PSTCollectionUpdateActionInsert)
         return [self initWithInitialIndexPath:nil finalIndexPath:indexPath updateAction:updateAction];
-    else if(updateAction == PSTCollectionUpdateActionDelete)
+    else if (updateAction == PSTCollectionUpdateActionDelete)
         return [self initWithInitialIndexPath:indexPath finalIndexPath:nil updateAction:updateAction];
-    else if(updateAction == PSTCollectionUpdateActionReload)
+    else if (updateAction == PSTCollectionUpdateActionReload)
         return [self initWithInitialIndexPath:indexPath finalIndexPath:indexPath updateAction:updateAction];
 
     return nil;
@@ -95,7 +93,7 @@
     NSComparisonResult result = NSOrderedSame;
     NSIndexPath *selfIndexPath = nil;
     NSIndexPath *otherIndexPath = nil;
-    
+
     switch (_updateAction) {
         case PSTCollectionUpdateActionInsert:
             selfIndexPath = _finalIndexPath;
@@ -113,7 +111,7 @@
 }
 
 - (NSComparisonResult)inverseCompareIndexPaths:(PSTCollectionViewUpdateItem *)otherItem {
-    return (NSComparisonResult) ([self compareIndexPaths:otherItem]*-1);
+    return (NSComparisonResult)([self compareIndexPaths:otherItem] * -1);
 }
 
 @end

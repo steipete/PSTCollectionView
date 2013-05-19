@@ -11,8 +11,8 @@
 
 @interface PSTCollectionViewLayout (Internals)
 
-@property (nonatomic,copy,readonly) NSDictionary *decorationViewClassDict;
-@property (nonatomic,copy,readonly) NSDictionary *decorationViewNibDict;
-@property (nonatomic,copy,readonly) NSDictionary *decorationViewExternalObjectsTables;
+@property (nonatomic, copy, readonly) NSDictionary *decorationViewClassDict;
+@property (nonatomic, copy, readonly) NSDictionary *decorationViewNibDict;
+@property (nonatomic, copy, readonly) NSDictionary *decorationViewExternalObjectsTables;
 
 @end
