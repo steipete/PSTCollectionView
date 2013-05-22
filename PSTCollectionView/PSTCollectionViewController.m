@@ -100,6 +100,18 @@
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - Lazy load the collection view
+
+- (PSTCollectionView *)collectionView {
+    if (!_collectionView) {
+        _collectionView = [[PSTCollectionView alloc] initWithFrame:[[UIScreen mainScreen] bounds] collectionViewLayout:self.layout];
+        _collectionView.delegate = self;
+        _collectionView.dataSource = self;
+    }
+    return _collectionView;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Properties
 
 - (void)setClearsSelectionOnViewWillAppear:(BOOL)clearsSelectionOnViewWillAppear {
