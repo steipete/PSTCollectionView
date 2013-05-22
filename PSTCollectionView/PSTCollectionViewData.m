@@ -14,7 +14,7 @@
     NSInteger _numItems;
     NSInteger _numSections;
     NSInteger *_sectionItemCounts;
-    NSArray *_globalItems; // Apple uses id *_globalItems; - a C array?
+//    id __strong* _globalItems; ///< _globalItems appears to be cached layoutAttributes. But adding that work in opens a can of worms, so deferring until later.
 
 /*
  // At this point, I've no idea how _screenPageDict is structured. Looks like some optimization for layoutAttributesForElementsInRect.
@@ -55,7 +55,6 @@
 
 - (id)initWithCollectionView:(PSTCollectionView *)collectionView layout:(PSTCollectionViewLayout *)layout {
     if ((self = [super init])) {
-        _globalItems = [NSArray new];
         _collectionView = collectionView;
         _layout = layout;
     }
@@ -67,7 +66,7 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p numItems:%d numSections:%d globalItems:%@>", NSStringFromClass([self class]), self, self.numberOfItems, self.numberOfSections, _globalItems];
+    return [NSString stringWithFormat:@"<%@: %p numItems:%d numSections:%d>", NSStringFromClass([self class]), self, self.numberOfItems, self.numberOfSections];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -106,7 +105,16 @@
 }
 
 - (NSInteger)numberOfItemsBeforeSection:(NSInteger)section {
-    return [self numberOfItemsInSection:section - 1]; // ???
+    [self validateItemCounts];
+    
+    NSAssert(section < _numSections, @"request for number of items in section %d when there are only %d sections in the collection view", section, _numSections);
+    
+    NSInteger returnCount = 0;
+    for (int i = 0; i < section-1; i++) {
+        returnCount += _sectionItemCounts[i];
+    }
+    
+    return returnCount;
 }
 
 - (NSInteger)numberOfItemsInSection:(NSInteger)section {
@@ -136,11 +144,26 @@
 }
 
 - (NSIndexPath *)indexPathForItemAtGlobalIndex:(NSInteger)index {
-    return _globalItems[index];
+    [self validateItemCounts];
+    
+    NSAssert(index < _numItems, @"request for index path for global index %d when there are only %d items in the collection view", index, _numItems);
+    
+    NSInteger section = 0;
+    NSInteger countItems = 0;
+    for (section = 0; section < _numSections; section++) {
+        NSInteger countIncludingThisSection = countItems + _sectionItemCounts[section];
+        if (countIncludingThisSection > index) break;
+        countItems = countIncludingThisSection;
+    }
+    
+    NSInteger item = index - countItems;
+    
+    return [NSIndexPath indexPathForItem:item inSection:section];
 }
 
 - (NSUInteger)globalIndexForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return [_globalItems indexOfObject:indexPath];
+    NSInteger offset = [self numberOfItemsBeforeSection:indexPath.section] + indexPath.item;
+    return (NSUInteger)offset;
 }
 
 - (BOOL)layoutIsPrepared {
@@ -196,11 +219,7 @@
         _sectionItemCounts[i] = cellCount;
         _numItems += cellCount;
     }
-    NSMutableArray *globalIndexPaths = [[NSMutableArray alloc] initWithCapacity:_numItems];
-    for (NSInteger section = 0; section < _numSections; section++)
-        for (NSInteger item = 0; item < _sectionItemCounts[section]; item++)
-            [globalIndexPaths addObject:[NSIndexPath indexPathForItem:item inSection:section]];
-    _globalItems = [NSArray arrayWithArray:globalIndexPaths];
+    
     _collectionViewDataFlags.itemCountsAreValid = YES;
 }
 
