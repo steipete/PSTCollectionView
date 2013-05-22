@@ -7,7 +7,7 @@
 //
 
 #import "PSTCollectionViewUpdateItem.h"
-
+#import "NSIndexPath+PSTCollectionViewAdditions.h"
 
 @interface PSTCollectionViewUpdateItem () {
     NSIndexPath *_initialIndexPath;
