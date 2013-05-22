@@ -8,7 +8,7 @@
 #import "PSTCollectionViewItemKey.h"
 
 NSString *const PSTCollectionElementKindCell = @"UICollectionElementKindCell";
-NSString *const PSTCollectionElementKindDecorationView = @"PSTCollectionElementKindDecorationView";
+NSString *const PSTCollectionElementKindDecorationView = @"UICollectionElementKindDecorationView";
 
 @implementation PSTCollectionViewItemKey
 
