@@ -26,8 +26,17 @@ NSString *const PSTCollectionElementKindDecorationView = @"PSTCollectionElementK
 + (id)collectionItemKeyForLayoutAttributes:(PSTCollectionViewLayoutAttributes *)layoutAttributes {
     PSTCollectionViewItemKey *key = [[self class] new];
     key.indexPath = layoutAttributes.indexPath;
-    key.type = layoutAttributes.representedElementCategory;
-    key.identifier = layoutAttributes.representedElementKind;
+	PSTCollectionViewItemType const itemType = layoutAttributes.representedElementCategory;
+	key.type = itemType;
+	switch (itemType) {
+		case PSTCollectionViewItemTypeCell:
+		case PSTCollectionViewItemTypeSupplementaryView:
+			key.identifier = layoutAttributes.representedElementKind;
+			break;
+		case PSTCollectionViewItemTypeDecorationView:
+			key.identifier = layoutAttributes.reuseIdentifier;
+			break;
+	}
     return key;
 }
 
