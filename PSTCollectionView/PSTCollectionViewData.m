@@ -22,7 +22,7 @@
 
  "<UICGPointKey: 0x11432d40>" = "<NSMutableIndexSet: 0x11432c60>[number of indexes: 9 (in 1 ranges), indexes: (0-8)]";
  "<UICGPointKey: 0xb94bf60>" = "<NSMutableIndexSet: 0x18dea7e0>[number of indexes: 11 (in 2 ranges), indexes: (6-15 17)]";
- 
+
  (lldb) p (CGPoint)[[[[[collectionView valueForKey:@"_collectionViewData"] valueForKey:@"_screenPageDict"] allKeys] objectAtIndex:0] point]
  (CGPoint) $11 = (x=15, y=159)
  (lldb) p (CGPoint)[[[[[collectionView valueForKey:@"_collectionViewData"] valueForKey:@"_screenPageDict"] allKeys] objectAtIndex:1] point]
@@ -119,7 +119,7 @@
 
 - (NSInteger)numberOfItemsInSection:(NSInteger)section {
     [self validateItemCounts];
-    if (section > _numSections || section < 0) {
+    if (section >= _numSections || section < 0) {
         // In case of inconsistency returns the 'less harmful' amount of items. Throwing an exception here potentially
         // causes exceptions when data is consistent. Deleting sections is one of the parts sensitive to this.
         // All checks via assertions are done on CollectionView animation methods, specially 'endAnimations'.
