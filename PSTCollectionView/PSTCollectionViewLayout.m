@@ -62,8 +62,7 @@
 
 + (instancetype)layoutAttributesForDecorationViewOfKind:(NSString *)kind withIndexPath:(NSIndexPath *)indexPath {
     PSTCollectionViewLayoutAttributes *attributes = [self new];
-    attributes.elementKind = PSTCollectionElementKindDecorationView;
-    attributes.reuseIdentifier = kind;
+    attributes.elementKind = kind;
     attributes.indexPath = indexPath;
     return attributes;
 }
