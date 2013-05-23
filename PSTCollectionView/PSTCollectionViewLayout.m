@@ -34,6 +34,7 @@
     } _layoutFlags;
 }
 @property (nonatomic, copy) NSString *elementKind;
+@property (nonatomic) PSTCollectionViewItemType elementCategory;
 @property (nonatomic, copy) NSString *reuseIdentifier;
 @end
 
@@ -49,6 +50,7 @@
 + (instancetype)layoutAttributesForCellWithIndexPath:(NSIndexPath *)indexPath {
     PSTCollectionViewLayoutAttributes *attributes = [self new];
     attributes.elementKind = PSTCollectionElementKindCell;
+    attributes.elementCategory = PSTCollectionViewItemTypeCell;
     attributes.indexPath = indexPath;
     return attributes;
 }
@@ -56,6 +58,7 @@
 + (instancetype)layoutAttributesForSupplementaryViewOfKind:(NSString *)elementKind withIndexPath:(NSIndexPath *)indexPath {
     PSTCollectionViewLayoutAttributes *attributes = [self new];
     attributes.elementKind = elementKind;
+    attributes.elementCategory = PSTCollectionViewItemTypeSupplementaryView;
     attributes.indexPath = indexPath;
     return attributes;
 }
@@ -63,6 +66,7 @@
 + (instancetype)layoutAttributesForDecorationViewOfKind:(NSString *)kind withIndexPath:(NSIndexPath *)indexPath {
     PSTCollectionViewLayoutAttributes *attributes = [self new];
     attributes.elementKind = kind;
+    attributes.elementCategory = PSTCollectionViewItemTypeDecorationView;
     attributes.indexPath = indexPath;
     return attributes;
 }
@@ -100,13 +104,7 @@
 #pragma mark - Public
 
 - (PSTCollectionViewItemType)representedElementCategory {
-    if ([self.elementKind isEqualToString:PSTCollectionElementKindCell]) {
-        return PSTCollectionViewItemTypeCell;
-    }else if([self.elementKind isEqualToString:PSTCollectionElementKindDecorationView]) {
-        return PSTCollectionViewItemTypeDecorationView;
-    }else {
-        return PSTCollectionViewItemTypeSupplementaryView;
-    }
+    return self.elementCategory;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
