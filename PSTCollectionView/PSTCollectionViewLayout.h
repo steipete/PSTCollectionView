@@ -44,7 +44,6 @@ typedef NS_ENUM(NSUInteger, PSTCollectionViewItemType) {
 @end
 
 @interface PSTCollectionViewLayoutAttributes (Private)
-@property (nonatomic, copy, readonly) NSString *reuseIdentifier;
 @property (nonatomic, readonly) NSString *representedElementKind;
 @property (nonatomic, readonly) PSTCollectionViewItemType representedElementCategory;
 
