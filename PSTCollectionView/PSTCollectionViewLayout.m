@@ -36,7 +36,6 @@
 }
 @property (nonatomic) PSTCollectionViewItemType elementCategory;
 @property (nonatomic, copy) NSString *elementKind;
-@property (nonatomic, copy) NSString *reuseIdentifier;
 @end
 
 @interface PSTCollectionViewUpdateItem ()
@@ -151,7 +150,6 @@
     layoutAttributes.indexPath = self.indexPath;
     layoutAttributes.elementKind = self.elementKind;
     layoutAttributes.elementCategory = self.elementCategory;
-    layoutAttributes.reuseIdentifier = self.reuseIdentifier;
     layoutAttributes.frame = self.frame;
     layoutAttributes.center = self.center;
     layoutAttributes.size = self.size;
