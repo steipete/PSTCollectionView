@@ -2219,34 +2219,58 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 @implementation PSUICollectionViewLayoutAttributes_ @end
 @implementation PSUICollectionViewController_ @end
 
+static BOOL PSTRegisterClass(NSString *UIClassName, Class PSTClass) {
+    NSCParameterAssert(UIClassName);
+    NSCParameterAssert(PSTClass);
+
+    Class UIClass = NSClassFromString(UIClassName);
+    if (UIClass) {
+        // Class size need to be the same for class_setSuperclass to work.
+        int sizeDifference = (int)class_getInstanceSize(UIClass) - (int)class_getInstanceSize(PSTClass);
+        if (sizeDifference) {
+            // This will fail in the unlikely case where any of the UICollectionView* classes became smaller. If so, we simply fall back using PSTCollectionView.
+            if (sizeDifference < 0) {
+                NSLog(@"Unable to change PSUI* classes to UICollectionView*. Class layou doesn't match.");
+                return NO;
+            }
+            // Create a subclass with a filler ivar to match the size.
+            NSString *subclassName = [NSStringFromClass(PSTClass) stringByAppendingString:@"_"];
+            Class subclass = objc_allocateClassPair(PSTClass, subclassName.UTF8String, sizeDifference);
+            if (subclass) {
+                class_addIvar(subclass, "pst_ivar_layout_filler", sizeDifference, 0, @encode(int));
+                objc_registerClassPair(subclass);
+                PSTClass = subclass;
+                NSCAssert(class_getInstanceSize(UIClass) == class_getInstanceSize(PSTClass), @"class size needs to match.");
+            }else {
+                // Code must have been called twice?
+                PSTClass = NSClassFromString(subclassName);
+            }
+        }
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        // class_setSuperclass is deprecated, but once iOS7 is out we hopefully can drop iOS5 and don't need this code anymore anyway.
+        class_setSuperclass(PSTClass, UIClass);
+#pragma clang diagnostic pop
+
+    }else {
+        // We're most likely on iOS5, the requested UIKit class doesn't exist, so we create it dynamically.
+        if ((UIClass = objc_allocateClassPair(PSTCollectionView.class, UIClassName.UTF8String, 0))) {  objc_registerClassPair(UIClass);
+        }
+    }
+    return YES;
+}
+
 // Create subclasses that pose as UICollectionView et al, if not available at runtime.
 __attribute__((constructor)) static void PSTCreateUICollectionViewClasses(void) {
     @autoreleasepool {
-        // class_setSuperclass is deprecated, but once iOS7 is out we hopefully can drop iOS5 and don't need this code anymore anyway.
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        // Dynamically change superclasses of the PSUICollectionView* classes to UICollectionView*. Crazy stuff.
-        if (UICollectionView.class) class_setSuperclass(PSUICollectionView_.class, UICollectionView.class);
-        else objc_registerClassPair(objc_allocateClassPair(PSTCollectionView.class, "UICollectionView", 0));
-
-        if (UICollectionViewCell.class) class_setSuperclass(PSUICollectionViewCell_.class, UICollectionViewCell.class);
-        else objc_registerClassPair(objc_allocateClassPair(PSTCollectionViewCell.class, "UICollectionViewCell", 0));
-
-        if (UICollectionReusableView.class) class_setSuperclass(PSUICollectionReusableView_.class, UICollectionReusableView.class);
-        else objc_registerClassPair(objc_allocateClassPair(PSTCollectionReusableView.class, "UICollectionReusableView", 0));
-
-        if (UICollectionViewLayout.class) class_setSuperclass(PSUICollectionViewLayout_.class, UICollectionViewLayout.class);
-        else objc_registerClassPair(objc_allocateClassPair(PSTCollectionViewLayout.class, "UICollectionViewLayout", 0));
-
-        if (UICollectionViewFlowLayout.class) class_setSuperclass(PSUICollectionViewFlowLayout_.class, UICollectionViewFlowLayout.class);
-        else objc_registerClassPair(objc_allocateClassPair(PSTCollectionViewFlowLayout.class, "UICollectionViewFlowLayout", 0));
-
-        if (UICollectionViewLayoutAttributes.class) class_setSuperclass(PSUICollectionViewLayoutAttributes_.class, UICollectionViewLayoutAttributes.class);
-        else objc_registerClassPair(objc_allocateClassPair(PSTCollectionViewLayoutAttributes.class, "UICollectionViewLayoutAttributes", 0));
-
-        if (UICollectionViewController.class) class_setSuperclass(PSUICollectionViewController_.class, UICollectionViewController.class);
-        else objc_registerClassPair(objc_allocateClassPair(PSTCollectionViewController.class, "UICollectionViewController", 0));
-#pragma clang diagnostic pop
+        // Change superclass at runtime. This allows seamless switching from PST* to UI* at runtime.
+        PSTRegisterClass(@"UICollectionView", PSUICollectionView_.class);
+        PSTRegisterClass(@"UICollectionViewCell", PSUICollectionViewCell_.class);
+        PSTRegisterClass(@"UICollectionReusableView", PSUICollectionReusableView_.class);
+        PSTRegisterClass(@"UICollectionViewLayout", PSUICollectionViewLayout_.class);
+        PSTRegisterClass(@"UICollectionViewFlowLayout", PSUICollectionViewFlowLayout_.class);
+        PSTRegisterClass(@"UICollectionViewLayoutAttributes", PSUICollectionViewLayoutAttributes_.class);
+        PSTRegisterClass(@"UICollectionViewController", PSUICollectionViewController_.class);
 
         // add PSUI classes at runtime to make Interface Builder sane
         // (IB doesn't allow adding the PSUICollectionView_ types but doesn't complain on unknown classes)
