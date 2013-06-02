@@ -2222,17 +2222,13 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 static BOOL PSTRegisterClass(NSString *UIClassName, Class PSTClass) {
     NSCParameterAssert(UIClassName);
     NSCParameterAssert(PSTClass);
-
+    
     Class UIClass = NSClassFromString(UIClassName);
     if (UIClass) {
         // Class size need to be the same for class_setSuperclass to work.
+        // If the UIKit class is smaller then our subclass, ivars won't clash, so there's no issue.
         int sizeDifference = (int)class_getInstanceSize(UIClass) - (int)class_getInstanceSize(PSTClass);
-        if (sizeDifference) {
-            // This will fail in the unlikely case where any of the UICollectionView* classes became smaller. If so, we simply fall back using PSTCollectionView.
-            if (sizeDifference < 0) {
-                NSLog(@"Unable to change PSUI* classes to UICollectionView*. Class layou doesn't match.");
-                return NO;
-            }
+        if (sizeDifference > 0) {
             // Create a subclass with a filler ivar to match the size.
             NSString *subclassName = [NSStringFromClass(PSTClass) stringByAppendingString:@"_"];
             Class subclass = objc_allocateClassPair(PSTClass, subclassName.UTF8String, sizeDifference);
@@ -2243,7 +2239,7 @@ static BOOL PSTRegisterClass(NSString *UIClassName, Class PSTClass) {
                 NSCAssert(class_getInstanceSize(UIClass) == class_getInstanceSize(PSTClass), @"class size needs to match.");
             }else {
                 // Code must have been called twice?
-                PSTClass = NSClassFromString(subclassName);
+                return NO;
             }
         }
 #pragma clang diagnostic push
