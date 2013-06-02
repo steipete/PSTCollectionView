@@ -33,7 +33,7 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p frame:%@ index:%d items:%@>", NSStringFromClass([self class]), self, NSStringFromCGRect(self.rowFrame), self.index, self.items];
+    return [NSString stringWithFormat:@"<%@: %p frame:%@ index:%d items:%@>", NSStringFromClass(self.class), self, NSStringFromCGRect(self.rowFrame), self.index, self.items];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -166,7 +166,7 @@
 }
 
 - (PSTGridLayoutRow *)snapshot {
-    PSTGridLayoutRow *snapshotRow = [[self class] new];
+    PSTGridLayoutRow *snapshotRow = [self.class new];
     snapshotRow.section = self.section;
     snapshotRow.items = self.items;
     snapshotRow.rowSize = self.rowSize;
@@ -186,7 +186,7 @@
     if (self.fixedItemSize) {
         return _itemCount;
     }else {
-        return [self.items count];
+        return self.items.count;
     }
 }
 

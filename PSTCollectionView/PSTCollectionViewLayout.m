@@ -85,7 +85,7 @@
 }
 
 - (BOOL)isEqual:(id)other {
-    if ([other isKindOfClass:[self class]]) {
+    if ([other isKindOfClass:self.class]) {
         PSTCollectionViewLayoutAttributes *otherLayoutAttributes = (PSTCollectionViewLayoutAttributes *)other;
         if ([_elementKind isEqual:otherLayoutAttributes.elementKind] && [_indexPath isEqual:otherLayoutAttributes.indexPath]) {
             return YES;
@@ -95,7 +95,7 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p frame:%@ indexPath:%@ elementKind:%@>", NSStringFromClass([self class]), self, NSStringFromCGRect(self.frame), self.indexPath, self.elementKind];
+    return [NSString stringWithFormat:@"<%@: %p frame:%@ indexPath:%@ elementKind:%@>", NSStringFromClass(self.class), self, NSStringFromCGRect(self.frame), self.indexPath, self.elementKind];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -150,7 +150,7 @@
 #pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone {
-    PSTCollectionViewLayoutAttributes *layoutAttributes = [[self class] new];
+    PSTCollectionViewLayoutAttributes *layoutAttributes = [self.class new];
     layoutAttributes.indexPath = self.indexPath;
     layoutAttributes.elementKind = self.elementKind;
     layoutAttributes.reuseIdentifier = self.reuseIdentifier;
@@ -260,7 +260,7 @@
 #pragma mark - Providing Layout Attributes
 
 + (Class)layoutAttributesClass {
-    return [PSTCollectionViewLayoutAttributes class];
+    return PSTCollectionViewLayoutAttributes.class;
 }
 
 - (void)prepareLayout {
@@ -466,11 +466,11 @@
         SEL cleanedSelector = NSSelectorFromString([selString substringFromIndex:1]);
         if ([self respondsToSelector:cleanedSelector]) {
             // dynamically add method for faster resolving
-            Method newMethod = class_getInstanceMethod([self class], [inv selector]);
+            Method newMethod = class_getInstanceMethod(self.class, [inv selector]);
             IMP underscoreIMP = imp_implementationWithBlock(^(id _self) {
                 return objc_msgSend(_self, cleanedSelector);
             });
-            class_addMethod([self class], [inv selector], underscoreIMP, method_getTypeEncoding(newMethod));
+            class_addMethod(self.class, [inv selector], underscoreIMP, method_getTypeEncoding(newMethod));
             // invoke now
             inv.selector = cleanedSelector;
             [inv invokeWithTarget:self];

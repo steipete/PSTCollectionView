@@ -62,11 +62,11 @@
 }
 
 - (void)dealloc {
-    if (_sectionItemCounts) free(_sectionItemCounts);
+    free(_sectionItemCounts);
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p numItems:%d numSections:%d>", NSStringFromClass([self class]), self, self.numberOfItems, self.numberOfSections];
+    return [NSString stringWithFormat:@"<%@: %p numItems:%d numSections:%d>", NSStringFromClass(self.class), self, self.numberOfItems, self.numberOfSections];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -91,7 +91,7 @@
         _validLayoutRect = rect;
         // we only want cell layoutAttributes & supplementaryView layoutAttributes
         self.cachedLayoutAttributes = [[self.layout layoutAttributesForElementsInRect:rect] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(PSTCollectionViewLayoutAttributes *evaluatedObject, NSDictionary *bindings) {
-            return ([evaluatedObject isKindOfClass:[PSTCollectionViewLayoutAttributes class]] &&
+            return ([evaluatedObject isKindOfClass:PSTCollectionViewLayoutAttributes.class] &&
                     ([evaluatedObject isCell] ||
                             [evaluatedObject isSupplementaryView] ||
                             [evaluatedObject isDecorationView]));

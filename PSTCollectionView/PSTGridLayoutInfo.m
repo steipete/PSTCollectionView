@@ -31,14 +31,14 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p dimension:%.1f horizontal:%d contentSize:%@ sections:%@>", NSStringFromClass([self class]), self, self.dimension, self.horizontal, NSStringFromCGSize(self.contentSize), self.sections];
+    return [NSString stringWithFormat:@"<%@: %p dimension:%.1f horizontal:%d contentSize:%@ sections:%@>", NSStringFromClass(self.class), self, self.dimension, self.horizontal, NSStringFromCGSize(self.contentSize), self.sections];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Public
 
 - (PSTGridLayoutInfo *)snapshot {
-    PSTGridLayoutInfo *layoutInfo = [[self class] new];
+    PSTGridLayoutInfo *layoutInfo = [self.class new];
     layoutInfo.sections = self.sections;
     layoutInfo.rowAlignmentOptions = self.rowAlignmentOptions;
     layoutInfo.usesFloatingHeaderFooter = self.usesFloatingHeaderFooter;

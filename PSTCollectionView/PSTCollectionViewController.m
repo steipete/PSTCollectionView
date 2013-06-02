@@ -50,7 +50,7 @@
     [super loadView];
 
     // if this is restored from IB, we don't have plain main view.
-    if ([self.view isKindOfClass:[PSTCollectionView class]]) {
+    if ([self.view isKindOfClass:PSTCollectionView.class]) {
         _collectionView = (PSTCollectionView *)self.view;
         self.view = [[UIView alloc] initWithFrame:self.view.bounds];
         self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
@@ -104,7 +104,7 @@
 
 - (PSTCollectionView *)collectionView {
     if (!_collectionView) {
-        _collectionView = [[PSTCollectionView alloc] initWithFrame:[[UIScreen mainScreen] bounds] collectionViewLayout:self.layout];
+        _collectionView = [[PSTCollectionView alloc] initWithFrame:UIScreen.mainScreen.bounds collectionViewLayout:self.layout];
         _collectionView.delegate = self;
         _collectionView.dataSource = self;
     }
