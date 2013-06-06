@@ -110,7 +110,7 @@
     NSAssert(section < _numSections, @"request for number of items in section %d when there are only %d sections in the collection view", section, _numSections);
     
     NSInteger returnCount = 0;
-    for (int i = 0; i < section-1; i++) {
+    for (int i = 0; i < section; i++) {
         returnCount += _sectionItemCounts[i];
     }
     
