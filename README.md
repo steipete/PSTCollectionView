@@ -40,7 +40,7 @@ Another goal (at least super useful for debugging) is interoperability between U
 
 ``` objective-c
 UICollectionViewFlowLayout *flowLayout = [UICollectionViewFlowLayout new];
-PSTCollectionView *collectionView = [PSTCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:(PSTCollectionViewFlowLayout *)flowLayout];
+PSTCollectionView *collectionView = [[PSTCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:(PSTCollectionViewFlowLayout *)flowLayout];
 ```
 
 (*) Note that for some methods we can't use the _ underscore variants or we risk to get a false-positive on private API use. I've added some runtime hacks to dynamcially add block forwarders for those cases (mainly for UI/PST interoperability)
