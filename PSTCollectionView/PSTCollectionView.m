@@ -108,7 +108,7 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
         unsigned int doneFirstLayout : 1;
     }_collectionViewFlags;
     CGPoint _lastLayoutOffset;
-
+    char filler[200]; // [HACK] Our class needs to be larged than Apple's class for the superclass change to work
 }
 @property (nonatomic, strong) PSTCollectionViewData *collectionViewData;
 @property (nonatomic, strong, readonly) PSTCollectionViewExt *extVars;
@@ -1180,8 +1180,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                         atIndexPath:key.indexPath];
             }
 
-            layoutInterchangeData[key] = [NSDictionary dictionaryWithObjects:@[prevAttr, newAttr]
-                    forKeys:@[@"previousLayoutInfos", @"newLayoutInfos"]];
+            NSMutableDictionary *layoutInterchangeData = [NSMutableDictionary dictionary];
+            if (prevAttr) layoutInterchangeData[@"previousLayoutInfos"] = prevAttr;
+            if (newAttr) layoutInterchangeData[@"newLayoutInfos"] = newAttr;
+            layoutInterchangeData[key] = layoutInterchangeData;
         }
 
         for (PSTCollectionViewItemKey *key in [layoutInterchangeData keyEnumerator]) {
@@ -2229,6 +2231,7 @@ static BOOL PSTRegisterClass(NSString *UIClassName, Class PSTClass) {
         // If the UIKit class is smaller then our subclass, ivars won't clash, so there's no issue.
         int sizeDifference = (int)class_getInstanceSize(UIClass) - (int)class_getInstanceSize(PSTClass);
         if (sizeDifference > 0) {
+            NSLog(@"");
             // Create a subclass with a filler ivar to match the size.
             NSString *subclassName = [NSStringFromClass(PSTClass) stringByAppendingString:@"_"];
             Class subclass = objc_allocateClassPair(PSTClass, subclassName.UTF8String, sizeDifference);

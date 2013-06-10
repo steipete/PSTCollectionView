@@ -206,6 +206,7 @@
     NSMutableDictionary *_decorationViewClassDict;
     NSMutableDictionary *_decorationViewNibDict;
     NSMutableDictionary *_decorationViewExternalObjectsTables;
+    char filler[200]; // [HACK] Our class needs to be larged than Apple's class for the superclass change to work
 }
 @property (nonatomic, unsafe_unretained) PSTCollectionView *collectionView;
 @property (nonatomic, copy, readonly) NSDictionary *decorationViewClassDict;
