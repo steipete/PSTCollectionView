@@ -103,21 +103,13 @@ typedef NS_ENUM(NSUInteger, PSTCollectionElementCategory) {
 
 // These methods allow dynamic modification of the current set of items in the collection view
 - (void)insertSections:(NSIndexSet *)sections;
-
 - (void)deleteSections:(NSIndexSet *)sections;
-
 - (void)reloadSections:(NSIndexSet *)sections;
-
 - (void)moveSection:(NSInteger)section toSection:(NSInteger)newSection;
-
 - (void)insertItemsAtIndexPaths:(NSArray *)indexPaths;
-
 - (void)deleteItemsAtIndexPaths:(NSArray *)indexPaths;
-
 - (void)reloadItemsAtIndexPaths:(NSArray *)indexPaths;
-
 - (void)moveItemAtIndexPath:(NSIndexPath *)indexPath toIndexPath:(NSIndexPath *)newIndexPath;
-
 - (void)performBatchUpdates:(void (^)(void))updates completion:(void (^)(BOOL finished))completion; // allows multiple insert/delete/reload/move calls to be animated simultaneously. Nestable.
 
 @end
