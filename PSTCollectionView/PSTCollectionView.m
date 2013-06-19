@@ -1152,8 +1152,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             }
 
             if (prevAttr != nil && newAttr != nil) {
-                layoutInterchangeData[newKey] = [NSDictionary dictionaryWithObjects:@[prevAttr, newAttr]
-                        forKeys:@[@"previousLayoutInfos", @"newLayoutInfos"]];
+                layoutInterchangeData[newKey] = @{@"previousLayoutInfos": prevAttr, @"newLayoutInfos": newAttr};
             }
         }
 
