@@ -31,8 +31,10 @@ typedef NS_ENUM(NSUInteger, PSTCollectionViewItemType) {
 @property (nonatomic, strong) NSIndexPath *indexPath;
 
 + (instancetype)layoutAttributesForCellWithIndexPath:(NSIndexPath *)indexPath;
+
 + (instancetype)layoutAttributesForSupplementaryViewOfKind:(NSString *)elementKind withIndexPath:(NSIndexPath *)indexPath;
-+ (instancetype)layoutAttributesForDecorationViewOfKind:(NSString *)kind withIndexPath:(NSIndexPath*)indexPath;
+
++ (instancetype)layoutAttributesForDecorationViewOfKind:(NSString *)kind withIndexPath:(NSIndexPath *)indexPath;
 
 /*
  + (id)layoutAttributesForDecorationViewOfKind:(id)arg1 withIndexPath:(id)arg2;
@@ -41,12 +43,15 @@ typedef NS_ENUM(NSUInteger, PSTCollectionViewItemType) {
  */
 @end
 
-@interface PSTCollectionViewLayoutAttributes(Private)
+@interface PSTCollectionViewLayoutAttributes (Private)
 @property (nonatomic, copy, readonly) NSString *reuseIdentifier;
 @property (nonatomic, readonly) NSString *representedElementKind;
 @property (nonatomic, readonly) PSTCollectionViewItemType representedElementCategory;
+
 - (BOOL)isDecorationView;
+
 - (BOOL)isSupplementaryView;
+
 - (BOOL)isCell;
 @end
 
@@ -62,6 +67,7 @@ typedef NS_ENUM(NSUInteger, PSTCollectionViewItemType) {
 
 /// @name Registering Decoration Views
 - (void)registerClass:(Class)viewClass forDecorationViewOfKind:(NSString *)kind;
+
 - (void)registerNib:(UINib *)nib forDecorationViewOfKind:(NSString *)kind;
 
 @end
@@ -82,8 +88,10 @@ typedef NS_ENUM(NSUInteger, PSTCollectionViewItemType) {
 // If the layout supports any supplementary or decoration view types, it should also implement the respective atIndexPath: methods for those types.
 - (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect; // return an array layout attributes instances for all the views in the given rect
 - (PSTCollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath;
+
 - (PSTCollectionViewLayoutAttributes *)layoutAttributesForSupplementaryViewOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath;
-- (PSTCollectionViewLayoutAttributes *)layoutAttributesForDecorationViewOfKind:(NSString*)kind atIndexPath:(NSIndexPath *)indexPath;
+
+- (PSTCollectionViewLayoutAttributes *)layoutAttributesForDecorationViewOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath;
 
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds; // return YES to cause the collection view to requery the layout for geometry information
 - (CGPoint)targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset withScrollingVelocity:(CGPoint)velocity; // return a point at which to rest after scrolling - for layouts that want snap-to-point scrolling behavior
@@ -104,14 +112,18 @@ typedef NS_ENUM(NSUInteger, PSTCollectionViewItemType) {
 - (void)finalizeCollectionViewUpdates;
 
 // Collection view calls these methods to determine the starting layout for animating in newly inserted views, or the ending layout for animating out deleted views
-- (PSTCollectionViewLayoutAttributes *)initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath*)itemIndexPath;
+- (PSTCollectionViewLayoutAttributes *)initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath *)itemIndexPath;
+
 - (PSTCollectionViewLayoutAttributes *)finalLayoutAttributesForDisappearingItemAtIndexPath:(NSIndexPath *)itemIndexPath;
+
 - (PSTCollectionViewLayoutAttributes *)initialLayoutAttributesForInsertedSupplementaryElementOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)elementIndexPath;
+
 - (PSTCollectionViewLayoutAttributes *)finalLayoutAttributesForDeletedSupplementaryElementOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)elementIndexPath;
 
 @end
 
 @interface PSTCollectionViewLayout (Private)
 - (void)setCollectionViewBoundsSize:(CGSize)size;
+
 - (PSTCollectionReusableView *)decorationViewForCollectionView:(PSTCollectionView *)collectionView withReuseIdentifier:(NSString *)reuseIdentifier indexPath:(NSIndexPath *)indexPath;
 @end

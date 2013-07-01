@@ -12,15 +12,15 @@ If you always want to use PSTCollectionView, use PSTCollectionView as class name
 ## Current State
 
 Most features work, including the flow layout with fixed or dynamic cell sizes and supplementary views. If you're not doing something fancy, it should just work.
-PSTCollectionView is also internally designed very closesly to UICollectionView and thus a great study if you're wondering how UICollectionView works. See [HowTo](/steipete/PSTCollectionView/blob/master/HowTo.md) for helpful details.
+PSTCollectionView is also internally designed very closely to UICollectionView and thus a great study if you're wondering how UICollectionView works. See [HowTo](HowTo.md) for helpful details.
 
 ## How can I help?
 
-The best way is if you're already using UICollectionView somewhere. Add PSTCollectionView and try it on iOS4/5. Check if everything works, fix bugs until the result is 1:1 the one of iOS6. You can also just pick an issue fron the Issue Tracker and start working there.
+The best way is if you're already using UICollectionView somewhere. Add PSTCollectionView and try it on iOS4/5. Check if everything works, fix bugs until the result matches 1:1 with iOS6. You can also just pick an issue fron the Issue Tracker and start working there.
 
 Or start playing around with one of the WWDC examples and try to make them work with PSTCollectionView. Most of them already do, but just not as perfect.
 
-You could also write a Pintrest-style layout manager. Can't be that hard.
+You could also write a Pinterest-style layout manager. Can't be that hard.
 
 ## Animations
 
@@ -36,11 +36,11 @@ PSTCollectionView needs the QuartzCore.framework.
 
 ## Interoperability
 
-Another goal (at least super useful for debugging) is interoperability between UI/PS classes:
+Another goal (at least super useful for debugging) is interoperability between UI/PST classes:
 
 ``` objective-c
 UICollectionViewFlowLayout *flowLayout = [UICollectionViewFlowLayout new];
-PSTCollectionView *collectionView = [PSTCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:(PSTCollectionViewFlowLayout *)flowLayout];
+PSTCollectionView *collectionView = [[PSTCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:(PSTCollectionViewFlowLayout *)flowLayout];
 ```
 
 (*) Note that for some methods we can't use the _ underscore variants or we risk to get a false-positive on private API use. I've added some runtime hacks to dynamcially add block forwarders for those cases (mainly for UI/PST interoperability)

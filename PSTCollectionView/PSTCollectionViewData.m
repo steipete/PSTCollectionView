@@ -7,15 +7,14 @@
 
 #import "PSTCollectionViewData.h"
 #import "PSTCollectionView.h"
-#import "PSTCollectionViewLayout.h"
 
 @interface PSTCollectionViewData () {
     CGRect _validLayoutRect;
-    
+
     NSInteger _numItems;
     NSInteger _numSections;
     NSInteger *_sectionItemCounts;
-    NSArray *_globalItems; // Apple uses id *_globalItems; - a C array?
+//    id __strong* _globalItems; ///< _globalItems appears to be cached layoutAttributes. But adding that work in opens a can of worms, so deferring until later.
 
 /*
  // At this point, I've no idea how _screenPageDict is structured. Looks like some optimization for layoutAttributesForElementsInRect.
@@ -23,7 +22,7 @@
 
  "<UICGPointKey: 0x11432d40>" = "<NSMutableIndexSet: 0x11432c60>[number of indexes: 9 (in 1 ranges), indexes: (0-8)]";
  "<UICGPointKey: 0xb94bf60>" = "<NSMutableIndexSet: 0x18dea7e0>[number of indexes: 11 (in 2 ranges), indexes: (6-15 17)]";
- 
+
  (lldb) p (CGPoint)[[[[[collectionView valueForKey:@"_collectionViewData"] valueForKey:@"_screenPageDict"] allKeys] objectAtIndex:0] point]
  (CGPoint) $11 = (x=15, y=159)
  (lldb) p (CGPoint)[[[[[collectionView valueForKey:@"_collectionViewData"] valueForKey:@"_screenPageDict"] allKeys] objectAtIndex:1] point]
@@ -41,7 +40,7 @@
         unsigned int contentSizeIsValid:1;
         unsigned int itemCountsAreValid:1;
         unsigned int layoutIsPrepared:1;
-    } _collectionViewDataFlags;
+    }_collectionViewDataFlags;
 }
 @property (nonatomic, unsafe_unretained) PSTCollectionView *collectionView;
 @property (nonatomic, unsafe_unretained) PSTCollectionViewLayout *layout;
@@ -55,8 +54,7 @@
 #pragma mark - NSObject
 
 - (id)initWithCollectionView:(PSTCollectionView *)collectionView layout:(PSTCollectionViewLayout *)layout {
-    if((self = [super init])) {
-        _globalItems = [NSArray new];
+    if ((self = [super init])) {
         _collectionView = collectionView;
         _layout = layout;
     }
@@ -64,11 +62,11 @@
 }
 
 - (void)dealloc {
-    if(_sectionItemCounts) free(_sectionItemCounts);
+    free(_sectionItemCounts);
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p numItems:%d numSections:%d globalItems:%@>", NSStringFromClass([self class]), self, self.numberOfItems, self.numberOfSections, _globalItems];
+    return [NSString stringWithFormat:@"<%@: %p numItems:%d numSections:%d>", NSStringFromClass(self.class), self, self.numberOfItems, self.numberOfSections];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -87,16 +85,16 @@
 - (void)validateLayoutInRect:(CGRect)rect {
     [self validateItemCounts];
     [self prepareToLoadData];
-    
+
     // TODO: check if we need to fetch data from layout
     if (!CGRectEqualToRect(_validLayoutRect, rect)) {
         _validLayoutRect = rect;
         // we only want cell layoutAttributes & supplementaryView layoutAttributes
         self.cachedLayoutAttributes = [[self.layout layoutAttributesForElementsInRect:rect] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(PSTCollectionViewLayoutAttributes *evaluatedObject, NSDictionary *bindings) {
-            return ([evaluatedObject isKindOfClass:[PSTCollectionViewLayoutAttributes class]] &&
-                    ([evaluatedObject isCell]||
-                     [evaluatedObject isSupplementaryView]||
-                     [evaluatedObject isDecorationView]));
+            return ([evaluatedObject isKindOfClass:PSTCollectionViewLayoutAttributes.class] &&
+                    ([evaluatedObject isCell] ||
+                            [evaluatedObject isSupplementaryView] ||
+                            [evaluatedObject isDecorationView]));
         }]];
     }
 }
@@ -107,15 +105,28 @@
 }
 
 - (NSInteger)numberOfItemsBeforeSection:(NSInteger)section {
-    return [self numberOfItemsInSection:section-1]; // ???
+    [self validateItemCounts];
+    
+    NSAssert(section < _numSections, @"request for number of items in section %d when there are only %d sections in the collection view", section, _numSections);
+    
+    NSInteger returnCount = 0;
+    for (int i = 0; i < section; i++) {
+        returnCount += _sectionItemCounts[i];
+    }
+    
+    return returnCount;
 }
 
 - (NSInteger)numberOfItemsInSection:(NSInteger)section {
     [self validateItemCounts];
-    if (section > _numSections || section < 0) {
-        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"Section %d out of range: 0...%d", section, _numSections] userInfo:nil];
+    if (section >= _numSections || section < 0) {
+        // In case of inconsistency returns the 'less harmful' amount of items. Throwing an exception here potentially
+        // causes exceptions when data is consistent. Deleting sections is one of the parts sensitive to this.
+        // All checks via assertions are done on CollectionView animation methods, specially 'endAnimations'.
+        return 0;
+        //@throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"Section %d out of range: 0...%d", section, _numSections] userInfo:nil];
     }
-    
+
     NSInteger numberOfItemsInSection = 0;
     if (_sectionItemCounts) {
         numberOfItemsInSection = _sectionItemCounts[section];
@@ -133,11 +144,26 @@
 }
 
 - (NSIndexPath *)indexPathForItemAtGlobalIndex:(NSInteger)index {
-    return _globalItems[index];
+    [self validateItemCounts];
+    
+    NSAssert(index < _numItems, @"request for index path for global index %d when there are only %d items in the collection view", index, _numItems);
+    
+    NSInteger section = 0;
+    NSInteger countItems = 0;
+    for (section = 0; section < _numSections; section++) {
+        NSInteger countIncludingThisSection = countItems + _sectionItemCounts[section];
+        if (countIncludingThisSection > index) break;
+        countItems = countIncludingThisSection;
+    }
+    
+    NSInteger item = index - countItems;
+    
+    return [NSIndexPath indexPathForItem:item inSection:section];
 }
 
-- (NSInteger)globalIndexForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return [_globalItems indexOfObject:indexPath];
+- (NSUInteger)globalIndexForItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSInteger offset = [self numberOfItemsBeforeSection:indexPath.section] + indexPath.item;
+    return (NSUInteger)offset;
 }
 
 - (BOOL)layoutIsPrepared {
@@ -175,7 +201,8 @@
     }
     if (_numSections <= 0) { // early bail-out
         _numItems = 0;
-        free(_sectionItemCounts); _sectionItemCounts = 0;
+        free(_sectionItemCounts);
+        _sectionItemCounts = 0;
         return;
     }
     // allocate space
@@ -187,16 +214,12 @@
 
     // query cells per section
     _numItems = 0;
-    for (NSInteger i=0; i<_numSections; i++) {
+    for (NSInteger i = 0; i < _numSections; i++) {
         NSInteger cellCount = [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:i];
         _sectionItemCounts[i] = cellCount;
         _numItems += cellCount;
     }
-    NSMutableArray* globalIndexPaths = [[NSMutableArray alloc] initWithCapacity:_numItems];
-    for(NSInteger section = 0;section<_numSections;section++)
-        for(NSInteger item=0;item<_sectionItemCounts[section];item++)
-            [globalIndexPaths addObject:[NSIndexPath indexPathForItem:item inSection:section]];
-    _globalItems = [NSArray arrayWithArray:globalIndexPaths];
+    
     _collectionViewDataFlags.itemCountsAreValid = YES;
 }
 
