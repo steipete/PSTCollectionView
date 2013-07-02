@@ -2092,11 +2092,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                     [newModel insertObject:section atIndex:updateItem.indexPathAfterUpdate.section];
                 }
                 else {
-                    NSUInteger originalIndex = [newModel[updateItem.indexPathBeforeUpdate.section] indexOfObject:@(updateItem.indexPathBeforeUpdate.item)];
-                    id object = newModel[updateItem.indexPathBeforeUpdate.section][originalIndex];
-                    [newModel[updateItem.indexPathBeforeUpdate.section] removeObjectAtIndex:originalIndex];
+                    id object = @([oldCollectionViewData globalIndexForItemAtIndexPath:updateItem.indexPathBeforeUpdate]);
+                    [newModel[updateItem.indexPathBeforeUpdate.section] removeObject:object];
                     [newModel[updateItem.indexPathAfterUpdate.section] insertObject:object
-                            atIndex:updateItem.indexPathAfterUpdate.item];
+                                                                            atIndex:updateItem.indexPathAfterUpdate.item];
                 }
             }
                 break;
