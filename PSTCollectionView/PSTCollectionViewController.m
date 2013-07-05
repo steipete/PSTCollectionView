@@ -105,9 +105,13 @@
 
 - (PSTCollectionView *)collectionView {
     if (!_collectionView) {
-        _collectionView = [[PSTCollectionView alloc] initWithFrame:UIScreen.mainScreen.bounds collectionViewLayout:self.layout];
-        _collectionView.delegate = self;
-        _collectionView.dataSource = self;
+		@autoreleasepool {
+			_collectionView = [[PSTCollectionView alloc] initWithFrame:UIScreen.mainScreen.bounds collectionViewLayout:self.layout];
+			_collectionView.delegate = self;
+			_collectionView.dataSource = self;
+			
+			[self viewDidLoad];
+		}
     }
     return _collectionView;
 }
