@@ -110,7 +110,11 @@
 			_collectionView.delegate = self;
 			_collectionView.dataSource = self;
 			
-			[self viewDidLoad];
+			if (self.view != self.collectionView) {
+				[self.view addSubview:self.collectionView];
+				self.collectionView.frame = self.view.bounds;
+				self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+			}
 		}
     }
     return _collectionView;
