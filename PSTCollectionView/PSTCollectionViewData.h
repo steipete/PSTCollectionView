@@ -19,6 +19,7 @@
 - (void)validateLayoutInRect:(CGRect)rect;
 
 - (CGRect)rectForItemAtIndexPath:(NSIndexPath *)indexPath;
+
 /*
  - (CGRect)rectForSupplementaryElementOfKind:(id)arg1 atIndexPath:(id)arg2;
  - (CGRect)rectForDecorationElementOfKind:(id)arg1 atIndexPath:(id)arg2;
@@ -26,11 +27,13 @@
 */
 
 // No fucking idea (yet)
-- (NSInteger)globalIndexForItemAtIndexPath:(NSIndexPath *)indexPath;
+- (NSUInteger)globalIndexForItemAtIndexPath:(NSIndexPath *)indexPath;
+
 - (NSIndexPath *)indexPathForItemAtGlobalIndex:(NSInteger)index;
 
 // Fetch layout attributes
 - (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect;
+
 /*
 - (PSTCollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath;
 - (PSTCollectionViewLayoutAttributes *)layoutAttributesForElementsInSection:(NSInteger)section;
@@ -45,8 +48,11 @@
 
 // Access cached item data
 - (NSInteger)numberOfItemsBeforeSection:(NSInteger)section;
+
 - (NSInteger)numberOfItemsInSection:(NSInteger)section;
+
 - (NSInteger)numberOfItems;
+
 - (NSInteger)numberOfSections;
 
 // Total size of the content.

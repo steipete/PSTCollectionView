@@ -23,18 +23,19 @@ typedef NS_ENUM(NSInteger, PSTCollectionUpdateAction) {
 @property (nonatomic, readonly, assign) PSTCollectionUpdateAction updateAction;
 
 
-- (id)initWithInitialIndexPath:(NSIndexPath*)arg1
-                finalIndexPath:(NSIndexPath*)arg2
-                  updateAction:(PSTCollectionUpdateAction)arg3;
+- (id)initWithInitialIndexPath:(NSIndexPath *)arg1
+        finalIndexPath:(NSIndexPath *)arg2
+        updateAction:(PSTCollectionUpdateAction)arg3;
 
 - (id)initWithAction:(PSTCollectionUpdateAction)arg1
-        forIndexPath:(NSIndexPath*)indexPath;
+        forIndexPath:(NSIndexPath *)indexPath;
 
-- (id)initWithOldIndexPath:(NSIndexPath*)arg1 newIndexPath:(NSIndexPath*)arg2;
+- (id)initWithOldIndexPath:(NSIndexPath *)arg1 newIndexPath:(NSIndexPath *)arg2;
 
 - (PSTCollectionUpdateAction)updateAction;
 
-- (NSComparisonResult)compareIndexPaths:(PSTCollectionViewUpdateItem*) otherItem;
-- (NSComparisonResult)inverseCompareIndexPaths:(PSTCollectionViewUpdateItem*) otherItem;
+- (NSComparisonResult)compareIndexPaths:(PSTCollectionViewUpdateItem *)otherItem;
+
+- (NSComparisonResult)inverseCompareIndexPaths:(PSTCollectionViewUpdateItem *)otherItem;
 
 @end

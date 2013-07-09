@@ -5,13 +5,12 @@
 //  Copyright (c) 2012-2013 Peter Steinberger. All rights reserved.
 //
 
-#import "PSTCollectionViewCommon.h"
 #import "PSTGridLayoutSection.h"
 #import "PSTGridLayoutItem.h"
 #import "PSTGridLayoutRow.h"
 #import "PSTGridLayoutInfo.h"
 
-@interface PSTGridLayoutSection() {
+@interface PSTGridLayoutSection () {
     NSMutableArray *_items;
     NSMutableArray *_rows;
     BOOL _isValid;
@@ -36,7 +35,7 @@
 #pragma mark - NSObject
 
 - (id)init {
-    if((self = [super init])) {
+    if ((self = [super init])) {
         _items = [NSMutableArray new];
         _rows = [NSMutableArray new];
     }
@@ -44,7 +43,7 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p itemCount:%d frame:%@ rows:%@>", NSStringFromClass([self class]), self, self.itemsCount, NSStringFromCGRect(self.frame), self.rows];
+    return [NSString stringWithFormat:@"<%@: %p itemCount:%d frame:%@ rows:%@>", NSStringFromClass(self.class), self, self.itemsCount, NSStringFromCGRect(self.frame), self.rows];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -57,7 +56,7 @@
 
 - (void)computeLayout {
     if (!_isValid) {
-        NSAssert([self.rows count] == 0, @"No rows shall be at this point.");
+        NSAssert(self.rows.count == 0, @"No rows shall be at this point.");
 
         // iterate over all items, turning them into rows.
         CGSize sectionSize = CGSizeZero;
@@ -67,21 +66,21 @@
         CGFloat dimensionLeft = 0;
         PSTGridLayoutRow *row = nil;
         // get dimension and compensate for section margin
-		CGFloat headerFooterDimension = self.layoutInfo.dimension;
+        CGFloat headerFooterDimension = self.layoutInfo.dimension;
         CGFloat dimension = headerFooterDimension;
 
         if (self.layoutInfo.horizontal) {
             dimension -= self.sectionMargins.top + self.sectionMargins.bottom;
-			self.headerFrame = CGRectMake(sectionSize.width, 0, self.headerDimension, headerFooterDimension);
-			sectionSize.width += self.headerDimension + self.sectionMargins.left;
+            self.headerFrame = CGRectMake(sectionSize.width, 0, self.headerDimension, headerFooterDimension);
+            sectionSize.width += self.headerDimension + self.sectionMargins.left;
         }else {
             dimension -= self.sectionMargins.left + self.sectionMargins.right;
-			self.headerFrame = CGRectMake(0, sectionSize.height, headerFooterDimension, self.headerDimension);
-			sectionSize.height += self.headerDimension + self.sectionMargins.top;
+            self.headerFrame = CGRectMake(0, sectionSize.height, headerFooterDimension, self.headerDimension);
+            sectionSize.height += self.headerDimension + self.sectionMargins.top;
         }
 
         float spacing = self.layoutInfo.horizontal ? self.verticalInterstice : self.horizontalInterstice;
-        
+
         do {
             BOOL finishCycle = itemIndex >= self.itemsCount;
             // TODO: fast path could even remove row creation and just calculate on the fly
@@ -128,7 +127,7 @@
                     dimensionLeft = dimension - itemDimension;
                     itemsByRowCount = 0;
                 }
-            } else {
+            }else {
                 dimensionLeft -= itemDimension;
             }
 
@@ -137,16 +136,16 @@
 
             itemIndex++;
             itemsByRowCount++;
-        }while (itemIndex <= self.itemsCount); // cycle once more to finish last row
+        } while (itemIndex <= self.itemsCount); // cycle once more to finish last row
 
         if (self.layoutInfo.horizontal) {
-			sectionSize.width += self.sectionMargins.right;
-			self.footerFrame = CGRectMake(sectionSize.width, 0, self.footerDimension, headerFooterDimension);
-			sectionSize.width += self.footerDimension;
+            sectionSize.width += self.sectionMargins.right;
+            self.footerFrame = CGRectMake(sectionSize.width, 0, self.footerDimension, headerFooterDimension);
+            sectionSize.width += self.footerDimension;
         }else {
-			sectionSize.height += self.sectionMargins.bottom;
-			self.footerFrame = CGRectMake(0, sectionSize.height, headerFooterDimension, self.footerDimension);
-			sectionSize.height += self.footerDimension;
+            sectionSize.height += self.sectionMargins.bottom;
+            self.footerFrame = CGRectMake(0, sectionSize.height, headerFooterDimension, self.footerDimension);
+            sectionSize.height += self.footerDimension;
         }
 
         _frame = CGRectMake(0, 0, sectionSize.width, sectionSize.height);
@@ -205,7 +204,7 @@
 }
 
 - (NSInteger)itemsCount {
-    return self.fixedItemSize ? _itemsCount : [self.items count];
+    return self.fixedItemSize ? _itemsCount : self.items.count;
 }
 
 @end

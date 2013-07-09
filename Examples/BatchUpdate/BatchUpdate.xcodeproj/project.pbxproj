@@ -1,0 +1,385 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FAE5AA59171EF69100616FC3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAE5AA58171EF69100616FC3 /* UIKit.framework */; };
+		FAE5AA5B171EF69100616FC3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAE5AA5A171EF69100616FC3 /* Foundation.framework */; };
+		FAE5AA5D171EF69100616FC3 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAE5AA5C171EF69100616FC3 /* CoreGraphics.framework */; };
+		FAE5AA63171EF69100616FC3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FAE5AA61171EF69100616FC3 /* InfoPlist.strings */; };
+		FAE5AA65171EF69100616FC3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE5AA64171EF69100616FC3 /* main.m */; };
+		FAE5AA69171EF69100616FC3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE5AA68171EF69100616FC3 /* AppDelegate.m */; };
+		FAE5AA79171EF6A700616FC3 /* Cell.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE5AA76171EF6A700616FC3 /* Cell.m */; };
+		FAE5AA7A171EF6A700616FC3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE5AA78171EF6A700616FC3 /* ViewController.m */; };
+		FAE5AA98171EF72900616FC3 /* NSIndexPath+PSTCollectionViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE5AA7D171EF72900616FC3 /* NSIndexPath+PSTCollectionViewAdditions.m */; };
+		FAE5AA99171EF72900616FC3 /* PSTCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE5AA7F171EF72900616FC3 /* PSTCollectionView.m */; };
+		FAE5AA9A171EF72900616FC3 /* PSTCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE5AA81171EF72900616FC3 /* PSTCollectionViewCell.m */; };
+		FAE5AA9B171EF72900616FC3 /* PSTCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE5AA84171EF72900616FC3 /* PSTCollectionViewController.m */; };
+		FAE5AA9C171EF72900616FC3 /* PSTCollectionViewData.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE5AA86171EF72900616FC3 /* PSTCollectionViewData.m */; };
+		FAE5AA9D171EF72900616FC3 /* PSTCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE5AA88171EF72900616FC3 /* PSTCollectionViewFlowLayout.m */; };
+		FAE5AA9E171EF72900616FC3 /* PSTCollectionViewItemKey.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE5AA8A171EF72900616FC3 /* PSTCollectionViewItemKey.m */; };
+		FAE5AA9F171EF72900616FC3 /* PSTCollectionViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE5AA8D171EF72900616FC3 /* PSTCollectionViewLayout.m */; };
+		FAE5AAA0171EF72900616FC3 /* PSTCollectionViewUpdateItem.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE5AA8F171EF72900616FC3 /* PSTCollectionViewUpdateItem.m */; };
+		FAE5AAA1171EF72900616FC3 /* PSTGridLayoutInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE5AA91171EF72900616FC3 /* PSTGridLayoutInfo.m */; };
+		FAE5AAA2171EF72900616FC3 /* PSTGridLayoutItem.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE5AA93171EF72900616FC3 /* PSTGridLayoutItem.m */; };
+		FAE5AAA3171EF72900616FC3 /* PSTGridLayoutRow.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE5AA95171EF72900616FC3 /* PSTGridLayoutRow.m */; };
+		FAE5AAA4171EF72900616FC3 /* PSTGridLayoutSection.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE5AA97171EF72900616FC3 /* PSTGridLayoutSection.m */; };
+		FAE5AAA6171EF78600616FC3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAE5AAA5171EF78600616FC3 /* QuartzCore.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		FAE5AA55171EF69100616FC3 /* BatchUpdate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BatchUpdate.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FAE5AA58171EF69100616FC3 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		FAE5AA5A171EF69100616FC3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		FAE5AA5C171EF69100616FC3 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		FAE5AA60171EF69100616FC3 /* BatchUpdate-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BatchUpdate-Info.plist"; sourceTree = "<group>"; };
+		FAE5AA62171EF69100616FC3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		FAE5AA64171EF69100616FC3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		FAE5AA66171EF69100616FC3 /* BatchUpdate-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BatchUpdate-Prefix.pch"; sourceTree = "<group>"; };
+		FAE5AA67171EF69100616FC3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		FAE5AA68171EF69100616FC3 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		FAE5AA75171EF6A700616FC3 /* Cell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cell.h; sourceTree = "<group>"; };
+		FAE5AA76171EF6A700616FC3 /* Cell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Cell.m; sourceTree = "<group>"; };
+		FAE5AA77171EF6A700616FC3 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		FAE5AA78171EF6A700616FC3 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		FAE5AA7C171EF72900616FC3 /* NSIndexPath+PSTCollectionViewAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSIndexPath+PSTCollectionViewAdditions.h"; sourceTree = "<group>"; };
+		FAE5AA7D171EF72900616FC3 /* NSIndexPath+PSTCollectionViewAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSIndexPath+PSTCollectionViewAdditions.m"; sourceTree = "<group>"; };
+		FAE5AA7E171EF72900616FC3 /* PSTCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTCollectionView.h; sourceTree = "<group>"; };
+		FAE5AA7F171EF72900616FC3 /* PSTCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTCollectionView.m; sourceTree = "<group>"; };
+		FAE5AA80171EF72900616FC3 /* PSTCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTCollectionViewCell.h; sourceTree = "<group>"; };
+		FAE5AA81171EF72900616FC3 /* PSTCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTCollectionViewCell.m; sourceTree = "<group>"; };
+		FAE5AA82171EF72900616FC3 /* PSTCollectionViewCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTCollectionViewCommon.h; sourceTree = "<group>"; };
+		FAE5AA83171EF72900616FC3 /* PSTCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTCollectionViewController.h; sourceTree = "<group>"; };
+		FAE5AA84171EF72900616FC3 /* PSTCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTCollectionViewController.m; sourceTree = "<group>"; };
+		FAE5AA85171EF72900616FC3 /* PSTCollectionViewData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTCollectionViewData.h; sourceTree = "<group>"; };
+		FAE5AA86171EF72900616FC3 /* PSTCollectionViewData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTCollectionViewData.m; sourceTree = "<group>"; };
+		FAE5AA87171EF72900616FC3 /* PSTCollectionViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTCollectionViewFlowLayout.h; sourceTree = "<group>"; };
+		FAE5AA88171EF72900616FC3 /* PSTCollectionViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTCollectionViewFlowLayout.m; sourceTree = "<group>"; };
+		FAE5AA89171EF72900616FC3 /* PSTCollectionViewItemKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTCollectionViewItemKey.h; sourceTree = "<group>"; };
+		FAE5AA8A171EF72900616FC3 /* PSTCollectionViewItemKey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTCollectionViewItemKey.m; sourceTree = "<group>"; };
+		FAE5AA8B171EF72900616FC3 /* PSTCollectionViewLayout+Internals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PSTCollectionViewLayout+Internals.h"; sourceTree = "<group>"; };
+		FAE5AA8C171EF72900616FC3 /* PSTCollectionViewLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTCollectionViewLayout.h; sourceTree = "<group>"; };
+		FAE5AA8D171EF72900616FC3 /* PSTCollectionViewLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTCollectionViewLayout.m; sourceTree = "<group>"; };
+		FAE5AA8E171EF72900616FC3 /* PSTCollectionViewUpdateItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTCollectionViewUpdateItem.h; sourceTree = "<group>"; };
+		FAE5AA8F171EF72900616FC3 /* PSTCollectionViewUpdateItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTCollectionViewUpdateItem.m; sourceTree = "<group>"; };
+		FAE5AA90171EF72900616FC3 /* PSTGridLayoutInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTGridLayoutInfo.h; sourceTree = "<group>"; };
+		FAE5AA91171EF72900616FC3 /* PSTGridLayoutInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTGridLayoutInfo.m; sourceTree = "<group>"; };
+		FAE5AA92171EF72900616FC3 /* PSTGridLayoutItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTGridLayoutItem.h; sourceTree = "<group>"; };
+		FAE5AA93171EF72900616FC3 /* PSTGridLayoutItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTGridLayoutItem.m; sourceTree = "<group>"; };
+		FAE5AA94171EF72900616FC3 /* PSTGridLayoutRow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTGridLayoutRow.h; sourceTree = "<group>"; };
+		FAE5AA95171EF72900616FC3 /* PSTGridLayoutRow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTGridLayoutRow.m; sourceTree = "<group>"; };
+		FAE5AA96171EF72900616FC3 /* PSTGridLayoutSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSTGridLayoutSection.h; sourceTree = "<group>"; };
+		FAE5AA97171EF72900616FC3 /* PSTGridLayoutSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSTGridLayoutSection.m; sourceTree = "<group>"; };
+		FAE5AAA5171EF78600616FC3 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FAE5AA52171EF69100616FC3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAE5AAA6171EF78600616FC3 /* QuartzCore.framework in Frameworks */,
+				FAE5AA59171EF69100616FC3 /* UIKit.framework in Frameworks */,
+				FAE5AA5B171EF69100616FC3 /* Foundation.framework in Frameworks */,
+				FAE5AA5D171EF69100616FC3 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FAE5AA4C171EF69100616FC3 = {
+			isa = PBXGroup;
+			children = (
+				FAE5AA5E171EF69100616FC3 /* BatchUpdate */,
+				FAE5AA57171EF69100616FC3 /* Frameworks */,
+				FAE5AA56171EF69100616FC3 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FAE5AA56171EF69100616FC3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FAE5AA55171EF69100616FC3 /* BatchUpdate.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FAE5AA57171EF69100616FC3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FAE5AAA5171EF78600616FC3 /* QuartzCore.framework */,
+				FAE5AA58171EF69100616FC3 /* UIKit.framework */,
+				FAE5AA5A171EF69100616FC3 /* Foundation.framework */,
+				FAE5AA5C171EF69100616FC3 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FAE5AA5E171EF69100616FC3 /* BatchUpdate */ = {
+			isa = PBXGroup;
+			children = (
+				FAE5AA7B171EF72900616FC3 /* PSTCollectionView */,
+				FAE5AA67171EF69100616FC3 /* AppDelegate.h */,
+				FAE5AA68171EF69100616FC3 /* AppDelegate.m */,
+				FAE5AA75171EF6A700616FC3 /* Cell.h */,
+				FAE5AA76171EF6A700616FC3 /* Cell.m */,
+				FAE5AA77171EF6A700616FC3 /* ViewController.h */,
+				FAE5AA78171EF6A700616FC3 /* ViewController.m */,
+				FAE5AA5F171EF69100616FC3 /* Supporting Files */,
+			);
+			path = BatchUpdate;
+			sourceTree = "<group>";
+		};
+		FAE5AA5F171EF69100616FC3 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				FAE5AA60171EF69100616FC3 /* BatchUpdate-Info.plist */,
+				FAE5AA61171EF69100616FC3 /* InfoPlist.strings */,
+				FAE5AA64171EF69100616FC3 /* main.m */,
+				FAE5AA66171EF69100616FC3 /* BatchUpdate-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		FAE5AA7B171EF72900616FC3 /* PSTCollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				FAE5AA7C171EF72900616FC3 /* NSIndexPath+PSTCollectionViewAdditions.h */,
+				FAE5AA7D171EF72900616FC3 /* NSIndexPath+PSTCollectionViewAdditions.m */,
+				FAE5AA7E171EF72900616FC3 /* PSTCollectionView.h */,
+				FAE5AA7F171EF72900616FC3 /* PSTCollectionView.m */,
+				FAE5AA80171EF72900616FC3 /* PSTCollectionViewCell.h */,
+				FAE5AA81171EF72900616FC3 /* PSTCollectionViewCell.m */,
+				FAE5AA82171EF72900616FC3 /* PSTCollectionViewCommon.h */,
+				FAE5AA83171EF72900616FC3 /* PSTCollectionViewController.h */,
+				FAE5AA84171EF72900616FC3 /* PSTCollectionViewController.m */,
+				FAE5AA85171EF72900616FC3 /* PSTCollectionViewData.h */,
+				FAE5AA86171EF72900616FC3 /* PSTCollectionViewData.m */,
+				FAE5AA87171EF72900616FC3 /* PSTCollectionViewFlowLayout.h */,
+				FAE5AA88171EF72900616FC3 /* PSTCollectionViewFlowLayout.m */,
+				FAE5AA89171EF72900616FC3 /* PSTCollectionViewItemKey.h */,
+				FAE5AA8A171EF72900616FC3 /* PSTCollectionViewItemKey.m */,
+				FAE5AA8B171EF72900616FC3 /* PSTCollectionViewLayout+Internals.h */,
+				FAE5AA8C171EF72900616FC3 /* PSTCollectionViewLayout.h */,
+				FAE5AA8D171EF72900616FC3 /* PSTCollectionViewLayout.m */,
+				FAE5AA8E171EF72900616FC3 /* PSTCollectionViewUpdateItem.h */,
+				FAE5AA8F171EF72900616FC3 /* PSTCollectionViewUpdateItem.m */,
+				FAE5AA90171EF72900616FC3 /* PSTGridLayoutInfo.h */,
+				FAE5AA91171EF72900616FC3 /* PSTGridLayoutInfo.m */,
+				FAE5AA92171EF72900616FC3 /* PSTGridLayoutItem.h */,
+				FAE5AA93171EF72900616FC3 /* PSTGridLayoutItem.m */,
+				FAE5AA94171EF72900616FC3 /* PSTGridLayoutRow.h */,
+				FAE5AA95171EF72900616FC3 /* PSTGridLayoutRow.m */,
+				FAE5AA96171EF72900616FC3 /* PSTGridLayoutSection.h */,
+				FAE5AA97171EF72900616FC3 /* PSTGridLayoutSection.m */,
+			);
+			name = PSTCollectionView;
+			path = ../../../PSTCollectionView;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FAE5AA54171EF69100616FC3 /* BatchUpdate */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FAE5AA72171EF69100616FC3 /* Build configuration list for PBXNativeTarget "BatchUpdate" */;
+			buildPhases = (
+				FAE5AA51171EF69100616FC3 /* Sources */,
+				FAE5AA52171EF69100616FC3 /* Frameworks */,
+				FAE5AA53171EF69100616FC3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BatchUpdate;
+			productName = BatchUpdate;
+			productReference = FAE5AA55171EF69100616FC3 /* BatchUpdate.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FAE5AA4D171EF69100616FC3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+			};
+			buildConfigurationList = FAE5AA50171EF69100616FC3 /* Build configuration list for PBXProject "BatchUpdate" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = FAE5AA4C171EF69100616FC3;
+			productRefGroup = FAE5AA56171EF69100616FC3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FAE5AA54171EF69100616FC3 /* BatchUpdate */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FAE5AA53171EF69100616FC3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAE5AA63171EF69100616FC3 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FAE5AA51171EF69100616FC3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAE5AA65171EF69100616FC3 /* main.m in Sources */,
+				FAE5AA69171EF69100616FC3 /* AppDelegate.m in Sources */,
+				FAE5AA79171EF6A700616FC3 /* Cell.m in Sources */,
+				FAE5AA7A171EF6A700616FC3 /* ViewController.m in Sources */,
+				FAE5AA98171EF72900616FC3 /* NSIndexPath+PSTCollectionViewAdditions.m in Sources */,
+				FAE5AA99171EF72900616FC3 /* PSTCollectionView.m in Sources */,
+				FAE5AA9A171EF72900616FC3 /* PSTCollectionViewCell.m in Sources */,
+				FAE5AA9B171EF72900616FC3 /* PSTCollectionViewController.m in Sources */,
+				FAE5AA9C171EF72900616FC3 /* PSTCollectionViewData.m in Sources */,
+				FAE5AA9D171EF72900616FC3 /* PSTCollectionViewFlowLayout.m in Sources */,
+				FAE5AA9E171EF72900616FC3 /* PSTCollectionViewItemKey.m in Sources */,
+				FAE5AA9F171EF72900616FC3 /* PSTCollectionViewLayout.m in Sources */,
+				FAE5AAA0171EF72900616FC3 /* PSTCollectionViewUpdateItem.m in Sources */,
+				FAE5AAA1171EF72900616FC3 /* PSTGridLayoutInfo.m in Sources */,
+				FAE5AAA2171EF72900616FC3 /* PSTGridLayoutItem.m in Sources */,
+				FAE5AAA3171EF72900616FC3 /* PSTGridLayoutRow.m in Sources */,
+				FAE5AAA4171EF72900616FC3 /* PSTGridLayoutSection.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		FAE5AA61171EF69100616FC3 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FAE5AA62171EF69100616FC3 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		FAE5AA70171EF69100616FC3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+		FAE5AA71171EF69100616FC3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		FAE5AA73171EF69100616FC3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "BatchUpdate/BatchUpdate-Prefix.pch";
+				INFOPLIST_FILE = "BatchUpdate/BatchUpdate-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		FAE5AA74171EF69100616FC3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "BatchUpdate/BatchUpdate-Prefix.pch";
+				INFOPLIST_FILE = "BatchUpdate/BatchUpdate-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FAE5AA50171EF69100616FC3 /* Build configuration list for PBXProject "BatchUpdate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FAE5AA70171EF69100616FC3 /* Debug */,
+				FAE5AA71171EF69100616FC3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FAE5AA72171EF69100616FC3 /* Build configuration list for PBXNativeTarget "BatchUpdate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FAE5AA73171EF69100616FC3 /* Debug */,
+				FAE5AA74171EF69100616FC3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FAE5AA4D171EF69100616FC3 /* Project object */;
+}

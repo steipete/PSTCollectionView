@@ -20,6 +20,7 @@
 - (void)applyLayoutAttributes:(PSTCollectionViewLayoutAttributes *)layoutAttributes;
 
 - (void)willTransitionFromLayout:(PSTCollectionViewLayout *)oldLayout toLayout:(PSTCollectionViewLayout *)newLayout;
+
 - (void)didTransitionFromLayout:(PSTCollectionViewLayout *)oldLayout toLayout:(PSTCollectionViewLayout *)newLayout;
 
 @end

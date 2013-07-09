@@ -7,10 +7,9 @@
 
 #import "NSIndexPath+PSTCollectionViewAdditions.h"
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
 
 @implementation NSIndexPath (PSTCollectionViewAdditions)
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
 
 // Simple NSIndexPath addition to allow using "item" instead of "row".
 + (NSIndexPath *)indexPathForItem:(NSInteger)item inSection:(NSInteger)section {
@@ -21,6 +20,6 @@
     return self.row;
 }
 
-#endif
-
 @end
+
+#endif
