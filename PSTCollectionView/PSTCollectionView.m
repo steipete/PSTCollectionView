@@ -277,6 +277,16 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     }
 }
 
+- (void)setBounds:(CGRect)bounds {
+    if (!CGRectEqualToRect(bounds, self.bounds)) {
+        [super setBounds:bounds];
+        if ([self.collectionViewLayout shouldInvalidateLayoutForBoundsChange:bounds]) {
+            [self invalidateLayout];
+            _collectionViewFlags.fadeCellsForBoundsChange = YES;
+        }
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - UIScrollViewDelegate
 
