@@ -303,10 +303,7 @@
         if (attr) {
             if (attr.isCell) {
                 NSInteger index = [update[@"oldModel"] globalIndexForItemAtIndexPath:[attr indexPath]];
-
                 if (index != NSNotFound) {
-                    index = [update[@"oldToNewIndexMap"][index] intValue];
-
                     [attr setIndexPath:[attr indexPath]];
                 }
             }
