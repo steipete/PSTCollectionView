@@ -8,7 +8,6 @@
 #import "PSTCollectionViewItemKey.h"
 
 NSString *const PSTCollectionElementKindCell = @"UICollectionElementKindCell";
-NSString *const PSTCollectionElementKindDecorationView = @"UICollectionElementKindDecorationView";
 
 @implementation PSTCollectionViewItemKey
 
@@ -28,32 +27,7 @@ NSString *const PSTCollectionElementKindDecorationView = @"UICollectionElementKi
     key.indexPath = layoutAttributes.indexPath;
 	PSTCollectionViewItemType const itemType = layoutAttributes.representedElementCategory;
 	key.type = itemType;
-	switch (itemType) {
-		case PSTCollectionViewItemTypeCell:
-		case PSTCollectionViewItemTypeSupplementaryView:
-			key.identifier = layoutAttributes.representedElementKind;
-			break;
-		case PSTCollectionViewItemTypeDecorationView:
-			key.identifier = layoutAttributes.reuseIdentifier;
-			break;
-	}
-    return key;
-}
-
-// elementKind or reuseIdentifier?
-+ (id)collectionItemKeyForDecorationViewOfKind:(NSString *)elementKind andIndexPath:(NSIndexPath *)indexPath {
-    PSTCollectionViewItemKey *key = [self.class new];
-    key.indexPath = indexPath;
-    key.type = PSTCollectionViewItemTypeDecorationView;
-    key.identifier = elementKind;
-    return key;
-}
-
-+ (id)collectionItemKeyForSupplementaryViewOfKind:(NSString *)elementKind andIndexPath:(NSIndexPath *)indexPath {
-    PSTCollectionViewItemKey *key = [self.class new];
-    key.indexPath = indexPath;
-    key.identifier = elementKind;
-    key.type = PSTCollectionViewItemTypeSupplementaryView;
+    key.identifier = layoutAttributes.representedElementKind;
     return key;
 }
 
