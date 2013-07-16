@@ -110,7 +110,7 @@
         _collectionView.dataSource = self;
 
         // If the collection view isn't the main view, add it.
-        if (self.view != self.collectionView) {
+        if (self.isViewLoaded && self.view != self.collectionView) {
             [self.view addSubview:self.collectionView];
             self.collectionView.frame = self.view.bounds;
             self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
