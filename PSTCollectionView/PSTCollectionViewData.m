@@ -203,6 +203,7 @@
         _numItems = 0;
         free(_sectionItemCounts);
         _sectionItemCounts = 0;
+        _collectionViewDataFlags.itemCountsAreValid = YES;
         return;
     }
     // allocate space
