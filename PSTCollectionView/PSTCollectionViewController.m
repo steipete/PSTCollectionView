@@ -108,6 +108,13 @@
         _collectionView = [[PSTCollectionView alloc] initWithFrame:UIScreen.mainScreen.bounds collectionViewLayout:self.layout];
         _collectionView.delegate = self;
         _collectionView.dataSource = self;
+
+        // If the collection view isn't the main view, add it.
+        if (self.view != self.collectionView) {
+            [self.view addSubview:self.collectionView];
+            self.collectionView.frame = self.view.bounds;
+            self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        }
     }
     return _collectionView;
 }
