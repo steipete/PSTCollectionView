@@ -84,9 +84,6 @@ NSString *const PSTFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVertical
                 // TODO: those values are some enum. find out what that is.
                 PSTFlowLayoutRowVerticalAlignmentKey : @(1),
         };
-
-        // custom ivars
-        objc_setAssociatedObject(self, &kPSTCachedItemRectsKey, [NSMutableDictionary dictionary], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return self;
 }
@@ -295,6 +292,9 @@ static char kPSTCachedItemRectsKey;
 }
 
 - (void)prepareLayout {
+    // custom ivars
+    objc_setAssociatedObject(self, &kPSTCachedItemRectsKey, [NSMutableDictionary dictionary], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
     _data = [PSTGridLayoutInfo new]; // clear old layout data
     _data.horizontal = self.scrollDirection == PSTCollectionViewScrollDirectionHorizontal;
     CGSize collectionViewSize = self.collectionView.bounds.size;
