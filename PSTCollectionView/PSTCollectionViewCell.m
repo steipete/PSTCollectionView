@@ -34,6 +34,7 @@
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if ((self = [super initWithCoder:aDecoder])) {
+        self.reuseIdentifier = [aDecoder decodeObjectForKey:@"UIReuseIdentifier"];
     }
     return self;
 }
