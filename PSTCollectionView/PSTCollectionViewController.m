@@ -105,9 +105,17 @@
 
 - (PSTCollectionView *)collectionView {
     if (!_collectionView) {
-        _collectionView = [[PSTCollectionView alloc] initWithFrame:UIScreen.mainScreen.bounds collectionViewLayout:self.layout];
-        _collectionView.delegate = self;
-        _collectionView.dataSource = self;
+		@autoreleasepool {
+			_collectionView = [[PSTCollectionView alloc] initWithFrame:UIScreen.mainScreen.bounds collectionViewLayout:self.layout];
+			_collectionView.delegate = self;
+			_collectionView.dataSource = self;
+			
+			if (self.view != self.collectionView) {
+				[self.view addSubview:self.collectionView];
+				self.collectionView.frame = self.view.bounds;
+				self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+			}
+		}
     }
     return _collectionView;
 }
