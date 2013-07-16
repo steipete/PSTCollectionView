@@ -1217,7 +1217,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                 PSTCollectionReusableView *view = _allVisibleViewsDict[key];
                 if (!view) {
                     PSTCollectionViewLayoutAttributes *attrs = layoutInterchangeData[key][@"previousLayoutInfos"];
-                    view = [self dequeueReusableOrCreateDecorationViewOfKind:attrs.reuseIdentifier forIndexPath:attrs.indexPath];
+                    view = [self dequeueReusableOrCreateDecorationViewOfKind:attrs.representedElementKind forIndexPath:attrs.indexPath];
                     _allVisibleViewsDict[key] = view;
                     [self addControlledSubview:view];
                 }
@@ -1409,11 +1409,11 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
             }else if (itemKey.type == PSTCollectionViewItemTypeSupplementaryView) {
                 view = [self createPreparedSupplementaryViewForElementOfKind:layoutAttributes.representedElementKind
-                        atIndexPath:layoutAttributes.indexPath
-                        withLayoutAttributes:layoutAttributes];
-            }else if (itemKey.type == PSTCollectionViewItemTypeDecorationView) {
-                view = [self dequeueReusableOrCreateDecorationViewOfKind:layoutAttributes.reuseIdentifier forIndexPath:layoutAttributes.indexPath];
-            }
+																 atIndexPath:layoutAttributes.indexPath
+														withLayoutAttributes:layoutAttributes];
+			} else if (itemKey.type == PSTCollectionViewItemTypeDecorationView) {
+				view = [self dequeueReusableOrCreateDecorationViewOfKind:layoutAttributes.representedElementKind forIndexPath:layoutAttributes.indexPath];
+			}
 
             // Supplementary views are optional
             if (view) {
