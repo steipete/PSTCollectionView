@@ -269,11 +269,21 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)setFrame:(CGRect)frame {
     if (!CGRectEqualToRect(frame, self.frame)) {
-        if ([self.collectionViewLayout shouldInvalidateLayoutForBoundsChange:frame]) {
+        [super setFrame:frame];
+        if ([self.collectionViewLayout shouldInvalidateLayoutForBoundsChange:self.bounds]) {
             [self invalidateLayout];
             _collectionViewFlags.fadeCellsForBoundsChange = YES;
         }
-        [super setFrame:frame];
+    }
+}
+
+- (void)setBounds:(CGRect)bounds {
+    if (!CGRectEqualToRect(bounds, self.bounds)) {
+        [super setBounds:bounds];
+        if ([self.collectionViewLayout shouldInvalidateLayoutForBoundsChange:bounds]) {
+            [self invalidateLayout];
+            _collectionViewFlags.fadeCellsForBoundsChange = YES;
+        }
     }
 }
 
