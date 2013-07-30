@@ -25,8 +25,8 @@ NSString *const PSTCollectionElementKindCell = @"UICollectionElementKindCell";
 + (id)collectionItemKeyForLayoutAttributes:(PSTCollectionViewLayoutAttributes *)layoutAttributes {
     PSTCollectionViewItemKey *key = [self.class new];
     key.indexPath = layoutAttributes.indexPath;
-	PSTCollectionViewItemType const itemType = layoutAttributes.representedElementCategory;
-	key.type = itemType;
+    PSTCollectionViewItemType const itemType = layoutAttributes.representedElementCategory;
+    key.type = itemType;
     key.identifier = layoutAttributes.representedElementKind;
     return key;
 }

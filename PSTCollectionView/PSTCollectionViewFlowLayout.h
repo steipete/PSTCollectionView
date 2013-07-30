@@ -43,7 +43,7 @@ typedef NS_ENUM(NSInteger, PSTCollectionViewScrollDirection) {
 
 /*
  Row alignment options exits in the official UICollectionView, but hasn't been made public API.
- 
+
  Here's a snippet to test this on UICollectionView:
 
  NSMutableDictionary *rowAlign = [[flowLayout valueForKey:@"_rowAlignmentsOptionsDictionary"] mutableCopy];

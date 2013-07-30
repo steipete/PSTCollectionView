@@ -130,7 +130,7 @@ static char kPSTCachedItemRectsKey;
 - (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect {
     // Apple calls _layoutAttributesForItemsInRect
     if (!_data) [self prepareLayout];
-    
+
     NSMutableArray *layoutAttributesArray = [NSMutableArray array];
     for (PSTGridLayoutSection *section in _data.sections) {
         if (CGRectIntersectsRect(section.frame, rect)) {
@@ -197,7 +197,7 @@ static char kPSTCachedItemRectsKey;
 
 - (PSTCollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath {
     if (!_data) [self prepareLayout];
-    
+
     PSTGridLayoutSection *section = _data.sections[indexPath.section];
     PSTGridLayoutRow *row = nil;
     CGRect itemFrame = CGRectZero;
@@ -226,7 +226,7 @@ static char kPSTCachedItemRectsKey;
 
 - (PSTCollectionViewLayoutAttributes *)layoutAttributesForSupplementaryViewOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
     if (!_data) [self prepareLayout];
-    
+
     NSUInteger sectionIndex = indexPath.section;
     PSTCollectionViewLayoutAttributes *layoutAttributes = nil;
 
@@ -258,7 +258,7 @@ static char kPSTCachedItemRectsKey;
 
 - (CGSize)collectionViewContentSize {
     if (!_data) [self prepareLayout];
-    
+
     return _data.contentSize;
 }
 
@@ -295,7 +295,7 @@ static char kPSTCachedItemRectsKey;
 - (void)prepareLayout {
     // custom ivars
     objc_setAssociatedObject(self, &kPSTCachedItemRectsKey, [NSMutableDictionary dictionary], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    
+
     _data = [PSTGridLayoutInfo new]; // clear old layout data
     _data.horizontal = self.scrollDirection == PSTCollectionViewScrollDirectionHorizontal;
     _visibleBounds = self.collectionView.bounds;

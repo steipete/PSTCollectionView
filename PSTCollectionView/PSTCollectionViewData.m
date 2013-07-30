@@ -106,14 +106,14 @@
 
 - (NSInteger)numberOfItemsBeforeSection:(NSInteger)section {
     [self validateItemCounts];
-    
+
     NSAssert(section < _numSections, @"request for number of items in section %d when there are only %d sections in the collection view", section, _numSections);
-    
+
     NSInteger returnCount = 0;
     for (int i = 0; i < section; i++) {
         returnCount += _sectionItemCounts[i];
     }
-    
+
     return returnCount;
 }
 
@@ -145,9 +145,9 @@
 
 - (NSIndexPath *)indexPathForItemAtGlobalIndex:(NSInteger)index {
     [self validateItemCounts];
-    
+
     NSAssert(index < _numItems, @"request for index path for global index %d when there are only %d items in the collection view", index, _numItems);
-    
+
     NSInteger section = 0;
     NSInteger countItems = 0;
     for (section = 0; section < _numSections; section++) {
@@ -155,9 +155,9 @@
         if (countIncludingThisSection > index) break;
         countItems = countIncludingThisSection;
     }
-    
+
     NSInteger item = index - countItems;
-    
+
     return [NSIndexPath indexPathForItem:item inSection:section];
 }
 
@@ -220,7 +220,7 @@
         _sectionItemCounts[i] = cellCount;
         _numItems += cellCount;
     }
-    
+
     _collectionViewDataFlags.itemCountsAreValid = YES;
 }
 

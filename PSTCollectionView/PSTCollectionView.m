@@ -110,7 +110,7 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
         unsigned int doneFirstLayout : 1;
     }_collectionViewFlags;
     CGPoint _lastLayoutOffset;
-    char filler[200]; // [HACK] Our class needs to be larger than Apple's class for the superclass change to work
+    char filler[200]; // [HACK] Our class needs to be larged than Apple's class for the superclass change to work
 }
 @property (nonatomic, strong) PSTCollectionViewData *collectionViewData;
 @property (nonatomic, strong, readonly) PSTCollectionViewExt *extVars;
@@ -1302,28 +1302,28 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 - (void)setDelegate:(id<PSTCollectionViewDelegate>)delegate {
     self.extVars.collectionViewDelegate = delegate;
 
-    //	Managing the Selected Cells
+    //  Managing the Selected Cells
     _collectionViewFlags.delegateShouldSelectItemAtIndexPath = [self.delegate respondsToSelector:@selector(collectionView:shouldSelectItemAtIndexPath:)];
     _collectionViewFlags.delegateDidSelectItemAtIndexPath = [self.delegate respondsToSelector:@selector(collectionView:didSelectItemAtIndexPath:)];
     _collectionViewFlags.delegateShouldDeselectItemAtIndexPath = [self.delegate respondsToSelector:@selector(collectionView:shouldDeselectItemAtIndexPath:)];
     _collectionViewFlags.delegateDidDeselectItemAtIndexPath = [self.delegate respondsToSelector:@selector(collectionView:didDeselectItemAtIndexPath:)];
 
-    //	Managing Cell Highlighting
+    //  Managing Cell Highlighting
     _collectionViewFlags.delegateShouldHighlightItemAtIndexPath = [self.delegate respondsToSelector:@selector(collectionView:shouldHighlightItemAtIndexPath:)];
     _collectionViewFlags.delegateDidHighlightItemAtIndexPath = [self.delegate respondsToSelector:@selector(collectionView:didHighlightItemAtIndexPath:)];
     _collectionViewFlags.delegateDidUnhighlightItemAtIndexPath = [self.delegate respondsToSelector:@selector(collectionView:didUnhighlightItemAtIndexPath:)];
 
-    //	Tracking the Removal of Views
+    //  Tracking the Removal of Views
     _collectionViewFlags.delegateDidEndDisplayingCell = [self.delegate respondsToSelector:@selector(collectionView:didEndDisplayingCell:forItemAtIndexPath:)];
     _collectionViewFlags.delegateDidEndDisplayingSupplementaryView = [self.delegate respondsToSelector:@selector(collectionView:didEndDisplayingSupplementaryView:forElementOfKind:atIndexPath:)];
 
-    //	Managing Actions for Cells
+    //  Managing Actions for Cells
     _collectionViewFlags.delegateSupportsMenus = [self.delegate respondsToSelector:@selector(collectionView:shouldShowMenuForItemAtIndexPath:)];
 
     // These aren't present in the flags which is a little strange. Not adding them because that will mess with byte alignment which will affect cross compatibility.
     // The flag names are guesses and are there for documentation purposes.
-    // _collectionViewFlags.delegateCanPerformActionForItemAtIndexPath	= [self.delegate respondsToSelector:@selector(collectionView:canPerformAction:forItemAtIndexPath:withSender:)];
-    // _collectionViewFlags.delegatePerformActionForItemAtIndexPath		= [self.delegate respondsToSelector:@selector(collectionView:performAction:forItemAtIndexPath:withSender:)];
+    // _collectionViewFlags.delegateCanPerformActionForItemAtIndexPath = [self.delegate respondsToSelector:@selector(collectionView:canPerformAction:forItemAtIndexPath:withSender:)];
+    // _collectionViewFlags.delegatePerformActionForItemAtIndexPath    = [self.delegate respondsToSelector:@selector(collectionView:performAction:forItemAtIndexPath:withSender:)];
 }
 
 // Might be overkill since two are required and two are handled by PSTCollectionViewData leaving only one flag we actually need to check for
@@ -1331,10 +1331,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     if (dataSource != _dataSource) {
         _dataSource = dataSource;
 
-        //	Getting Item and Section Metrics
+        //  Getting Item and Section Metrics
         _collectionViewFlags.dataSourceNumberOfSections = [_dataSource respondsToSelector:@selector(numberOfSectionsInCollectionView:)];
 
-        //	Getting Views for Items
+        //  Getting Views for Items
         _collectionViewFlags.dataSourceViewForSupplementaryElement = [_dataSource respondsToSelector:@selector(collectionView:viewForSupplementaryElementOfKind:atIndexPath:)];
     }
 }
@@ -2229,7 +2229,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 static BOOL PSTRegisterClass(NSString *UIClassName, Class PSTClass) {
     NSCParameterAssert(UIClassName);
     NSCParameterAssert(PSTClass);
-    
+
     Class UIClass = NSClassFromString(UIClassName);
     if (UIClass) {
         // Class size need to be the same for class_setSuperclass to work.
