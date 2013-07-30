@@ -168,7 +168,7 @@
         // Ignore the events if view wants to
         if (!((UIView *)view).isUserInteractionEnabled &&
                 [view respondsToSelector:@selector(setHighlighted:)] &&
-                ![view isKindOfClass:UIButton.class]) {
+                ![view isKindOfClass:UIControl.class]) {
             [view setHighlighted:highlighted];
 
         }
