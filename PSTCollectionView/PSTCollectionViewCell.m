@@ -170,9 +170,9 @@
                 [view respondsToSelector:@selector(setHighlighted:)] &&
                 ![view isKindOfClass:UIControl.class]) {
             [view setHighlighted:highlighted];
-
+            
+            [self setHighlighted:highlighted forViews:[view subviews]];
         }
-        [self setHighlighted:highlighted forViews:[view subviews]];
     }
 }
 
