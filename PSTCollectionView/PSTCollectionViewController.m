@@ -15,7 +15,7 @@
         unsigned int clearsSelectionOnViewWillAppear : 1;
         unsigned int appearsFirstTime : 1; // PST exension!
     }_collectionViewControllerFlags;
-    char filler[100]; // [HACK] Our class needs to be larged than Apple's class for the superclass change to work
+    char filler[100]; // [HACK] Our class needs to be larger than Apple's class for the superclass change to work.
 }
 @property (nonatomic, strong) PSTCollectionViewLayout *layout;
 @end

@@ -53,7 +53,7 @@ NSString *const PSTFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVertical
     PSTCollectionViewScrollDirection _scrollDirection;
     NSDictionary *_rowAlignmentsOptionsDictionary;
     CGRect _visibleBounds;
-    char filler[200]; // [HACK] Our class needs to be larged than Apple's class for the superclass change to work
+    char filler[200]; // [HACK] Our class needs to be larger than Apple's class for the superclass change to work.
 }
 
 @synthesize rowAlignmentOptions = _rowAlignmentsOptionsDictionary;

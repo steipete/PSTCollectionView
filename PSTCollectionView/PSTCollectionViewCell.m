@@ -14,7 +14,7 @@
     struct {
         unsigned int inUpdateAnimation : 1;
     }_reusableViewFlags;
-    char filler[50]; // [HACK] Our class needs to be larged than Apple's class for the superclass change to work
+    char filler[50]; // [HACK] Our class needs to be larger than Apple's class for the superclass change to work.
 }
 @property (nonatomic, copy) NSString *reuseIdentifier;
 @property (nonatomic, unsafe_unretained) PSTCollectionView *collectionView;
