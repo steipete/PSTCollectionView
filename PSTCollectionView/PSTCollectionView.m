@@ -2233,7 +2233,7 @@ static BOOL PSTRegisterClass(NSString *UIClassName, Class PSTClass) {
     if (UIClass) {
         // Class size need to be the same for class_setSuperclass to work.
         // If the UIKit class is smaller then our subclass, ivars won't clash, so there's no issue.
-        size_t sizeDifference = class_getInstanceSize(UIClass) - class_getInstanceSize(PSTClass);
+        long sizeDifference = class_getInstanceSize(UIClass) - class_getInstanceSize(PSTClass);
         if (sizeDifference > 0) {
             NSLog(@"Warning! ivar size mismatch in %@ - can't change the superclass.", PSTClass);
         }else {
