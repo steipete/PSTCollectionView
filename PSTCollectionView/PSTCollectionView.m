@@ -2233,19 +2233,21 @@ static BOOL PSTRegisterClass(NSString *UIClassName, Class PSTClass) {
     if (UIClass) {
         // Class size need to be the same for class_setSuperclass to work.
         // If the UIKit class is smaller then our subclass, ivars won't clash, so there's no issue.
-        size_t sizeDifference = class_getInstanceSize(UIClass) - class_getInstanceSize(PSTClass);
+        long sizeDifference = class_getInstanceSize(UIClass) - class_getInstanceSize(PSTClass);
         if (sizeDifference > 0) {
             NSLog(@"Warning! ivar size mismatch in %@ - can't change the superclass.", PSTClass);
-        }else {
+            return NO;
+        } else {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        // class_setSuperclass is deprecated, but still exists and works on iOS6/7.
-        class_setSuperclass(PSTClass, UIClass);
+            // class_setSuperclass is deprecated, but still exists and works on iOS6/7.
+            class_setSuperclass(PSTClass, UIClass);
 #pragma clang diagnostic pop
         }
-    }else {
+    } else {
         // We're most likely on iOS5, the requested UIKit class doesn't exist, so we create it dynamically.
-        if ((UIClass = objc_allocateClassPair(PSTClass, UIClassName.UTF8String, 0))) {  objc_registerClassPair(UIClass);
+        if ((UIClass = objc_allocateClassPair(PSTClass, UIClassName.UTF8String, 0))) {
+            objc_registerClassPair(UIClass);
         }
     }
     return YES;
