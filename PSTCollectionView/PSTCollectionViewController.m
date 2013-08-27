@@ -73,7 +73,7 @@
 
     // This seems like a hack, but is needed for real compatibility
     // There can be implementations of loadView that don't call super and don't set the view, yet it works in UICollectionViewController.
-    if (![self isViewLoaded]) {
+    if (!self.isViewLoaded) {
         self.view = [[UIView alloc] initWithFrame:CGRectZero];
     }
 
