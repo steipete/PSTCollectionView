@@ -615,7 +615,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         PSTCollectionViewItemKey *itemKey = (PSTCollectionViewItemKey *)key;
         if (itemKey.type == PSTCollectionViewItemTypeCell) {
             PSTCollectionViewCell *cell = (PSTCollectionViewCell *)obj;
-            if (CGRectContainsPoint(cell.frame, point)) {
+            if (CGRectContainsPoint(cell.frame, point) && cell.userInteractionEnabled) {
                 indexPath = itemKey.indexPath;
                 *stop = YES;
             }
