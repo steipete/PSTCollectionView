@@ -2255,6 +2255,8 @@ static BOOL PSTRegisterClass(NSString *UIClassName, Class PSTClass) {
 
 // Create subclasses that pose as UICollectionView et al, if not available at runtime.
 __attribute__((constructor)) static void PSTCreateUICollectionViewClasses(void) {
+    if (objc_getClass("PSTCollectionViewDisableForwardToUICollectionViewSentinel")) return;
+
     @autoreleasepool {
         // Change superclass at runtime. This allows seamless switching from PST* to UI* at runtime.
         PSTRegisterClass(@"UICollectionView", PSUICollectionView_.class);
