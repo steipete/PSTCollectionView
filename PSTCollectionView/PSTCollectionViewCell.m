@@ -144,11 +144,13 @@
     self.layoutAttributes = nil;
     self.selected = NO;
     self.highlighted = NO;
+    self.accessibilityTraits = UIAccessibilityTraitNone;
 }
 
 // Selection highlights underlying contents
 - (void)setSelected:(BOOL)selected {
     _collectionCellFlags.selected = selected;
+    self.accessibilityTraits = selected ? UIAccessibilityTraitSelected : UIAccessibilityTraitNone;
     [self updateBackgroundView:selected];
 }
 
