@@ -33,7 +33,7 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p frame:%@ index:%d items:%@>", NSStringFromClass(self.class), self, NSStringFromCGRect(self.rowFrame), self.index, self.items];
+    return [NSString stringWithFormat:@"<%@: %p frame:%@ index:%ld items:%@>", NSStringFromClass(self.class), self, NSStringFromCGRect(self.rowFrame), (long)self.index, self.items];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////

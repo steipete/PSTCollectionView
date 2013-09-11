@@ -43,7 +43,7 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p itemCount:%d frame:%@ rows:%@>", NSStringFromClass(self.class), self, self.itemsCount, NSStringFromCGRect(self.frame), self.rows];
+    return [NSString stringWithFormat:@"<%@: %p itemCount:%ld frame:%@ rows:%@>", NSStringFromClass(self.class), self, (long)self.itemsCount, NSStringFromCGRect(self.frame), self.rows];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -79,7 +79,7 @@
             sectionSize.height += self.headerDimension + self.sectionMargins.top;
         }
 
-        float spacing = self.layoutInfo.horizontal ? self.verticalInterstice : self.horizontalInterstice;
+        CGFloat spacing = self.layoutInfo.horizontal ? self.verticalInterstice : self.horizontalInterstice;
 
         do {
             BOOL finishCycle = itemIndex >= self.itemsCount;
@@ -95,7 +95,7 @@
                 // finish current row
                 if (row) {
                     // compensate last row
-                    self.itemsByRowCount = fmaxf(itemsByRowCount, self.itemsByRowCount);
+                    self.itemsByRowCount = fmax(itemsByRowCount, self.itemsByRowCount);
                     row.itemCount = itemsByRowCount;
 
                     // if current row is done but there are still items left, increase the incomplete row counter
@@ -105,12 +105,12 @@
 
                     if (self.layoutInfo.horizontal) {
                         row.rowFrame = CGRectMake(sectionSize.width, self.sectionMargins.top, row.rowSize.width, row.rowSize.height);
-                        sectionSize.height = fmaxf(row.rowSize.height, sectionSize.height);
+                        sectionSize.height = fmax(row.rowSize.height, sectionSize.height);
                         sectionSize.width += row.rowSize.width + (finishCycle ? 0 : self.horizontalInterstice);
                     }else {
                         row.rowFrame = CGRectMake(self.sectionMargins.left, sectionSize.height, row.rowSize.width, row.rowSize.height);
                         sectionSize.height += row.rowSize.height + (finishCycle ? 0 : self.verticalInterstice);
-                        sectionSize.width = fmaxf(row.rowSize.width, sectionSize.width);
+                        sectionSize.width = fmax(row.rowSize.width, sectionSize.width);
                     }
                 }
                 // add new rows until the section is fully laid out

@@ -66,7 +66,7 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p numItems:%d numSections:%d>", NSStringFromClass(self.class), self, self.numberOfItems, self.numberOfSections];
+    return [NSString stringWithFormat:@"<%@: %p numItems:%ld numSections:%ld>", NSStringFromClass(self.class), self, (long)self.numberOfItems, (long)self.numberOfSections];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -107,7 +107,7 @@
 - (NSInteger)numberOfItemsBeforeSection:(NSInteger)section {
     [self validateItemCounts];
 
-    NSAssert(section < _numSections, @"request for number of items in section %d when there are only %d sections in the collection view", section, _numSections);
+    NSAssert(section < _numSections, @"request for number of items in section %ld when there are only %ld sections in the collection view", (long)section, (long)_numSections);
 
     NSInteger returnCount = 0;
     for (int i = 0; i < section; i++) {
@@ -146,7 +146,7 @@
 - (NSIndexPath *)indexPathForItemAtGlobalIndex:(NSInteger)index {
     [self validateItemCounts];
 
-    NSAssert(index < _numItems, @"request for index path for global index %d when there are only %d items in the collection view", index, _numItems);
+    NSAssert(index < _numItems, @"request for index path for global index %ld when there are only %ld items in the collection view", (long)index, (long)_numItems);
 
     NSInteger section = 0;
     NSInteger countItems = 0;

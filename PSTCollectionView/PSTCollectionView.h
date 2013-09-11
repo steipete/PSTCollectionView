@@ -115,7 +115,6 @@ typedef NS_ENUM(NSUInteger, PSTCollectionElementCategory) {
 @end
 
 // To dynamically switch between PSTCollectionView and UICollectionView, use the PSUICollectionView* classes.
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
 #define PSUICollectionView PSUICollectionView_
 #define PSUICollectionViewCell PSUICollectionViewCell_
 #define PSUICollectionReusableView PSUICollectionReusableView_
@@ -135,16 +134,3 @@ typedef NS_ENUM(NSUInteger, PSTCollectionElementCategory) {
 @protocol PSUICollectionViewDelegateFlowLayout_ <PSTCollectionViewDelegateFlowLayout> @end
 @interface PSUICollectionViewLayoutAttributes_ : PSTCollectionViewLayoutAttributes @end
 @interface PSUICollectionViewController_ : PSTCollectionViewController <PSUICollectionViewDelegate, PSUICollectionViewDataSource> @end
-
-#else
-#define PSUICollectionView UICollectionView
-#define PSUICollectionViewCell UICollectionViewCell
-#define PSUICollectionReusableView UICollectionReusableView
-#define PSUICollectionViewDelegate UICollectionViewDelegate
-#define PSUICollectionViewDataSource UICollectionViewDataSource
-#define PSUICollectionViewLayout UICollectionViewLayout
-#define PSUICollectionViewFlowLayout UICollectionViewFlowLayout
-#define PSUICollectionViewDelegateFlowLayout UICollectionViewDelegateFlowLayout
-#define PSUICollectionViewLayoutAttributes UICollectionViewLayoutAttributes
-#define PSUICollectionViewController UICollectionViewController
-#endif

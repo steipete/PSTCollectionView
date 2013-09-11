@@ -36,8 +36,8 @@ NSString *const PSTFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVertical
         unsigned int layoutDataIsValid : 1;
         unsigned int delegateInfoIsValid : 1;
     }_gridLayoutFlags;
-    float _interitemSpacing;
-    float _lineSpacing;
+    CGFloat _interitemSpacing;
+    CGFloat _lineSpacing;
     CGSize _itemSize;
     CGSize _headerReferenceSize;
     CGSize _footerReferenceSize;
@@ -114,8 +114,8 @@ NSString *const PSTFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVertical
 - (void)encodeWithCoder:(NSCoder *)coder {
     [super encodeWithCoder:coder];
     [coder encodeCGSize:self.itemSize forKey:@"UIItemSize"];
-    [coder encodeFloat:self.minimumInteritemSpacing forKey:@"UIInteritemSpacing"];
-    [coder encodeFloat:self.minimumLineSpacing forKey:@"UILineSpacing"];
+    [coder encodeFloat:(float)self.minimumInteritemSpacing forKey:@"UIInteritemSpacing"];
+    [coder encodeFloat:(float)self.minimumLineSpacing forKey:@"UILineSpacing"];
     [coder encodeCGSize:self.footerReferenceSize forKey:@"UIFooterReferenceSize"];
     [coder encodeCGSize:self.headerReferenceSize forKey:@"UIHeaderReferenceSize"];
     [coder encodeUIEdgeInsets:self.sectionInset forKey:@"UISectionInset"];
@@ -399,11 +399,11 @@ static char kPSTCachedItemRectsKey;
         if (_data.horizontal) {
             sectionFrame.origin.x += contentSize.width;
             contentSize.width += section.frame.size.width + section.frame.origin.x;
-            contentSize.height = fmaxf(contentSize.height, sectionFrame.size.height + section.frame.origin.y + section.sectionMargins.top + section.sectionMargins.bottom);
+            contentSize.height = fmax(contentSize.height, sectionFrame.size.height + section.frame.origin.y + section.sectionMargins.top + section.sectionMargins.bottom);
         }else {
             sectionFrame.origin.y += contentSize.height;
             contentSize.height += sectionFrame.size.height + section.frame.origin.y;
-            contentSize.width = fmaxf(contentSize.width, sectionFrame.size.width + section.frame.origin.x + section.sectionMargins.left + section.sectionMargins.right);
+            contentSize.width = fmax(contentSize.width, sectionFrame.size.width + section.frame.origin.x + section.sectionMargins.left + section.sectionMargins.right);
         }
         section.frame = sectionFrame;
     }
