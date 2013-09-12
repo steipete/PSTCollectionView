@@ -1638,7 +1638,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
                     [_allVisibleViewsDict removeObjectForKey:key];
 
-                    [viewsToRemove[@(key.type)] addObject:view];
+                    [(NSMutableArray *)viewsToRemove[@(key.type)] addObject:view];
 
                 }
             }
@@ -1662,7 +1662,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
                 [_allVisibleViewsDict removeObjectForKey:key];
 
-                [viewsToRemove[@(key.type)] addObject:view];
+                [(NSMutableArray *)viewsToRemove[@(key.type)] addObject:view];
 
             }
         }
