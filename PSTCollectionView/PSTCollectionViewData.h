@@ -12,7 +12,7 @@
 // https://github.com/steipete/iOS6-Runtime-Headers/blob/master/UICollectionViewData.h
 @interface PSTCollectionViewData : NSObject
 
-/// Designated initializer.
+// Designated initializer.
 - (id)initWithCollectionView:(PSTCollectionView *)collectionView layout:(PSTCollectionViewLayout *)layout;
 
 // Ensure data is valid. may fetches items from dataSource and layout.

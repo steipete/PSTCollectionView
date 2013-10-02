@@ -34,11 +34,11 @@ typedef NS_ENUM(NSUInteger, PSTCollectionElementCategory) {
     PSTCollectionElementCategoryDecorationView
 };
 
-/// Define the `PSTCollectionViewDisableForwardToUICollectionViewSentinel` to disable the automatic forwarding to UICollectionView on iOS 6+. (Copy below line into your AppDelegate.m)
+// Define the `PSTCollectionViewDisableForwardToUICollectionViewSentinel` to disable the automatic forwarding to UICollectionView on iOS 6+. (Copy below line into your AppDelegate.m)
 //@interface PSTCollectionViewDisableForwardToUICollectionViewSentinel : NSObject @end @implementation PSTCollectionViewDisableForwardToUICollectionViewSentinel @end
 
-/// API-compatible replacement for UICollectionView.
-/// Works on iOS 4.3 upwards (including iOS 6).
+// API-compatible replacement for UICollectionView.
+// Works on iOS 4.3 upwards (including iOS 6).
 @interface PSTCollectionView : UIScrollView
 
 - (id)initWithFrame:(CGRect)frame collectionViewLayout:(PSTCollectionViewLayout *)layout; // the designated initializer

@@ -9,16 +9,16 @@
 
 @class PSTCollectionViewLayout, PSTCollectionViewController;
 
-/// Simple controller-wrapper around PSTCollectionView.
+// Simple controller-wrapper around PSTCollectionView.
 @interface PSTCollectionViewController : UIViewController <PSTCollectionViewDelegate, PSTCollectionViewDataSource>
 
-/// Designated initializer.
+// Designated initializer.
 - (id)initWithCollectionViewLayout:(PSTCollectionViewLayout *)layout;
 
-/// Internally used collection view. If not set, created during loadView.
+// Internally used collection view. If not set, created during loadView.
 @property (nonatomic, strong) PSTCollectionView *collectionView;
 
-/// Defaults to YES, and if YES, any selection is cleared in viewWillAppear:
+// Defaults to YES, and if YES, any selection is cleared in viewWillAppear:
 @property (nonatomic, assign) BOOL clearsSelectionOnViewWillAppear;
 
 @end
