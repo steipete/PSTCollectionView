@@ -202,7 +202,7 @@ static char kPSTCachedItemRectsKey;
     PSTGridLayoutRow *row = nil;
     CGRect itemFrame = CGRectZero;
 
-    if (section.fixedItemSize && indexPath.item / section.itemsByRowCount < (NSInteger)section.rows.count) {
+    if (section.fixedItemSize && section.itemsByRowCount > 0 && indexPath.item / section.itemsByRowCount < (NSInteger)section.rows.count) {
         row = section.rows[indexPath.item / section.itemsByRowCount];
         NSUInteger itemIndex = indexPath.item % section.itemsByRowCount;
         NSArray *itemRects = [row itemRects];
