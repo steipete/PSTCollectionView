@@ -760,16 +760,6 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         self.extVars.touchingIndexPath = indexPath;
         self.extVars.currentIndexPath = indexPath;
 
-        if (!self.allowsMultipleSelection) {
-            // temporally unhighlight background on touchesBegan (keeps selected by _indexPathsForSelectedItems)
-            // single-select only mode only though
-            NSIndexPath *tempDeselectIndexPath = _indexPathsForSelectedItems.anyObject;
-            if (tempDeselectIndexPath && ![tempDeselectIndexPath isEqual:self.extVars.touchingIndexPath]) {
-                // iOS6 UICollectionView deselects cell without notification
-                PSTCollectionViewCell *selectedCell = [self cellForItemAtIndexPath:tempDeselectIndexPath];
-                selectedCell.selected = NO;
-            }
-        }
     }
 }
 
@@ -933,6 +923,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     if (shouldHighlight) {
         PSTCollectionViewCell *highlightedCell = [self cellForItemAtIndexPath:indexPath];
         highlightedCell.highlighted = YES;
+        highlightedCell.selected = YES;
         [_indexPathsForHighlightedItems addObject:indexPath];
 
         if (scrollPosition != PSTCollectionViewScrollPositionNone) {
