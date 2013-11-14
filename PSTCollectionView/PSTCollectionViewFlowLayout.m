@@ -406,11 +406,11 @@ static char kPSTCachedItemRectsKey;
         if (_data.horizontal) {
             sectionFrame.origin.x += contentSize.width;
             contentSize.width += section.frame.size.width + section.frame.origin.x;
-            contentSize.height = fmax(contentSize.height, sectionFrame.size.height + section.frame.origin.y + section.sectionMargins.top + section.sectionMargins.bottom);
+            contentSize.height = MAX(contentSize.height, sectionFrame.size.height + section.frame.origin.y + section.sectionMargins.top + section.sectionMargins.bottom);
         }else {
             sectionFrame.origin.y += contentSize.height;
             contentSize.height += sectionFrame.size.height + section.frame.origin.y;
-            contentSize.width = fmax(contentSize.width, sectionFrame.size.width + section.frame.origin.x + section.sectionMargins.left + section.sectionMargins.right);
+            contentSize.width = MAX(contentSize.width, sectionFrame.size.width + section.frame.origin.x + section.sectionMargins.left + section.sectionMargins.right);
         }
         section.frame = sectionFrame;
     }
