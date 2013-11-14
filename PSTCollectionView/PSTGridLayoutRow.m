@@ -73,7 +73,7 @@
         // UICollectionView is smart and lays out items like they would have been placed on a full row
         // So we need to calculate the "usedItemCount" with using the last item as a reference size.
         // This allows us to correctly justify-place the items in the grid.
-        NSUInteger usedItemCount = 0;
+        NSInteger usedItemCount = 0;
         NSInteger itemIndex = 0;
         CGFloat spacing = isHorizontal ? self.section.verticalInterstice : self.section.horizontalInterstice;
         // the last row should justify as if it is filled with more (invisible) items so that the whole
@@ -82,7 +82,7 @@
             CGFloat nextItemSize;
             // first we need to find the size (width/height) of the next item to fit
             if (!self.fixedItemSize) {
-                PSTGridLayoutItem *item = self.items[MIN(itemIndex, self.itemCount - 1)];
+                PSTGridLayoutItem *item = self.items[(NSUInteger)MIN(itemIndex, self.itemCount - 1)];
                 nextItemSize = isHorizontal ? item.itemFrame.size.height : item.itemFrame.size.width;
             }else {
                 nextItemSize = isHorizontal ? self.section.itemSize.height : self.section.itemSize.width;
@@ -128,7 +128,7 @@
         for (itemIndex = 0; itemIndex < self.itemCount; itemIndex++) {
             PSTGridLayoutItem *item = nil;
             if (!self.fixedItemSize) {
-                item = self.items[itemIndex];
+                item = self.items[(NSUInteger)itemIndex];
                 itemFrame = [item itemFrame];
             }
             // depending on horizontal/vertical for an item size (height/width),
@@ -186,7 +186,7 @@
     if (self.fixedItemSize) {
         return _itemCount;
     }else {
-        return self.items.count;
+        return (NSInteger)self.items.count;
     }
 }
 

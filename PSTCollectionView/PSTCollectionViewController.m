@@ -123,7 +123,7 @@
 #pragma mark - Properties
 
 - (void)setClearsSelectionOnViewWillAppear:(BOOL)clearsSelectionOnViewWillAppear {
-    _collectionViewControllerFlags.clearsSelectionOnViewWillAppear = clearsSelectionOnViewWillAppear;
+    _collectionViewControllerFlags.clearsSelectionOnViewWillAppear = (unsigned int)clearsSelectionOnViewWillAppear;
 }
 
 - (BOOL)clearsSelectionOnViewWillAppear {

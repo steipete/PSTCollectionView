@@ -85,7 +85,7 @@
             BOOL finishCycle = itemIndex >= self.itemsCount;
             // TODO: fast path could even remove row creation and just calculate on the fly
             PSTGridLayoutItem *item = nil;
-            if (!finishCycle) item = self.fixedItemSize ? nil : self.items[itemIndex];
+            if (!finishCycle) item = self.fixedItemSize ? nil : self.items[(NSUInteger)itemIndex];
 
             CGSize itemSize = self.fixedItemSize ? self.itemSize : item.itemFrame.size;
             CGFloat itemDimension = self.layoutInfo.horizontal ? itemSize.height : itemSize.width;
@@ -204,7 +204,7 @@
 }
 
 - (NSInteger)itemsCount {
-    return self.fixedItemSize ? _itemsCount : self.items.count;
+    return self.fixedItemSize ? _itemsCount : (NSInteger)self.items.count;
 }
 
 @end
