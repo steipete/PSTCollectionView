@@ -709,7 +709,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
     switch (verticalPosition) {
         case PSTCollectionViewScrollPositionCenteredVertically:
-            calculateY = fmax(targetRect.origin.y - ((frame.size.height / 2) - (targetRect.size.height / 2)), -self.contentInset.top);
+            calculateY = MAX(targetRect.origin.y - ((frame.size.height / 2) - (targetRect.size.height / 2)), -self.contentInset.top);
             targetRect = CGRectMake(targetRect.origin.x, calculateY, targetRect.size.width, frame.size.height);
             break;
         case PSTCollectionViewScrollPositionTop:
@@ -717,7 +717,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             break;
 
         case PSTCollectionViewScrollPositionBottom:
-            calculateY = fmax(targetRect.origin.y - (frame.size.height - targetRect.size.height), -self.contentInset.top);
+            calculateY = MAX(targetRect.origin.y - (frame.size.height - targetRect.size.height), -self.contentInset.top);
             targetRect = CGRectMake(targetRect.origin.x, calculateY, targetRect.size.width, frame.size.height);
             break;
     }
@@ -1123,7 +1123,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             if (layoutAttributes) {
                 PSTCollectionViewScrollPosition scrollPosition = PSTCollectionViewScrollPositionCenteredVertically|PSTCollectionViewScrollPositionCenteredHorizontally;
                 CGRect targetRect = [self makeRect:layoutAttributes.frame toScrollPosition:scrollPosition];
-                targetOffset = CGPointMake(fmax(0.f, targetRect.origin.x), fmax(0.f, targetRect.origin.y));
+                targetOffset = CGPointMake(MAX(0.f, targetRect.origin.x), MAX(0.f, targetRect.origin.y));
             }
         }
 

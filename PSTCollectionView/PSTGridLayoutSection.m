@@ -105,12 +105,12 @@
 
                     if (self.layoutInfo.horizontal) {
                         row.rowFrame = CGRectMake(sectionSize.width, self.sectionMargins.top, row.rowSize.width, row.rowSize.height);
-                        sectionSize.height = fmax(row.rowSize.height, sectionSize.height);
+                        sectionSize.height = MAX(row.rowSize.height, sectionSize.height);
                         sectionSize.width += row.rowSize.width + (finishCycle ? 0 : self.horizontalInterstice);
                     }else {
                         row.rowFrame = CGRectMake(self.sectionMargins.left, sectionSize.height, row.rowSize.width, row.rowSize.height);
                         sectionSize.height += row.rowSize.height + (finishCycle ? 0 : self.verticalInterstice);
-                        sectionSize.width = fmax(row.rowSize.width, sectionSize.width);
+                        sectionSize.width = MAX(row.rowSize.width, sectionSize.width);
                     }
                 }
                 // add new rows until the section is fully laid out
