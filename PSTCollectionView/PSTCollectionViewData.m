@@ -171,7 +171,7 @@
 }
 
 - (void)setLayoutIsPrepared:(BOOL)layoutIsPrepared {
-    _collectionViewDataFlags.layoutIsPrepared = layoutIsPrepared;
+    _collectionViewDataFlags.layoutIsPrepared = (unsigned int)layoutIsPrepared;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -208,9 +208,9 @@
     }
     // allocate space
     if (!_sectionItemCounts) {
-        _sectionItemCounts = malloc(_numSections * sizeof(NSInteger));
+        _sectionItemCounts = malloc((size_t)_numSections * sizeof(NSInteger));
     }else {
-        _sectionItemCounts = realloc(_sectionItemCounts, _numSections * sizeof(NSInteger));
+        _sectionItemCounts = realloc(_sectionItemCounts, (size_t)_numSections * sizeof(NSInteger));
     }
 
     // query cells per section

@@ -76,7 +76,7 @@
 }
 
 - (void)setInUpdateAnimation:(BOOL)inUpdateAnimation {
-    _reusableViewFlags.inUpdateAnimation = inUpdateAnimation;
+    _reusableViewFlags.inUpdateAnimation = (unsigned int)inUpdateAnimation;
 }
 
 @end
@@ -149,14 +149,14 @@
 
 // Selection highlights underlying contents
 - (void)setSelected:(BOOL)selected {
-    _collectionCellFlags.selected = selected;
+    _collectionCellFlags.selected = (unsigned int)selected;
     self.accessibilityTraits = selected ? UIAccessibilityTraitSelected : UIAccessibilityTraitNone;
     [self updateBackgroundView:selected];
 }
 
 // Cell highlighting only highlights the cell itself
 - (void)setHighlighted:(BOOL)highlighted {
-    _collectionCellFlags.highlighted = highlighted;
+    _collectionCellFlags.highlighted = (unsigned int)highlighted;
     [self updateBackgroundView:highlighted];
 }
 

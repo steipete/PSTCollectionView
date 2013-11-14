@@ -50,12 +50,12 @@
 }
 
 - (CGRect)frameForItemAtIndexPath:(NSIndexPath *)indexPath {
-    PSTGridLayoutSection *section = self.sections[indexPath.section];
+    PSTGridLayoutSection *section = self.sections[(NSUInteger)indexPath.section];
     CGRect itemFrame;
     if (section.fixedItemSize) {
         itemFrame = (CGRect){.size=section.itemSize};
     }else {
-        itemFrame = [section.items[indexPath.item] itemFrame];
+        itemFrame = [section.items[(NSUInteger)indexPath.item] itemFrame];
     }
     return itemFrame;
 }
