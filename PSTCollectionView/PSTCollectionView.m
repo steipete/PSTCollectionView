@@ -271,8 +271,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)setFrame:(CGRect)frame {
     if (!CGRectEqualToRect(frame, self.frame)) {
+        CGRect bounds = (CGRect){.origin=self.contentOffset, .size=frame.size};
+        BOOL shouldInvalidate = [self.collectionViewLayout shouldInvalidateLayoutForBoundsChange:bounds];
         [super setFrame:frame];
-        if ([self.collectionViewLayout shouldInvalidateLayoutForBoundsChange:self.bounds]) {
+        if (shouldInvalidate) {
             [self invalidateLayout];
             _collectionViewFlags.fadeCellsForBoundsChange = YES;
         }
@@ -281,8 +283,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 - (void)setBounds:(CGRect)bounds {
     if (!CGRectEqualToRect(bounds, self.bounds)) {
+        BOOL shouldInvalidate = [self.collectionViewLayout shouldInvalidateLayoutForBoundsChange:bounds];
         [super setBounds:bounds];
-        if ([self.collectionViewLayout shouldInvalidateLayoutForBoundsChange:bounds]) {
+        if (shouldInvalidate) {
             [self invalidateLayout];
             _collectionViewFlags.fadeCellsForBoundsChange = YES;
         }
