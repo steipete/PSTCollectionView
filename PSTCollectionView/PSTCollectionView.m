@@ -1785,6 +1785,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         }
     }
 
+	//In here I think it doesn't need the animation but the transaction, it would cause some issue of display.
+	//I resolve the bug when user insert the new sections, the cell will display with a blink animation at the first operation.
+	//But I don't know why the next operation wouldn't reproduction in the pre version.
     _allVisibleViewsDict = newAllVisibleView;
 
     for (NSDictionary *animation in animations) {
@@ -1793,58 +1796,41 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         [view applyLayoutAttributes:attr];
     };
 
-    [UIView animateWithDuration:.3 animations:^{
-        _collectionViewFlags.updatingLayout = YES;
-
-        [CATransaction begin];
-        [CATransaction setAnimationDuration:.3];
-
-        // You might wonder why we use CATransaction to handle animation completion
-        // here instead of using the completion: parameter of UIView's animateWithDuration:.
-        // The problem is that animateWithDuration: calls this completion block
-        // when other animations are finished. This means that the block is called
-        // after the user releases his finger and the scroll view has finished scrolling.
-        // This can be a large delay, which causes the layout of the cells to be greatly
-        // delayed, and thus, be unrendered. I assume that was done for performance
-        // purposes but it completely breaks our layout logic here.
-        // To get the completion block called immediately after the animation actually
-        // finishes, I switched to use CATransaction.
-        // The only thing I'm not sure about - _completed_ flag. I don't know where to get it
-        // in terms of CATransaction's API, so I use animateWithDuration's completion block
-        // to call _updateCompletionHandler with that flag.
-        // Ideally, _updateCompletionHandler should be called along with the other logic in
-        // CATransaction's completionHandler but I simply don't know where to get that flag.
-        [CATransaction setCompletionBlock:^{
-            // Iterate through all the views that we are going to remove.
-            [viewsToRemove enumerateKeysAndObjectsUsingBlock:^(NSNumber *keyObj, NSArray *views, BOOL *stop) {
-                PSTCollectionViewItemType type = [keyObj unsignedIntegerValue];
-                for (PSTCollectionReusableView *view in views) {
-                    if (type == PSTCollectionViewItemTypeCell) {
-                        [self reuseCell:(PSTCollectionViewCell *)view];
-                    }else if (type == PSTCollectionViewItemTypeSupplementaryView) {
-                        [self reuseSupplementaryView:view];
-                    }else if (type == PSTCollectionViewItemTypeDecorationView) {
-                        [self reuseDecorationView:view];
-                    }
-                }
-            }];
-            _collectionViewFlags.updatingLayout = NO;
-        }];
-
-        for (NSDictionary *animation in animations) {
-            PSTCollectionReusableView *view = animation[@"view"];
-            PSTCollectionViewLayoutAttributes *attrs = animation[@"newLayoutInfos"];
-            [view applyLayoutAttributes:attrs];
-        }
-        [CATransaction commit];
-    } completion:^(BOOL finished) {
-
-        if (_updateCompletionHandler) {
-            _updateCompletionHandler(finished);
-            _updateCompletionHandler = nil;
-        }
-    }];
-
+    _collectionViewFlags.updatingLayout = YES;
+	
+	[CATransaction begin];
+	[CATransaction setAnimationDuration:0];
+	[CATransaction setCompletionBlock:^{
+		// Iterate through all the views that we are going to remove.
+		[viewsToRemove enumerateKeysAndObjectsUsingBlock:^(NSNumber *keyObj, NSArray *views, BOOL *stop) {
+			PSTCollectionViewItemType type = [keyObj unsignedIntegerValue];
+			for (PSTCollectionReusableView *view in views) {
+				if (type == PSTCollectionViewItemTypeCell) {
+					[self reuseCell:(PSTCollectionViewCell *)view];
+				} else if (type == PSTCollectionViewItemTypeSupplementaryView) {
+					[self reuseSupplementaryView:view];
+				} else if (type == PSTCollectionViewItemTypeDecorationView) {
+					[self reuseDecorationView:view];
+				}
+			}
+		}];
+		
+		_collectionViewFlags.updatingLayout = NO;
+		
+		//In here I think when the block is called, the flag is YES. So the _updateCopletionHandler's paramer is YES.
+		if (_updateCompletionHandler) {
+			_updateCompletionHandler(YES);
+			_updateCompletionHandler = nil;
+		}
+	}];
+	
+	for (NSDictionary *animation in animations) {
+		PSTCollectionReusableView *view = animation[@"view"];
+		PSTCollectionViewLayoutAttributes *attrs = animation[@"newLayoutInfos"];
+		[view applyLayoutAttributes:attrs];
+	}
+	[CATransaction commit];
+	
     [_layout finalizeCollectionViewUpdates];
 }
 
