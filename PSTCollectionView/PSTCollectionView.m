@@ -11,6 +11,7 @@
 #import "PSTCollectionViewItemKey.h"
 
 #import <objc/runtime.h>
+#import <tgmath.h>
 
 @interface PSTCollectionViewLayout (Internal)
 @property (nonatomic, unsafe_unretained) PSTCollectionView *collectionView;
@@ -990,8 +991,8 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     // First delete all items
     NSMutableArray *paths = [NSMutableArray new];
     [sections enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
-        for (int i = 0; i < [self numberOfItemsInSection:idx]; ++i) {
-            [paths addObject:[NSIndexPath indexPathForItem:i inSection:idx]];
+        for (int i = 0; i < [self numberOfItemsInSection:(NSInteger)idx]; ++i) {
+            [paths addObject:[NSIndexPath indexPathForItem:i inSection:(NSInteger)idx]];
         }
     }];
     [self deleteItemsAtIndexPaths:paths];
@@ -1306,22 +1307,22 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     self.extVars.collectionViewDelegate = delegate;
 
     //  Managing the Selected Cells
-    _collectionViewFlags.delegateShouldSelectItemAtIndexPath = [self.delegate respondsToSelector:@selector(collectionView:shouldSelectItemAtIndexPath:)];
-    _collectionViewFlags.delegateDidSelectItemAtIndexPath = [self.delegate respondsToSelector:@selector(collectionView:didSelectItemAtIndexPath:)];
-    _collectionViewFlags.delegateShouldDeselectItemAtIndexPath = [self.delegate respondsToSelector:@selector(collectionView:shouldDeselectItemAtIndexPath:)];
-    _collectionViewFlags.delegateDidDeselectItemAtIndexPath = [self.delegate respondsToSelector:@selector(collectionView:didDeselectItemAtIndexPath:)];
+    _collectionViewFlags.delegateShouldSelectItemAtIndexPath = (unsigned int)[self.delegate respondsToSelector:@selector(collectionView:shouldSelectItemAtIndexPath:)];
+    _collectionViewFlags.delegateDidSelectItemAtIndexPath = (unsigned int)[self.delegate respondsToSelector:@selector(collectionView:didSelectItemAtIndexPath:)];
+    _collectionViewFlags.delegateShouldDeselectItemAtIndexPath = (unsigned int)[self.delegate respondsToSelector:@selector(collectionView:shouldDeselectItemAtIndexPath:)];
+    _collectionViewFlags.delegateDidDeselectItemAtIndexPath = (unsigned int)[self.delegate respondsToSelector:@selector(collectionView:didDeselectItemAtIndexPath:)];
 
     //  Managing Cell Highlighting
-    _collectionViewFlags.delegateShouldHighlightItemAtIndexPath = [self.delegate respondsToSelector:@selector(collectionView:shouldHighlightItemAtIndexPath:)];
-    _collectionViewFlags.delegateDidHighlightItemAtIndexPath = [self.delegate respondsToSelector:@selector(collectionView:didHighlightItemAtIndexPath:)];
-    _collectionViewFlags.delegateDidUnhighlightItemAtIndexPath = [self.delegate respondsToSelector:@selector(collectionView:didUnhighlightItemAtIndexPath:)];
+    _collectionViewFlags.delegateShouldHighlightItemAtIndexPath = (unsigned int)[self.delegate respondsToSelector:@selector(collectionView:shouldHighlightItemAtIndexPath:)];
+    _collectionViewFlags.delegateDidHighlightItemAtIndexPath = (unsigned int)[self.delegate respondsToSelector:@selector(collectionView:didHighlightItemAtIndexPath:)];
+    _collectionViewFlags.delegateDidUnhighlightItemAtIndexPath = (unsigned int)[self.delegate respondsToSelector:@selector(collectionView:didUnhighlightItemAtIndexPath:)];
 
     //  Tracking the Removal of Views
-    _collectionViewFlags.delegateDidEndDisplayingCell = [self.delegate respondsToSelector:@selector(collectionView:didEndDisplayingCell:forItemAtIndexPath:)];
-    _collectionViewFlags.delegateDidEndDisplayingSupplementaryView = [self.delegate respondsToSelector:@selector(collectionView:didEndDisplayingSupplementaryView:forElementOfKind:atIndexPath:)];
+    _collectionViewFlags.delegateDidEndDisplayingCell = (unsigned int)[self.delegate respondsToSelector:@selector(collectionView:didEndDisplayingCell:forItemAtIndexPath:)];
+    _collectionViewFlags.delegateDidEndDisplayingSupplementaryView = (unsigned int)[self.delegate respondsToSelector:@selector(collectionView:didEndDisplayingSupplementaryView:forElementOfKind:atIndexPath:)];
 
     //  Managing Actions for Cells
-    _collectionViewFlags.delegateSupportsMenus = [self.delegate respondsToSelector:@selector(collectionView:shouldShowMenuForItemAtIndexPath:)];
+    _collectionViewFlags.delegateSupportsMenus = (unsigned int)[self.delegate respondsToSelector:@selector(collectionView:shouldShowMenuForItemAtIndexPath:)];
 
     // These aren't present in the flags which is a little strange. Not adding them because that will mess with byte alignment which will affect cross compatibility.
     // The flag names are guesses and are there for documentation purposes.
@@ -1335,10 +1336,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         _dataSource = dataSource;
 
         //  Getting Item and Section Metrics
-        _collectionViewFlags.dataSourceNumberOfSections = [_dataSource respondsToSelector:@selector(numberOfSectionsInCollectionView:)];
+        _collectionViewFlags.dataSourceNumberOfSections = (unsigned int)[_dataSource respondsToSelector:@selector(numberOfSectionsInCollectionView:)];
 
         //  Getting Views for Items
-        _collectionViewFlags.dataSourceViewForSupplementaryElement = [_dataSource respondsToSelector:@selector(collectionView:viewForSupplementaryElementOfKind:atIndexPath:)];
+        _collectionViewFlags.dataSourceViewForSupplementaryElement = (unsigned int)[_dataSource respondsToSelector:@selector(collectionView:viewForSupplementaryElementOfKind:atIndexPath:)];
     }
 }
 
@@ -1347,7 +1348,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (void)setAllowsSelection:(BOOL)allowsSelection {
-    _collectionViewFlags.allowsSelection = allowsSelection;
+    _collectionViewFlags.allowsSelection = (unsigned int)allowsSelection;
 }
 
 - (BOOL)allowsMultipleSelection {
@@ -1355,7 +1356,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (void)setAllowsMultipleSelection:(BOOL)allowsMultipleSelection {
-    _collectionViewFlags.allowsMultipleSelection = allowsMultipleSelection;
+    _collectionViewFlags.allowsMultipleSelection = (unsigned int)allowsMultipleSelection;
 
     // Deselect all objects if allows multiple selection is false
     if (!allowsMultipleSelection && _indexPathsForSelectedItems.count) {
@@ -1729,10 +1730,10 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             NSArray *oldToNewIndexMap = _update[@"oldToNewIndexMap"];
             NSUInteger newGlobalIndex = NSNotFound;
             if (NSNotFound != oldGlobalIndex && oldGlobalIndex < oldToNewIndexMap.count) {
-                newGlobalIndex = [oldToNewIndexMap[oldGlobalIndex] intValue];
+                newGlobalIndex = [oldToNewIndexMap[oldGlobalIndex] unsignedIntegerValue];
             }
-            NSIndexPath *newIndexPath = newGlobalIndex == NSNotFound ? nil : [_update[@"newModel"] indexPathForItemAtGlobalIndex:newGlobalIndex];
-            NSIndexPath *oldIndexPath = oldGlobalIndex == NSNotFound ? nil : [_update[@"oldModel"] indexPathForItemAtGlobalIndex:oldGlobalIndex];
+            NSIndexPath *newIndexPath = newGlobalIndex == NSNotFound ? nil : [_update[@"newModel"] indexPathForItemAtGlobalIndex:(int)newGlobalIndex];
+            NSIndexPath *oldIndexPath = oldGlobalIndex == NSNotFound ? nil : [_update[@"oldModel"] indexPathForItemAtGlobalIndex:(int)oldGlobalIndex];
 
             if (newIndexPath) {
                 PSTCollectionViewLayoutAttributes *startAttrs = nil;
@@ -2033,12 +2034,12 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
 #if !defined  NS_BLOCK_ASSERTIONS
     for (NSNumber *sectionKey in [operations keyEnumerator]) {
-        NSInteger section = [sectionKey intValue];
+        NSInteger section = [sectionKey integerValue];
 
-        NSInteger insertedCount = [operations[sectionKey][@"inserted"] intValue];
-        NSInteger deletedCount = [operations[sectionKey][@"deleted"] intValue];
-        NSInteger movedInCount = [operations[sectionKey][@"movedIn"] intValue];
-        NSInteger movedOutCount = [operations[sectionKey][@"movedOut"] intValue];
+        NSInteger insertedCount = [operations[sectionKey][@"inserted"] integerValue];
+        NSInteger deletedCount = [operations[sectionKey][@"deleted"] integerValue];
+        NSInteger movedInCount = [operations[sectionKey][@"movedIn"] integerValue];
+        NSInteger movedOutCount = [operations[sectionKey][@"movedOut"] integerValue];
 
         NSAssert([oldCollectionViewData numberOfItemsInSection:section] + insertedCount - deletedCount + movedInCount - movedOutCount ==
                 [_collectionViewData numberOfItemsInSection:section],
@@ -2079,33 +2080,33 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
                     // section updates are ignored anyway in animation code. If not commented, mixing rows and section deletion causes crash in else below
                     // [newModel removeObjectAtIndex:updateItem.indexPathBeforeUpdate.section];
                 }else {
-                    [(NSMutableArray *)newModel[updateItem.indexPathBeforeUpdate.section]
-                            removeObjectAtIndex:updateItem.indexPathBeforeUpdate.item];
+                    [(NSMutableArray *)newModel[(NSUInteger)updateItem.indexPathBeforeUpdate.section]
+                            removeObjectAtIndex:(NSUInteger)updateItem.indexPathBeforeUpdate.item];
                 }
             }
                 break;
             case PSTCollectionUpdateActionInsert: {
                 if (updateItem.isSectionOperation) {
                     [newModel insertObject:[[NSMutableArray alloc] init]
-                            atIndex:updateItem.indexPathAfterUpdate.section];
+                            atIndex:(NSUInteger)updateItem.indexPathAfterUpdate.section];
                 }else {
-                    [(NSMutableArray *)newModel[updateItem.indexPathAfterUpdate.section]
+                    [(NSMutableArray *)newModel[(NSUInteger)updateItem.indexPathAfterUpdate.section]
                             insertObject:@(NSNotFound)
-                            atIndex:updateItem.indexPathAfterUpdate.item];
+                            atIndex:(NSUInteger)updateItem.indexPathAfterUpdate.item];
                 }
             }
                 break;
 
             case PSTCollectionUpdateActionMove: {
                 if (updateItem.isSectionOperation) {
-                    id section = newModel[updateItem.indexPathBeforeUpdate.section];
-                    [newModel insertObject:section atIndex:updateItem.indexPathAfterUpdate.section];
+                    id section = newModel[(NSUInteger)updateItem.indexPathBeforeUpdate.section];
+                    [newModel insertObject:section atIndex:(NSUInteger)updateItem.indexPathAfterUpdate.section];
                 }
                 else {
                     id object = @([oldCollectionViewData globalIndexForItemAtIndexPath:updateItem.indexPathBeforeUpdate]);
-                    [newModel[updateItem.indexPathBeforeUpdate.section] removeObject:object];
-                    [newModel[updateItem.indexPathAfterUpdate.section] insertObject:object
-                                                                            atIndex:updateItem.indexPathAfterUpdate.item];
+                    [newModel[(NSUInteger)updateItem.indexPathBeforeUpdate.section] removeObject:object];
+                    [newModel[(NSUInteger)updateItem.indexPathAfterUpdate.section] insertObject:object
+                                                                            atIndex:(NSUInteger)updateItem.indexPathAfterUpdate.item];
                 }
             }
                 break;
@@ -2113,8 +2114,8 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         }
     }
 
-    NSMutableArray *oldToNewMap = [NSMutableArray arrayWithCapacity:[oldCollectionViewData numberOfItems]];
-    NSMutableArray *newToOldMap = [NSMutableArray arrayWithCapacity:[_collectionViewData numberOfItems]];
+    NSMutableArray *oldToNewMap = [NSMutableArray arrayWithCapacity:(NSUInteger)[oldCollectionViewData numberOfItems]];
+    NSMutableArray *newToOldMap = [NSMutableArray arrayWithCapacity:(NSUInteger)[_collectionViewData numberOfItems]];
 
     for (NSInteger i = 0; i < [oldCollectionViewData numberOfItems]; i++)
         [oldToNewMap addObject:@(NSNotFound)];
@@ -2125,9 +2126,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     for (NSUInteger i = 0; i < newModel.count; i++) {
         NSMutableArray *section = newModel[i];
         for (NSUInteger j = 0; j < section.count; j++) {
-            NSInteger newGlobalIndex = [_collectionViewData globalIndexForItemAtIndexPath:[NSIndexPath indexPathForItem:j inSection:i]];
+            NSUInteger newGlobalIndex = [_collectionViewData globalIndexForItemAtIndexPath:[NSIndexPath indexPathForItem:(NSInteger)j inSection:(NSInteger)i]];
             if ([section[j] integerValue] != NSNotFound)
-                oldToNewMap[[section[j] intValue]] = @(newGlobalIndex);
+                oldToNewMap[[section[j] unsignedIntegerValue]] = @(newGlobalIndex);
             if (newGlobalIndex != NSNotFound)
                 newToOldMap[newGlobalIndex] = section[j];
         }
@@ -2171,7 +2172,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     NSMutableArray *updateActions = [self arrayForUpdateAction:updateAction];
 
     [sections enumerateIndexesUsingBlock:^(NSUInteger section, BOOL *stop) {
-        PSTCollectionViewUpdateItem *updateItem = [[PSTCollectionViewUpdateItem alloc] initWithAction:updateAction forIndexPath:[NSIndexPath indexPathForItem:NSNotFound inSection:section]];
+        PSTCollectionViewUpdateItem *updateItem = [[PSTCollectionViewUpdateItem alloc] initWithAction:updateAction forIndexPath:[NSIndexPath indexPathForItem:NSNotFound inSection:(NSInteger)section]];
         [updateActions addObject:updateItem];
     }];
 
@@ -2235,7 +2236,7 @@ static BOOL PSTRegisterClass(NSString *UIClassName, Class PSTClass) {
     if (UIClass) {
         // Class size need to be the same for class_setSuperclass to work.
         // If the UIKit class is smaller then our subclass, ivars won't clash, so there's no issue.
-        long sizeDifference = class_getInstanceSize(UIClass) - class_getInstanceSize(PSTClass);
+        long sizeDifference = (long)(class_getInstanceSize(UIClass) - class_getInstanceSize(PSTClass));
         if (sizeDifference > 0) {
             NSLog(@"Warning! ivar size mismatch in %@ - can't change the superclass.", PSTClass);
             return NO;

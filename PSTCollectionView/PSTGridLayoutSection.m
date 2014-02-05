@@ -85,7 +85,7 @@
             BOOL finishCycle = itemIndex >= self.itemsCount;
             // TODO: fast path could even remove row creation and just calculate on the fly
             PSTGridLayoutItem *item = nil;
-            if (!finishCycle) item = self.fixedItemSize ? nil : self.items[itemIndex];
+            if (!finishCycle) item = self.fixedItemSize ? nil : self.items[(NSUInteger)itemIndex];
 
             CGSize itemSize = self.fixedItemSize ? self.itemSize : item.itemFrame.size;
             CGFloat itemDimension = self.layoutInfo.horizontal ? itemSize.height : itemSize.width;
@@ -105,12 +105,12 @@
 
                     if (self.layoutInfo.horizontal) {
                         row.rowFrame = CGRectMake(sectionSize.width, self.sectionMargins.top, row.rowSize.width, row.rowSize.height);
-                        sectionSize.height = fmax(row.rowSize.height, sectionSize.height);
+                        sectionSize.height = MAX(row.rowSize.height, sectionSize.height);
                         sectionSize.width += row.rowSize.width + (finishCycle ? 0 : self.horizontalInterstice);
                     }else {
                         row.rowFrame = CGRectMake(self.sectionMargins.left, sectionSize.height, row.rowSize.width, row.rowSize.height);
                         sectionSize.height += row.rowSize.height + (finishCycle ? 0 : self.verticalInterstice);
-                        sectionSize.width = fmax(row.rowSize.width, sectionSize.width);
+                        sectionSize.width = MAX(row.rowSize.width, sectionSize.width);
                     }
                 }
                 // add new rows until the section is fully laid out
@@ -204,7 +204,7 @@
 }
 
 - (NSInteger)itemsCount {
-    return self.fixedItemSize ? _itemsCount : self.items.count;
+    return self.fixedItemSize ? _itemsCount : (NSInteger)self.items.count;
 }
 
 @end
