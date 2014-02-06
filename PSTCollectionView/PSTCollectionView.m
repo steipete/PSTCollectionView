@@ -613,18 +613,8 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 }
 
 - (NSIndexPath *)indexPathForItemAtPoint:(CGPoint)point {
-    __block NSIndexPath *indexPath = nil;
-    [_allVisibleViewsDict enumerateKeysAndObjectsWithOptions:kNilOptions usingBlock:^(id key, id obj, BOOL *stop) {
-        PSTCollectionViewItemKey *itemKey = (PSTCollectionViewItemKey *)key;
-        if (itemKey.type == PSTCollectionViewItemTypeCell) {
-            PSTCollectionViewCell *cell = (PSTCollectionViewCell *)obj;
-            if (CGRectContainsPoint(cell.frame, point) && cell.userInteractionEnabled) {
-                indexPath = itemKey.indexPath;
-                *stop = YES;
-            }
-        }
-    }];
-    return indexPath;
+    PSTCollectionViewLayoutAttributes *attributes = [[self.collectionViewLayout layoutAttributesForElementsInRect:CGRectMake(point.x, point.y, 1, 1)] lastObject];
+    return attributes.indexPath;
 }
 
 - (NSIndexPath *)indexPathForCell:(PSTCollectionViewCell *)cell {
