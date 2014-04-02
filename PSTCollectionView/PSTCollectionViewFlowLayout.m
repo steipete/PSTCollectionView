@@ -155,11 +155,13 @@ static char kPSTCachedItemRectsKey;
                 itemRects = [(section.rows)[0] itemRects];
                 if (itemRects) rectCache[@(sectionIndex)] = itemRects;
             }
-
+            
             for (PSTGridLayoutRow *row in section.rows) {
                 CGRect normalizedRowFrame = row.rowFrame;
+                
                 normalizedRowFrame.origin.x += section.frame.origin.x;
                 normalizedRowFrame.origin.y += section.frame.origin.y;
+                
                 if (CGRectIntersectsRect(normalizedRowFrame, rect)) {
                     // TODO be more fine-grained for items
 
@@ -175,9 +177,14 @@ static char kPSTCachedItemRectsKey;
                             sectionItemIndex = [section.items indexOfObjectIdenticalTo:item];
                             itemFrame = item.itemFrame;
                         }
-                        layoutAttributes = [[self.class layoutAttributesClass] layoutAttributesForCellWithIndexPath:[NSIndexPath indexPathForItem:sectionItemIndex inSection:sectionIndex]];
-                        layoutAttributes.frame = CGRectMake(normalizedRowFrame.origin.x + itemFrame.origin.x, normalizedRowFrame.origin.y + itemFrame.origin.y, itemFrame.size.width, itemFrame.size.height);
-                        [layoutAttributesArray addObject:layoutAttributes];
+
+                        CGRect normalisedItemFrame = CGRectMake(normalizedRowFrame.origin.x + itemFrame.origin.x, normalizedRowFrame.origin.y + itemFrame.origin.y, itemFrame.size.width, itemFrame.size.height);
+                        
+                        if (CGRectIntersectsRect(normalisedItemFrame, rect)) {
+                            layoutAttributes = [[self.class layoutAttributesClass] layoutAttributesForCellWithIndexPath:[NSIndexPath indexPathForItem:sectionItemIndex inSection:sectionIndex]];
+                            layoutAttributes.frame = normalisedItemFrame;
+                            [layoutAttributesArray addObject:layoutAttributes];
+                        }
                     }
                 }
             }

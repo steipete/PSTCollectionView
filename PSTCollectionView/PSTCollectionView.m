@@ -1078,6 +1078,9 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     }
     else {
         layout.collectionView = self;
+        
+        _layout.collectionView = nil;
+        _layout = layout;
 
         _collectionViewData = [[PSTCollectionViewData alloc] initWithCollectionView:self layout:layout];
         [_collectionViewData prepareToLoadData];
@@ -1278,9 +1281,6 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
             applyNewLayoutBlock();
             freeUnusedViews();
         }
-
-        _layout.collectionView = nil;
-        _layout = layout;
     }
 }
 
