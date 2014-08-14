@@ -2230,7 +2230,7 @@ static void PSTRegisterClasses() {
             long sizeDifference = (long)class_getInstanceSize(UIClass) - class_getInstanceSize(PSTClass);
             if (sizeDifference > 0) {
                 canOverwrite = NO;
-                NSLog(@"Warning! ivar size mismatch in %@ of %d bytes - can't change the superclass.", PSTClass, sizeDifference);
+                NSLog(@"Warning! ivar size mismatch in %@ of %tu bytes - can't change the superclass.", PSTClass, sizeDifference);
             }
         } else {
             canOverwrite = NO;
