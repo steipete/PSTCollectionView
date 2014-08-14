@@ -1032,7 +1032,6 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
         [self setupCellAnimations];
         [self endItemAnimations];
     }
-
 }
 
 - (void)performBatchUpdates:(void (^)(void))updates completion:(void (^)(BOOL finished))completion {
