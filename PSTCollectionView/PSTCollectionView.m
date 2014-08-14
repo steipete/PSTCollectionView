@@ -113,7 +113,7 @@ CGFloat PSTSimulatorAnimationDragCoefficient(void);
         unsigned int doneFirstLayout : 1;
     }_collectionViewFlags;
     CGPoint _lastLayoutOffset;
-    char filler[200]; // [HACK] Our class needs to be larger than Apple's class for the superclass change to work.
+    char filler[232]; // [HACK] Our class needs to be larger than Apple's class for the superclass change to work.
 }
 @property (nonatomic, strong) PSTCollectionViewData *collectionViewData;
 @property (nonatomic, strong, readonly) PSTCollectionViewExt *extVars;
@@ -2221,31 +2221,50 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 @implementation PSUICollectionViewLayoutAttributes_ @end
 @implementation PSUICollectionViewController_ @end
 
-static BOOL PSTRegisterClass(NSString *UIClassName, Class PSTClass) {
-    NSCParameterAssert(UIClassName && PSTClass);
+static void PSTRegisterClasses() {
+    NSDictionary *map = @{
+        @"UICollectionView": PSUICollectionView_.class,
+        @"UICollectionViewCell": PSUICollectionViewCell_.class,
+        @"UICollectionReusableView": PSUICollectionReusableView_.class,
+        @"UICollectionViewLayout": PSUICollectionViewLayout_.class,
+        @"UICollectionViewFlowLayout": PSUICollectionViewFlowLayout_.class,
+        @"UICollectionViewLayoutAttributes": PSUICollectionViewLayoutAttributes_.class,
+        @"UICollectionViewController": PSUICollectionViewController_.class
+    };
 
-    Class UIClass = NSClassFromString(UIClassName);
-    if (UIClass) {
-        // Class size need to be the same for class_setSuperclass to work.
-        // If the UIKit class is smaller then our subclass, ivars won't clash, so there's no issue.
-        long sizeDifference = class_getInstanceSize(UIClass) - class_getInstanceSize(PSTClass);
-        if (sizeDifference > 0) {
-            NSLog(@"Warning! ivar size mismatch in %@ - can't change the superclass.", PSTClass);
-            return NO;
+    // Ensure that superclass replacement is all-or-nothing for the PSUI*_ types. Either use exclusively
+    // UICollectionView*, or exclusively PSTCollectionView*.
+    __block BOOL canOverwrite = YES;
+    [map enumerateKeysAndObjectsUsingBlock:^(NSString* UIClassName, id PSTClass, BOOL *stop) {
+        Class UIClass = NSClassFromString(UIClassName);
+        if (UIClass) {
+            // Class size need to be the same for class_setSuperclass to work.
+            // If the UIKit class is smaller then our subclass, ivars won't clash, so there's no issue.
+            long sizeDifference = class_getInstanceSize(UIClass) - class_getInstanceSize(PSTClass);
+            if (sizeDifference > 0) {
+                canOverwrite = NO;
+                NSLog(@"Warning! ivar size mismatch in %@ of %d bytes - can't change the superclass.", PSTClass, sizeDifference);
+            }
         } else {
+            canOverwrite = NO;
+            // We're most likely on iOS5, the requested UIKit class doesn't exist, so we create it dynamically.
+            if ((UIClass = objc_allocateClassPair(PSTClass, UIClassName.UTF8String, 0))) {
+                objc_registerClassPair(UIClass);
+            }
+        }
+    }];
+
+    if (canOverwrite) {
+        // All UICollectionView types were found and appropriately sized, so it is safe to replace the super-class.
+        [map enumerateKeysAndObjectsUsingBlock:^(NSString* UIClassName, id PSTClass, BOOL *stop) {
+            Class UIClass = NSClassFromString(UIClassName);
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
             // class_setSuperclass is deprecated, but still exists and works on iOS6/7.
             class_setSuperclass(PSTClass, UIClass);
 #pragma clang diagnostic pop
-        }
-    } else {
-        // We're most likely on iOS5, the requested UIKit class doesn't exist, so we create it dynamically.
-        if ((UIClass = objc_allocateClassPair(PSTClass, UIClassName.UTF8String, 0))) {
-            objc_registerClassPair(UIClass);
-        }
+        }];
     }
-    return YES;
 }
 
 // Create subclasses that pose as UICollectionView et al, if not available at runtime.
@@ -2254,13 +2273,7 @@ __attribute__((constructor)) static void PSTCreateUICollectionViewClasses(void) 
 
     @autoreleasepool {
         // Change superclass at runtime. This allows seamless switching from PST* to UI* at runtime.
-        PSTRegisterClass(@"UICollectionView", PSUICollectionView_.class);
-        PSTRegisterClass(@"UICollectionViewCell", PSUICollectionViewCell_.class);
-        PSTRegisterClass(@"UICollectionReusableView", PSUICollectionReusableView_.class);
-        PSTRegisterClass(@"UICollectionViewLayout", PSUICollectionViewLayout_.class);
-        PSTRegisterClass(@"UICollectionViewFlowLayout", PSUICollectionViewFlowLayout_.class);
-        PSTRegisterClass(@"UICollectionViewLayoutAttributes", PSUICollectionViewLayoutAttributes_.class);
-        PSTRegisterClass(@"UICollectionViewController", PSUICollectionViewController_.class);
+        PSTRegisterClasses();
 
         // add PSUI classes at runtime to make Interface Builder sane
         // (IB doesn't allow adding the PSUICollectionView_ types but doesn't complain on unknown classes)
