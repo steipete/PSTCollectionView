@@ -257,7 +257,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
 
     // do we need to update contentSize?
     CGSize contentSize = [_collectionViewData collectionViewContentRect].size;
-    if (contentSize.height < self.frame.size.height) {
+    if (contentSize.height < self.frame.size.height + 1) {
         contentSize = CGSizeMake(contentSize.width, self.frame.size.height + 1);
     }
     if (!CGSizeEqualToSize(self.contentSize, contentSize)) {
