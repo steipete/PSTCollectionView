@@ -1,7 +1,7 @@
 PSTCollectionView
 =================
 
-UPDATE: I'm no longer using PSTCollectionView in any project, but will still accept pull requests for improvements.
+UPDATE: I'm no longer using PSTCollectionView in any project. This purely exists to keep old projects alive and for historical reasons.
 
 Open Source, 100% API compatible replacement of UICollectionView for iOS4.3+
 
