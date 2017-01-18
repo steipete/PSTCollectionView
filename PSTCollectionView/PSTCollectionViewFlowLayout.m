@@ -131,9 +131,34 @@ static char kPSTCachedItemRectsKey;
     // Apple calls _layoutAttributesForItemsInRect
     if (!_data) [self prepareLayout];
 
+    CGRect largerXFrame = rect;
+    CGRect largerYFrame = rect;
+    CGFloat extraW = PSTCollectionViewLayoutPreloadAmountOneScreen == self.preloadAmount ? (rect.size.width - 10) : 1;
+    CGFloat extraH = PSTCollectionViewLayoutPreloadAmountOneScreen == self.preloadAmount ? (rect.size.height - 10) : 1;
+    BOOL preloadX = false;
+    BOOL preloadY = false;
+    if (_preloadMask & PSTCollectionViewLayoutPreloadRight) {
+        largerXFrame.size.width += extraW;
+        preloadX = true;
+    }
+    if (_preloadMask & PSTCollectionViewLayoutPreloadLeft) {
+        largerXFrame.origin.x -= extraW;
+        largerXFrame.size.width += extraW;
+        preloadX = true;
+    }
+    if (_preloadMask & PSTCollectionViewLayoutPreloadBelow) {
+        largerYFrame.size.height += extraH;
+        preloadY = true;
+    }
+    if (_preloadMask & PSTCollectionViewLayoutPreloadAbove) {
+        largerYFrame.origin.y -= extraH;
+        largerYFrame.size.height += extraH;
+        preloadY = true;
+    }
+
     NSMutableArray *layoutAttributesArray = [NSMutableArray array];
     for (PSTGridLayoutSection *section in _data.sections) {
-        if (CGRectIntersectsRect(section.frame, rect)) {
+        if (CGRectIntersectsRect(section.frame, largerYFrame) || CGRectIntersectsRect(section.frame, largerXFrame)) {
 
             // if we have fixed size, calculate item frames only once.
             // this also uses the default PSTFlowLayoutCommonRowHorizontalAlignmentKey alignment
@@ -155,15 +180,17 @@ static char kPSTCachedItemRectsKey;
                 itemRects = [(section.rows)[0] itemRects];
                 if (itemRects) rectCache[@(sectionIndex)] = itemRects;
             }
-            
+
+            NSMutableSet* rowsAdded = [NSMutableSet new];
+            void(^addRow)(CGRect testFrame) = ^(CGRect testFrame){
+            // intentionally decreased indentation to minimized diff
             for (PSTGridLayoutRow *row in section.rows) {
                 CGRect normalizedRowFrame = row.rowFrame;
-                
                 normalizedRowFrame.origin.x += section.frame.origin.x;
                 normalizedRowFrame.origin.y += section.frame.origin.y;
-                
-                if (CGRectIntersectsRect(normalizedRowFrame, rect)) {
+                if (CGRectIntersectsRect(normalizedRowFrame, testFrame) && ![rowsAdded containsObject:row]) {
                     // TODO be more fine-grained for items
+                    [rowsAdded addObject:row];
 
                     for (NSInteger itemIndex = 0; itemIndex < row.itemCount; itemIndex++) {
                         PSTCollectionViewLayoutAttributes *layoutAttributes;
@@ -180,13 +207,22 @@ static char kPSTCachedItemRectsKey;
 
                         CGRect normalisedItemFrame = CGRectMake(normalizedRowFrame.origin.x + itemFrame.origin.x, normalizedRowFrame.origin.y + itemFrame.origin.y, itemFrame.size.width, itemFrame.size.height);
                         
-                        if (CGRectIntersectsRect(normalisedItemFrame, rect)) {
+                        if (CGRectIntersectsRect(normalisedItemFrame, testFrame)) {
                             layoutAttributes = [[self.class layoutAttributesClass] layoutAttributesForCellWithIndexPath:[NSIndexPath indexPathForItem:(NSInteger)sectionItemIndex inSection:(NSInteger)sectionIndex]];
                             layoutAttributes.frame = normalisedItemFrame;
+
                             [layoutAttributesArray addObject:layoutAttributes];
                         }
                     }
                 }
+            }
+            };
+            addRow(rect);
+            if (preloadX) {
+              addRow(largerXFrame);
+            }
+            if (preloadY) {
+              addRow(largerYFrame);
             }
 
             CGRect normalizedFooterFrame = section.footerFrame;

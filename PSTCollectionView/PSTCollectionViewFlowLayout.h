@@ -52,6 +52,25 @@ typedef NS_ENUM(NSInteger, PSTCollectionViewScrollDirection) {
  */
 @property (nonatomic, strong) NSDictionary *rowAlignmentOptions;
 
+typedef NS_OPTIONS(NSUInteger, PSTCollectionViewLayoutPreload) {
+    PSTCollectionViewLayoutPreloadNone,
+    PSTCollectionViewLayoutPreloadBelow = 1,
+    PSTCollectionViewLayoutPreloadRight = 2,
+    PSTCollectionViewLayoutPreloadLeft = 4,
+    PSTCollectionViewLayoutPreloadAbove = 8,
+} ;
+
+/// The bit mask determining on which directions we will be preloading one cell
+@property (nonatomic, assign) PSTCollectionViewLayoutPreload preloadMask;
+
+typedef NS_OPTIONS(NSUInteger, PSTCollectionViewLayoutPreloadAmount) {
+    PSTCollectionViewLayoutPreloadAmountOneCell,
+    PSTCollectionViewLayoutPreloadAmountOneScreen,
+} ;
+
+/// This determines whether to preload just one cell or one screen, if preloadMask is enabled
+@property (nonatomic, assign) PSTCollectionViewLayoutPreloadAmount preloadAmount;
+
 @end
 
 // @steipete addition, private API in UICollectionViewFlowLayout

@@ -48,6 +48,7 @@ typedef NS_ENUM(NSUInteger, PSTCollectionElementCategory) {
 @property (nonatomic, assign) IBOutlet id<PSTCollectionViewDataSource> dataSource;
 @property (nonatomic, strong) UIView *backgroundView; // will be automatically resized to track the size of the collection view and placed behind all cells and supplementary views.
 
+
 // For each reuse identifier that the collection view will use, register either a class or a nib from which to instantiate a cell.
 // If a nib is registered, it must contain exactly 1 top level object which is a PSTCollectionViewCell.
 // If a class is registered, it will be instantiated via alloc/initWithFrame:
