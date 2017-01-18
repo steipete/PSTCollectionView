@@ -48,8 +48,6 @@
 #pragma mark - UIViewController
 
 - (void)loadView {
-    [super loadView];
-
     // if this is restored from IB, we don't have plain main view.
     if ([self.view isKindOfClass:PSTCollectionView.class]) {
         _collectionView = (PSTCollectionView *)self.view;
