@@ -1528,7 +1528,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     if (self.dragging) {
         scrollIndicatorView = [self.subviews lastObject];
     }
-
+    
     NSMutableArray *floatingViews = [[NSMutableArray alloc] init];
     for (UIView *uiView in self.subviews) {
         if ([uiView isKindOfClass:PSTCollectionReusableView.class] && [[(PSTCollectionReusableView *)uiView layoutAttributes] zIndex] > 0) {
@@ -1551,7 +1551,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     for (PSTCollectionReusableView *uiView in floatingViews) {
         [self bringSubviewToFront:uiView];
     }
-
+    
     if (floatingViews.count && scrollIndicatorView) {
         [self bringSubviewToFront:scrollIndicatorView];
     }
