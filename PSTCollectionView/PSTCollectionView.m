@@ -594,7 +594,7 @@ static void PSTCollectionViewCommonSetup(PSTCollectionView *_self) {
     [_indexPathsForSelectedItems removeAllObjects];
     [_indexPathsForHighlightedItems removeAllObjects];
 
-    [self setNeedsLayout];
+    [self layoutSubviews];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
